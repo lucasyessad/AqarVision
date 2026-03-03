@@ -1,0 +1,5 @@
+type_verif;nom_table_v4;nom_table_v5;nom_colonne_v4;nom_colonne_v5;cle_fonctionnelle;type_ecart;explication;date_explication
+PERIM;PRODUIT;PRODUIT_V5;CODE;CODE_PRD;ID_PROD;pas dans V5;Renomme en CODE_PRD en V5;2026-02-25 10:10:00
+PERIM;PRODUIT;PRODUIT_V5;CATEGORIE;CAT_CODE;ID_PROD;pas dans V5;Fusionne dans CAT_CODE;2026-02-25 10:10:00
+VALEUR;PRODUIT;PRODUIT_V5;PRIX_HT;PRIX_HT;ID_PROD;valeur en ecart V4;Arrondi different entre V4 et V5;2026-02-25 10:10:00
+STRUCTURE;PRODUIT;PRODUIT_V5;FLAG_ACTIF;FLAG_ACTIF;ID_PROD;pas dans V4;Indicateur actif ajoute en V5;2026-02-25 10:10:00

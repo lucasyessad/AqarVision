@@ -1,0 +1,5 @@
+type_verif;nom_table_v4;nom_table_v5;nom_colonne_v4;nom_colonne_v5;cle_fonctionnelle;type_ecart;explication;date_explication
+STRUCTURE;ADRESSE;ADRESSE_V5;CODE_POSTAL;CODE_POSTAL;ID_ADR;pas dans V4;Colonne absente en V4;2026-02-25 10:00:00
+STRUCTURE;ADRESSE;ADRESSE_V5;VILLE;VILLE;ID_ADR;pas dans V5;Remplace par CODE_VILLE en V5;2026-02-25 10:00:00
+PERIM;ADRESSE;ADRESSE_V5;PAYS;CODE_PAYS;ID_ADR;different entre V4 et V5;Renomme en CODE_PAYS;2026-02-25 10:00:00
+VALEUR;ADRESSE;ADRESSE_V5;CODE_CEDEX;CODE_CEDEX;ID_ADR;valeur en ecart V4;Format normalise en V5;2026-02-25 10:00:00

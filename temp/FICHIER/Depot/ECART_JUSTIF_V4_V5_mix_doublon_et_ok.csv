@@ -1,0 +1,6 @@
+type_verif;nom_table_v4;nom_table_v5;nom_colonne_v4;nom_colonne_v5;cle_fonctionnelle;type_ecart;explication;date_explication
+STRUCTURE;TEST1;TEST1_V5;C1;C1;KEY1;pas dans V5;Ligne valide a integrer;2026-02-25 12:00:00
+STRUCTURE;TEST1;TEST1_V5;C1;C1;KEY1;pas dans V5;Doublon interne KEY1 - occurrence 2;2026-02-25 12:05:00
+VALEUR;TEST2;TEST2_V5;C2;C2;KEY2;different entre V4 et V5;Ligne valide a integrer;2026-02-25 12:10:00
+PERIM;TEST3;TEST3_V5;C3;C3;KEY3;pas dans V4;Ligne valide a integrer;2026-02-25 12:15:00
+STRUCTURE;TEST4;TEST4_V5;C4;C4;;pas dans V5;Rejet NULL cle_fonctionnelle;2026-02-25 12:20:00

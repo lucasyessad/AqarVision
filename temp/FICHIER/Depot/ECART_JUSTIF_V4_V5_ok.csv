@@ -1,0 +1,8 @@
+type_verif;nom_table_v4;nom_table_v5;nom_colonne_v4;nom_colonne_v5;cle_fonctionnelle;type_ecart;explication;date_explication
+STRUCTURE;CLIENT;CLIENT_V5;CODE_CLIENT;CODE_CLIENT;CODE_CLIENT;pas dans V5;Supprime car obsolete en V5;2026-01-12 11:23:00
+PERIM;CONTRAT;CONTRAT_V5;DATE_DEBUT;DATE_DEBUT;ID_CONTRAT;different entre V4 et V5;Format change AAAA-MM-JJ;2026-01-12 14:12:00
+VALEUR;TARIF;TARIF_V5;MONTANT;MONTANT;ID_TARIF;valeur en ecart V4;NUM(8,2) en V4 contre DECIMAL(15,4) en V5;2026-02-01 09:11:12
+STRUCTURE;COMMANDE;COMMANDE_V5;NUM_CMD;NUM_CMD;ID_CMD;pas dans V4;Nouvelle colonne ajoutee uniquement en V5;2026-02-10 08:00:00
+PERIM;AGENT;AGENT_V5;CODE_AGENT;CD_AGENT;ID_AGENT;pas dans V5;Renomme en CD_AGENT en V5;2026-02-12 14:00:00
+VALEUR;FACTURE;FACTURE_V5;DATE_ECHEANCE;DATE_ECH;ID_FACTURE;different entre V4 et V5;Type DATE en V5 contre DATETIME en V4;2026-02-15 09:00:00
+STRUCTURE;PRODUIT;PRODUIT_V5;LIB_COURT;LIB_COURT;ID_PRODUIT;pas dans V4;Colonne absente en V4 ajoutee en V5;2026-02-18 10:30:00

@@ -1,0 +1,5 @@
+type_verif;nom_table_v4;nom_table_v5;nom_colonne_v4;nom_colonne_v5;cle_fonctionnelle;type_ecart;explication;date_explication
+STRUCTURE;CLIENT;CLIENT_V5;CODE_CLIENT;CODE_CLIENT;CODE_AGENT;pas dans V5;Doublon paire 1 - occurrence A;2026-02-20 09:00:00
+STRUCTURE;CLIENT;CLIENT_V5;CODE_CLIENT;CODE_CLIENT;CODE_AGENT;pas dans V5;Doublon paire 1 - occurrence B;2026-02-20 09:10:00
+PERIM;CONTRAT;CONTRAT_V5;DATE_FIN;DATE_FIN;ID_CTRK;different entre V4 et V5;Doublon paire 2 - occurrence A;2026-02-20 09:20:00
+PERIM;CONTRAT;CONTRAT_V5;DATE_FIN;DATE_FIN;ID_CTRK;different entre V4 et V5;Doublon paire 2 - occurrence B;2026-02-20 09:30:00

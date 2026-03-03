@@ -1,0 +1,8 @@
+type_verif;nom_table_v4;nom_table_v5;nom_colonne_v4;nom_colonne_v5;cle_fonctionnelle;type_ecart;explication;date_explication
+;TABLE_V4;TABLE_V5;COL_V4;COL_V5;KEY_NULL_TV;pas dans V5;type_verif NULL;2026-02-20 08:00:00
+STRUCTURE;;TABLE_V5;COL_V4;COL_V5;KEY_NULL_T4;pas dans V5;nom_table_v4 NULL;2026-02-20 08:01:00
+PERIM;TABLE_V4;;COL_V4;COL_V5;KEY_NULL_T5;pas dans V5;nom_table_v5 NULL;2026-02-20 08:02:00
+VALEUR;TABLE_V4;TABLE_V5;;COL_V5;KEY_NULL_C4;valeur en ecart V4;nom_colonne_v4 NULL;2026-02-20 08:03:00
+STRUCTURE;TABLE_V4;TABLE_V5;COL_V4;;KEY_NULL_C5;pas dans V4;nom_colonne_v5 NULL;2026-02-20 08:04:00
+PERIM;TABLE_V4;TABLE_V5;COL_V4;COL_V5;;pas dans V5;cle_fonctionnelle NULL;2026-02-20 08:05:00
+VALEUR;TABLE_V4;TABLE_V5;COL_V4;COL_V5;KEY_NULL_TE;;explication test;2026-02-20 08:06:00
