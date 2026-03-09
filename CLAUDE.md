@@ -107,6 +107,37 @@ Use the intelligent prompt generator to create a skill for API documentation gen
 3. **Reference library resources** as needed (../../library/...)
 4. **Apply workflows** from library/workflows/
 
+### Active Projects
+
+Current projects in development:
+
+- **aqarvision/** - Plateforme SaaS immobilière multi-agences pour le marché algérien
+  - Stack: Next.js 14, TypeScript, Supabase, Tailwind CSS, shadcn/ui
+  - Features: Dashboard agence, mini-sites vitrines, gestion leads, analytics
+  - Status: En développement actif (v0.1.0)
+  - Docs: [projects/aqarvision/README.md](projects/aqarvision/README.md)
+
+- **tabibpro/** - Logiciel de gestion médicale avec IA diagnostique (Édition Algérie)
+  - Stack: NestJS 11, Next.js 15, Prisma, PostgreSQL, Electron, Expo
+  - Features: Dossiers patients, IA médicale (diagnostic, darija), mode offline, multilingue (FR/AR/BER/EN)
+  - Architecture: Monorepo Turborepo (5 apps: API, Web, Desktop, Mobile, Patient Portal)
+  - Status: En développement (v1.0.0)
+  - Docs: [projects/tabibpro/README.md](projects/tabibpro/README.md)
+
+- **thermoai/** - Plateforme d'audit énergétique et conformité RE2020/DPE
+  - Stack: FastAPI (Python), Next.js, SQLAlchemy, PostgreSQL, scikit-learn
+  - Features: Audit énergétique automatisé, ML prédictions, simulation rénovation, rapports PDF
+  - Architecture: Backend Python + Frontend Next.js
+  - Status: En développement (v1.0.0)
+  - Docs: [projects/thermoai/README.md](projects/thermoai/README.md)
+
+- **patrimoine-360/** - Plateforme de gestion patrimoniale personnelle avec IA (Web + Mobile)
+  - Stack: Next.js 14 + Expo 55, TypeScript, Supabase, Anthropic Claude
+  - Features: 7 modules patrimoniaux, calcul scores, copilote IA, exports PDF/Excel
+  - Architecture: Mono-repo (web Next.js + mobile React Native)
+  - Status: En développement (v1.0.0)
+  - Docs: [projects/patrimoine-360/README.md](projects/patrimoine-360/README.md) | [Mobile](projects/patrimoine-360/mobile/README.md)
+
 ### Updating Resources
 
 To update source repositories:
