@@ -1,0 +1,94 @@
+PersoDev - Structure Finale
+============================
+
+Racine
+------
+.
+├── CLAUDE.md                    # Guide pour Claude Code (mis à jour)
+├── README.md                    # Documentation complète du projet
+├── lien.md                      # Liens sources originaux
+├── STRUCTURE.txt               # Ce fichier
+│
+├── 📚 resources/                # Dépôts sources (6 repos)
+│   ├── skills/                 # anthropics/skills
+│   ├── awesome-subagents/      # VoltAgent/awesome-claude-code-subagents
+│   ├── planning-system/        # OthmanAdi/planning-with-files
+│   ├── prompt-generator/       # huangserva/skill-prompt-generator
+│   ├── ui-ux-tools/           # nextlevelbuilder/ui-ux-pro-max-skill
+│   └── superpowers/           # obra/superpowers
+│
+├── 🎯 library/                  # Bibliothèque organisée (22M)
+│   ├── skills/                 # 17 skills (10M)
+│   │   ├── documents/         # 4 skills (PDF, DOCX, PPTX, XLSX)
+│   │   ├── design/            # 4 skills (Art, Canvas, Frontend, Themes)
+│   │   ├── development/       # 5 skills (MCP, Testing, API, etc.)
+│   │   └── communication/     # 4 skills (Comms, Slack, Branding)
+│   │
+│   ├── subagents/             # 50+ subagents (656K)
+│   │   ├── languages/         # 27 language specialists
+│   │   ├── infrastructure/    # 16 DevOps/Cloud specialists
+│   │   ├── testing/           # 14 QA/Security specialists
+│   │   ├── data-ai/          # 12 Data/ML specialists
+│   │   └── workflows/         # 10 orchestration specialists
+│   │
+│   ├── workflows/             # 15+ workflows (2.3M)
+│   │   ├── planning/          # Manus-style + brainstorming + execution
+│   │   ├── git-strategies/    # Git worktrees + branch management
+│   │   ├── code-review/       # Review processes
+│   │   └── debugging/         # TDD + systematic debugging
+│   │
+│   └── generators/            # 3 générateurs (9.7M)
+│       ├── prompts/           # Intelligent prompt generator
+│       ├── ui-components/     # UI/UX Pro tools
+│       └── templates/         # Skill templates
+│
+├── 🚀 projects/                # Vos projets (vide pour l'instant)
+│
+├── 🔧 templates/               # Templates de démarrage
+│   ├── web-app/
+│   ├── api/
+│   ├── mobile/
+│   └── data-science/
+│
+├── 📖 docs/                    # Documentation
+│   ├── guides/                # Quick Start Guide
+│   ├── best-practices/        # Resource Management Guide
+│   └── references/            # Quick Reference
+│
+└── 🛠️ .claude/                 # Configuration Claude Code
+    ├── settings.local.json    # Permissions
+    ├── commands/              # Slash commands
+    └── hooks/                 # Hooks
+
+Statistiques
+------------
+- Ressources sources : 6 dépôts Git
+- Skills organisés : 17
+- Subagents organisés : 50+
+- Workflows organisés : 15+
+- Générateurs : 3
+- Documentation : 3 guides principaux
+- Taille library/ : ~22M
+- Fichiers Markdown : 400+
+
+Commandes Rapides
+-----------------
+# Mettre à jour les sources
+cd resources/<nom-depot> && git pull
+
+# Lister les skills
+find library/skills -type d -depth 2
+
+# Lister les workflows
+find library/workflows -type d -depth 2
+
+# Créer un nouveau projet
+mkdir projects/<nom> && cd projects/<nom>
+
+Prochaines Étapes
+-----------------
+1. Commencer à utiliser les skills avec Claude Code
+2. Explorer les workflows de planification
+3. Tester les générateurs de prompts
+4. Créer vos premiers projets dans projects/
+5. Customiser selon vos besoins
