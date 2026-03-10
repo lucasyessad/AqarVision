@@ -135,7 +135,7 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
           />
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-3">
           <div>
             <label htmlFor="primary_color" className="mb-1 block text-sm font-medium">
               Couleur principale
@@ -147,6 +147,25 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
               defaultValue={agency.primary_color}
               className="h-10 w-20 cursor-pointer rounded border"
             />
+          </div>
+
+          <div>
+            <label htmlFor="locale" className="mb-1 block text-sm font-medium">
+              Langue du site
+            </label>
+            <select
+              id="locale"
+              name="locale"
+              defaultValue={agency.locale ?? 'fr'}
+              className="w-full rounded-md border px-3 py-2 text-sm"
+            >
+              <option value="fr">Fran&ccedil;ais</option>
+              <option value="ar">العربية (Arabe)</option>
+              <option value="en">English</option>
+            </select>
+            <p className="mt-1 text-xs text-gray-500">
+              Langue affich&eacute;e sur votre mini-site public
+            </p>
           </div>
 
           <div>

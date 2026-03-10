@@ -6,6 +6,7 @@ export const agencyBrandingSchema = z.object({
   slogan: z.string().max(120, 'Le slogan ne doit pas dépasser 120 caractères').optional().nullable(),
   description: z.string().max(2000).optional().nullable(),
   primary_color: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Couleur invalide'),
+  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
   phone: z.string().optional().nullable(),
   email: z.string().email('Email invalide').optional().nullable(),
   website: z.string().url('URL invalide').optional().nullable(),
