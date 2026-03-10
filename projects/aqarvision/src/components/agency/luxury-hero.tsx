@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { ChevronDown, Play } from 'lucide-react';
 import type { Agency } from '@/types/database';
+import { UI } from '@/config';
 
 interface LuxuryHeroProps {
   agency: Agency;
@@ -23,7 +24,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true;
-          const duration = 2000;
+          const duration = UI.COUNTER_ANIMATION_MS;
           const startTime = performance.now();
 
           const animate = (now: number) => {

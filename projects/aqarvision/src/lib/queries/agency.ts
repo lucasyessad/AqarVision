@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import type { Agency, Property } from '@/types/database';
+import { PAGINATION } from '@/config';
 
 /**
  * Récupère une agence par son slug.
@@ -22,7 +23,7 @@ export const getAgencyBySlug = cache(async (slug: string): Promise<Agency | null
  * Filtre par status = 'active' pour les pages publiques.
  */
 export const getAgencyProperties = cache(
-  async (agencyId: string, limit = 6, offset = 0): Promise<Property[]> => {
+  async (agencyId: string, limit = PAGINATION.PROPERTIES_DEFAULT_LIMIT, offset = 0): Promise<Property[]> => {
     const supabase = await createClient();
     const query = supabase
       .from('properties')

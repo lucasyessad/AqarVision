@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { LuxuryAboutSection } from '@/components/agency/luxury-about-section';
 import { getAgencyBySlug } from '@/lib/queries/agency';
+import { PLANS } from '@/config';
 import type { Metadata } from 'next';
 
 interface AboutPageProps {
@@ -21,7 +22,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
   if (!agency) notFound();
 
   // Enterprise → Luxury About
-  if (agency.active_plan === 'enterprise') {
+  if (agency.active_plan === PLANS.ENTERPRISE) {
     return <LuxuryAboutSection agency={agency} />;
   }
 

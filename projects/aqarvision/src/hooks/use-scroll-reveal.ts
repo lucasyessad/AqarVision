@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { UI } from '@/config';
 
 /**
  * Hook qui observe les éléments .luxury-scroll-reveal dans un container
@@ -24,8 +25,8 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>() {
         });
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px',
+        threshold: UI.OBSERVER_THRESHOLD,
+        rootMargin: UI.OBSERVER_ROOT_MARGIN,
       }
     );
 

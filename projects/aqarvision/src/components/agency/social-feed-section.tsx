@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Instagram, Facebook, ExternalLink, Heart, MessageCircle, Play } from 'lucide-react';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 import type { Agency, SocialPost, SocialPlatform } from '@/types/database';
+import { PLATFORM_COLORS as PLATFORM_BRAND_COLORS, PLANS } from '@/config';
 import type { OEmbedData } from '@/lib/social/fetch-feed';
 
 interface SocialFeedSectionProps {
@@ -19,11 +20,7 @@ const PLATFORM_ICONS: Record<SocialPlatform, React.ReactNode> = {
   tiktok: <TikTokIcon className="h-4 w-4" />,
 };
 
-const PLATFORM_COLORS: Record<SocialPlatform, string> = {
-  instagram: '#E4405F',
-  facebook: '#1877F2',
-  tiktok: '#000000',
-};
+const PLATFORM_COLORS = PLATFORM_BRAND_COLORS as Record<SocialPlatform, string>;
 
 const PLATFORM_LABELS: Record<SocialPlatform, string> = {
   instagram: 'Instagram',
@@ -196,7 +193,7 @@ export function SocialFeedSection({ agency, posts, embeds, hasApiData }: SocialF
   const containerRef = useScrollReveal();
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
-  const isEnterprise = agency.active_plan === 'enterprise';
+  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
 
   // Pas de réseaux configurés → ne rien afficher
   if (embeds.length === 0 && posts.length === 0) return null;

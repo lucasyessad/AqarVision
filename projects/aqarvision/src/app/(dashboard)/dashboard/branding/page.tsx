@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { PLANS } from '@/config';
 import { BrandingForm } from './form';
 
 export default async function BrandingPage() {
@@ -27,7 +28,7 @@ export default async function BrandingPage() {
     );
   }
 
-  const isEnterprise = agency.active_plan === 'enterprise';
+  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
 
   return (
     <div className="mx-auto max-w-4xl p-8">

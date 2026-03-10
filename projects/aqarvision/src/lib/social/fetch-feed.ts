@@ -1,4 +1,5 @@
 import type { SocialPost, SocialPlatform } from '@/types/database';
+import { CACHE, TIMEOUTS, SOCIAL_API, SOCIAL_EMBED, PAGINATION } from '@/config';
 
 /**
  * Service de récupération des publications sociales.
@@ -11,9 +12,6 @@ import type { SocialPost, SocialPlatform } from '@/types/database';
  * Les résultats sont mis en cache côté serveur via Next.js fetch cache.
  */
 
-const CACHE_TTL = 3600; // 1 heure
-const FETCH_TIMEOUT_MS = 8000; // 8 secondes max par appel API externe
-
 // ─── Instagram (Meta Graph API) ──────────────────────────────────────
 
 /**
@@ -25,12 +23,12 @@ export function extractInstagramUsername(url: string): string | null {
   return match?.[1] ?? null;
 }
 
-async function fetchInstagramAPI(accessToken: string, limit = 6): Promise<SocialPost[]> {
-  const url = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count&limit=${limit}&access_token=${accessToken}`;
+async function fetchInstagramAPI(accessToken: string, limit = PAGINATION.SOCIAL_FEED_LIMIT): Promise<SocialPost[]> {
+  const url = `${SOCIAL_API.INSTAGRAM_BASE}/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count&limit=${limit}&access_token=${accessToken}`;
 
   const res = await fetch(url, {
-    next: { revalidate: CACHE_TTL },
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    next: { revalidate: CACHE.SOCIAL_FEED_TTL },
+    signal: AbortSignal.timeout(TIMEOUTS.EXTERNAL_API_MS),
   });
   if (!res.ok) return [];
 
@@ -64,12 +62,12 @@ export function extractFacebookPageId(url: string): string | null {
   return pageMatch?.[1] ?? null;
 }
 
-async function fetchFacebookAPI(accessToken: string, pageId: string, limit = 6): Promise<SocialPost[]> {
-  const url = `https://graph.facebook.com/v19.0/${pageId}/posts?fields=id,message,full_picture,permalink_url,created_time,type,likes.summary(true),comments.summary(true)&limit=${limit}&access_token=${accessToken}`;
+async function fetchFacebookAPI(accessToken: string, pageId: string, limit = PAGINATION.SOCIAL_FEED_LIMIT): Promise<SocialPost[]> {
+  const url = `${SOCIAL_API.FACEBOOK_BASE}/${SOCIAL_API.FACEBOOK_API_VERSION}/${pageId}/posts?fields=id,message,full_picture,permalink_url,created_time,type,likes.summary(true),comments.summary(true)&limit=${limit}&access_token=${accessToken}`;
 
   const res = await fetch(url, {
-    next: { revalidate: CACHE_TTL },
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    next: { revalidate: CACHE.SOCIAL_FEED_TTL },
+    signal: AbortSignal.timeout(TIMEOUTS.EXTERNAL_API_MS),
   });
   if (!res.ok) return [];
 
@@ -106,8 +104,8 @@ export function extractTikTokUsername(url: string): string | null {
   return match?.[1] ?? null;
 }
 
-async function fetchTikTokAPI(accessToken: string, limit = 6): Promise<SocialPost[]> {
-  const url = 'https://open.tiktokapis.com/v2/video/list/?fields=id,title,cover_image_url,share_url,create_time,like_count,comment_count';
+async function fetchTikTokAPI(accessToken: string, limit = PAGINATION.SOCIAL_FEED_LIMIT): Promise<SocialPost[]> {
+  const url = `${SOCIAL_API.TIKTOK_BASE}/${SOCIAL_API.TIKTOK_API_VERSION}/video/list/?fields=id,title,cover_image_url,share_url,create_time,like_count,comment_count`;
 
   const res = await fetch(url, {
     method: 'POST',
@@ -116,8 +114,8 @@ async function fetchTikTokAPI(accessToken: string, limit = 6): Promise<SocialPos
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ max_count: limit }),
-    next: { revalidate: CACHE_TTL },
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    next: { revalidate: CACHE.SOCIAL_FEED_TTL },
+    signal: AbortSignal.timeout(TIMEOUTS.EXTERNAL_API_MS),
   });
   if (!res.ok) return [];
 
@@ -162,7 +160,7 @@ export function getOEmbedData(
     const username = extractInstagramUsername(instagramUrl);
     embeds.push({
       platform: 'instagram',
-      embedUrl: `https://www.instagram.com/${username}/embed`,
+      embedUrl: SOCIAL_EMBED.INSTAGRAM(username || ''),
       profileUrl: instagramUrl,
       username,
     });
@@ -172,7 +170,7 @@ export function getOEmbedData(
     const pageId = extractFacebookPageId(facebookUrl);
     embeds.push({
       platform: 'facebook',
-      embedUrl: `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(facebookUrl)}&tabs=timeline&width=340&height=500&small_header=true&adapt_container_width=true&hide_cover=false`,
+      embedUrl: SOCIAL_EMBED.FACEBOOK_PAGE(facebookUrl),
       profileUrl: facebookUrl,
       username: pageId,
     });
@@ -182,7 +180,7 @@ export function getOEmbedData(
     const username = extractTikTokUsername(tiktokUrl);
     embeds.push({
       platform: 'tiktok',
-      embedUrl: `https://www.tiktok.com/embed/@${username}`,
+      embedUrl: SOCIAL_EMBED.TIKTOK(username || ''),
       profileUrl: tiktokUrl,
       username,
     });
@@ -222,7 +220,7 @@ export async function fetchSocialFeed(config: {
   tiktok_url: string | null;
   limit?: number;
 }): Promise<SocialFeedResult> {
-  const limit = config.limit || 6;
+  const limit = config.limit || PAGINATION.SOCIAL_FEED_LIMIT;
   const posts: SocialPost[] = [];
   let hasApiData = false;
 

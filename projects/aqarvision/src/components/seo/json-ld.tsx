@@ -1,4 +1,5 @@
 import type { Agency, Property } from '@/types/database';
+import { LOCALE } from '@/config';
 
 interface JsonLdProps {
   data: Record<string, unknown>;
@@ -36,14 +37,14 @@ export function AgencyJsonLd({ agency, baseUrl }: { agency: Agency; baseUrl: str
         '@type': 'PostalAddress',
         streetAddress: agency.address,
         ...(agency.wilaya && { addressRegion: agency.wilaya }),
-        addressCountry: 'DZ',
+        addressCountry: LOCALE.COUNTRY_CODE,
       },
     }),
     ...(agency.wilaya && !agency.address && {
       address: {
         '@type': 'PostalAddress',
         addressRegion: agency.wilaya,
-        addressCountry: 'DZ',
+        addressCountry: LOCALE.COUNTRY_CODE,
       },
     }),
   };
@@ -77,7 +78,7 @@ export function PropertyJsonLd({
     offers: {
       '@type': 'Offer',
       price: property.price,
-      priceCurrency: 'DZD',
+      priceCurrency: LOCALE.CURRENCY,
       availability: 'https://schema.org/InStock',
       seller: {
         '@type': 'RealEstateAgent',
@@ -92,7 +93,7 @@ export function PropertyJsonLd({
           '@type': 'PostalAddress',
           ...(property.address && { streetAddress: property.address }),
           addressRegion: property.wilaya,
-          addressCountry: 'DZ',
+          addressCountry: LOCALE.COUNTRY_CODE,
         },
       },
     }),

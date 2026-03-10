@@ -8,6 +8,7 @@ import { PropertyJsonLd, BreadcrumbJsonLd } from '@/components/seo/json-ld';
 import { ConditionalMap } from '@/components/agency/location-map';
 import { SocialFeedWidget } from '@/components/agency/social-feed-widget';
 import { fetchSocialFeed } from '@/lib/social/fetch-feed';
+import { PAGINATION, PLANS, LOCALE, MESSAGES } from '@/config';
 import type { Agency, Property } from '@/types/database';
 import type { Metadata } from 'next';
 
@@ -44,7 +45,7 @@ async function getSimilarProperties(
     .eq('status', 'active')
     .neq('id', propertyId)
     .order('created_at', { ascending: false })
-    .limit(3);
+    .limit(PAGINATION.SIMILAR_PROPERTIES_LIMIT);
   return (data || []) as Property[];
 }
 
@@ -65,9 +66,9 @@ export async function generateMetadata({ params }: PropertyDetailPageProps): Pro
 }
 
 function formatPrice(price: number): string {
-  return new Intl.NumberFormat('fr-DZ', {
+  return new Intl.NumberFormat(LOCALE.LOCALE_FR, {
     style: 'currency',
-    currency: 'DZD',
+    currency: LOCALE.CURRENCY,
     maximumFractionDigits: 0,
   }).format(price);
 }
@@ -101,19 +102,19 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
           instagram_url: agency.instagram_url,
           facebook_url: agency.facebook_url,
           tiktok_url: agency.tiktok_url,
-          limit: 3,
+          limit: PAGINATION.SOCIAL_FEED_SMALL,
         })
       : Promise.resolve({ posts: [], embeds: [], hasApiData: false }),
   ]);
 
-  const isEnterprise = agency.active_plan === 'enterprise';
+  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
 
   // WhatsApp message
-  const whatsappMessage = `Bonjour ${agency.name}, je suis intéressé(e) par le bien "${property.title}" (${formatPrice(property.price)}).`;
+  const whatsappMessage = MESSAGES.whatsappProperty(agency.name, property.title, formatPrice(property.price));
   const whatsappNumber = agency.phone
-    ? agency.phone.replace(/[\s\-().+]/g, '').replace(/^0/, '213')
+    ? agency.phone.replace(/[\s\-().+]/g, '').replace(/^0/, LOCALE.PHONE_PREFIX)
     : null;
 
   const structuredData = (

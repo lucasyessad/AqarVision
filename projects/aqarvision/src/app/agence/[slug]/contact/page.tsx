@@ -4,6 +4,7 @@ import { fetchSocialFeed } from '@/lib/social/fetch-feed';
 import { ContactForm } from '@/components/agency/contact-form';
 import { ConditionalMap } from '@/components/agency/location-map';
 import { SocialFeedWidget } from '@/components/agency/social-feed-widget';
+import { PAGINATION, PLANS } from '@/config';
 import type { Metadata } from 'next';
 
 interface ContactPageProps {
@@ -29,11 +30,11 @@ export default async function ContactPage({ params }: ContactPageProps) {
         instagram_url: agency.instagram_url,
         facebook_url: agency.facebook_url,
         tiktok_url: agency.tiktok_url,
-        limit: 3,
+        limit: PAGINATION.SOCIAL_FEED_SMALL,
       })
     : { posts: [], embeds: [], hasApiData: false };
 
-  const isEnterprise = agency.active_plan === 'enterprise';
+  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
   const accentColor = agency.secondary_color || agency.primary_color;
   const isDark = agency.theme_mode === 'dark';
 

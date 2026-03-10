@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getAgencyBySlug, getAgencyProperties, getAgencyPropertiesCount } from '@/lib/queries/agency';
+import { PAGINATION, PLANS, LOCALE } from '@/config';
 import type { Agency, Property } from '@/types/database';
 import type { Metadata } from 'next';
 
@@ -17,12 +18,10 @@ export async function generateMetadata({ params }: BiensPageProps): Promise<Meta
   return { title: 'Nos biens' };
 }
 
-const ITEMS_PER_PAGE = 12;
-
 function formatPrice(price: number): string {
-  return new Intl.NumberFormat('fr-DZ', {
+  return new Intl.NumberFormat(LOCALE.LOCALE_FR, {
     style: 'currency',
-    currency: 'DZD',
+    currency: LOCALE.CURRENCY,
     maximumFractionDigits: 0,
   }).format(price);
 }
@@ -128,15 +127,15 @@ export default async function BiensPage({ params, searchParams }: BiensPageProps
   if (!agency) notFound();
 
   const currentPage = Math.max(1, parseInt(pageStr || '1', 10));
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const offset = (currentPage - 1) * PAGINATION.PROPERTIES_PER_PAGE;
 
   const [properties, totalCount] = await Promise.all([
-    getAgencyProperties(agency.id, ITEMS_PER_PAGE, offset),
+    getAgencyProperties(agency.id, PAGINATION.PROPERTIES_PER_PAGE, offset),
     getAgencyPropertiesCount(agency.id),
   ]);
 
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
-  const isEnterprise = agency.active_plan === 'enterprise';
+  const totalPages = Math.ceil(totalCount / PAGINATION.PROPERTIES_PER_PAGE);
+  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
 

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { agencyBrandingSchema, agencyLuxuryBrandingSchema } from '@/lib/validators';
+import { UPLOADS, PLANS, STORAGE } from '@/config';
 
 interface ActionResult {
   success: boolean;
@@ -9,9 +10,6 @@ interface ActionResult {
 }
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
-const MAX_COVER_SIZE = 10 * 1024 * 1024; // 10 Mo
-const MAX_LOGO_SIZE = 5 * 1024 * 1024; // 5 Mo
 
 /**
  * Vérifie que l'utilisateur est authentifié et propriétaire de l'agence.
@@ -61,7 +59,7 @@ async function verifyAgencyOwnership(
  */
 function getSafeExtension(fileName: string): string | null {
   const ext = fileName.split('.').pop()?.toLowerCase();
-  if (!ext || !ALLOWED_EXTENSIONS.includes(ext)) return null;
+  if (!ext || !UPLOADS.ALLOWED_EXTENSIONS.includes(ext)) return null;
   return ext;
 }
 
@@ -77,7 +75,7 @@ export async function updateAgencyBranding(
   const auth = await verifyAgencyOwnership(agencyId);
   if (auth.error) return auth.error;
 
-  const isEnterprise = auth.agency.active_plan === 'enterprise';
+  const isEnterprise = auth.agency.active_plan === PLANS.ENTERPRISE;
   const schema = isEnterprise ? agencyLuxuryBrandingSchema : agencyBrandingSchema;
 
   // Valider les données
@@ -125,8 +123,8 @@ export async function updateAgencyCoverImage(
     return { success: false, error: 'Aucun fichier sélectionné' };
   }
 
-  if (file.size > MAX_COVER_SIZE) {
-    return { success: false, error: 'Le fichier ne doit pas dépasser 10 Mo' };
+  if (file.size > UPLOADS.MAX_COVER_SIZE) {
+    return { success: false, error: `Le fichier ne doit pas dépasser ${UPLOADS.MAX_COVER_SIZE / (1024 * 1024)} Mo` };
   }
 
   if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
@@ -138,18 +136,18 @@ export async function updateAgencyCoverImage(
     return { success: false, error: 'Extension de fichier non autorisée' };
   }
 
-  const path = `agencies/${agencyId}/branding/cover.${ext}`;
+  const path = STORAGE.coverPath(agencyId, ext);
   const supabase = await createClient();
 
   // Nettoyer les anciens fichiers cover (éviter les orphelins si extension change)
   const { data: existingFiles } = await supabase.storage
     .from('public')
-    .list(`agencies/${agencyId}/branding`);
+    .list(STORAGE.brandingDir(agencyId));
 
   if (existingFiles) {
     const oldCovers = existingFiles
       .filter((f) => f.name.startsWith('cover.') && f.name !== `cover.${ext}`)
-      .map((f) => `agencies/${agencyId}/branding/${f.name}`);
+      .map((f) => `${STORAGE.brandingDir(agencyId)}/${f.name}`);
     if (oldCovers.length > 0) {
       await supabase.storage.from('public').remove(oldCovers);
     }
@@ -199,8 +197,8 @@ export async function updateAgencyLogo(
     return { success: false, error: 'Aucun fichier sélectionné' };
   }
 
-  if (file.size > MAX_LOGO_SIZE) {
-    return { success: false, error: 'Le fichier ne doit pas dépasser 5 Mo' };
+  if (file.size > UPLOADS.MAX_LOGO_SIZE) {
+    return { success: false, error: `Le fichier ne doit pas dépasser ${UPLOADS.MAX_LOGO_SIZE / (1024 * 1024)} Mo` };
   }
 
   if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
@@ -212,18 +210,18 @@ export async function updateAgencyLogo(
     return { success: false, error: 'Extension de fichier non autorisée' };
   }
 
-  const path = `agencies/${agencyId}/branding/logo.${ext}`;
+  const path = STORAGE.logoPath(agencyId, ext);
   const supabase = await createClient();
 
   // Nettoyer les anciens fichiers logo
   const { data: existingFiles } = await supabase.storage
     .from('public')
-    .list(`agencies/${agencyId}/branding`);
+    .list(STORAGE.brandingDir(agencyId));
 
   if (existingFiles) {
     const oldLogos = existingFiles
       .filter((f) => f.name.startsWith('logo.') && f.name !== `logo.${ext}`)
-      .map((f) => `agencies/${agencyId}/branding/${f.name}`);
+      .map((f) => `${STORAGE.brandingDir(agencyId)}/${f.name}`);
     if (oldLogos.length > 0) {
       await supabase.storage.from('public').remove(oldLogos);
     }

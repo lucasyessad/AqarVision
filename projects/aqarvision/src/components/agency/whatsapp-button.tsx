@@ -1,6 +1,7 @@
 'use client';
 
 import type { Agency } from '@/types/database';
+import { LOCALE, MESSAGES } from '@/config';
 
 interface WhatsAppButtonProps {
   agency: Agency;
@@ -9,20 +10,17 @@ interface WhatsAppButtonProps {
 
 /**
  * Formate un numéro de téléphone algérien pour WhatsApp.
- * Supprime les espaces/tirets et ajoute le préfixe 213 si nécessaire.
+ * Supprime les espaces/tirets et ajoute le préfixe international si nécessaire.
  */
 function formatWhatsAppNumber(phone: string): string {
   const cleaned = phone.replace(/[\s\-().]/g, '');
-  // Si commence par 0, remplacer par 213
   if (cleaned.startsWith('0')) {
-    return `213${cleaned.slice(1)}`;
+    return `${LOCALE.PHONE_PREFIX}${cleaned.slice(1)}`;
   }
-  // Si commence par +213, retirer le +
-  if (cleaned.startsWith('+213')) {
+  if (cleaned.startsWith(`+${LOCALE.PHONE_PREFIX}`)) {
     return cleaned.slice(1);
   }
-  // Si commence déjà par 213
-  if (cleaned.startsWith('213')) {
+  if (cleaned.startsWith(LOCALE.PHONE_PREFIX)) {
     return cleaned;
   }
   return cleaned;
@@ -32,7 +30,7 @@ export function WhatsAppButton({ agency, message }: WhatsAppButtonProps) {
   if (!agency.phone) return null;
 
   const number = formatWhatsAppNumber(agency.phone);
-  const defaultMessage = `Bonjour ${agency.name}, je suis intéressé(e) par vos biens immobiliers.`;
+  const defaultMessage = MESSAGES.whatsappGeneric(agency.name);
   const text = encodeURIComponent(message || defaultMessage);
 
   const isDark = agency.theme_mode === 'dark';

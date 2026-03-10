@@ -5,6 +5,7 @@ import { LuxuryAboutSection } from '@/components/agency/luxury-about-section';
 import { SocialFeedSection } from '@/components/agency/social-feed-section';
 import { getAgencyBySlug, getAgencyProperties } from '@/lib/queries/agency';
 import { fetchSocialFeed } from '@/lib/social/fetch-feed';
+import { PLANS } from '@/config';
 import type { Metadata } from 'next';
 
 interface AgencyPageProps {
@@ -40,7 +41,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
   ]);
 
   // Enterprise → Pages Luxury
-  if (agency.active_plan === 'enterprise') {
+  if (agency.active_plan === PLANS.ENTERPRISE) {
     return (
       <>
         <LuxuryHero agency={agency} />

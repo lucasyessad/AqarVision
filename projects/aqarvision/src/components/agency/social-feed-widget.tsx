@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Instagram, Facebook, ExternalLink, Play } from 'lucide-react';
 import type { Agency, SocialPost, SocialPlatform } from '@/types/database';
+import { PLANS } from '@/config';
 import type { OEmbedData } from '@/lib/social/fetch-feed';
 
 interface SocialFeedWidgetProps {
@@ -45,7 +46,7 @@ const PLATFORM_LABELS: Record<SocialPlatform, string> = {
 export function SocialFeedWidget({ agency, posts, embeds, hasApiData }: SocialFeedWidgetProps) {
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
-  const isEnterprise = agency.active_plan === 'enterprise';
+  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
 
   if (embeds.length === 0 && posts.length === 0) return null;
 

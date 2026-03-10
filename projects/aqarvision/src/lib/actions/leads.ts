@@ -3,6 +3,7 @@
 import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { leadSchema } from '@/lib/validators/lead';
+import { RATE_LIMIT } from '@/config';
 
 interface ActionResult {
   success: boolean;
@@ -14,19 +15,17 @@ interface ActionResult {
  * En production, utiliser Redis ou Supabase Edge Functions avec un rate limiter.
  */
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
-const RATE_LIMIT_MAX = 5; // 5 requêtes par minute par IP
 
 function checkRateLimit(identifier: string): boolean {
   const now = Date.now();
   const entry = rateLimitMap.get(identifier);
 
   if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(identifier, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    rateLimitMap.set(identifier, { count: 1, resetAt: now + RATE_LIMIT.WINDOW_MS });
     return true;
   }
 
-  if (entry.count >= RATE_LIMIT_MAX) {
+  if (entry.count >= RATE_LIMIT.MAX_REQUESTS) {
     return false;
   }
 
@@ -41,7 +40,7 @@ if (typeof setInterval !== 'undefined') {
     for (const [key, value] of rateLimitMap) {
       if (now > value.resetAt) rateLimitMap.delete(key);
     }
-  }, 60_000);
+  }, RATE_LIMIT.WINDOW_MS);
 }
 
 export async function createLead(formData: Record<string, unknown>): Promise<ActionResult> {

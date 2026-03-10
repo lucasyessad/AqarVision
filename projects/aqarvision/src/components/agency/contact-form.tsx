@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { createLead } from '@/lib/actions/leads';
 import type { Agency } from '@/types/database';
+import { PLANS } from '@/config';
 
 interface ContactFormProps {
   agency: Agency;
@@ -14,7 +15,7 @@ export function ContactForm({ agency, propertyId }: ContactFormProps) {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const isDark = agency.theme_mode === 'dark';
-  const isEnterprise = agency.active_plan === 'enterprise';
+  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
   const accentColor = agency.secondary_color || agency.primary_color;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
