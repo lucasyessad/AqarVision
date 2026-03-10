@@ -2,8 +2,9 @@ import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 /**
- * Auth callback handler for Supabase email confirmation.
- * After email verification, creates the agency if it doesn't exist.
+ * Auth callback handler for Supabase.
+ * Handles both email confirmation and OAuth (Google/Facebook) callbacks.
+ * After authentication, creates the agency if it doesn't exist.
  */
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -22,9 +23,14 @@ export async function GET(request: Request) {
         .eq('owner_id', data.user.id)
         .single();
 
-      // Create agency from signup metadata if none exists
-      if (!existing && data.user.user_metadata?.agency_name) {
-        const agencyName = data.user.user_metadata.agency_name as string;
+      // Create agency if none exists (works for both email signup and OAuth)
+      if (!existing) {
+        // Use agency_name from metadata (email signup) or full_name/email from OAuth
+        const agencyName =
+          (data.user.user_metadata?.agency_name as string) ||
+          (data.user.user_metadata?.full_name as string) ||
+          (data.user.email?.split('@')[0] || 'Mon Agence');
+
         const slug = agencyName
           .toLowerCase()
           .normalize('NFD')

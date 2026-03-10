@@ -1,0 +1,1195 @@
+# AqarSearch — Technical Spec
+
+> Spécification technique et opérationnelle de la couche B2C connectée à AqarVision
+
+**Version** : 0.1.0  
+**Statut** : Spécification technique  
+**Dépendance principale** : AqarVision  
+**Architecture cible** : Monolithe modulaire Next.js 14 + Supabase
+
+---
+
+# Table des matières
+
+1. [Objectif technique](#1-objectif-technique)
+2. [Périmètre du MVP](#2-périmètre-du-mvp)
+3. [Principes d’architecture](#3-principes-darchitecture)
+4. [Intégration avec AqarVision](#4-intégration-avec-aqarvision)
+5. [Nouvelles routes Next.js](#5-nouvelles-routes-nextjs)
+6. [Nouveaux modules backend](#6-nouveaux-modules-backend)
+7. [Nouvelles tables SQL](#7-nouvelles-tables-sql)
+8. [Vue/index de recherche](#8-vueindex-de-recherche)
+9. [Règles de visibilité des annonces](#9-règles-de-visibilité-des-annonces)
+10. [Moteur de recherche](#10-moteur-de-recherche)
+11. [Ranking des résultats](#11-ranking-des-résultats)
+12. [Déduplication](#12-déduplication)
+13. [Score de confiance](#13-score-de-confiance)
+14. [Favoris](#14-favoris)
+15. [Recherches sauvegardées et alertes](#15-recherches-sauvegardées-et-alertes)
+16. [Historique utilisateur](#16-historique-utilisateur)
+17. [Leads depuis AqarSearch](#17-leads-depuis-aqarsearch)
+18. [Analytics et événements](#18-analytics-et-événements)
+19. [Validators Zod](#19-validators-zod)
+20. [Server Actions](#20-server-actions)
+21. [Composants UI à créer](#21-composants-ui-à-créer)
+22. [Pages à créer](#22-pages-à-créer)
+23. [SEO et indexabilité](#23-seo-et-indexabilité)
+24. [Sécurité et RLS](#24-sécurité-et-rls)
+25. [Performance et cache](#25-performance-et-cache)
+26. [Tests à ajouter](#26-tests-à-ajouter)
+27. [Arborescence recommandée](#27-arborescence-recommandée)
+28. [Plan d’implémentation par phases](#28-plan-dimplémentation-par-phases)
+29. [Prompt maître pour Claude Code](#29-prompt-maître-pour-claude-code)
+
+---
+
+# 1. Objectif technique
+
+AqarSearch est la couche de recherche immobilière grand public de l’écosystème Aqar.
+
+Sur le plan technique, son rôle est de :
+
+- consommer les annonces actives publiées dans AqarVision
+- les rendre recherchables dans une interface transverse
+- permettre les favoris, alertes et comparaisons
+- générer des leads vers les agences
+- enrichir AqarVision avec des événements d’usage
+
+Le point clé : **AqarVision reste la source métier**, tandis que **AqarSearch devient la couche d’exploration, de découverte et de rétention**.
+
+---
+
+# 2. Périmètre du MVP
+
+Le MVP AqarSearch doit couvrir uniquement ce qui crée de la valeur immédiate.
+
+## Inclus dans le MVP
+
+- page de recherche globale
+- page de détail bien publique unifiée
+- favoris utilisateur
+- recherches sauvegardées
+- alertes simples
+- historique de recherche
+- leads depuis AqarSearch
+- score de confiance simple
+- index de recherche dédié
+- analytics de base
+
+## Exclus du MVP
+
+- carte avancée
+- moteur de recommandation poussé
+- observatoire marché
+- déduplication avancée par vision/image
+- notifications push natives
+- matching IA avancé
+- comparaison multi-critères complexe
+- crawling de sites tiers externes
+
+---
+
+# 3. Principes d’architecture
+
+## 3.1 Source de vérité
+
+### AqarVision est la source de vérité pour :
+- agences
+- propriétés
+- branding
+- publication
+- statuts de biens
+- leads
+- plans
+
+### AqarSearch est la source de vérité pour :
+- recherches utilisateur
+- favoris
+- alertes
+- historique
+- signaux de ranking
+- signaux de confiance calculés
+
+---
+
+## 3.2 Modèle recommandé
+
+Architecture monolithique modulaire dans le même repo :
+
+- `src/app/dashboard/...` pour AqarVision
+- `src/app/recherche/...`, `src/app/bien/...`, etc. pour AqarSearch
+
+Ce choix permet :
+- de partager Supabase
+- de partager auth
+- de partager types
+- de livrer plus vite
+
+---
+
+## 3.3 Règle métier centrale
+
+Une annonce publiée dans AqarVision peut être exposée dans AqarSearch si :
+
+- l’agence est active
+- le bien est `active`
+- le bien respecte les minima de qualité
+- le plan autorise la diffusion publique
+- aucune suspension ou modération ne bloque l’annonce
+
+---
+
+# 4. Intégration avec AqarVision
+
+## 4.1 Flux entrant vers AqarSearch
+
+AqarVision fournit :
+
+- agences actives
+- biens actifs
+- métadonnées agence
+- métriques d’usage
+- informations de confiance
+- statut de plan
+
+## 4.2 Flux sortant vers AqarVision
+
+AqarSearch renvoie :
+
+- vues de biens
+- clics contact
+- clics téléphone
+- clics WhatsApp
+- leads
+- signaux engagement
+- éventuels signaux qualité
+
+## 4.3 Stratégie d’interfaçage
+
+Le couplage doit être **fort sur les données**, mais **propre dans le code**.
+
+Approche recommandée :
+
+- les tables `agencies`, `properties`, `leads`, `analytics_events`, `property_views` sont partagées
+- AqarSearch ajoute ses propres tables spécialisées
+- une vue ou table indexée sert d’interface de recherche
+
+---
+
+# 5. Nouvelles routes Next.js
+
+## 5.1 Routes publiques
+
+```txt
+src/app/
+  recherche/
+    page.tsx
+    loading.tsx
+    error.tsx
+  bien/
+    [id]/
+      page.tsx
+      loading.tsx
+      error.tsx
+  favoris/
+    page.tsx
+  alertes/
+    page.tsx
+  recherches/
+    page.tsx
+  comparer/
+    page.tsx
+
+5.2 Description des pages
+
+/recherche
+
+Page principale du moteur de recherche.
+
+/bien/[id]
+
+Fiche publique unifiée d’un bien.
+
+/favoris
+
+Liste des biens sauvegardés par l’utilisateur.
+
+/alertes
+
+Liste des alertes actives de l’utilisateur.
+
+/recherches
+
+Historique et recherches sauvegardées.
+
+/comparer
+
+Comparaison simple de plusieurs biens.
+
+⸻
+
+6. Nouveaux modules backend
+
+6.1 Dossiers à créer
+
+src/lib/
+  search/
+  alerts/
+  recommendations/
+  actions/
+  validators/
+  queries/
+
+6.2 Modules attendus
+
+lib/search/
+	•	search-properties.ts
+	•	ranking.ts
+	•	deduplication.ts
+	•	trust-score.ts
+	•	normalize.ts
+	•	filters.ts
+
+lib/alerts/
+	•	create-alert.ts
+	•	match-alerts.ts
+	•	send-alerts.ts
+
+lib/actions/
+	•	favorites.ts
+	•	alerts.ts
+	•	search.ts
+	•	search-history.ts
+
+lib/validators/
+	•	search.ts
+	•	alert.ts
+	•	favorite.ts
+
+lib/queries/
+	•	search.ts
+	•	property-public.ts
+	•	favorites.ts
+	•	alerts.ts
+
+⸻
+
+7. Nouvelles tables SQL
+
+⸻
+
+7.1 saved_searches
+
+Stocke les recherches enregistrées par un utilisateur.
+
+Colonnes recommandées
+
+Colonne	Type	Description
+id	UUID PK	Identifiant
+user_id	UUID FK auth.users	Propriétaire
+name	TEXT	Nom libre de la recherche
+transaction_type	TEXT	sale / rent
+country	TEXT	Code pays
+wilaya	TEXT	Wilaya
+commune	TEXT	Commune
+city	TEXT	Ville
+property_type	TEXT	Appartement, villa, etc.
+price_min	NUMERIC	Prix min
+price_max	NUMERIC	Prix max
+surface_min	NUMERIC	Surface min
+surface_max	NUMERIC	Surface max
+rooms_min	INTEGER	Pièces min
+features	TEXT[]	Équipements recherchés
+keywords	TEXT	Recherche texte libre
+is_active	BOOLEAN	Active ou non
+created_at	TIMESTAMPTZ	Création
+updated_at	TIMESTAMPTZ	Mise à jour
+
+RLS
+	•	SELECT uniquement par user_id = auth.uid()
+	•	INSERT/UPDATE/DELETE uniquement par propriétaire
+
+⸻
+
+7.2 search_alerts
+
+Associe une recherche sauvegardée à une logique d’alerte.
+
+Colonnes recommandées
+
+Colonne	Type	Description
+id	UUID PK	Identifiant
+saved_search_id	UUID FK	Recherche liée
+user_id	UUID FK auth.users	Propriétaire
+channel	TEXT	email / in_app
+frequency	TEXT	instant / daily / weekly
+last_sent_at	TIMESTAMPTZ	Dernier envoi
+is_active	BOOLEAN	Active ou non
+created_at	TIMESTAMPTZ	Création
+
+RLS
+	•	propriétaire uniquement
+
+⸻
+
+7.3 search_history
+
+Historique des recherches exécutées.
+
+Colonnes recommandées
+
+Colonne	Type	Description
+id	UUID PK	Identifiant
+user_id	UUID FK auth.users	Utilisateur
+query_text	TEXT	Texte libre
+filters	JSONB	Filtres normalisés
+created_at	TIMESTAMPTZ	Date recherche
+
+RLS
+	•	propriétaire uniquement
+
+⸻
+
+7.4 property_trust_scores
+
+Score de confiance calculé par bien.
+
+Colonnes recommandées
+
+Colonne	Type	Description
+id	UUID PK	Identifiant
+property_id	UUID FK properties	Bien
+score	INTEGER	Score global 0..100
+price_consistency_score	INTEGER	0..100
+description_quality_score	INTEGER	0..100
+image_quality_score	INTEGER	0..100
+agency_verification_score	INTEGER	0..100
+location_consistency_score	INTEGER	0..100
+flags	TEXT[]	Signaux / anomalies
+updated_at	TIMESTAMPTZ	Dernière mise à jour
+
+RLS
+	•	lecture publique possible si score exposé publiquement
+	•	écriture service_role uniquement
+
+⸻
+
+7.5 property_duplicates
+
+Lie des biens considérés comme potentiellement dupliqués.
+
+Colonnes recommandées
+
+Colonne	Type	Description
+id	UUID PK	Identifiant
+master_property_id	UUID FK properties	Bien principal
+duplicate_property_id	UUID FK properties	Bien proche
+match_score	NUMERIC	Similarité
+reason	TEXT	Raison du match
+created_at	TIMESTAMPTZ	Date
+
+RLS
+	•	lecture service_role / admin interne
+	•	pas forcément exposé au front au début
+
+⸻
+
+7.6 user_recommendation_signals
+
+Prépare les futures recommandations.
+
+Colonnes recommandées
+
+Colonne	Type	Description
+id	UUID PK	Identifiant
+user_id	UUID FK auth.users	Utilisateur
+property_id	UUID FK properties	Bien
+signal_type	TEXT	view, favorite, contact, share, etc.
+weight	NUMERIC	Poids
+created_at	TIMESTAMPTZ	Date
+
+
+⸻
+
+8. Vue/index de recherche
+
+8.1 Objectif
+
+Le moteur de recherche ne doit pas requêter directement properties de manière brute sur chaque besoin complexe.
+
+Il faut une couche dédiée :
+	•	plus rapide
+	•	plus simple à filtrer
+	•	prête au ranking
+	•	prête au SEO
+	•	prête aux futures évolutions
+
+⸻
+
+8.2 Recommandation MVP
+
+Créer une vue SQL ou une table indexée appelée :
+
+search_properties_index
+
+8.3 Colonnes recommandées
+	•	property_id
+	•	agency_id
+	•	agency_name
+	•	agency_slug
+	•	agency_plan
+	•	agency_verified
+	•	title
+	•	description
+	•	price
+	•	currency
+	•	transaction_type
+	•	type
+	•	surface
+	•	rooms
+	•	bathrooms
+	•	country
+	•	wilaya
+	•	commune
+	•	city
+	•	address_public_label
+	•	images_count
+	•	has_location
+	•	has_description
+	•	has_features
+	•	is_featured
+	•	published_at
+	•	updated_at
+	•	search_text
+	•	trust_score
+	•	ranking_score_initial
+
+8.4 Alimentation
+
+Cette vue/table est alimentée à partir de :
+	•	properties
+	•	agencies
+	•	property_trust_scores
+
+⸻
+
+9. Règles de visibilité des annonces
+
+Une annonce ne doit être visible dans AqarSearch que si :
+	•	properties.status = 'active'
+	•	l’agence associée existe
+	•	l’agence n’est pas désactivée
+	•	le bien possède au moins :
+	•	un titre
+	•	un prix
+	•	une localisation exploitable
+	•	une image ou une description suffisante
+
+Règle bonus
+
+Les biens très incomplets peuvent être :
+	•	soit masqués
+	•	soit publiés avec un score de confiance dégradé
+
+⸻
+
+10. Moteur de recherche
+
+10.1 Entrées de recherche
+
+Le moteur doit accepter :
+	•	texte libre
+	•	transaction
+	•	pays
+	•	wilaya
+	•	commune
+	•	ville
+	•	type de bien
+	•	budget min/max
+	•	surface min/max
+	•	pièces min
+	•	featured
+	•	agence vérifiée
+	•	tri
+
+10.2 Sorties
+
+Chaque résultat doit renvoyer :
+	•	id du bien
+	•	slug ou id agence
+	•	titre
+	•	image principale
+	•	prix formaté
+	•	localisation courte
+	•	surface
+	•	pièces
+	•	type
+	•	badge agence
+	•	badge confiance
+	•	date publication
+	•	CTA favori
+	•	CTA contact
+
+10.3 Interface recommandée
+
+Fonction serveur :
+
+searchProperties(input: SearchInput): Promise<SearchResultPage>
+
+
+⸻
+
+11. Ranking des résultats
+
+11.1 Objectif
+
+Éviter un tri purement chronologique.
+Le ranking doit favoriser :
+	•	pertinence
+	•	qualité
+	•	confiance
+	•	fraîcheur
+
+11.2 Score simple MVP
+
+Exemple de formule interne :
+
+ranking_score =
+  freshness_score * 0.35
+  + completeness_score * 0.20
+  + trust_score * 0.20
+  + engagement_score * 0.10
+  + featured_score * 0.10
+  + exact_filter_match_score * 0.05
+
+11.3 Tri utilisateur
+
+Tri supporté :
+	•	plus récents
+	•	prix croissant
+	•	prix décroissant
+	•	surface croissante
+	•	surface décroissante
+	•	confiance décroissante
+
+⸻
+
+12. Déduplication
+
+12.1 Objectif
+
+Éviter d’afficher la même opportunité plusieurs fois.
+
+12.2 MVP réaliste
+
+En MVP, déduplication simple par proximité de caractéristiques :
+	•	même agence
+	•	même type
+	•	même wilaya / commune
+	•	prix proche
+	•	surface proche
+	•	rooms proches
+	•	texte proche
+
+12.3 Utilisation initiale
+
+Au début :
+	•	détection interne
+	•	pas forcément affichée dans l’UI
+	•	sert au nettoyage et au ranking
+
+Ensuite :
+	•	possibilité de masquer certains doublons
+	•	affichage d’un seul résultat principal
+
+⸻
+
+13. Score de confiance
+
+13.1 But
+
+Donner un signal simple à l’utilisateur.
+
+13.2 Signaux MVP
+	•	annonce complète
+	•	nombre d’images
+	•	cohérence du prix
+	•	qualité du texte
+	•	agence vérifiée ou non
+	•	présence localisation exploitable
+
+13.3 Restitution
+
+Valeur interne
+	•	score de 0 à 100
+
+Valeur front
+	•	Confiance élevée
+	•	Confiance moyenne
+	•	À vérifier
+
+Exemple de mapping
+	•	80 à 100 : Confiance élevée
+	•	50 à 79 : Confiance moyenne
+	•	0 à 49 : À vérifier
+
+⸻
+
+14. Favoris
+
+14.1 Base existante
+
+La table favorites existe déjà dans AqarVision.
+
+14.2 Ce qu’il faut ajouter
+
+UI
+	•	bouton favori sur carte résultat
+	•	bouton favori sur fiche bien
+	•	page /favoris
+
+Actions
+	•	ajouter favori
+	•	retirer favori
+	•	lister favoris
+
+Règles
+	•	nécessite authentification
+	•	si non connecté, rediriger vers login avec retour vers page courante
+
+⸻
+
+15. Recherches sauvegardées et alertes
+
+15.1 Recherches sauvegardées
+
+L’utilisateur peut sauver une recherche complète.
+Exemples :
+	•	“Location Alger centre”
+	•	“Villa Oran moins de 4M”
+	•	“Terrain Constantine”
+
+15.2 Alertes
+
+Chaque recherche sauvegardée peut avoir une alerte associée.
+
+MVP
+	•	email ou notification interne
+	•	fréquence instant ou daily
+	•	matching sur nouvelles annonces uniquement
+
+15.3 Matching d’alerte
+
+Pseudo-logique :
+	1.	une nouvelle annonce active arrive
+	2.	on compare avec les recherches sauvegardées actives
+	3.	si match, on crée une notification ou un email
+
+⸻
+
+16. Historique utilisateur
+
+16.1 Objectif
+
+Permettre à l’utilisateur de reprendre sa recherche sans friction.
+
+16.2 Données à conserver
+	•	recherches exécutées
+	•	pages de résultats consultées
+	•	biens vus
+	•	date
+
+16.3 UI
+
+Page /recherches avec :
+	•	recherches récentes
+	•	bouton “sauvegarder”
+	•	recherches déjà sauvegardées
+	•	suppression
+
+⸻
+
+17. Leads depuis AqarSearch
+
+17.1 Principe
+
+Un lead généré depuis AqarSearch doit arriver dans la table leads existante.
+
+17.2 Source
+
+Ajouter une source ou conserver :
+	•	property_detail
+	•	ou nouvelle source aqarsearch
+
+Recommandation :
+ajouter une valeur explicite si besoin :
+	•	aqarsearch_search
+	•	aqarsearch_detail
+
+17.3 Données envoyées
+	•	agency_id
+	•	property_id
+	•	name
+	•	phone
+	•	email
+	•	message
+	•	source
+	•	éventuellement critères de recherche initiaux
+
+17.4 Bénéfice
+
+L’agence retrouve tout dans son dashboard AqarVision, sans outil séparé.
+
+⸻
+
+18. Analytics et événements
+
+18.1 Table existante
+
+La table analytics_events existe déjà.
+
+18.2 Nouveaux événements à tracer
+	•	search_page_view
+	•	search_executed
+	•	search_filter_change
+	•	search_sort_change
+	•	property_card_click
+	•	property_favorite_add
+	•	property_favorite_remove
+	•	search_alert_create
+	•	search_alert_disable
+	•	comparison_add
+	•	comparison_remove
+
+18.3 Objectif
+
+Ces événements servent à :
+	•	améliorer le ranking
+	•	comprendre l’usage
+	•	alimenter les futures recommandations
+
+⸻
+
+19. Validators Zod
+
+Créer :
+
+19.1 search.ts
+
+Schéma pour les filtres de recherche :
+	•	texte libre
+	•	transaction
+	•	pays
+	•	wilaya
+	•	commune
+	•	ville
+	•	type
+	•	budget
+	•	surface
+	•	rooms
+	•	sort
+	•	page
+
+19.2 alert.ts
+
+Schéma pour créer une alerte :
+	•	nom
+	•	critères de recherche
+	•	fréquence
+	•	canal
+	•	actif ou non
+
+19.3 favorite.ts
+
+Schéma simple :
+	•	property_id UUID
+
+⸻
+
+20. Server Actions
+
+Créer :
+
+20.1 favorites.ts
+
+Actions :
+	•	addFavorite(propertyId)
+	•	removeFavorite(propertyId)
+
+20.2 alerts.ts
+
+Actions :
+	•	createSavedSearch(formData)
+	•	updateSavedSearch(id, formData)
+	•	deleteSavedSearch(id)
+	•	createSearchAlert(savedSearchId, frequency, channel)
+	•	toggleSearchAlert(id, isActive)
+
+20.3 search-history.ts
+
+Actions :
+	•	trackSearch(query, filters)
+	•	clearSearchHistory()
+
+20.4 search.ts
+
+Actions :
+	•	trackPropertyClick(propertyId)
+	•	trackComparisonAdd(propertyId)
+
+Toutes les actions doivent retourner un contrat simple :
+
+{
+  success: boolean
+  error?: string
+}
+
+
+⸻
+
+21. Composants UI à créer
+
+21.1 Dossier recommandé
+
+src/components/search/
+
+21.2 Composants MVP
+
+search-bar.tsx
+
+Barre principale de recherche.
+
+filter-panel.tsx
+
+Filtres complets.
+
+result-card.tsx
+
+Carte de bien pour résultats.
+
+trust-badge.tsx
+
+Badge de confiance.
+
+favorite-button.tsx
+
+Ajout/retrait favori.
+
+alert-button.tsx
+
+Créer une alerte depuis une recherche.
+
+saved-search-card.tsx
+
+Affichage recherche sauvegardée.
+
+result-empty-state.tsx
+
+Aucun résultat.
+
+compare-button.tsx
+
+Préparer le comparateur.
+
+contact-panel.tsx
+
+Contact rapide depuis fiche bien.
+
+⸻
+
+22. Pages à créer
+
+22.1 /recherche/page.tsx
+
+Doit :
+	•	lire les query params
+	•	valider les filtres
+	•	appeler searchProperties
+	•	afficher résultats + pagination
+
+22.2 /bien/[id]/page.tsx
+
+Doit :
+	•	charger un bien public via index ou requête dédiée
+	•	vérifier la visibilité
+	•	afficher galerie + infos + agence + confiance + contact
+	•	tracer la vue
+
+22.3 /favoris/page.tsx
+
+Doit :
+	•	afficher les biens favoris de l’utilisateur
+	•	permettre la suppression rapide
+
+22.4 /alertes/page.tsx
+
+Doit :
+	•	afficher les recherches sauvegardées avec alerte
+	•	permettre activation/désactivation
+
+22.5 /recherches/page.tsx
+
+Doit :
+	•	afficher historique + recherches sauvegardées
+
+22.6 /comparer/page.tsx
+
+Version simple :
+	•	comparaison de quelques biens sélectionnés
+
+⸻
+
+23. SEO et indexabilité
+
+23.1 Pages indexables
+
+Le MVP doit au minimum rendre indexables :
+	•	pages de résultats stables
+	•	fiches biens
+	•	pages de recherche structurées futures
+
+23.2 Metadata
+
+Pour /bien/[id] :
+	•	title
+	•	description
+	•	Open Graph
+	•	Twitter Card
+	•	JSON-LD
+
+23.3 Structured Data
+
+Réutiliser / adapter :
+	•	PropertyJsonLd
+	•	BreadcrumbJsonLd
+
+⸻
+
+24. Sécurité et RLS
+
+24.1 Règles
+	•	favoris : utilisateur propriétaire uniquement
+	•	saved searches : propriétaire uniquement
+	•	search alerts : propriétaire uniquement
+	•	history : propriétaire uniquement
+	•	trust score : lecture publique OK, écriture backend only
+
+24.2 Vérifications côté serveur
+
+Même avec RLS :
+	•	vérifier session utilisateur
+	•	vérifier propriété visible
+	•	vérifier cohérence des IDs
+
+⸻
+
+25. Performance et cache
+
+25.1 Cache recommandé
+	•	recherche : dynamique avec cache court si nécessaire
+	•	bien/[id] : ISR ou revalidate court
+	•	favoris, alertes, recherches : privé, non mis en cache publiquement
+
+25.2 Objectifs
+	•	résultats rapides
+	•	faible coût DB
+	•	bon comportement mobile
+
+25.3 Pagination
+
+Préférer :
+	•	pagination serveur simple
+	•	limit / offset au MVP
+
+⸻
+
+26. Tests à ajouter
+
+Créer des tests pour :
+
+26.1 Validators
+	•	search.test.ts
+	•	alert.test.ts
+
+26.2 Search engine
+	•	search-properties.test.ts
+	•	ranking.test.ts
+	•	trust-score.test.ts
+
+26.3 Actions
+	•	actions-favorites.test.ts
+	•	actions-alerts.test.ts
+	•	actions-search-history.test.ts
+
+26.4 Pages / logique
+	•	visibilité d’un bien
+	•	création d’un favori
+	•	création d’une alerte
+	•	lead depuis fiche AqarSearch
+
+⸻
+
+27. Arborescence recommandée
+
+src/
+├── app/
+│   ├── recherche/
+│   │   ├── page.tsx
+│   │   ├── loading.tsx
+│   │   ├── error.tsx
+│   │   ├── filters.tsx
+│   │   └── results-list.tsx
+│   ├── bien/
+│   │   └── [id]/
+│   │       ├── page.tsx
+│   │       ├── loading.tsx
+│   │       └── error.tsx
+│   ├── favoris/
+│   │   └── page.tsx
+│   ├── alertes/
+│   │   └── page.tsx
+│   ├── recherches/
+│   │   └── page.tsx
+│   └── comparer/
+│       └── page.tsx
+│
+├── components/
+│   ├── search/
+│   │   ├── search-bar.tsx
+│   │   ├── filter-panel.tsx
+│   │   ├── result-card.tsx
+│   │   ├── trust-badge.tsx
+│   │   ├── favorite-button.tsx
+│   │   ├── alert-button.tsx
+│   │   ├── compare-button.tsx
+│   │   ├── saved-search-card.tsx
+│   │   ├── contact-panel.tsx
+│   │   └── result-empty-state.tsx
+│
+├── lib/
+│   ├── search/
+│   │   ├── search-properties.ts
+│   │   ├── ranking.ts
+│   │   ├── deduplication.ts
+│   │   ├── trust-score.ts
+│   │   ├── normalize.ts
+│   │   └── filters.ts
+│   ├── alerts/
+│   │   ├── create-alert.ts
+│   │   ├── match-alerts.ts
+│   │   └── send-alerts.ts
+│   ├── queries/
+│   │   ├── search.ts
+│   │   ├── property-public.ts
+│   │   ├── favorites.ts
+│   │   └── alerts.ts
+│   ├── actions/
+│   │   ├── favorites.ts
+│   │   ├── alerts.ts
+│   │   ├── search.ts
+│   │   └── search-history.ts
+│   └── validators/
+│       ├── search.ts
+│       ├── alert.ts
+│       └── favorite.ts
+
+
+⸻
+
+28. Plan d’implémentation par phases
+
+Phase 1 — fondations recherche
+	•	créer saved_searches
+	•	créer search_alerts
+	•	créer search_history
+	•	créer property_trust_scores
+	•	créer vue/table search_properties_index
+
+Phase 2 — UI B2C minimale
+	•	/recherche
+	•	/bien/[id]
+	•	result-card
+	•	trust-badge
+
+Phase 3 — rétention
+	•	/favoris
+	•	/alertes
+	•	/recherches
+	•	actions associées
+
+Phase 4 — liaison complète avec AqarVision
+	•	tracer vues
+	•	générer leads
+	•	enrichir analytics
+
+Phase 5 — amélioration qualité
+	•	score de confiance
+	•	déduplication simple
+	•	comparateur léger
+
+⸻
+
+29. Prompt maître pour Claude Code
+
+Construis la couche technique AqarSearch dans le projet AqarVision existant.
+
+Objectif :
+Ajouter une couche B2C de recherche immobilière connectée au SaaS AqarVision, sans casser l’architecture existante.
+
+Contraintes :
+- AqarVision reste la source de vérité pour les agences, biens et leads
+- AqarSearch ajoute la recherche, les favoris, les alertes, l’historique et la confiance
+- architecture monolithique modulaire Next.js 14
+- TypeScript strict
+- Supabase avec RLS
+- UI premium, simple, mobile-first
+- code factorisé et propre
+
+À implémenter :
+1. routes publiques :
+   - /recherche
+   - /bien/[id]
+   - /favoris
+   - /alertes
+   - /recherches
+   - /comparer
+
+2. nouvelles tables :
+   - saved_searches
+   - search_alerts
+   - search_history
+   - property_trust_scores
+   - property_duplicates
+   - user_recommendation_signals
+
+3. couche search :
+   - search-properties.ts
+   - ranking.ts
+   - trust-score.ts
+   - deduplication.ts
+
+4. server actions :
+   - favorites.ts
+   - alerts.ts
+   - search.ts
+   - search-history.ts
+
+5. validators Zod :
+   - search.ts
+   - alert.ts
+   - favorite.ts
+
+6. composants UI :
+   - search-bar
+   - filter-panel
+   - result-card
+   - trust-badge
+   - favorite-button
+   - alert-button
+   - saved-search-card
+   - contact-panel
+
+7. intégration avec AqarVision :
+   - utiliser properties et agencies comme source
+   - générer des leads dans la table leads existante
+   - tracer analytics_events et property_views

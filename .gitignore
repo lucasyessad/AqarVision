@@ -75,3 +75,4 @@ coverage/
 *.swp
 *.swo
 .sass-cache/
+.next/

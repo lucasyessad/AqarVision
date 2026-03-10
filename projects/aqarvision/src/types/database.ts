@@ -12,7 +12,7 @@ export type AgencyPlan = 'starter' | 'pro' | 'enterprise';
 export type MemberRole = 'admin' | 'agent' | 'viewer';
 export type TransactionType = 'sale' | 'rent';
 export type PropertyStatus = 'draft' | 'active' | 'sold' | 'rented' | 'archived';
-export type LeadSource = 'contact_form' | 'property_detail' | 'whatsapp' | 'phone' | 'walk_in' | 'referral';
+export type LeadSource = 'contact_form' | 'property_detail' | 'whatsapp' | 'phone' | 'walk_in' | 'referral' | 'aqarsearch';
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'negotiation' | 'converted' | 'lost';
 export type LeadPriority = 'low' | 'normal' | 'high' | 'urgent';
 export type SubscriptionStatus = 'trial' | 'active' | 'past_due' | 'cancelled' | 'expired';
@@ -31,7 +31,10 @@ export type NotificationType =
 export type AnalyticsEventType =
   | 'page_view' | 'property_click' | 'contact_click' | 'phone_click'
   | 'whatsapp_click' | 'share_click' | 'map_click' | 'gallery_view'
-  | 'search' | 'filter_change' | 'lead_submit';
+  | 'search' | 'filter_change' | 'lead_submit'
+  | 'search_executed' | 'search_filter_change' | 'search_sort_change'
+  | 'property_card_click' | 'property_favorite_add' | 'property_favorite_remove'
+  | 'search_alert_create' | 'search_alert_disable';
 
 // === Tables ===
 
@@ -255,4 +258,105 @@ export interface SocialFeedConfig {
   instagram_access_token?: string;
   facebook_access_token?: string;
   tiktok_access_token?: string;
+}
+
+// === AqarSearch Types ===
+
+export type SearchAlertChannel = 'email' | 'in_app';
+export type SearchAlertFrequency = 'instant' | 'daily' | 'weekly';
+export type SearchSortOption = 'recent' | 'price_asc' | 'price_desc' | 'surface_asc' | 'surface_desc' | 'trust_desc';
+export type TrustLevel = 'high' | 'medium' | 'low';
+export type RecommendationSignalType = 'view' | 'favorite' | 'contact' | 'share' | 'search_click' | 'compare';
+
+export interface SavedSearch {
+  id: string;
+  user_id: string;
+  name: string;
+  transaction_type: TransactionType | null;
+  country: string | null;
+  wilaya: string | null;
+  commune: string | null;
+  city: string | null;
+  property_type: string | null;
+  price_min: number | null;
+  price_max: number | null;
+  surface_min: number | null;
+  surface_max: number | null;
+  rooms_min: number | null;
+  features: string[];
+  keywords: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SearchAlert {
+  id: string;
+  saved_search_id: string;
+  user_id: string;
+  channel: SearchAlertChannel;
+  frequency: SearchAlertFrequency;
+  last_sent_at: string | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface SearchHistory {
+  id: string;
+  user_id: string;
+  query_text: string | null;
+  filters: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface PropertyTrustScore {
+  id: string;
+  property_id: string;
+  score: number;
+  price_consistency_score: number;
+  description_quality_score: number;
+  image_quality_score: number;
+  agency_verification_score: number;
+  location_consistency_score: number;
+  flags: string[];
+  updated_at: string;
+}
+
+export interface SearchPropertyResult {
+  property_id: string;
+  agency_id: string;
+  agency_name: string;
+  agency_slug: string;
+  agency_plan: AgencyPlan;
+  agency_logo_url: string | null;
+  agency_phone: string | null;
+  agency_email: string | null;
+  title: string;
+  description: string | null;
+  price: number;
+  currency: string;
+  transaction_type: TransactionType;
+  type: string;
+  surface: number | null;
+  rooms: number | null;
+  bathrooms: number | null;
+  country: string;
+  wilaya: string | null;
+  commune: string | null;
+  city: string | null;
+  address: string | null;
+  images: string[];
+  features: string[];
+  latitude: number | null;
+  longitude: number | null;
+  is_featured: boolean;
+  views_count: number;
+  published_at: string | null;
+  updated_at: string;
+  created_at: string;
+  images_count: number | null;
+  has_location: boolean;
+  has_description: boolean;
+  has_features: boolean;
+  trust_score: number;
 }

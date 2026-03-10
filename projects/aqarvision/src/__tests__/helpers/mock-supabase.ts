@@ -9,16 +9,16 @@ export function createMockSupabase() {
   const chain: Record<string, ReturnType<typeof vi.fn>> = {};
 
   // The chain object that every builder method returns
-  const builder = {
-    select: vi.fn(() => builder),
-    eq: vi.fn(() => builder),
-    single: vi.fn(() => Promise.resolve({ data: null, error: null })),
-    insert: vi.fn(() => builder),
-    update: vi.fn(() => builder),
-    delete: vi.fn(() => builder),
-    order: vi.fn(() => builder),
-    limit: vi.fn(() => builder),
-    range: vi.fn(() => builder),
+  const builder: Record<string, ReturnType<typeof vi.fn>> = {
+    select: vi.fn((): any => builder),
+    eq: vi.fn((): any => builder),
+    single: vi.fn((): any => Promise.resolve({ data: null, error: null })),
+    insert: vi.fn((): any => builder),
+    update: vi.fn((): any => builder),
+    delete: vi.fn((): any => builder),
+    order: vi.fn((): any => builder),
+    limit: vi.fn((): any => builder),
+    range: vi.fn((): any => builder),
   };
 
   Object.assign(chain, builder);

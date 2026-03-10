@@ -398,6 +398,20 @@ export const MESSAGES = {
     `Bonjour ${agencyName}, je suis intéressé(e) par le bien "${title}" (${price}).`,
 } as const;
 
+// ─── AqarSearch ─────────────────────────────────────────────────────
+
+export const SEARCH = {
+  RESULTS_PER_PAGE: 12,
+  MAX_SAVED_SEARCHES: 20,
+  MAX_ALERTS: 10,
+  HISTORY_MAX_ITEMS: 50,
+  TRUST_SCORE_HIGH: 80,
+  TRUST_SCORE_MEDIUM: 50,
+  MIN_IMAGES_FOR_HIGH_TRUST: 3,
+  SEARCH_REVALIDATE: 60,
+  SIMILAR_PROPERTIES_LIMIT: 4,
+} as const;
+
 // ─── Animations / UI ─────────────────────────────────────────────────
 
 export const UI = {

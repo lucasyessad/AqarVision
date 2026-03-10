@@ -12,10 +12,16 @@ export default function HomePage() {
       <p className="mt-4 max-w-md text-center text-lg text-gray-600">
         {t('home.subtitle')}
       </p>
-      <div className="mt-8 flex gap-4">
+      <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
+        <Link
+          href="/recherche"
+          className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700"
+        >
+          {t('home.search')}
+        </Link>
         <Link
           href="/agence/demo"
-          className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700"
+          className="rounded-lg border border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 hover:bg-gray-50"
         >
           {t('home.demo')}
         </Link>

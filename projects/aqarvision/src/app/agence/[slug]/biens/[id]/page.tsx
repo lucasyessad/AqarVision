@@ -302,15 +302,17 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
       {property.images.length > 0 && (
         <div className="mb-8 grid gap-3 sm:grid-cols-2">
           <div className="relative aspect-[4/3] overflow-hidden rounded-lg sm:col-span-2">
-            <img
+            <Image
               src={property.images[0]}
               alt={property.title}
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
+              priority
             />
           </div>
           {property.images.slice(1, 5).map((img, i) => (
             <div key={i} className="relative aspect-[4/3] overflow-hidden rounded-lg">
-              <img src={img} alt={`${property.title} ${i + 2}`} className="h-full w-full object-cover" />
+              <Image src={img} alt={`${property.title} ${i + 2}`} fill className="object-cover" />
             </div>
           ))}
         </div>
@@ -395,7 +397,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
               >
                 {p.images[0] && (
                   <div className="relative aspect-[4/3]">
-                    <img src={p.images[0]} alt={p.title} className="h-full w-full object-cover" />
+                    <Image src={p.images[0]} alt={p.title} fill className="object-cover" />
                   </div>
                 )}
                 <div className="p-4">
