@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { agencyBrandingSchema, agencyLuxuryBrandingSchema } from '@/lib/validators';
-import type { Agency } from '@/types/database';
 
 interface ActionResult {
   success: boolean;
