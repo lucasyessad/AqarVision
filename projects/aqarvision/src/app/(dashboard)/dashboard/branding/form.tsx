@@ -157,7 +157,7 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
               id="locale"
               name="locale"
               defaultValue={agency.locale ?? 'fr'}
-              className="w-full rounded-md border px-3 py-2 text-sm"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors hover:border-gray-400"
             >
               <option value="fr">Fran&ccedil;ais</option>
               <option value="ar">العربية (Arabe)</option>
@@ -311,7 +311,7 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
                 id="hero_style"
                 name="hero_style"
                 defaultValue={agency.hero_style}
-                className="w-full rounded-md border px-3 py-2 text-sm"
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors hover:border-gray-400"
               >
                 <option value="color">Couleur unie</option>
                 <option value="cover">Image de couverture</option>
@@ -375,7 +375,7 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
                 id="font_style"
                 name="font_style"
                 defaultValue={agency.font_style}
-                className="w-full rounded-md border px-3 py-2 text-sm"
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors hover:border-gray-400"
               >
                 <option value="modern">Modern (Sans-serif)</option>
                 <option value="classic">Classic (Playfair)</option>
@@ -392,7 +392,7 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
                 id="theme_mode"
                 name="theme_mode"
                 defaultValue={agency.theme_mode}
-                className="w-full rounded-md border px-3 py-2 text-sm"
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors hover:border-gray-400"
               >
                 <option value="dark">Sombre luxe</option>
                 <option value="light">Clair</option>

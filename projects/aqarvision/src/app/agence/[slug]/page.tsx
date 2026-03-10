@@ -5,6 +5,8 @@ import { LuxuryAboutSection } from '@/components/agency/luxury-about-section';
 import { SocialFeedSection } from '@/components/agency/social-feed-section';
 import { getAgencyBySlug, getAgencyProperties } from '@/lib/queries/agency';
 import { fetchSocialFeed } from '@/lib/social/fetch-feed';
+import { getTranslations } from '@/lib/i18n';
+import { formatPrice } from '@/lib/utils/format';
 import { PLANS } from '@/config';
 import type { Metadata } from 'next';
 
@@ -27,6 +29,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
 
   if (!agency) notFound();
 
+  const t = getTranslations(agency.locale ?? 'fr');
   const hasSocial = agency.instagram_url || agency.facebook_url || agency.tiktok_url;
 
   const [properties, socialFeed] = await Promise.all([
@@ -84,7 +87,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
                   {property.wilaya} {property.surface && `· ${property.surface} m²`}
                 </p>
                 <p className="mt-2 font-bold text-blue-600">
-                  {new Intl.NumberFormat('fr-DZ').format(property.price)} DZD
+                  {formatPrice(property.price, property.currency)}
                 </p>
               </div>
             </div>
