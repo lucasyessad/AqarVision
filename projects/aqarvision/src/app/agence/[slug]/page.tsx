@@ -2,7 +2,9 @@ import { notFound } from 'next/navigation';
 import { LuxuryHero } from '@/components/agency/luxury-hero';
 import { LuxuryPropertiesSection } from '@/components/agency/luxury-properties-section';
 import { LuxuryAboutSection } from '@/components/agency/luxury-about-section';
+import { SocialFeedSection } from '@/components/agency/social-feed-section';
 import { getAgencyBySlug, getAgencyProperties } from '@/lib/queries/agency';
+import { fetchSocialFeed } from '@/lib/social/fetch-feed';
 import type { Metadata } from 'next';
 
 interface AgencyPageProps {
@@ -24,7 +26,18 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
 
   if (!agency) notFound();
 
-  const properties = await getAgencyProperties(agency.id, 6);
+  const hasSocial = agency.instagram_url || agency.facebook_url || agency.tiktok_url;
+
+  const [properties, socialFeed] = await Promise.all([
+    getAgencyProperties(agency.id, 6),
+    hasSocial
+      ? fetchSocialFeed({
+          instagram_url: agency.instagram_url,
+          facebook_url: agency.facebook_url,
+          tiktok_url: agency.tiktok_url,
+        })
+      : Promise.resolve({ posts: [], embeds: [], hasApiData: false }),
+  ]);
 
   // Enterprise → Pages Luxury
   if (agency.active_plan === 'enterprise') {
@@ -33,6 +46,12 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
         <LuxuryHero agency={agency} />
         <LuxuryPropertiesSection agency={agency} properties={properties} />
         <LuxuryAboutSection agency={agency} showStats={false} />
+        <SocialFeedSection
+          agency={agency}
+          posts={socialFeed.posts}
+          embeds={socialFeed.embeds}
+          hasApiData={socialFeed.hasApiData}
+        />
       </>
     );
   }
@@ -71,6 +90,13 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
           ))}
         </div>
       )}
+
+      <SocialFeedSection
+        agency={agency}
+        posts={socialFeed.posts}
+        embeds={socialFeed.embeds}
+        hasApiData={socialFeed.hasApiData}
+      />
     </div>
   );
 }

@@ -6,6 +6,8 @@ import { getAgencyBySlug } from '@/lib/queries/agency';
 import { ContactForm } from '@/components/agency/contact-form';
 import { PropertyJsonLd, BreadcrumbJsonLd } from '@/components/seo/json-ld';
 import { ConditionalMap } from '@/components/agency/location-map';
+import { SocialFeedWidget } from '@/components/agency/social-feed-widget';
+import { fetchSocialFeed } from '@/lib/social/fetch-feed';
 import type { Agency, Property } from '@/types/database';
 import type { Metadata } from 'next';
 
@@ -86,7 +88,19 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
   if (!agency || !property) notFound();
   if (property.agency_id !== agency.id) notFound();
 
-  const similar = await getSimilarProperties(agency.id, property.id, property.type);
+  const hasSocial = agency.instagram_url || agency.facebook_url || agency.tiktok_url;
+
+  const [similar, socialFeed] = await Promise.all([
+    getSimilarProperties(agency.id, property.id, property.type),
+    hasSocial
+      ? fetchSocialFeed({
+          instagram_url: agency.instagram_url,
+          facebook_url: agency.facebook_url,
+          tiktok_url: agency.tiktok_url,
+          limit: 3,
+        })
+      : Promise.resolve({ posts: [], embeds: [], hasApiData: false }),
+  ]);
 
   const isEnterprise = agency.active_plan === 'enterprise';
   const isDark = agency.theme_mode === 'dark';
@@ -218,6 +232,16 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
 
                 <ContactForm agency={agency} propertyId={property.id} />
               </div>
+
+              {/* Widget réseaux sociaux */}
+              <div className="mt-6">
+                <SocialFeedWidget
+                  agency={agency}
+                  posts={socialFeed.posts}
+                  embeds={socialFeed.embeds}
+                  hasApiData={socialFeed.hasApiData}
+                />
+              </div>
             </div>
           </div>
 
@@ -343,6 +367,16 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
             )}
 
             <ContactForm agency={agency} propertyId={property.id} />
+          </div>
+
+          {/* Widget réseaux sociaux */}
+          <div className="mt-6">
+            <SocialFeedWidget
+              agency={agency}
+              posts={socialFeed.posts}
+              embeds={socialFeed.embeds}
+              hasApiData={socialFeed.hasApiData}
+            />
           </div>
         </div>
       </div>

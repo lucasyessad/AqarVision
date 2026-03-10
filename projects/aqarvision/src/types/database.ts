@@ -43,6 +43,37 @@ export interface Agency {
   // === Geolocation ===
   latitude: number | null;
   longitude: number | null;
+
+  // === Social Media ===
+  instagram_url: string | null;
+  facebook_url: string | null;
+  tiktok_url: string | null;
+}
+
+// === Social Feed Types ===
+
+export type SocialPlatform = 'instagram' | 'facebook' | 'tiktok';
+
+export interface SocialPost {
+  id: string;
+  platform: SocialPlatform;
+  permalink: string;
+  caption: string | null;
+  media_url: string | null;
+  media_type: 'image' | 'video' | 'carousel';
+  thumbnail_url: string | null;
+  timestamp: string;
+  likes_count: number | null;
+  comments_count: number | null;
+}
+
+export interface SocialFeedConfig {
+  instagram_url: string | null;
+  facebook_url: string | null;
+  tiktok_url: string | null;
+  instagram_access_token?: string;
+  facebook_access_token?: string;
+  tiktok_access_token?: string;
 }
 
 export interface Property {

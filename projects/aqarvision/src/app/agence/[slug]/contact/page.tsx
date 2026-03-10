@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getAgencyBySlug } from '@/lib/queries/agency';
+import { fetchSocialFeed } from '@/lib/social/fetch-feed';
 import { ContactForm } from '@/components/agency/contact-form';
 import { ConditionalMap } from '@/components/agency/location-map';
+import { SocialFeedWidget } from '@/components/agency/social-feed-widget';
 import type { Metadata } from 'next';
 
 interface ContactPageProps {
@@ -20,6 +22,16 @@ export default async function ContactPage({ params }: ContactPageProps) {
   const agency = await getAgencyBySlug(slug);
 
   if (!agency) notFound();
+
+  const hasSocial = agency.instagram_url || agency.facebook_url || agency.tiktok_url;
+  const socialFeed = hasSocial
+    ? await fetchSocialFeed({
+        instagram_url: agency.instagram_url,
+        facebook_url: agency.facebook_url,
+        tiktok_url: agency.tiktok_url,
+        limit: 3,
+      })
+    : { posts: [], embeds: [], hasApiData: false };
 
   const isEnterprise = agency.active_plan === 'enterprise';
   const accentColor = agency.secondary_color || agency.primary_color;
@@ -117,6 +129,16 @@ export default async function ContactPage({ params }: ContactPageProps) {
               isDark ? 'opacity-90' : ''
             }`}
           />
+
+          {/* Widget réseaux sociaux */}
+          <div className="mt-12">
+            <SocialFeedWidget
+              agency={agency}
+              posts={socialFeed.posts}
+              embeds={socialFeed.embeds}
+              hasApiData={socialFeed.hasApiData}
+            />
+          </div>
         </div>
       </section>
     );
@@ -158,6 +180,16 @@ export default async function ContactPage({ params }: ContactPageProps) {
         label={agency.name}
         className="mt-8 h-64 w-full overflow-hidden rounded-xl"
       />
+
+      {/* Widget réseaux sociaux */}
+      <div className="mt-8">
+        <SocialFeedWidget
+          agency={agency}
+          posts={socialFeed.posts}
+          embeds={socialFeed.embeds}
+          hasApiData={socialFeed.hasApiData}
+        />
+      </div>
     </div>
   );
 }
