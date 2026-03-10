@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   LUXURY BRANDING ANIMATIONS
+   Enterprise-tier agency branding system
+   ============================================ */
+
+/* === Keyframes === */
+
+@keyframes luxury-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes luxury-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes luxury-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes luxury-scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes luxury-line-grow {
+  from {
+    width: 0;
+  }
+  to {
+    width: 80px;
+  }
+}
+
+@keyframes luxury-counter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === Animation Classes === */
+
+.luxury-animate-fade-in-up {
+  animation: luxury-fade-in-up 0.8s ease-out forwards;
+}
+
+.luxury-animate-fade-in {
+  animation: luxury-fade-in 0.6s ease-out forwards;
+}
+
+.luxury-animate-scale-in {
+  animation: luxury-scale-in 0.6s ease-out forwards;
+}
+
+.luxury-animate-fade-in-delayed {
+  opacity: 0;
+  animation: luxury-fade-in 0.8s ease-out 0.3s forwards;
+}
+
+.luxury-animate-fade-in-delayed-2 {
+  opacity: 0;
+  animation: luxury-fade-in 0.8s ease-out 0.6s forwards;
+}
+
+.luxury-animate-fade-in-delayed-3 {
+  opacity: 0;
+  animation: luxury-fade-in 0.8s ease-out 0.9s forwards;
+}
+
+.luxury-animate-line-grow {
+  animation: luxury-line-grow 1s ease-out 0.5s forwards;
+  width: 0;
+}
+
+.luxury-animate-counter {
+  animation: luxury-counter 0.6s ease-out forwards;
+}
+
+.luxury-animate-scroll-bounce {
+  animation: luxury-scroll-bounce 2s ease-in-out infinite;
+}
+
+/* === Scroll Reveal === */
+
+.luxury-scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.luxury-scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Property Card Hover === */
+
+.luxury-property-card {
+  overflow: hidden;
+}
+
+.luxury-property-card img {
+  transition: transform 0.6s ease-out;
+}
+
+.luxury-property-card:hover img {
+  transform: scale(1.08);
+}
+
+/* === Header Glassmorphism === */
+
+.luxury-header-glass {
+  background: transparent;
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+.luxury-header-glass.is-scrolled {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.luxury-header-glass.is-scrolled.theme-light {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* === Font Display Variants === */
+
+.font-display-modern {
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+}
+
+.font-display-classic {
+  font-family: 'Playfair Display', 'Georgia', serif;
+}
+
+.font-display-elegant {
+  font-family: 'Cormorant Garamond', 'Garamond', serif;
+}
+
+/* === Display Text Size === */
+
+.text-display-xl {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.text-display-lg {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
