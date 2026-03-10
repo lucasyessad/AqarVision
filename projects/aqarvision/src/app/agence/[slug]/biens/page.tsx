@@ -91,10 +91,11 @@ function PropertyCard({
     >
       {property.images[0] && (
         <div className="relative aspect-[4/3]">
-          <img
+          <Image
             src={property.images[0]}
             alt={property.title}
-            className="h-full w-full object-cover"
+            fill
+            className="object-cover"
           />
         </div>
       )}

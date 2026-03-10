@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { LuxuryHero } from '@/components/agency/luxury-hero';
 import { LuxuryPropertiesSection } from '@/components/agency/luxury-properties-section';
 import { LuxuryAboutSection } from '@/components/agency/luxury-about-section';
@@ -74,10 +75,11 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
             <div key={property.id} className="overflow-hidden rounded-lg border">
               {property.images[0] && (
                 <div className="relative aspect-[4/3]">
-                  <img
+                  <Image
                     src={property.images[0]}
                     alt={property.title}
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </div>
               )}
