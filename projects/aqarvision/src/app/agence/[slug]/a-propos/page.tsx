@@ -1,27 +1,28 @@
 import { notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
 import { LuxuryAboutSection } from '@/components/agency/luxury-about-section';
-import type { Agency } from '@/types/database';
+import { getAgencyBySlug } from '@/lib/queries/agency';
+import type { Metadata } from 'next';
 
 interface AboutPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export async function generateMetadata({ params }: AboutPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const agency = await getAgencyBySlug(slug);
+  if (!agency) return {};
+  return { title: 'À propos' };
+}
+
 export default async function AboutPage({ params }: AboutPageProps) {
   const { slug } = await params;
-  const supabase = await createClient();
-
-  const { data: agency } = await supabase
-    .from('agencies')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  const agency = await getAgencyBySlug(slug);
 
   if (!agency) notFound();
 
   // Enterprise → Luxury About
   if (agency.active_plan === 'enterprise') {
-    return <LuxuryAboutSection agency={agency as Agency} />;
+    return <LuxuryAboutSection agency={agency} />;
   }
 
   // Starter / Pro → Page basique

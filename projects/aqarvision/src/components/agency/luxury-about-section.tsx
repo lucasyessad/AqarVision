@@ -6,9 +6,10 @@ import type { Agency } from '@/types/database';
 
 interface LuxuryAboutSectionProps {
   agency: Agency;
+  showStats?: boolean;
 }
 
-export function LuxuryAboutSection({ agency }: LuxuryAboutSectionProps) {
+export function LuxuryAboutSection({ agency, showStats = true }: LuxuryAboutSectionProps) {
   const containerRef = useScrollReveal();
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
@@ -64,7 +65,7 @@ export function LuxuryAboutSection({ agency }: LuxuryAboutSectionProps) {
         )}
 
         {/* Statistiques */}
-        {stats.length > 0 && (
+        {showStats && stats.length > 0 && (
           <div className="luxury-scroll-reveal mt-16 grid gap-8 sm:grid-cols-3">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">

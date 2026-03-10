@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X, Phone, Mail, MapPin } from 'lucide-react';
+import { WhatsAppButton } from '@/components/agency/whatsapp-button';
 import type { Agency } from '@/types/database';
 
 interface LuxuryLayoutProps {
@@ -43,6 +44,14 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
 
   return (
     <div className={`min-h-screen ${bgClass} ${fontClass}`}>
+      {/* Skip to content (accessibility) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-gray-900 focus:shadow-lg"
+      >
+        Aller au contenu principal
+      </a>
+
       {/* === Header === */}
       <header
         className={`luxury-header-glass fixed top-0 left-0 right-0 z-50 ${
@@ -108,8 +117,11 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
         )}
       </header>
 
+      {/* === WhatsApp === */}
+      <WhatsAppButton agency={agency} />
+
       {/* === Main === */}
-      <main>{children}</main>
+      <main id="main-content">{children}</main>
 
       {/* === Footer === */}
       <footer className={`border-t ${isDark ? 'border-white/10' : 'border-gray-200'} py-16`}>
@@ -156,20 +168,20 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
               </h3>
               <div className="flex flex-col gap-3 text-sm">
                 {agency.phone && (
-                  <a href={`tel:${agency.phone}`} className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" style={{ color: accentColor }} />
+                  <a href={`tel:${agency.phone}`} className="flex items-center gap-2" aria-label={`Appeler ${agency.name}`}>
+                    <Phone className="h-4 w-4" style={{ color: accentColor }} aria-hidden="true" />
                     {agency.phone}
                   </a>
                 )}
                 {agency.email && (
-                  <a href={`mailto:${agency.email}`} className="flex items-center gap-2">
-                    <Mail className="h-4 w-4" style={{ color: accentColor }} />
+                  <a href={`mailto:${agency.email}`} className="flex items-center gap-2" aria-label={`Envoyer un email à ${agency.name}`}>
+                    <Mail className="h-4 w-4" style={{ color: accentColor }} aria-hidden="true" />
                     {agency.email}
                   </a>
                 )}
                 {agency.address && (
                   <span className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4" style={{ color: accentColor }} />
+                    <MapPin className="h-4 w-4" style={{ color: accentColor }} aria-hidden="true" />
                     {agency.address}
                   </span>
                 )}

@@ -100,6 +100,20 @@ export async function updateAgencyCoverImage(
   const ext = file.name.split('.').pop() || 'jpg';
   const path = `agencies/${agencyId}/branding/cover.${ext}`;
 
+  // Nettoyer les anciens fichiers cover (éviter les orphelins si extension change)
+  const { data: existingFiles } = await supabase.storage
+    .from('public')
+    .list(`agencies/${agencyId}/branding`);
+
+  if (existingFiles) {
+    const oldCovers = existingFiles
+      .filter((f) => f.name.startsWith('cover.') && f.name !== `cover.${ext}`)
+      .map((f) => `agencies/${agencyId}/branding/${f.name}`);
+    if (oldCovers.length > 0) {
+      await supabase.storage.from('public').remove(oldCovers);
+    }
+  }
+
   // Upload vers Supabase Storage
   const { error: uploadError } = await supabase.storage
     .from('public')

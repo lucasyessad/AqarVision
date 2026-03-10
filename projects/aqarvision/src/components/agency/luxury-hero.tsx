@@ -171,7 +171,7 @@ export function LuxuryHero({ agency }: LuxuryHeroProps) {
 
         {/* CTA */}
         <a
-          href="#properties"
+          href={`/agence/${agency.slug}/biens`}
           className="luxury-animate-fade-in-delayed-2 mt-10 border px-10 py-4 text-sm font-semibold uppercase tracking-widest transition-colors duration-300 hover:opacity-80"
           style={{
             borderColor: accentColor,

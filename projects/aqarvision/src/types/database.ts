@@ -54,3 +54,17 @@ export interface Property {
   created_at: string;
   updated_at: string;
 }
+
+export type LeadSource = 'contact_form' | 'property_detail' | 'whatsapp';
+
+export interface Lead {
+  id: string;
+  agency_id: string;
+  property_id: string | null;
+  name: string;
+  phone: string;
+  email: string | null;
+  message: string | null;
+  source: LeadSource;
+  created_at: string;
+}

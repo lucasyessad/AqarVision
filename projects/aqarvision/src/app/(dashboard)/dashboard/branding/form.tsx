@@ -18,7 +18,9 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const data = Object.fromEntries(
+      [...formData.entries()].map(([k, v]) => [k, v === '' ? null : v])
+    );
 
     startTransition(async () => {
       const result = await updateAgencyBranding(agency.id, data);
@@ -380,6 +382,19 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
         </div>
       )}
 
+      {/* Live Preview (Enterprise) */}
+      {isEnterprise && (
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">Aperçu en direct</h2>
+          <div
+            className="relative overflow-hidden rounded-xl"
+            style={{ minHeight: '280px' }}
+          >
+            <BrandingPreview agency={agency} coverPreview={coverPreview} />
+          </div>
+        </div>
+      )}
+
       {/* Submit */}
       <button
         type="submit"
@@ -389,5 +404,64 @@ export function BrandingForm({ agency, isEnterprise }: BrandingFormProps) {
         {isPending ? 'Enregistrement...' : 'Enregistrer les modifications'}
       </button>
     </form>
+  );
+}
+
+/** Mini preview of how the luxury hero will look */
+function BrandingPreview({
+  agency,
+  coverPreview,
+}: {
+  agency: Agency;
+  coverPreview: string | null;
+}) {
+  const isDark = agency.theme_mode === 'dark';
+  const accentColor = agency.secondary_color || agency.primary_color;
+
+  return (
+    <div
+      className={`relative flex h-[280px] flex-col items-center justify-center rounded-xl px-6 text-center ${
+        isDark ? 'bg-gray-950 text-white' : 'bg-gray-100 text-gray-900'
+      }`}
+    >
+      {/* Cover background */}
+      {coverPreview && (
+        <>
+          <Image
+            src={coverPreview}
+            alt="Aperçu couverture"
+            fill
+            className="rounded-xl object-cover"
+          />
+          <div
+            className={`absolute inset-0 rounded-xl ${
+              isDark
+                ? 'bg-gradient-to-b from-black/60 via-black/40 to-black/80'
+                : 'bg-gradient-to-b from-white/50 via-white/30 to-white/70'
+            }`}
+          />
+        </>
+      )}
+
+      <div className="relative z-10">
+        {agency.logo_url && (
+          <Image
+            src={agency.logo_url}
+            alt="Logo"
+            width={60}
+            height={60}
+            className="mx-auto mb-4 h-16 w-16 rounded-full object-cover shadow-lg"
+          />
+        )}
+        <h3 className="font-display-classic text-2xl">{agency.name}</h3>
+        <div
+          className="mx-auto mt-3 h-0.5 w-16"
+          style={{ backgroundColor: accentColor }}
+        />
+        {(agency.tagline || agency.slogan) && (
+          <p className="mt-3 text-sm opacity-80">{agency.tagline || agency.slogan}</p>
+        )}
+      </div>
+    </div>
   );
 }

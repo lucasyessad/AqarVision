@@ -1,42 +1,30 @@
 import { notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
 import { LuxuryHero } from '@/components/agency/luxury-hero';
 import { LuxuryPropertiesSection } from '@/components/agency/luxury-properties-section';
 import { LuxuryAboutSection } from '@/components/agency/luxury-about-section';
-import type { Agency, Property } from '@/types/database';
+import { getAgencyBySlug, getAgencyProperties } from '@/lib/queries/agency';
+import type { Metadata } from 'next';
 
 interface AgencyPageProps {
   params: Promise<{ slug: string }>;
 }
 
-async function getAgencyWithProperties(slug: string) {
-  const supabase = await createClient();
-
-  const { data: agency } = await supabase
-    .from('agencies')
-    .select('*')
-    .eq('slug', slug)
-    .single();
-
-  if (!agency) return null;
-
-  const { data: properties } = await supabase
-    .from('properties')
-    .select('*')
-    .eq('agency_id', agency.id)
-    .order('created_at', { ascending: false })
-    .limit(6);
-
-  return { agency: agency as Agency, properties: (properties || []) as Property[] };
+export async function generateMetadata({ params }: AgencyPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const agency = await getAgencyBySlug(slug);
+  if (!agency) return {};
+  return {
+    title: { absolute: `${agency.name} — Agence immobilière${agency.wilaya ? ` à ${agency.wilaya}` : ''}` },
+  };
 }
 
 export default async function AgencyPage({ params }: AgencyPageProps) {
   const { slug } = await params;
-  const data = await getAgencyWithProperties(slug);
+  const agency = await getAgencyBySlug(slug);
 
-  if (!data) notFound();
+  if (!agency) notFound();
 
-  const { agency, properties } = data;
+  const properties = await getAgencyProperties(agency.id, 6);
 
   // Enterprise → Pages Luxury
   if (agency.active_plan === 'enterprise') {
@@ -44,7 +32,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
       <>
         <LuxuryHero agency={agency} />
         <LuxuryPropertiesSection agency={agency} properties={properties} />
-        <LuxuryAboutSection agency={agency} />
+        <LuxuryAboutSection agency={agency} showStats={false} />
       </>
     );
   }

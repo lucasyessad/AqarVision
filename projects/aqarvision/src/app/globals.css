@@ -161,15 +161,47 @@
 /* === Font Display Variants === */
 
 .font-display-modern {
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-inter), 'Inter', 'Helvetica Neue', sans-serif;
 }
 
 .font-display-classic {
-  font-family: 'Playfair Display', 'Georgia', serif;
+  font-family: var(--font-playfair), 'Playfair Display', 'Georgia', serif;
 }
 
 .font-display-elegant {
-  font-family: 'Cormorant Garamond', 'Garamond', serif;
+  font-family: var(--font-cormorant), 'Cormorant Garamond', 'Garamond', serif;
+}
+
+/* === Accessibility: Reduced Motion === */
+
+@media (prefers-reduced-motion: reduce) {
+  .luxury-animate-fade-in-up,
+  .luxury-animate-fade-in,
+  .luxury-animate-scale-in,
+  .luxury-animate-fade-in-delayed,
+  .luxury-animate-fade-in-delayed-2,
+  .luxury-animate-fade-in-delayed-3,
+  .luxury-animate-line-grow,
+  .luxury-animate-counter,
+  .luxury-animate-scroll-bounce {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .luxury-scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .luxury-property-card img {
+    transition: none !important;
+  }
+
+  .luxury-header-glass {
+    transition: none !important;
+  }
 }
 
 /* === Display Text Size === */
