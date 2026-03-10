@@ -9,7 +9,7 @@ import { NextResponse, type NextRequest } from 'next/server';
  * 3. Redirige vers /dashboard si déjà authentifié sur /login
  */
 
-const PROTECTED_ROUTES = ['/dashboard'];
+const PROTECTED_ROUTES = ['/dashboard', '/favoris', '/alertes', '/recherches'];
 const AUTH_ROUTES = ['/login', '/signup'];
 
 export async function middleware(request: NextRequest) {
