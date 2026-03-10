@@ -5,5 +5,6 @@ export { updateLeadStatus, updateLeadPriority, deleteLead } from './lead-managem
 export { inviteMember, updateMemberRole, removeMember } from './team';
 export { markNotificationAsRead, markAllNotificationsAsRead, deleteNotification, createNotification } from './notifications';
 export { addLeadNote, deleteLeadNote } from './lead-notes';
-export { getAgencyForCurrentUser, isAuthError } from './auth';
+export { getAgencyForCurrentUser } from './auth';
+export { isAuthError } from './auth-utils';
 export type { AgencyAuth, AuthError } from './auth';

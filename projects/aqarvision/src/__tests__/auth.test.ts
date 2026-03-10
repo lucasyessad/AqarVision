@@ -7,7 +7,8 @@ vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(() => Promise.resolve(mockSupabase)),
 }));
 
-import { getAgencyForCurrentUser, isAuthError } from '@/lib/actions/auth';
+import { getAgencyForCurrentUser } from '@/lib/actions/auth';
+import { isAuthError } from '@/lib/actions/auth-utils';
 
 describe('getAgencyForCurrentUser', () => {
   beforeEach(() => {

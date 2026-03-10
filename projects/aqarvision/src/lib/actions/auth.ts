@@ -1,16 +1,9 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import type { AgencyAuth, AuthError } from './auth-utils';
 
-export interface AgencyAuth {
-  agency: { id: string; active_plan: string };
-  user: { id: string; email: string };
-}
-
-export interface AuthError {
-  success: false;
-  error: string;
-}
+export type { AgencyAuth, AuthError };
 
 /**
  * Vérifie que l'utilisateur est propriétaire OU admin de son agence.
@@ -65,11 +58,4 @@ export async function getAgencyForCurrentUser(): Promise<AgencyAuth | AuthError>
     agency: { id: memberAgency.id, active_plan: memberAgency.active_plan },
     user: { id: user.id, email: user.email || '' },
   };
-}
-
-/**
- * Type guard pour différencier une erreur d'auth d'un résultat valide.
- */
-export function isAuthError(result: AgencyAuth | AuthError): result is AuthError {
-  return 'success' in result && result.success === false;
 }

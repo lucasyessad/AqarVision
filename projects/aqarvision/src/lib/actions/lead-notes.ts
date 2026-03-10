@@ -2,7 +2,8 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { getAgencyForCurrentUser, isAuthError } from './auth';
+import { getAgencyForCurrentUser } from './auth';
+import { isAuthError } from './auth-utils';
 
 interface ActionResult {
   success: boolean;

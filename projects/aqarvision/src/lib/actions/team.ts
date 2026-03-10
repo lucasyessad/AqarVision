@@ -3,7 +3,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { createPlanGate } from '@/lib/plan-gate';
 import { revalidatePath } from 'next/cache';
-import { getAgencyForCurrentUser, isAuthError } from './auth';
+import { getAgencyForCurrentUser } from './auth';
+import { isAuthError } from './auth-utils';
 
 interface ActionResult {
   success: boolean;
