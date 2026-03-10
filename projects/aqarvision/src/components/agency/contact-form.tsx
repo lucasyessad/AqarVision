@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { createLead } from '@/lib/actions/leads';
+import { getTranslations } from '@/lib/i18n';
 import type { Agency } from '@/types/database';
 import { PLANS } from '@/config';
 
@@ -14,6 +15,7 @@ export function ContactForm({ agency, propertyId }: ContactFormProps) {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  const t = getTranslations(agency.locale ?? 'fr');
   const isDark = agency.theme_mode === 'dark';
   const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
   const accentColor = agency.secondary_color || agency.primary_color;
@@ -34,10 +36,10 @@ export function ContactForm({ agency, propertyId }: ContactFormProps) {
     startTransition(async () => {
       const result = await createLead(data);
       if (result.success) {
-        setMessage({ type: 'success', text: 'Message envoyé avec succès ! Nous vous recontacterons rapidement.' });
+        setMessage({ type: 'success', text: t('form.success') });
         (e.target as HTMLFormElement).reset();
       } else {
-        setMessage({ type: 'error', text: result.error || 'Erreur lors de l\'envoi' });
+        setMessage({ type: 'error', text: result.error || t('form.error') });
       }
     });
   }
@@ -71,7 +73,7 @@ export function ContactForm({ agency, propertyId }: ContactFormProps) {
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="lead-name" className={labelClass}>
-            Nom complet *
+            {t('form.name')} *
           </label>
           <input
             id="lead-name"
@@ -79,13 +81,13 @@ export function ContactForm({ agency, propertyId }: ContactFormProps) {
             type="text"
             required
             minLength={2}
-            placeholder="Votre nom"
+            placeholder={t('form.namePlaceholder')}
             className={inputClass}
           />
         </div>
         <div>
           <label htmlFor="lead-phone" className={labelClass}>
-            Téléphone *
+            {t('form.phone')} *
           </label>
           <input
             id="lead-phone"
@@ -93,7 +95,7 @@ export function ContactForm({ agency, propertyId }: ContactFormProps) {
             type="tel"
             required
             minLength={9}
-            placeholder="0555 XX XX XX"
+            placeholder={t('form.phonePlaceholder')}
             className={inputClass}
           />
         </div>
@@ -101,27 +103,27 @@ export function ContactForm({ agency, propertyId }: ContactFormProps) {
 
       <div>
         <label htmlFor="lead-email" className={labelClass}>
-          Email (optionnel)
+          {t('form.email')}
         </label>
         <input
           id="lead-email"
           name="email"
           type="email"
-          placeholder="votre@email.com"
+          placeholder={t('form.emailPlaceholder')}
           className={inputClass}
         />
       </div>
 
       <div>
         <label htmlFor="lead-message" className={labelClass}>
-          Message (optionnel)
+          {t('form.message')}
         </label>
         <textarea
           id="lead-message"
           name="message"
           rows={4}
           maxLength={2000}
-          placeholder="Décrivez votre recherche ou posez votre question..."
+          placeholder={t('form.messagePlaceholder')}
           className={inputClass}
         />
       </div>
@@ -134,7 +136,7 @@ export function ContactForm({ agency, propertyId }: ContactFormProps) {
         }`}
         style={isEnterprise ? { backgroundColor: accentColor } : undefined}
       >
-        {isPending ? 'Envoi en cours...' : 'Envoyer le message'}
+        {isPending ? t('form.sending') : t('form.submit')}
       </button>
     </form>
   );

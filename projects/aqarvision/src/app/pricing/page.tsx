@@ -6,70 +6,66 @@ import {
   getBillingDiscount,
   type PlanType,
 } from '@/config';
+import { getTranslations } from '@/lib/i18n';
+
+const t = getTranslations('fr');
 
 export const metadata: Metadata = {
-  title: 'Tarifs',
-  description:
-    'Découvrez nos offres : Starter, Pro et Enterprise. 2 mois d\'essai gratuit, sans engagement.',
+  title: t('pricing.title'),
+  description: t('pricing.description'),
 };
 
-const BILLING_CYCLES = [
-  { id: 'monthly' as const, label: 'Mensuel' },
-  { id: 'quarterly' as const, label: 'Trimestriel', discount: 10 },
-  { id: 'yearly' as const, label: 'Annuel', discount: 20 },
-];
-
-/** Features affichées sur la page pricing avec labels FR */
+/** Features affichées sur la page pricing avec labels i18n */
 const FEATURE_LABELS: {
   key: string;
-  label: string;
+  labelKey: Parameters<typeof t>[0];
   getValue: (plan: PlanType) => string | boolean;
 }[] = [
   {
     key: 'properties',
-    label: 'Biens immobiliers',
+    labelKey: 'pricing.properties',
     getValue: (plan) => {
       const max = PLAN_CONFIGS[plan].limits.maxProperties;
-      return max === Infinity ? 'Illimité' : `${max} biens`;
+      return max === Infinity ? t('pricing.unlimited') : `${max}`;
     },
   },
   {
     key: 'leads',
-    label: 'Leads par mois',
+    labelKey: 'pricing.leadsPerMonth',
     getValue: (plan) => {
       const max = PLAN_CONFIGS[plan].limits.maxLeadsPerMonth;
-      return max === Infinity ? 'Illimité' : `${max} leads`;
+      return max === Infinity ? t('pricing.unlimited') : `${max}`;
     },
   },
   {
     key: 'members',
-    label: 'Membres',
+    labelKey: 'pricing.members',
     getValue: (plan) => {
       const max = PLAN_CONFIGS[plan].limits.maxMembers;
-      return `${max} membre${max > 1 ? 's' : ''}`;
+      return `${max}`;
     },
   },
   {
     key: 'storage',
-    label: 'Stockage',
+    labelKey: 'pricing.storage',
     getValue: (plan) => {
       const bytes = PLAN_CONFIGS[plan].limits.maxStorageBytes;
       if (bytes >= 1024 * 1024 * 1024) return `${bytes / (1024 * 1024 * 1024)} Go`;
       return `${bytes / (1024 * 1024)} Mo`;
     },
   },
-  { key: 'social', label: 'Réseaux sociaux', getValue: (plan) => PLAN_CONFIGS[plan].limits.socialIntegration },
-  { key: 'export', label: 'Export leads CSV', getValue: (plan) => PLAN_CONFIGS[plan].limits.exportLeads },
-  { key: 'analytics', label: 'Analytics avancés', getValue: (plan) => PLAN_CONFIGS[plan].limits.advancedAnalytics },
-  { key: 'luxury', label: 'Branding luxury', getValue: (plan) => PLAN_CONFIGS[plan].limits.luxuryBranding },
-  { key: 'domain', label: 'Domaine personnalisé', getValue: (plan) => PLAN_CONFIGS[plan].limits.customDomain },
+  { key: 'social', labelKey: 'pricing.social', getValue: (plan) => PLAN_CONFIGS[plan].limits.socialIntegration },
+  { key: 'export', labelKey: 'pricing.exportLeads', getValue: (plan) => PLAN_CONFIGS[plan].limits.exportLeads },
+  { key: 'analytics', labelKey: 'pricing.advancedAnalytics', getValue: (plan) => PLAN_CONFIGS[plan].limits.advancedAnalytics },
+  { key: 'luxury', labelKey: 'pricing.luxuryBranding', getValue: (plan) => PLAN_CONFIGS[plan].limits.luxuryBranding },
+  { key: 'domain', labelKey: 'pricing.customDomain', getValue: (plan) => PLAN_CONFIGS[plan].limits.customDomain },
   {
     key: 'featured',
-    label: 'Biens sponsorisés',
+    labelKey: 'pricing.featuredProperties',
     getValue: (plan) => {
       const max = PLAN_CONFIGS[plan].limits.featuredProperties;
       if (max === 0) return false;
-      return max === Infinity ? 'Illimité' : `${max} biens`;
+      return max === Infinity ? t('pricing.unlimited') : `${max}`;
     },
   },
 ];
@@ -108,8 +104,8 @@ export default function PricingPage() {
             Aqar<span className="text-blue-600">Vision</span>
           </Link>
           <nav className="flex items-center gap-6 text-sm">
-            <Link href="/" className="text-gray-600 hover:text-gray-900">Accueil</Link>
-            <Link href="/pricing" className="font-medium text-blue-600">Tarifs</Link>
+            <Link href="/" className="text-gray-600 hover:text-gray-900">{t('nav.home')}</Link>
+            <Link href="/pricing" className="font-medium text-blue-600">{t('pricing.title')}</Link>
           </nav>
         </div>
       </header>
@@ -118,14 +114,14 @@ export default function PricingPage() {
         {/* Hero */}
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            Des tarifs simples et transparents
+            {t('pricing.heading')}
           </h1>
           <p className="mt-4 text-lg text-gray-600">
-            <span className="font-semibold text-blue-600">{TRIAL_DURATION_DAYS} jours d&apos;essai gratuit</span>
-            {' '}sur tous les plans, sans engagement.
+            <span className="font-semibold text-blue-600">{t('pricing.trialDays', { count: TRIAL_DURATION_DAYS })}</span>
+            {' '}{t('pricing.noCommitment')}
           </p>
           <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-green-50 px-4 py-2 text-sm text-green-700">
-            <span className="font-medium">Paiement local</span> — CCP, BaridiMob, Dahabia, virement
+            <span className="font-medium">{t('pricing.localPayment')}</span> — {t('pricing.paymentMethods')}
           </div>
         </div>
 
@@ -162,12 +158,12 @@ export default function PricingPage() {
                   <span className="text-4xl font-bold tracking-tight text-gray-900">
                     {formatDZD(plan.pricing.monthlyDZD)}
                   </span>
-                  <span className="ml-1 text-sm text-gray-500">DA/mois</span>
+                  <span className="ml-1 text-sm text-gray-500">{t('pricing.perMonth')}</span>
                 </div>
 
                 {/* Annual savings */}
                 <p className="mt-2 text-xs text-gray-500">
-                  ou {formatDZD(plan.pricing.yearlyDZD)} DA/an
+                  ou {formatDZD(plan.pricing.yearlyDZD)} {t('pricing.perYear')}
                   {' '}
                   <span className="font-medium text-green-600">
                     (-{getBillingDiscount('yearly')}%)
@@ -183,14 +179,15 @@ export default function PricingPage() {
                       : 'bg-gray-900 text-white hover:bg-gray-800'
                   }`}
                 >
-                  Essai gratuit {TRIAL_DURATION_DAYS} jours
+                  {t('pricing.freeTrial', { count: TRIAL_DURATION_DAYS })}
                 </Link>
 
                 {/* Features */}
                 <ul className="mt-8 space-y-3">
-                  {FEATURE_LABELS.map(({ key, label, getValue }) => {
+                  {FEATURE_LABELS.map(({ key, labelKey, getValue }) => {
                     const value = getValue(plan.id);
                     const isAvailable = value !== false;
+                    const label = t(labelKey);
 
                     return (
                       <li key={key} className="flex items-center gap-3 text-sm">
@@ -213,13 +210,13 @@ export default function PricingPage() {
         {/* Comparison Table */}
         <div className="mt-24">
           <h2 className="text-center text-2xl font-bold text-gray-900">
-            Comparaison détaillée
+            {t('detail.comparison')}
           </h2>
           <div className="mt-8 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
-                  <th className="pb-4 text-left font-medium text-gray-500">Fonctionnalité</th>
+                  <th className="pb-4 text-left font-medium text-gray-500">{t('pricing.feature')}</th>
                   {plans.map((plan) => (
                     <th key={plan.id} className="pb-4 text-center font-semibold text-gray-900">
                       {plan.name}
@@ -228,9 +225,9 @@ export default function PricingPage() {
                 </tr>
               </thead>
               <tbody>
-                {FEATURE_LABELS.map(({ key, label, getValue }) => (
+                {FEATURE_LABELS.map(({ key, labelKey, getValue }) => (
                   <tr key={key} className="border-b">
-                    <td className="py-4 text-gray-600">{label}</td>
+                    <td className="py-4 text-gray-600">{t(labelKey)}</td>
                     {plans.map((plan) => {
                       const value = getValue(plan.id);
                       return (
@@ -252,35 +249,30 @@ export default function PricingPage() {
 
         {/* FAQ */}
         <div className="mt-24">
-          <h2 className="text-center text-2xl font-bold text-gray-900">Questions fréquentes</h2>
+          <h2 className="text-center text-2xl font-bold text-gray-900">{t('pricing.faq')}</h2>
           <div className="mx-auto mt-8 grid max-w-3xl gap-6">
             <div>
-              <h3 className="font-semibold text-gray-900">Comment fonctionne l&apos;essai gratuit ?</h3>
+              <h3 className="font-semibold text-gray-900">{t('pricing.faq1.q')}</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Vous bénéficiez de {TRIAL_DURATION_DAYS} jours d&apos;essai gratuit avec accès complet au plan choisi.
-                Aucun paiement n&apos;est requis pour commencer. À la fin de la période d&apos;essai,
-                vous choisissez de continuer ou non.
+                {t('pricing.faq1.a', { count: TRIAL_DURATION_DAYS })}
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Quels moyens de paiement acceptez-vous ?</h3>
+              <h3 className="font-semibold text-gray-900">{t('pricing.faq2.q')}</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Nous acceptons CCP, BaridiMob, Dahabia, virement bancaire et paiement en espèces.
-                Tous les prix sont en Dinars algériens (DA).
+                {t('pricing.faq2.a')}
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Puis-je changer de plan ?</h3>
+              <h3 className="font-semibold text-gray-900">{t('pricing.faq3.q')}</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Oui, vous pouvez passer à un plan supérieur à tout moment.
-                Le changement prend effet immédiatement et le montant est ajusté au prorata.
+                {t('pricing.faq3.a')}
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Y a-t-il un engagement ?</h3>
+              <h3 className="font-semibold text-gray-900">{t('pricing.faq4.q')}</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Non, tous nos plans sont sans engagement. Vous pouvez annuler à tout moment.
-                Les plans trimestriels et annuels offrent des réductions mais restent résiliables.
+                {t('pricing.faq4.a')}
               </p>
             </div>
           </div>
@@ -288,23 +280,22 @@ export default function PricingPage() {
 
         {/* CTA bottom */}
         <div className="mt-24 rounded-2xl bg-blue-600 p-12 text-center text-white">
-          <h2 className="text-3xl font-bold">Prêt à digitaliser votre agence ?</h2>
+          <h2 className="text-3xl font-bold">{t('pricing.ctaHeading')}</h2>
           <p className="mt-4 text-blue-100">
-            Rejoignez les agences qui font confiance à AqarVision.
-            {TRIAL_DURATION_DAYS} jours gratuits, aucune carte requise.
+            {t('pricing.ctaText', { count: TRIAL_DURATION_DAYS })}
           </p>
           <Link
             href="/signup"
             className="mt-8 inline-block rounded-lg bg-white px-8 py-3 font-semibold text-blue-600 hover:bg-blue-50"
           >
-            Commencer gratuitement
+            {t('pricing.ctaButton')}
           </Link>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="border-t px-6 py-8 text-center text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} AqarVision. Tous droits réservés.
+        &copy; {new Date().getFullYear()} AqarVision. {t('footer.rights')}
       </footer>
     </div>
   );

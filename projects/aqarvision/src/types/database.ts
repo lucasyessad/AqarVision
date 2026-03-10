@@ -7,7 +7,7 @@
 export type HeroStyle = 'color' | 'cover' | 'video';
 export type FontStyle = 'modern' | 'classic' | 'elegant';
 export type ThemeMode = 'light' | 'dark';
-export type AgencyLocale = 'fr' | 'ar';
+export type AgencyLocale = 'fr' | 'ar' | 'en';
 export type AgencyPlan = 'starter' | 'pro' | 'enterprise';
 export type MemberRole = 'admin' | 'agent' | 'viewer';
 export type TransactionType = 'sale' | 'rent';

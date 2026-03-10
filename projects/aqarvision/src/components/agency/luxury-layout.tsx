@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X, Phone, Mail, MapPin } from 'lucide-react';
 import { WhatsAppButton } from '@/components/agency/whatsapp-button';
+import { getTranslations } from '@/lib/i18n';
 import type { Agency } from '@/types/database';
 
 interface LuxuryLayoutProps {
@@ -24,6 +25,7 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
   const mobileMenuRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
+  const t = getTranslations(agency.locale ?? 'fr');
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
   const fontClass = FONT_CLASS_MAP[agency.font_style] || 'font-display-elegant';
@@ -76,10 +78,10 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
   }, [menuOpen]);
 
   const navLinks = [
-    { href: `/agence/${agency.slug}`, label: 'Accueil' },
-    { href: `/agence/${agency.slug}/biens`, label: 'Biens' },
-    { href: `/agence/${agency.slug}/a-propos`, label: 'À propos' },
-    { href: `/agence/${agency.slug}/contact`, label: 'Contact' },
+    { href: `/agence/${agency.slug}`, label: t('nav.home') },
+    { href: `/agence/${agency.slug}/biens`, label: t('nav.properties') },
+    { href: `/agence/${agency.slug}/a-propos`, label: t('nav.about') },
+    { href: `/agence/${agency.slug}/contact`, label: t('nav.contact') },
   ];
 
   const bgClass = isDark ? 'bg-gray-950 text-white' : 'bg-white text-gray-900';
@@ -92,7 +94,7 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-gray-900 focus:shadow-lg"
       >
-        Aller au contenu principal
+        {t('a11y.skipToContent')}
       </a>
 
       {/* === Header === */}
@@ -119,7 +121,7 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
+          <nav className="hidden items-center gap-8 md:flex" aria-label={t('nav.navigation')}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -136,7 +138,7 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
             ref={menuButtonRef}
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden"
-            aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-label={menuOpen ? t('a11y.closeMenu') : t('a11y.openMenu')}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
           >
@@ -150,7 +152,7 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
             id="mobile-menu"
             ref={mobileMenuRef}
             role="navigation"
-            aria-label="Menu mobile"
+            aria-label={t('nav.navigation')}
             className={`md:hidden border-t ${isDark ? 'border-white/10 bg-black/90' : 'border-gray-200 bg-white/95'} backdrop-blur-lg`}
             onKeyDown={handleMenuKeyDown}
           >
@@ -245,7 +247,7 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
             {/* Col 2: Navigation */}
             <div>
               <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest opacity-60">
-                Navigation
+                {t('nav.navigation')}
               </h3>
               <div className="flex flex-col gap-3">
                 {navLinks.map((link) => (
@@ -263,17 +265,17 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
             {/* Col 3: Contact */}
             <div>
               <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest opacity-60">
-                Contact
+                {t('contact.title')}
               </h3>
               <div className="flex flex-col gap-3 text-sm">
                 {agency.phone && (
-                  <a href={`tel:${agency.phone}`} className="flex items-center gap-2" aria-label={`Appeler ${agency.name}`}>
+                  <a href={`tel:${agency.phone}`} className="flex items-center gap-2" aria-label={t('a11y.callAgency', { name: agency.name })}>
                     <Phone className="h-4 w-4" style={{ color: accentColor }} aria-hidden="true" />
                     {agency.phone}
                   </a>
                 )}
                 {agency.email && (
-                  <a href={`mailto:${agency.email}`} className="flex items-center gap-2" aria-label={`Envoyer un email à ${agency.name}`}>
+                  <a href={`mailto:${agency.email}`} className="flex items-center gap-2" aria-label={t('a11y.emailAgency', { name: agency.name })}>
                     <Mail className="h-4 w-4" style={{ color: accentColor }} aria-hidden="true" />
                     {agency.email}
                   </a>
@@ -290,7 +292,7 @@ export function LuxuryLayout({ agency, children }: LuxuryLayoutProps) {
 
           {/* Copyright */}
           <div className="mt-12 border-t border-current/10 pt-8 text-center text-xs uppercase tracking-widest opacity-40">
-            © {new Date().getFullYear()} {agency.name}. Tous droits réservés.
+            © {new Date().getFullYear()} {agency.name}. {t('footer.rights')}
           </div>
         </div>
       </footer>

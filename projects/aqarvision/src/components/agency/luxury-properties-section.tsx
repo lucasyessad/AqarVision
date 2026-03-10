@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 import { formatPrice, getLocationLabel } from '@/lib/utils/format';
+import { getTranslations } from '@/lib/i18n';
 import type { Agency, Property } from '@/types/database';
 
 interface LuxuryPropertiesSectionProps {
@@ -13,6 +14,7 @@ interface LuxuryPropertiesSectionProps {
 
 export function LuxuryPropertiesSection({ agency, properties }: LuxuryPropertiesSectionProps) {
   const containerRef = useScrollReveal();
+  const t = getTranslations(agency.locale ?? 'fr');
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
 
@@ -29,14 +31,14 @@ export function LuxuryPropertiesSection({ agency, properties }: LuxuryProperties
             className="text-xs font-semibold uppercase tracking-widest"
             style={{ color: accentColor }}
           >
-            Portfolio
+            {t('properties.portfolio')}
           </span>
           <h2
             className={`mt-4 font-display-classic text-display-lg ${
               isDark ? 'text-white' : 'text-gray-900'
             }`}
           >
-            Nos biens d&apos;exception
+            {t('properties.title')}
           </h2>
           <div
             className="luxury-animate-line-grow mx-auto mt-6 h-0.5"
@@ -67,7 +69,7 @@ export function LuxuryPropertiesSection({ agency, properties }: LuxuryProperties
                       className="flex h-full w-full items-center justify-center"
                       style={{ backgroundColor: `${accentColor}20` }}
                     >
-                      <span className="text-sm opacity-40">Pas de photo</span>
+                      <span className="text-sm opacity-40">{t('properties.noPhoto')}</span>
                     </div>
                   )}
 
@@ -76,7 +78,7 @@ export function LuxuryPropertiesSection({ agency, properties }: LuxuryProperties
                     className="absolute left-4 top-4 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white"
                     style={{ backgroundColor: accentColor }}
                   >
-                    {property.transaction_type === 'sale' ? 'Vente' : 'Location'}
+                    {property.transaction_type === 'sale' ? t('properties.sale') : t('properties.rent')}
                   </span>
 
                   {/* Prix overlay */}
@@ -95,7 +97,7 @@ export function LuxuryPropertiesSection({ agency, properties }: LuxuryProperties
                   <div className="mt-2 flex items-center gap-4 text-sm opacity-60">
                     {(property.city || property.wilaya) && <span>{getLocationLabel(property)}</span>}
                     {property.surface && <span>{property.surface} m²</span>}
-                    {property.rooms && <span>{property.rooms} pièces</span>}
+                    {property.rooms && <span>{property.rooms} {t('properties.rooms')}</span>}
                   </div>
                 </div>
               </div>
@@ -103,7 +105,7 @@ export function LuxuryPropertiesSection({ agency, properties }: LuxuryProperties
           </div>
         ) : (
           <p className={`text-center opacity-50 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            Aucun bien disponible pour le moment.
+            {t('properties.none')}
           </p>
         )}
 
@@ -115,7 +117,7 @@ export function LuxuryPropertiesSection({ agency, properties }: LuxuryProperties
               className="inline-block border px-10 py-4 text-sm font-semibold uppercase tracking-widest transition-colors duration-300 hover:opacity-80"
               style={{ borderColor: accentColor, color: accentColor }}
             >
-              Voir tous les biens
+              {t('properties.viewAll')}
             </Link>
           </div>
         )}

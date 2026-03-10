@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { ChevronDown, Play } from 'lucide-react';
+import { getTranslations } from '@/lib/i18n';
 import type { Agency } from '@/types/database';
 import { UI } from '@/config';
 
@@ -67,7 +68,7 @@ function getYouTubeId(url: string): string | null {
  * Façade YouTube légère : affiche la miniature + bouton play.
  * L'iframe n'est chargée qu'au clic (~500KB–1MB économisés au chargement initial).
  */
-function YouTubeFacade({ videoId }: { videoId: string }) {
+function YouTubeFacade({ videoId, t }: { videoId: string; t: ReturnType<typeof getTranslations> }) {
   const [activated, setActivated] = useState(false);
 
   const handleActivate = useCallback(() => setActivated(true), []);
@@ -89,12 +90,12 @@ function YouTubeFacade({ videoId }: { videoId: string }) {
       type="button"
       onClick={handleActivate}
       className="absolute inset-0 h-full w-full cursor-pointer"
-      aria-label="Lire la vidéo"
+      aria-label={t('a11y.playVideo')}
     >
       {/* Thumbnail YouTube (maxresdefault avec fallback hqdefault) */}
       <Image
         src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-        alt="Aperçu vidéo"
+        alt={t('a11y.videoPreview')}
         fill
         className="object-cover"
         sizes="100vw"
@@ -127,6 +128,7 @@ export function LuxuryHero({ agency }: LuxuryHeroProps) {
     stats_clients,
   } = agency;
 
+  const t = getTranslations(agency.locale ?? 'fr');
   const isDark = theme_mode === 'dark';
   const accentColor = secondary_color || primary_color;
 
@@ -137,9 +139,9 @@ export function LuxuryHero({ agency }: LuxuryHeroProps) {
   const textColor = isDark ? 'text-white' : 'text-gray-900';
 
   const stats = [
-    { value: stats_years, label: "Années d'expérience", suffix: '+' },
-    { value: stats_properties_sold, label: 'Biens vendus', suffix: '+' },
-    { value: stats_clients, label: 'Clients satisfaits', suffix: '+' },
+    { value: stats_years, label: t('about.years'), suffix: '+' },
+    { value: stats_properties_sold, label: t('about.sold'), suffix: '+' },
+    { value: stats_clients, label: t('about.clients'), suffix: '+' },
   ].filter((s) => s.value != null && s.value > 0);
 
   return (
@@ -148,7 +150,7 @@ export function LuxuryHero({ agency }: LuxuryHeroProps) {
       {hero_style === 'video' && hero_video_url ? (
         <>
           {getYouTubeId(hero_video_url) ? (
-            <YouTubeFacade videoId={getYouTubeId(hero_video_url)!} />
+            <YouTubeFacade videoId={getYouTubeId(hero_video_url)!} t={t} />
           ) : (
             <video
               className="absolute inset-0 h-full w-full object-cover"
@@ -222,7 +224,7 @@ export function LuxuryHero({ agency }: LuxuryHeroProps) {
             color: isDark ? 'white' : 'inherit',
           }}
         >
-          Découvrir nos biens
+          {t('hero.cta')}
         </a>
 
         {/* Stats */}

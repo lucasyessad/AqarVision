@@ -4,6 +4,7 @@ import { fetchSocialFeed } from '@/lib/social/fetch-feed';
 import { ContactForm } from '@/components/agency/contact-form';
 import { ConditionalMap } from '@/components/agency/location-map';
 import { SocialFeedWidget } from '@/components/agency/social-feed-widget';
+import { getTranslations } from '@/lib/i18n';
 import { PAGINATION, PLANS } from '@/config';
 import type { Metadata } from 'next';
 
@@ -15,7 +16,8 @@ export async function generateMetadata({ params }: ContactPageProps): Promise<Me
   const { slug } = await params;
   const agency = await getAgencyBySlug(slug);
   if (!agency) return {};
-  return { title: 'Contact' };
+  const t = getTranslations(agency.locale ?? 'fr');
+  return { title: t('contact.title') };
 }
 
 export default async function ContactPage({ params }: ContactPageProps) {
@@ -23,6 +25,8 @@ export default async function ContactPage({ params }: ContactPageProps) {
   const agency = await getAgencyBySlug(slug);
 
   if (!agency) notFound();
+
+  const t = getTranslations(agency.locale ?? 'fr');
 
   const hasSocial = agency.instagram_url || agency.facebook_url || agency.tiktok_url;
   const socialFeed = hasSocial
@@ -39,10 +43,10 @@ export default async function ContactPage({ params }: ContactPageProps) {
   const isDark = agency.theme_mode === 'dark';
 
   const contactItems = [
-    { label: 'Téléphone', value: agency.phone, href: agency.phone ? `tel:${agency.phone}` : null },
-    { label: 'Email', value: agency.email, href: agency.email ? `mailto:${agency.email}` : null },
-    { label: 'Site web', value: agency.website, href: agency.website },
-    { label: 'Adresse', value: agency.address, href: null },
+    { label: t('contact.phone'), value: agency.phone, href: agency.phone ? `tel:${agency.phone}` : null },
+    { label: t('contact.email'), value: agency.email, href: agency.email ? `mailto:${agency.email}` : null },
+    { label: t('contact.website'), value: agency.website, href: agency.website },
+    { label: t('contact.address'), value: agency.address, href: null },
   ].filter((c) => c.value);
 
   // Enterprise → Contact luxe avec formulaire
@@ -55,14 +59,14 @@ export default async function ContactPage({ params }: ContactPageProps) {
               className="text-xs font-semibold uppercase tracking-widest"
               style={{ color: accentColor }}
             >
-              Contact
+              {t('contact.title')}
             </span>
             <h1
               className={`mt-4 font-display-classic text-display-lg ${
                 isDark ? 'text-white' : 'text-gray-900'
               }`}
             >
-              Nous contacter
+              {t('contact.heading')}
             </h1>
             <div
               className="mx-auto mt-6 h-0.5 w-20"
@@ -115,7 +119,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                   isDark ? 'text-white' : 'text-gray-900'
                 }`}
               >
-                Envoyez-nous un message
+                {t('contact.sendMessage')}
               </h2>
               <ContactForm agency={agency} />
             </div>
@@ -148,7 +152,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
   // Starter / Pro → Contact basique avec formulaire
   return (
     <div className="mx-auto max-w-4xl px-6 py-12">
-      <h1 className="mb-8 text-2xl font-bold">Contacter {agency.name}</h1>
+      <h1 className="mb-8 text-2xl font-bold">{t('contact.contactName', { name: agency.name })}</h1>
 
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Coordonnées */}
@@ -169,7 +173,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
         {/* Formulaire */}
         <div className="rounded-xl border p-6">
-          <h2 className="mb-6 text-lg font-semibold">Envoyez-nous un message</h2>
+          <h2 className="mb-6 text-lg font-semibold">{t('contact.sendMessage')}</h2>
           <ContactForm agency={agency} />
         </div>
       </div>

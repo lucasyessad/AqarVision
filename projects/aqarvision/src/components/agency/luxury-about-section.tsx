@@ -2,6 +2,7 @@
 
 import { Building2, FileText, MapPin } from 'lucide-react';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
+import { getTranslations } from '@/lib/i18n';
 import type { Agency } from '@/types/database';
 
 interface LuxuryAboutSectionProps {
@@ -11,19 +12,20 @@ interface LuxuryAboutSectionProps {
 
 export function LuxuryAboutSection({ agency, showStats = true }: LuxuryAboutSectionProps) {
   const containerRef = useScrollReveal();
+  const t = getTranslations(agency.locale ?? 'fr');
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
 
   const stats = [
-    { value: agency.stats_years, label: "Années d'expérience" },
-    { value: agency.stats_properties_sold, label: 'Biens vendus' },
-    { value: agency.stats_clients, label: 'Clients satisfaits' },
+    { value: agency.stats_years, label: t('about.years') },
+    { value: agency.stats_properties_sold, label: t('about.sold') },
+    { value: agency.stats_clients, label: t('about.clients') },
   ].filter((s) => s.value != null && s.value > 0);
 
   const infoCards = [
-    { icon: MapPin, label: 'Wilaya', value: agency.wilaya },
-    { icon: FileText, label: 'Registre de commerce', value: agency.registre_commerce },
-    { icon: Building2, label: 'Adresse', value: agency.address },
+    { icon: MapPin, label: t('about.wilaya'), value: agency.wilaya },
+    { icon: FileText, label: t('about.registre'), value: agency.registre_commerce },
+    { icon: Building2, label: t('about.address'), value: agency.address },
   ].filter((c) => c.value);
 
   return (
@@ -38,14 +40,14 @@ export function LuxuryAboutSection({ agency, showStats = true }: LuxuryAboutSect
             className="text-xs font-semibold uppercase tracking-widest"
             style={{ color: accentColor }}
           >
-            Notre histoire
+            {t('about.title')}
           </span>
           <h2
             className={`mt-4 font-display-classic text-display-lg ${
               isDark ? 'text-white' : 'text-gray-900'
             }`}
           >
-            À propos de {agency.name}
+            {t('about.heading', { name: agency.name })}
           </h2>
           <div
             className="luxury-animate-line-grow mx-auto mt-6 h-0.5"
