@@ -20,13 +20,38 @@ vi.mock('next/headers', () => ({
   ),
 }));
 
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+}));
+
 import { createLead } from '@/lib/actions/leads';
+
+// ─── Helpers ────────────────────────────────────────────────────────
+
+const AGENCY_ID = '550e8400-e29b-41d4-a716-446655440000';
+
+/** Mock the agency lookup + notification owner fetch that createLead now performs */
+function mockAgencyFlow() {
+  // 1. Agency existence check → .single()
+  builder.single.mockResolvedValueOnce({
+    data: { id: AGENCY_ID, active_plan: 'starter' },
+    error: null,
+  });
+  // 2. Owner fetch for notification → .single()
+  builder.single.mockResolvedValueOnce({
+    data: { owner_id: 'owner-1' },
+    error: null,
+  });
+}
 
 // ─── Tests ──────────────────────────────────────────────────────────
 
 describe('createLead server action', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    builder.select.mockReturnValue(builder);
+    builder.eq.mockReturnValue(builder);
+    builder.gte.mockReturnValue(builder);
     builder.insert.mockReturnValue({ error: null });
   });
 
@@ -38,6 +63,7 @@ describe('createLead server action', () => {
   };
 
   it('creates a lead successfully', async () => {
+    mockAgencyFlow();
     builder.insert.mockReturnValue({ error: null });
     const result = await createLead(validLead);
     expect(result.success).toBe(true);
@@ -64,6 +90,11 @@ describe('createLead server action', () => {
   });
 
   it('returns error when Supabase insert fails', async () => {
+    // Agency exists but insert fails
+    builder.single.mockResolvedValueOnce({
+      data: { id: AGENCY_ID, active_plan: 'starter' },
+      error: null,
+    });
     builder.insert.mockReturnValue({ error: { message: 'DB error' } });
 
     const result = await createLead(validLead);
@@ -72,6 +103,7 @@ describe('createLead server action', () => {
   });
 
   it('accepts lead with all optional fields', async () => {
+    mockAgencyFlow();
     builder.insert.mockReturnValue({ error: null });
 
     const result = await createLead({
@@ -92,6 +124,7 @@ describe('createLead server action', () => {
     const sources = ['contact_form', 'property_detail', 'whatsapp', 'phone', 'walk_in', 'referral'];
 
     for (const source of sources) {
+      mockAgencyFlow();
       builder.insert.mockReturnValue({ error: null });
       const result = await createLead({ ...validLead, source });
       expect(result.success).toBe(true);

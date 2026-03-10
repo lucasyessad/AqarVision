@@ -12,6 +12,11 @@ export function createMockSupabase() {
   const builder: Record<string, ReturnType<typeof vi.fn>> = {
     select: vi.fn((): any => builder),
     eq: vi.fn((): any => builder),
+    neq: vi.fn((): any => builder),
+    in: vi.fn((): any => builder),
+    gte: vi.fn((): any => builder),
+    lte: vi.fn((): any => builder),
+    ilike: vi.fn((): any => builder),
     single: vi.fn((): any => Promise.resolve({ data: null, error: null })),
     insert: vi.fn((): any => builder),
     update: vi.fn((): any => builder),
