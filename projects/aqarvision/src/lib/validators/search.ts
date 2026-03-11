@@ -13,6 +13,10 @@ export const searchFiltersSchema = z.object({
   surface_min: z.coerce.number().min(0).optional().nullable(),
   surface_max: z.coerce.number().min(0).optional().nullable(),
   rooms_min: z.coerce.number().int().min(0).optional().nullable(),
+  bounds_north: z.coerce.number().optional(),
+  bounds_south: z.coerce.number().optional(),
+  bounds_east: z.coerce.number().optional(),
+  bounds_west: z.coerce.number().optional(),
   sort: z
     .enum(['recent', 'price_asc', 'price_desc', 'surface_asc', 'surface_desc', 'trust_desc'])
     .default('recent'),

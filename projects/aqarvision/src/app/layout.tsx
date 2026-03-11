@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { DM_Serif_Display, DM_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -30,6 +30,16 @@ export const metadata: Metadata = {
   },
   description:
     'Plateforme SaaS immobilière multi-agences pour le marché algérien. Créez votre vitrine en ligne en quelques clics.',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'AqarVision',
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#2563EB',
 };
 
 export default function RootLayout({

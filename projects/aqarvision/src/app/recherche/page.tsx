@@ -1,16 +1,15 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Building2, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { Building2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { searchProperties, searchPropertiesCount } from '@/lib/queries/search';
 import { searchFiltersSchema } from '@/lib/validators/search';
 import { SEARCH } from '@/config';
 import { SearchBar } from '@/components/search/search-bar';
 import { FilterPanel } from '@/components/search/filter-panel';
-import { ResultCard } from '@/components/search/result-card';
 import { ResultEmptyState } from '@/components/search/result-empty-state';
-import { FavoriteButton } from '@/components/search/favorite-button';
 import { AlertButton } from '@/components/search/alert-button';
+import { ResultsWithMap } from '@/components/search/results-with-map';
 import { createClient } from '@/lib/supabase/server';
 
 export const metadata: Metadata = {
@@ -56,6 +55,45 @@ export default async function RecherchePage({ searchParams }: PageProps) {
 
   const searchQuery = filters.q ?? '';
 
+  const paginationNode =
+    totalPages > 1 ? (
+      <nav className="mt-10 flex items-center justify-center gap-4">
+        {page > 1 ? (
+          <Link
+            href={`/recherche?${new URLSearchParams({ ...params, page: String(page - 1) }).toString()}`}
+            className="flex items-center gap-1.5 h-10 px-4 rounded-md border border-neutral-300 bg-white text-body-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Précédent
+          </Link>
+        ) : (
+          <span className="flex items-center gap-1.5 h-10 px-4 rounded-md border border-neutral-200 bg-neutral-50 text-body-sm text-neutral-400">
+            <ChevronLeft className="h-4 w-4" />
+            Précédent
+          </span>
+        )}
+
+        <span className="text-body-sm text-neutral-500">
+          Page {page} / {totalPages}
+        </span>
+
+        {page < totalPages ? (
+          <Link
+            href={`/recherche?${new URLSearchParams({ ...params, page: String(page + 1) }).toString()}`}
+            className="flex items-center gap-1.5 h-10 px-4 rounded-md border border-neutral-300 bg-white text-body-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
+          >
+            Suivant
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        ) : (
+          <span className="flex items-center gap-1.5 h-10 px-4 rounded-md border border-neutral-200 bg-neutral-50 text-body-sm text-neutral-400">
+            Suivant
+            <ChevronRight className="h-4 w-4" />
+          </span>
+        )}
+      </nav>
+    ) : null;
+
   return (
     <div className="min-h-screen bg-neutral-50">
       {/* Sticky header */}
@@ -94,72 +132,22 @@ export default async function RecherchePage({ searchParams }: PageProps) {
 
       {/* Main content */}
       <div className="max-w-[1440px] mx-auto px-6 py-6">
-        {/* Results count */}
-        <p className="text-body-sm text-neutral-500 mb-6">
-          {total.toLocaleString('fr-FR')} bien{total !== 1 ? 's' : ''} trouvé{total !== 1 ? 's' : ''}
-          {searchQuery && <span className="text-neutral-900 font-medium"> à « {searchQuery} »</span>}
-        </p>
-
         {properties.length > 0 ? (
-          <>
-            {/* Property grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {properties.map((property) => (
-                <ResultCard
-                  key={property.property_id}
-                  property={property}
-                  favoriteButton={
-                    <FavoriteButton
-                      propertyId={property.property_id}
-                      isFavorited={false}
-                      isAuthenticated={isAuthenticated}
-                    />
-                  }
-                />
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <nav className="mt-10 flex items-center justify-center gap-4">
-                {page > 1 ? (
-                  <Link
-                    href={`/recherche?${new URLSearchParams({ ...params, page: String(page - 1) }).toString()}`}
-                    className="flex items-center gap-1.5 h-10 px-4 rounded-md border border-neutral-300 bg-white text-body-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    Précédent
-                  </Link>
-                ) : (
-                  <span className="flex items-center gap-1.5 h-10 px-4 rounded-md border border-neutral-200 bg-neutral-50 text-body-sm text-neutral-400">
-                    <ChevronLeft className="h-4 w-4" />
-                    Précédent
-                  </span>
-                )}
-
-                <span className="text-body-sm text-neutral-500">
-                  Page {page} / {totalPages}
-                </span>
-
-                {page < totalPages ? (
-                  <Link
-                    href={`/recherche?${new URLSearchParams({ ...params, page: String(page + 1) }).toString()}`}
-                    className="flex items-center gap-1.5 h-10 px-4 rounded-md border border-neutral-300 bg-white text-body-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    Suivant
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                ) : (
-                  <span className="flex items-center gap-1.5 h-10 px-4 rounded-md border border-neutral-200 bg-neutral-50 text-body-sm text-neutral-400">
-                    Suivant
-                    <ChevronRight className="h-4 w-4" />
-                  </span>
-                )}
-              </nav>
-            )}
-          </>
+          <ResultsWithMap
+            properties={properties}
+            total={total}
+            searchQuery={searchQuery}
+            isAuthenticated={isAuthenticated}
+            pagination={paginationNode}
+          />
         ) : (
-          <ResultEmptyState hasFilters={hasFilters} />
+          <>
+            <p className="text-body-sm text-neutral-500 mb-6">
+              {total.toLocaleString('fr-FR')} bien{total !== 1 ? 's' : ''} trouvé{total !== 1 ? 's' : ''}
+              {searchQuery && <span className="text-neutral-900 font-medium"> à « {searchQuery} »</span>}
+            </p>
+            <ResultEmptyState hasFilters={hasFilters} />
+          </>
         )}
       </div>
     </div>

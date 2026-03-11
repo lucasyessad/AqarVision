@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Building2, ArrowRight, Search, Star, Shield, Users, ChevronRight } from 'lucide-react';
-import { SearchBar } from '@/components/search/search-bar';
-import { Suspense } from 'react';
+import {
+  Building2, ArrowRight, Search, Shield, Users, Star,
+  Bell, Heart, MapPin, BarChart3,
+  CheckCircle2, Zap, Globe2, MessageSquare, Layers,
+} from 'lucide-react';
 
-/* ─── Data ───────────────────────────────────────────────────────── */
+/* ─── Data ─────────────────────────────────────────────────────── */
 
 const CITIES = [
   { name: 'Alger',       count: 3240, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80' },
@@ -22,45 +24,14 @@ const STATS = [
   { label: 'Wilayas couvertes',   value: '48' },
 ];
 
-const TRANSACTION_TYPES = [
-  {
-    type: 'rent-long',
-    label: 'Location longue durée',
-    description: 'Appartements, villas et studios à louer à l\'année partout en Algérie.',
-    icon: '🏠',
-    border: 'border-primary-300 hover:border-primary-500',
-    iconBg: 'bg-primary-100',
-    href: '/recherche?transaction_type=rent',
-    cta: 'Voir les locations',
-  },
-  {
-    type: 'rent-short',
-    label: 'Location courte durée',
-    description: 'Logements meublés pour vos déplacements, vacances ou séjours temporaires.',
-    icon: '🌴',
-    border: 'border-amber-300 hover:border-amber-500',
-    iconBg: 'bg-amber-100',
-    href: '/recherche?transaction_type=rent&short_term=1',
-    cta: 'Réserver un logement',
-  },
-  {
-    type: 'buy',
-    label: 'Achat immobilier',
-    description: 'Trouvez votre bien idéal parmi des milliers d\'annonces vérifiées sur tout le territoire.',
-    icon: '🔑',
-    border: 'border-green-300 hover:border-green-500',
-    iconBg: 'bg-green-100',
-    href: '/recherche?transaction_type=sale',
-    cta: 'Explorer les biens',
-  },
-];
-
-/* ─── Navbar ─────────────────────────────────────────────────────── */
+/* ─── Navbar ────────────────────────────────────────────────────── */
 
 function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-b border-neutral-200 h-[72px] flex items-center">
-      <div className="w-full max-w-[1440px] mx-auto px-8 flex items-center justify-between gap-6">
+      <div className="w-full max-w-[1440px] mx-auto px-6 lg:px-8 flex items-center justify-between gap-6">
+
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0">
           <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shadow-sm">
             <Building2 className="h-5 w-5 text-white" />
@@ -71,24 +42,22 @@ function Navbar() {
           </div>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6 text-body-sm text-neutral-600">
-          <Link href="/recherche?transaction_type=rent" className="hover:text-primary-700 transition-colors">Location</Link>
-          <Link href="/recherche?transaction_type=sale" className="hover:text-primary-700 transition-colors">Achat</Link>
-          <Link href="/agences" className="hover:text-primary-700 transition-colors">Agences</Link>
-          <Link href="/recherche?country=ES" className="hover:text-primary-700 transition-colors">International</Link>
-        </nav>
-
-        <div className="flex items-center gap-3">
+        {/* CTAs droite — 2 produits distincts */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          {/* AqarSearch — outlined */}
           <Link
-            href="/recherches"
-            className="hidden sm:inline-flex items-center gap-1.5 text-body-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors"
+            href="/recherche"
+            className="hidden sm:inline-flex items-center gap-1.5 h-9 px-4 text-body-sm font-semibold text-primary-700 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors"
           >
-            Mes recherches
+            <Search className="h-3.5 w-3.5" />
+            AqarSearch
           </Link>
+          {/* AqarPro — filled */}
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center h-9 px-4 bg-primary-600 text-white text-body-sm font-semibold rounded-lg hover:bg-primary-700 transition-colors shadow-sm"
+            className="inline-flex items-center gap-1.5 h-9 px-4 bg-primary-600 text-white text-body-sm font-semibold rounded-lg hover:bg-primary-700 transition-colors shadow-sm"
           >
+            <Building2 className="h-3.5 w-3.5" />
             Espace agence
           </Link>
         </div>
@@ -97,16 +66,16 @@ function Navbar() {
   );
 }
 
-/* ─── Hero ───────────────────────────────────────────────────────── */
+/* ─── Hero — Vitrine écosystème ─────────────────────────────────── */
 
 function Hero() {
   return (
     <section
-      className="relative flex flex-col items-center justify-center min-h-[80vh] pt-[72px]"
+      className="relative flex flex-col items-center justify-center min-h-[90vh] pt-[72px]"
       style={{ background: 'linear-gradient(150deg, #0A1929 0%, #0D2D52 55%, #0F3D72 100%)' }}
     >
-      {/* Algerian flag accent line */}
-      <div className="absolute top-0 left-0 right-0 h-[3px]">
+      {/* Accent drapeau algérien */}
+      <div className="absolute top-[72px] left-0 right-0 h-[3px]">
         <div className="h-full w-full flex">
           <div className="flex-1 bg-green-600" />
           <div className="flex-1 bg-white" />
@@ -114,39 +83,68 @@ function Hero() {
         </div>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center text-center px-6 py-20 max-w-[900px] mx-auto w-full">
+      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-16 pb-12 max-w-[860px] mx-auto w-full">
+
+        {/* Eyebrow */}
         <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-6">
-          <span className="text-caption text-white/80">🇩🇿 Plateforme immobilière — 48 wilayas d'Algérie</span>
+          <Layers className="h-3.5 w-3.5 text-white/70" />
+          <span className="text-caption text-white/80">L'écosystème immobilier digital en Algérie</span>
         </div>
 
+        {/* Titre */}
         <h1 className="font-display text-display-xl text-white mb-4 leading-tight">
-          Votre prochain logement<br />
-          <span className="text-primary-300">commence ici</span>
+          Deux produits.<br />
+          <span className="text-primary-300">Un seul écosystème.</span>
         </h1>
-        <p className="text-body-lg text-white/70 mb-10 max-w-xl">
-          Location longue durée, courte durée, achat — des milliers d'annonces
-          vérifiées partout en Algérie.
+
+        {/* Sous-titre */}
+        <p className="text-body-lg text-white/70 mb-12 max-w-lg">
+          AqarVision connecte les <strong className="text-white/90">particuliers</strong> qui cherchent un logement
+          et les <strong className="text-white/90">agences</strong> qui veulent gérer leur activité — en Algérie et au-delà.
         </p>
 
-        <Suspense fallback={null}>
-          <SearchBar variant="hero" />
-        </Suspense>
+        {/* 2 cartes produit */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full max-w-[700px]">
 
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-          {[
-            { label: 'Appartements Alger',  href: '/recherche?q=Alger&type=appartement' },
-            { label: 'Villas Oran',          href: '/recherche?q=Oran&type=villa' },
-            { label: 'Studios Constantine',  href: '/recherche?q=Constantine' },
-            { label: 'Terrains Tizi-Ouzou', href: '/recherche?q=Tizi-Ouzou&type=terrain' },
-          ].map(({ label, href }) => (
+          {/* AqarSearch */}
+          <div className="flex flex-col text-left bg-white/10 border border-white/20 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/15 transition-colors">
+            <div className="w-11 h-11 bg-primary-500/30 border border-primary-400/40 rounded-xl flex items-center justify-center mb-4">
+              <Search className="h-5 w-5 text-primary-200" />
+            </div>
+            <span className="text-caption font-bold text-primary-300 uppercase tracking-widest mb-1">AqarSearch</span>
+            <h2 className="font-display text-xl text-white mb-2 leading-snug">
+              Vous cherchez un logement ?
+            </h2>
+            <p className="text-body-sm text-white/60 flex-1 mb-5">
+              Des milliers d'annonces vérifiées partout en Algérie. Recherche avancée, alertes, favoris, carte interactive.
+            </p>
             <Link
-              key={label}
-              href={href}
-              className="text-caption text-white/60 hover:text-white/90 transition-colors border border-white/20 rounded-full px-3 py-1 hover:border-white/40"
+              href="/recherche"
+              className="inline-flex items-center justify-center gap-2 h-10 px-5 bg-white text-primary-700 text-body-sm font-semibold rounded-xl hover:bg-primary-50 transition-colors"
             >
-              {label}
+              Rechercher un bien <ArrowRight className="h-4 w-4" />
             </Link>
-          ))}
+          </div>
+
+          {/* AqarPro */}
+          <div className="flex flex-col text-left bg-amber-500/10 border border-amber-400/30 backdrop-blur-sm rounded-2xl p-6 hover:bg-amber-500/15 transition-colors">
+            <div className="w-11 h-11 bg-amber-500/30 border border-amber-400/40 rounded-xl flex items-center justify-center mb-4">
+              <Building2 className="h-5 w-5 text-amber-200" />
+            </div>
+            <span className="text-caption font-bold text-amber-300 uppercase tracking-widest mb-1">AqarPro</span>
+            <h2 className="font-display text-xl text-white mb-2 leading-snug">
+              Vous êtes une agence ?
+            </h2>
+            <p className="text-body-sm text-white/60 flex-1 mb-5">
+              Gérez vos biens, leads et clients depuis un seul tableau de bord. Vitrine en ligne, CRM, analytics.
+            </p>
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center gap-2 h-10 px-5 bg-amber-400 text-amber-900 text-body-sm font-semibold rounded-xl hover:bg-amber-300 transition-colors"
+            >
+              Créer mon agence <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -165,67 +163,210 @@ function Hero() {
   );
 }
 
-/* ─── Transaction Types ──────────────────────────────────────────── */
+/* ─── Pour les particuliers ─────────────────────────────────────── */
 
-function TransactionTypes() {
+function ForParticuliers() {
+  const features = [
+    {
+      icon: Search,
+      title: 'Recherche intelligente',
+      desc: 'Filtrez par wilaya, prix, surface, type de bien. Trouvez exactement ce que vous cherchez en quelques secondes.',
+    },
+    {
+      icon: Bell,
+      title: 'Alertes personnalisées',
+      desc: 'Sauvegardez vos critères et recevez une notification dès qu\'un bien correspondant est publié.',
+    },
+    {
+      icon: Heart,
+      title: 'Favoris & comparaison',
+      desc: 'Sauvegardez vos coups de cœur et comparez jusqu\'à 4 biens côte à côte.',
+    },
+    {
+      icon: MessageSquare,
+      title: 'Messagerie sécurisée',
+      desc: 'Contactez les agences directement via la plateforme, sans divulguer vos coordonnées.',
+    },
+    {
+      icon: MapPin,
+      title: 'Recherche par carte',
+      desc: 'Visualisez les biens sur une carte interactive et dessinez votre zone de recherche.',
+    },
+    {
+      icon: BarChart3,
+      title: 'Observatoire des prix',
+      desc: 'Consultez les prix du marché par wilaya pour négocier en connaissance de cause.',
+    },
+  ];
+
   return (
-    <section className="py-20 px-6 max-w-[1440px] mx-auto">
-      <div className="text-center mb-12">
-        <h2 className="font-display text-display-md text-neutral-900 mb-3">Que cherchez-vous ?</h2>
-        <p className="text-body-lg text-neutral-500 max-w-lg mx-auto">
-          Que ce soit pour habiter, investir ou passer un séjour, trouvez exactement ce qu'il vous faut.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        {TRANSACTION_TYPES.map(t => (
-          <Link
-            key={t.type}
-            href={t.href}
-            className={`group flex flex-col p-8 rounded-2xl border-2 bg-white transition-all hover:shadow-lg ${t.border}`}
-          >
-            <div className={`w-14 h-14 rounded-2xl ${t.iconBg} flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform`}>
-              {t.icon}
-            </div>
-            <h3 className="font-display text-display-sm text-neutral-900 mb-2">{t.label}</h3>
-            <p className="text-body-md text-neutral-500 flex-1 mb-5">{t.description}</p>
-            <span className="inline-flex items-center gap-2 text-body-sm font-semibold text-primary-700 group-hover:gap-3 transition-all">
-              {t.cta} <ArrowRight className="h-4 w-4" />
+    <section id="particuliers" className="py-24 px-6 bg-white">
+      <div className="max-w-[1440px] mx-auto">
+        <div className="flex flex-col lg:flex-row items-start gap-16">
+          {/* Left — texte */}
+          <div className="lg:w-[380px] shrink-0 lg:sticky lg:top-24">
+            <span className="inline-flex items-center gap-2 text-caption font-semibold text-primary-600 uppercase tracking-widest mb-4">
+              <Search className="h-3.5 w-3.5" /> AqarSearch
             </span>
-          </Link>
-        ))}
-      </div>
-
-      {/* Vente CTA */}
-      <div className="rounded-2xl border-2 border-dashed border-neutral-300 bg-neutral-50 p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-white border border-neutral-200 rounded-xl flex items-center justify-center text-xl shadow-sm shrink-0">🤝</div>
-          <div>
-            <h3 className="text-heading-md text-neutral-900">Vous souhaitez vendre un bien ?</h3>
-            <p className="text-body-sm text-neutral-500">
-              Mettez-vous en relation directe avec une agence référencée. Estimation gratuite, accompagnement personnalisé.
+            <h2 className="font-display text-display-md text-neutral-900 mb-4">
+              Pour les particuliers
+            </h2>
+            <p className="text-body-lg text-neutral-500 mb-8">
+              Trouvez, comparez et contactez — tout ce dont vous avez besoin pour votre projet immobilier en Algérie.
             </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/recherche"
+                className="inline-flex items-center justify-center gap-2 h-11 px-6 bg-primary-600 text-white text-body-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors"
+              >
+                <Search className="h-4 w-4" /> Rechercher un bien
+              </Link>
+              <Link
+                href="/signup"
+                className="inline-flex items-center justify-center gap-2 h-11 px-6 border border-neutral-300 text-neutral-700 text-body-sm font-medium rounded-xl hover:bg-neutral-50 transition-colors"
+              >
+                Créer un compte gratuit
+              </Link>
+            </div>
+          </div>
+
+          {/* Right — features grid */}
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {features.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex gap-4 p-5 rounded-2xl border border-neutral-100 hover:border-primary-200 hover:bg-primary-50/30 transition-colors">
+                <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center shrink-0">
+                  <Icon className="h-5 w-5 text-primary-600" />
+                </div>
+                <div>
+                  <h3 className="text-heading-sm text-neutral-900 mb-1">{title}</h3>
+                  <p className="text-body-sm text-neutral-500">{desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <Link
-          href="/agences"
-          className="shrink-0 inline-flex items-center gap-2 h-11 px-6 bg-neutral-900 text-white text-body-sm font-semibold rounded-xl hover:bg-neutral-800 transition-colors"
-        >
-          Trouver une agence <ChevronRight className="h-4 w-4" />
-        </Link>
       </div>
     </section>
   );
 }
 
-/* ─── Popular Cities ─────────────────────────────────────────────── */
+/* ─── Pour les agences ──────────────────────────────────────────── */
+
+function ForAgences() {
+  const features = [
+    {
+      icon: Building2,
+      title: 'Vitrine en ligne',
+      desc: 'Votre mini-site personnalisé avec votre branding, vos annonces et vos coordonnées. Prêt en 5 minutes.',
+    },
+    {
+      icon: Users,
+      title: 'Gestion des leads',
+      desc: 'CRM intégré : qualifiez, suivez et convertissez vos contacts avec un pipeline visuel.',
+    },
+    {
+      icon: BarChart3,
+      title: 'Analytics avancés',
+      desc: 'Suivez les vues, clics, leads et conversions pour optimiser vos annonces.',
+    },
+    {
+      icon: Zap,
+      title: 'Publication rapide',
+      desc: 'Publiez un bien en moins de 2 minutes avec génération IA du titre et de la description.',
+    },
+    {
+      icon: Shield,
+      title: 'Badge vérifié',
+      desc: 'Obtenez le badge "Agence vérifiée" pour gagner la confiance des acheteurs et locataires.',
+    },
+    {
+      icon: Globe2,
+      title: 'Multi-pays',
+      desc: 'Publiez des annonces en Algérie, France, Espagne, Dubai et plus encore.',
+    },
+  ];
+
+  const plans = [
+    { name: 'Starter',    price: 'Gratuit',    cta: 'Commencer',     href: '/signup',        highlight: false },
+    { name: 'Pro',        price: '4 900 DA/m', cta: 'Essayer Pro',   href: '/signup',        highlight: true  },
+    { name: 'Enterprise', price: 'Sur mesure', cta: 'Nous contacter', href: '/pricing',      highlight: false },
+  ];
+
+  return (
+    <section id="agences" className="py-24 px-6 bg-neutral-50">
+      <div className="max-w-[1440px] mx-auto">
+        <div className="flex flex-col lg:flex-row-reverse items-start gap-16">
+          {/* Right (visually left on LG) — texte */}
+          <div className="lg:w-[380px] shrink-0 lg:sticky lg:top-24">
+            <span className="inline-flex items-center gap-2 text-caption font-semibold text-amber-600 uppercase tracking-widest mb-4">
+              <Building2 className="h-3.5 w-3.5" /> AqarPro
+            </span>
+            <h2 className="font-display text-display-md text-neutral-900 mb-4">
+              Pour les agences
+            </h2>
+            <p className="text-body-lg text-neutral-500 mb-8">
+              Le premier SaaS immobilier pensé pour le marché algérien. Gérez tout depuis un seul tableau de bord.
+            </p>
+
+            {/* Mini pricing */}
+            <div className="flex flex-col gap-3 mb-6">
+              {plans.map(plan => (
+                <Link
+                  key={plan.name}
+                  href={plan.href}
+                  className={[
+                    'flex items-center justify-between px-5 py-3.5 rounded-xl border transition-colors',
+                    plan.highlight
+                      ? 'bg-primary-600 border-primary-600 text-white hover:bg-primary-700'
+                      : 'bg-white border-neutral-200 text-neutral-700 hover:border-primary-300',
+                  ].join(' ')}
+                >
+                  <span className="text-body-sm font-semibold">{plan.name}</span>
+                  <div className="flex items-center gap-3">
+                    <span className={['text-body-sm', plan.highlight ? 'text-white/80' : 'text-neutral-500'].join(' ')}>{plan.price}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <Link
+              href="/pricing"
+              className="text-body-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
+            >
+              Comparer tous les plans <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          {/* Left — features */}
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {features.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex gap-4 p-5 rounded-2xl border border-neutral-200 bg-white hover:border-amber-300 hover:bg-amber-50/20 transition-colors">
+                <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center shrink-0">
+                  <Icon className="h-5 w-5 text-amber-600" />
+                </div>
+                <div>
+                  <h3 className="text-heading-sm text-neutral-900 mb-1">{title}</h3>
+                  <p className="text-body-sm text-neutral-500">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Popular Cities ────────────────────────────────────────────── */
 
 function PopularCities() {
   return (
-    <section className="py-20 px-6 bg-neutral-50">
+    <section className="py-20 px-6 bg-white">
       <div className="max-w-[1440px] mx-auto">
-        <h2 className="font-display text-display-md text-neutral-900 mb-3 text-center">Explorer par ville</h2>
-        <p className="text-body-lg text-neutral-500 text-center mb-10">Des annonces dans toutes les wilayas d'Algérie</p>
+        <div className="text-center mb-10">
+          <h2 className="font-display text-display-md text-neutral-900 mb-3">Explorer par ville</h2>
+          <p className="text-body-lg text-neutral-500">Des annonces dans toutes les wilayas d'Algérie</p>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {CITIES.map(city => (
             <Link
@@ -248,61 +389,32 @@ function PopularCities() {
             </Link>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── International Banner ───────────────────────────────────────── */
-
-function InternationalBanner() {
-  return (
-    <section className="py-16 px-6">
-      <div className="max-w-[1440px] mx-auto">
-        <div
-          className="rounded-3xl overflow-hidden relative"
-          style={{ background: 'linear-gradient(135deg, #0A1929 0%, #0D3B6B 100%)' }}
-        >
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 px-10 py-12">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-3 py-1 mb-4">
-                <span className="text-caption text-white/80">🌍 Annonces à l'international</span>
-              </div>
-              <h2 className="font-display text-display-md text-white mb-3">
-                Immobilier en Espagne,<br className="hidden md:block" /> France et Dubai
-              </h2>
-              <p className="text-body-lg text-white/70 max-w-lg">
-                Les Algériens peuvent publier et consulter des annonces immobilières à l'étranger.
-                Diaspora, investissement, résidence secondaire.
-              </p>
-            </div>
-            <Link
-              href="/recherche"
-              className="shrink-0 inline-flex items-center gap-2 h-12 px-8 bg-white text-primary-900 text-body-md font-semibold rounded-xl hover:bg-neutral-100 transition-colors shadow-lg"
-            >
-              Voir les annonces <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+        <div className="mt-8 text-center">
+          <Link href="/recherche" className="inline-flex items-center gap-2 text-body-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+            Voir toutes les annonces <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Why Us ─────────────────────────────────────────────────────── */
+/* ─── Trust / Why Us ────────────────────────────────────────────── */
 
 function WhyUs() {
   const points = [
-    { icon: Shield, title: 'Annonces vérifiées',  desc: 'Toutes les annonces sont contrôlées avant publication.' },
-    { icon: Users,  title: 'Agences référencées', desc: 'Accédez aux meilleures agences de votre wilaya.' },
-    { icon: Search, title: 'Recherche avancée',   desc: 'Filtrez par surface, prix, wilaya, type de bien et plus.' },
-    { icon: Star,   title: '100% gratuit',         desc: 'La consultation des annonces est gratuite pour les acheteurs.' },
+    { icon: Shield,       title: 'Agences vérifiées',  desc: 'Chaque agence passe par un processus de vérification avant d\'obtenir son badge.' },
+    { icon: Star,         title: 'Score de confiance', desc: 'Chaque annonce reçoit un score basé sur la qualité des photos, la description et l\'agence.' },
+    { icon: Search,       title: 'Recherche avancée',  desc: 'Filtres multicritères, carte interactive, alertes email — trouvez le bien idéal.' },
+    { icon: CheckCircle2, title: '100% gratuit',        desc: 'La consultation et la recherche sont entièrement gratuites pour les acheteurs.' },
   ];
 
   return (
-    <section className="py-20 px-6 bg-white">
+    <section className="py-20 px-6 bg-neutral-50">
       <div className="max-w-[1440px] mx-auto">
-        <h2 className="font-display text-display-md text-neutral-900 text-center mb-12">Pourquoi choisir Aqar ?</h2>
+        <h2 className="font-display text-display-md text-neutral-900 text-center mb-12">
+          La confiance au cœur d'AqarVision
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {points.map(({ icon: Icon, title, desc }) => (
             <div key={title} className="flex flex-col items-center text-center">
@@ -319,37 +431,71 @@ function WhyUs() {
   );
 }
 
-/* ─── Agency CTA ─────────────────────────────────────────────────── */
+/* ─── Dual CTA — bas de page ────────────────────────────────────── */
 
-function AgencyCTA() {
+function DualCTA() {
   return (
-    <section className="py-16 px-6 bg-neutral-50">
-      <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8 bg-white rounded-2xl border border-neutral-200 p-8 shadow-sm">
-        <div className="flex items-center gap-5">
-          <div className="w-14 h-14 bg-primary-600 rounded-2xl flex items-center justify-center shrink-0">
-            <Building2 className="h-7 w-7 text-white" />
+    <section className="py-16 px-6 bg-white">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Particulier */}
+        <div className="rounded-2xl border border-primary-200 bg-primary-50 p-8 flex flex-col">
+          <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-5">
+            <Search className="h-6 w-6 text-primary-600" />
           </div>
-          <div>
-            <h2 className="font-display text-display-sm text-neutral-900 mb-1">Vous êtes une agence immobilière ?</h2>
-            <p className="text-body-md text-neutral-500">
-              Gérez vos annonces, recevez vos leads et développez votre visibilité avec AqarPro.
-            </p>
+          <h3 className="font-display text-display-sm text-neutral-900 mb-2">
+            Je cherche un bien
+          </h3>
+          <p className="text-body-md text-neutral-500 flex-1 mb-6">
+            Créez un compte gratuit pour sauvegarder vos favoris, activer des alertes et contacter directement les agences.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center gap-2 h-11 px-6 bg-primary-600 text-white text-body-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors"
+            >
+              Créer un compte gratuit <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/recherche"
+              className="inline-flex items-center justify-center h-11 px-5 border border-primary-300 text-primary-700 text-body-sm font-medium rounded-xl hover:bg-primary-100 transition-colors"
+            >
+              Parcourir les annonces
+            </Link>
           </div>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <Link href="/pricing" className="h-11 px-5 border border-neutral-300 text-body-sm font-medium text-neutral-700 rounded-xl hover:bg-neutral-50 transition-colors inline-flex items-center">
-            Voir les tarifs
-          </Link>
-          <Link href="/signup" className="h-11 px-6 bg-primary-600 text-white text-body-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors inline-flex items-center gap-2">
-            Créer mon espace <ArrowRight className="h-4 w-4" />
-          </Link>
+
+        {/* Agence */}
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-8 flex flex-col">
+          <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-5">
+            <Building2 className="h-6 w-6 text-amber-600" />
+          </div>
+          <h3 className="font-display text-display-sm text-neutral-900 mb-2">
+            Je suis une agence
+          </h3>
+          <p className="text-body-md text-neutral-500 flex-1 mb-6">
+            Publiez vos annonces, recevez des leads qualifiés et gérez votre présence en ligne depuis un seul tableau de bord.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center gap-2 h-11 px-6 bg-amber-500 text-white text-body-sm font-semibold rounded-xl hover:bg-amber-600 transition-colors"
+            >
+              Créer mon agence <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/pricing"
+              className="inline-flex items-center justify-center h-11 px-5 border border-amber-300 text-amber-700 text-body-sm font-medium rounded-xl hover:bg-amber-100 transition-colors"
+            >
+              Voir les tarifs
+            </Link>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Footer ─────────────────────────────────────────────────────── */
+/* ─── Footer ────────────────────────────────────────────────────── */
 
 function Footer() {
   return (
@@ -358,9 +504,9 @@ function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           {[
             {
-              title: 'Chercher',
-              links: ['Location longue durée', 'Location courte durée', 'Acheter un bien', 'Biens à la une'],
-              hrefs: ['/recherche?transaction_type=rent', '/recherche?transaction_type=rent&short_term=1', '/recherche?transaction_type=sale', '/recherche?featured=1'],
+              title: 'AqarSearch',
+              links: ['Rechercher un bien', 'Alertes de recherche', 'Mes favoris', 'Prix du marché'],
+              hrefs: ['/recherche', '/alertes', '/favoris', '/prix-immobilier'],
             },
             {
               title: 'International',
@@ -368,13 +514,13 @@ function Footer() {
               hrefs: ['/recherche?country=ES', '/recherche?country=FR', '/recherche?country=AE', '/recherche'],
             },
             {
-              title: 'Agences',
-              links: ['Annuaire agences', 'AqarPro', 'Créer un compte', 'Tarifs'],
+              title: 'AqarPro',
+              links: ['Annuaire agences', 'Tableau de bord', 'Créer une agence', 'Tarifs'],
               hrefs: ['/agences', '/dashboard', '/signup', '/pricing'],
             },
             {
               title: 'Légal',
-              links: ['À propos', 'Confidentialité', 'Conditions', 'Contact'],
+              links: ['À propos', 'Confidentialité', 'Conditions d\'utilisation', 'Contact'],
               hrefs: ['#', '#', '#', '#'],
             },
           ].map(col => (
@@ -394,11 +540,14 @@ function Footer() {
         </div>
 
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 bg-primary-600 rounded-lg flex items-center justify-center">
               <Building2 className="h-4 w-4 text-white" />
             </div>
-            <span className="font-display text-white">AqarSearch</span>
+            <div className="flex flex-col leading-none">
+              <span className="font-display text-white text-sm">AqarVision</span>
+              <span className="text-neutral-500" style={{ fontSize: '9px', letterSpacing: '0.1em' }}>PLATEFORME IMMOBILIÈRE</span>
+            </div>
           </div>
           <p className="text-caption text-neutral-500">
             © {new Date().getFullYear()} AqarVision. Tous droits réservés. · Plateforme immobilière algérienne
@@ -409,7 +558,7 @@ function Footer() {
   );
 }
 
-/* ─── Page ───────────────────────────────────────────────────────── */
+/* ─── Page ──────────────────────────────────────────────────────── */
 
 export default function HomePage() {
   return (
@@ -417,11 +566,11 @@ export default function HomePage() {
       <Navbar />
       <main>
         <Hero />
-        <TransactionTypes />
+        <ForParticuliers />
+        <ForAgences />
         <PopularCities />
-        <InternationalBanner />
         <WhyUs />
-        <AgencyCTA />
+        <DualCTA />
       </main>
       <Footer />
     </>

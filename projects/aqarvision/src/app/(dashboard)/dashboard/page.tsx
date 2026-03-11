@@ -40,11 +40,11 @@ export default async function DashboardPage() {
 
   const { data: agency } = await supabase
     .from('agencies')
-    .select('id, name, plan')
+    .select('id, name, active_plan')
     .eq('owner_id', user.id)
     .single();
 
-  if (!agency) redirect('/login');
+  if (!agency) redirect('/profil'); // particulier connecté sans agence
 
   const agencyId = agency.id;
   const now          = new Date();
@@ -56,14 +56,18 @@ export default async function DashboardPage() {
     { count: activeProperties },
     { count: leadsThisMonth },
     { count: leadsLastMonth },
+    { count: convertedThisMonth },
     { count: viewsThisMonth },
+    { count: viewsLastMonth },
     { data: recentLeads },
     { data: recentActivity },
   ] = await Promise.all([
     supabase.from('properties').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).eq('status', 'active'),
     supabase.from('leads').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).gte('created_at', firstOfMonth),
     supabase.from('leads').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).gte('created_at', lastMonth).lte('created_at', endLastMonth),
+    supabase.from('leads').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).eq('status', 'converted').gte('created_at', firstOfMonth),
     supabase.from('property_views').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).gte('created_at', firstOfMonth),
+    supabase.from('property_views').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).gte('created_at', lastMonth).lte('created_at', endLastMonth),
     supabase.from('leads').select('id, name, status, created_at, property_id, properties(title)').eq('agency_id', agencyId).order('created_at', { ascending: false }).limit(5),
     supabase.from('analytics_events').select('id, event_type, metadata, created_at').eq('agency_id', agencyId).order('created_at', { ascending: false }).limit(8),
   ]);
@@ -72,7 +76,15 @@ export default async function DashboardPage() {
     ? Math.round((((leadsThisMonth ?? 0) - (leadsLastMonth ?? 0)) / Math.max(leadsLastMonth ?? 1, 1)) * 100)
     : 0;
 
-  const planConfig  = getPlanConfig(agency.plan ?? 'starter');
+  const viewsTrend = viewsLastMonth
+    ? Math.round((((viewsThisMonth ?? 0) - (viewsLastMonth ?? 0)) / Math.max(viewsLastMonth ?? 1, 1)) * 100)
+    : 0;
+
+  const conversionRate = leadsThisMonth
+    ? Math.round(((convertedThisMonth ?? 0) / Math.max(leadsThisMonth ?? 1, 1)) * 100)
+    : 0;
+
+  const planConfig  = getPlanConfig(agency.active_plan ?? 'starter');
   const propLimit   = planConfig?.limits?.maxProperties ?? 15;
 
   const formatDate = (d: string) =>
@@ -110,7 +122,7 @@ export default async function DashboardPage() {
           label="Vues ce mois"
           value={(viewsThisMonth ?? 0).toLocaleString('fr-FR')}
           icon={Eye}
-          trend={{ value: 8.2, label: 'vs mois dernier' }}
+          trend={{ value: viewsTrend, label: 'vs mois dernier' }}
         />
         <StatCard
           label="Leads ce mois"
@@ -120,7 +132,7 @@ export default async function DashboardPage() {
         />
         <StatCard
           label="Taux de conversion"
-          value={leadsThisMonth ? `${Math.round((leadsThisMonth ?? 0) * 0.12)}%` : '0%'}
+          value={`${conversionRate}%`}
           icon={TrendingUp}
         />
       </div>
