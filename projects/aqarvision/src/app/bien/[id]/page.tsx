@@ -9,6 +9,7 @@ import { formatPrice, getLocationLabel } from '@/lib/utils/format';
 import { TrustBadge } from '@/components/search/trust-badge';
 import { FavoriteButton } from '@/components/search/favorite-button';
 import { ContactPanel } from '@/components/search/contact-panel';
+import { VisitRequestForm } from '@/components/search/visit-request-form';
 import { ResultCard } from '@/components/search/result-card';
 import { PropertyCardSkeleton } from '@/components/ui/skeleton';
 import { createClient } from '@/lib/supabase/server';
@@ -236,7 +237,7 @@ export default async function BienPage({ params }: PageProps) {
 
           {/* Sidebar — Contact */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6">
+            <div className="sticky top-6 space-y-4">
               <ContactPanel
                 agencyId={property.agency_id}
                 agencyName={property.agency_name}
@@ -246,6 +247,13 @@ export default async function BienPage({ params }: PageProps) {
                 propertyTitle={property.title}
                 propertyPrice={formattedPrice}
               />
+              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                <VisitRequestForm
+                  propertyId={property.property_id}
+                  agencyId={property.agency_id}
+                  isAuthenticated={isAuthenticated}
+                />
+              </div>
             </div>
           </div>
         </div>

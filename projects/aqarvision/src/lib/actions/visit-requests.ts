@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { proPattern } from '@/lib/utils/paths';
 import { visitRequestSchema } from '@/lib/validators/visit-request';
 
 interface ActionResult {
@@ -60,6 +61,6 @@ export async function createVisitRequest(data: {
     priority: 'normal',
   });
 
-  revalidatePath('/dashboard/visites');
+  revalidatePath(proPattern('visit-requests'));
   return { success: true };
 }

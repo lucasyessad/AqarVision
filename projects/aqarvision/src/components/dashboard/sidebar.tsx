@@ -19,6 +19,7 @@ import {
   BarChart3,
   Shield,
   Calendar,
+  CalendarCheck,
   ExternalLink,
   Bell,
 } from 'lucide-react';
@@ -40,6 +41,7 @@ function buildNav(slug: string): NavItem[] {
     { label: 'Messages',        href: `${base}/messages`,       icon: MessageSquare },
     { label: 'Notifications',   href: `${base}/notifications`,  icon: Bell },
     { label: 'Analytics',       href: `${base}/analytics`,      icon: BarChart3 },
+    { label: 'Visites',          href: `${base}/visit-requests`, icon: CalendarCheck },
     { label: 'Calendrier',      href: `${base}/calendar`,       icon: Calendar },
   ];
 }
