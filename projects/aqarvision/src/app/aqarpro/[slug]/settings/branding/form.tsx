@@ -9,7 +9,9 @@ import {
   updateAgencyWilayas,
 } from '@/lib/actions';
 import { THEMES, WILAYAS, type ThemeKey } from '@/lib/constants';
-import type { Agency, AgencyWilaya, AgencyTheme } from '@/types/database';
+import { THEME_REGISTRY, type ThemeId } from '@/lib/themes/registry';
+import { ThemePicker } from '@/components/dashboard/theme-picker';
+import type { Agency, AgencyWilaya, AgencyTheme, AgencyPlan } from '@/types/database';
 import {
   Palette,
   Building2,
@@ -107,7 +109,7 @@ export function BrandingForm({ agency, isEnterprise, initialWilayas }: BrandingF
   const [logoPreview, setLogoPreview] = useState<string | null>(agency.logo_url);
 
   // Theme state
-  const [selectedTheme, setSelectedTheme] = useState<AgencyTheme>(agency.theme || 'classic');
+  const [selectedTheme, setSelectedTheme] = useState<AgencyTheme>(agency.theme || 'modern');
   const [primaryColor, setPrimaryColor] = useState(agency.primary_color);
   const [accentColor, setAccentColor] = useState(agency.accent_color || '');
   const [borderStyle, setBorderStyle] = useState(agency.border_style || 'rounded');
@@ -129,6 +131,7 @@ export function BrandingForm({ agency, isEnterprise, initialWilayas }: BrandingF
   const handleThemeSelect = useCallback(
     (key: AgencyTheme) => {
       setSelectedTheme(key);
+      // Apply color preset from constants
       if (key !== 'custom' && key in THEMES) {
         const preset = THEMES[key as ThemeKey];
         setPrimaryColor(preset.primary_color);
@@ -252,70 +255,14 @@ export function BrandingForm({ agency, isEnterprise, initialWilayas }: BrandingF
         {/* ── Section 1: Theme Picker ── */}
         <Section
           icon={Palette}
-          title="Thème"
-          description="Choisissez un thème prédéfini ou personnalisez le vôtre"
+          title="Thème de votre vitrine"
+          description="Choisissez un template structurel pour votre site"
         >
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {(Object.entries(THEMES) as [ThemeKey, (typeof THEMES)[ThemeKey]][]).map(
-              ([key, preset]) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => handleThemeSelect(key)}
-                  className={`group relative rounded-lg border-2 p-3 text-left transition-all ${
-                    selectedTheme === key
-                      ? 'border-primary-500 bg-primary-50/50 ring-1 ring-primary-500/20'
-                      : 'border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50'
-                  }`}
-                >
-                  {selectedTheme === key && (
-                    <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary-500">
-                      <Check className="h-3 w-3 text-white" />
-                    </div>
-                  )}
-                  {/* Preview colors */}
-                  <div className="mb-2 flex gap-1.5">
-                    <div
-                      className="h-6 w-6 rounded-md"
-                      style={{ backgroundColor: preset.preview.bg }}
-                    />
-                    <div
-                      className="h-6 w-6 rounded-md"
-                      style={{ backgroundColor: preset.preview.text }}
-                    />
-                    <div
-                      className="h-6 w-6 rounded-md"
-                      style={{ backgroundColor: preset.preview.accent }}
-                    />
-                  </div>
-                  <p className="text-caption font-semibold text-neutral-900">{preset.label}</p>
-                  <p className="text-caption text-neutral-500">{preset.description}</p>
-                </button>
-              )
-            )}
-
-            {/* Custom theme option */}
-            <button
-              type="button"
-              onClick={() => handleThemeSelect('custom')}
-              className={`group relative rounded-lg border-2 border-dashed p-3 text-left transition-all ${
-                selectedTheme === 'custom'
-                  ? 'border-primary-500 bg-primary-50/50'
-                  : 'border-neutral-300 hover:border-neutral-400 hover:bg-neutral-50'
-              }`}
-            >
-              {selectedTheme === 'custom' && (
-                <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary-500">
-                  <Check className="h-3 w-3 text-white" />
-                </div>
-              )}
-              <div className="mb-2 flex h-6 items-center">
-                <Sliders className="h-4 w-4 text-neutral-400" />
-              </div>
-              <p className="text-caption font-semibold text-neutral-900">Personnalisé</p>
-              <p className="text-caption text-neutral-500">Vos propres couleurs</p>
-            </button>
-          </div>
+          <ThemePicker
+            selectedTheme={selectedTheme}
+            agencyPlan={(agency.active_plan || 'starter') as AgencyPlan}
+            onSelect={handleThemeSelect}
+          />
         </Section>
 
         {/* ── Section 2: Identity ── */}
@@ -947,7 +894,7 @@ function BrandingPreview({
       {/* Theme label */}
       <div className="border-t border-neutral-100 px-3 py-2 text-center">
         <p className="text-[10px] text-neutral-400">
-          Thème : {themeName === 'custom' ? 'Personnalisé' : THEMES[themeName as ThemeKey]?.label || themeName}
+          Thème : {themeName === 'custom' ? 'Personnalisé' : (THEME_REGISTRY[themeName as ThemeId]?.name.fr || THEMES[themeName as ThemeKey]?.label || themeName)}
         </p>
       </div>
     </div>

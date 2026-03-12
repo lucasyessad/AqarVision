@@ -4,7 +4,7 @@
 
 // === Enums ===
 
-export type AgencyTheme = 'classic' | 'modern' | 'luxury' | 'natural' | 'minimal' | 'bold' | 'custom';
+export type AgencyTheme = 'minimal' | 'modern' | 'professional' | 'editorial' | 'premium' | 'luxury' | 'bold' | 'custom';
 export type HeroStyle = 'color' | 'cover' | 'video';
 export type FontStyle = 'modern' | 'classic' | 'elegant';
 export type ThemeMode = 'light' | 'dark';

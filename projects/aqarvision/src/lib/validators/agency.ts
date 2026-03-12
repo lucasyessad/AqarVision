@@ -8,7 +8,7 @@ export const agencyBrandingSchema = z.object({
   slogan: z.string().max(120, 'Le slogan ne doit pas dépasser 120 caractères').optional().nullable(),
   description: z.string().max(2000).optional().nullable(),
   primary_color: hexColor,
-  theme: z.enum(['classic', 'modern', 'luxury', 'natural', 'minimal', 'bold', 'custom']).default('classic'),
+  theme: z.enum(['minimal', 'modern', 'professional', 'editorial', 'premium', 'luxury', 'bold', 'custom']).default('modern'),
   accent_color: hexColor.nullable().optional(),
   border_style: z.enum(['rounded', 'square']).default('rounded'),
   locale: z.enum(['fr', 'ar', 'en']).default('fr'),

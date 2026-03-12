@@ -16,8 +16,9 @@ function readSource(relativePath: string): string {
 
 // ─── Agency pages: next/image compliance ─────────────────────────────
 
+// Note: app/agence/[slug]/page.tsx now delegates rendering to ThemeRenderer
+// and section components, so it no longer directly imports Image.
 const AGENCY_PAGES = [
-  'app/agence/[slug]/page.tsx',
   'app/agence/[slug]/biens/page.tsx',
   'app/agence/[slug]/biens/[id]/page.tsx',
 ] as const;

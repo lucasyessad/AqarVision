@@ -5,7 +5,8 @@ import { ContactForm } from '@/components/agency/contact-form';
 import { ConditionalMap } from '@/components/agency/location-map';
 import { SocialFeedWidget } from '@/components/agency/social-feed-widget';
 import { getTranslations } from '@/lib/i18n';
-import { PAGINATION, PLANS } from '@/config';
+import { getThemeManifest } from '@/lib/themes';
+import { PAGINATION } from '@/config';
 import { Phone, Mail, Globe, MapPin } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -28,6 +29,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
   if (!agency) notFound();
 
   const t = getTranslations(agency.locale ?? 'fr');
+  const manifest = getThemeManifest(agency.theme);
 
   const hasSocial = agency.instagram_url || agency.facebook_url || agency.tiktok_url;
   const socialFeed = hasSocial
@@ -39,9 +41,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
       })
     : { posts: [], embeds: [], hasApiData: false };
 
-  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
+  const isDark = manifest.style.themeMode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color || '#234E6F';
-  const isDark = agency.theme_mode === 'dark';
+  const isPremium = manifest.style.themeMode === 'dark' || manifest.id === 'premium' || manifest.id === 'luxury' || manifest.id === 'bold';
 
   const contactItems = [
     { icon: Phone, label: t('contact.phone'), value: agency.phone, href: agency.phone ? `tel:${agency.phone}` : null },
@@ -50,8 +52,8 @@ export default async function ContactPage({ params }: ContactPageProps) {
     { icon: MapPin, label: t('contact.address'), value: agency.address, href: null },
   ].filter((c) => c.value);
 
-  // Enterprise → Contact luxe avec formulaire
-  if (isEnterprise) {
+  // Premium/Luxury themes → elegant contact with centered heading
+  if (isPremium) {
     return (
       <section className={`py-24 ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
         <div className="mx-auto max-w-5xl px-6">
@@ -150,7 +152,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
     );
   }
 
-  // Starter / Pro → Contact professionnel
+  // Standard themes → professional contact
   return (
     <div className="mx-auto max-w-4xl px-6 py-12">
       <h1 className="text-heading-lg text-neutral-900 mb-8">

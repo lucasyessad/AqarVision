@@ -251,23 +251,28 @@ describe('OpenGraph image conditional logic', () => {
   });
 });
 
-// ─── 5. Enterprise vs Starter/Pro branching ─────────────────────────
+// ─── 5. Theme-manifest-based branching ──────────────────────────────
 
-describe('Enterprise vs Starter/Pro plan branching', () => {
-  const PAGES = [
-    { path: 'app/agence/[slug]/page.tsx', name: 'agency home' },
-    { path: 'app/agence/[slug]/biens/page.tsx', name: 'properties listing' },
-    { path: 'app/agence/[slug]/biens/[id]/page.tsx', name: 'property detail' },
-  ] as const;
+describe('Theme-manifest-based branching (replaces PLANS.ENTERPRISE)', () => {
+  it('agency home uses ThemeRenderer', () => {
+    const source = readSource('app/agence/[slug]/page.tsx');
+    expect(source).toContain('ThemeRenderer');
+    expect(source).toContain('getThemeManifest');
+  });
 
-  for (const { path, name } of PAGES) {
-    it(`${name} uses PLANS.ENTERPRISE for plan branching`, () => {
-      const source = readSource(path);
-      expect(source).toContain('PLANS.ENTERPRISE');
-    });
-  }
+  it('properties listing uses getThemeManifest for theme-aware rendering', () => {
+    const source = readSource('app/agence/[slug]/biens/page.tsx');
+    expect(source).toContain('getThemeManifest');
+    expect(source).toContain('PropertiesVariant');
+  });
 
-  it('Enterprise detail uses luxury CSS classes', () => {
+  it('property detail uses getThemeManifest for theme-aware rendering', () => {
+    const source = readSource('app/agence/[slug]/biens/[id]/page.tsx');
+    expect(source).toContain('getThemeManifest');
+    expect(source).toContain('isPremium');
+  });
+
+  it('premium detail uses luxury CSS classes', () => {
     const source = readSource('app/agence/[slug]/biens/[id]/page.tsx');
     expect(source).toContain('luxury-property-card');
     expect(source).toContain('font-display-classic');

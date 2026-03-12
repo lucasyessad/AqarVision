@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
-import { LuxuryAboutSection } from '@/components/agency/luxury-about-section';
+import { AboutSection } from '@/components/agency/sections/about';
 import { getAgencyBySlug } from '@/lib/queries/agency';
+import { getThemeManifest } from '@/lib/themes';
 import { getTranslations } from '@/lib/i18n';
-import { PLANS } from '@/config';
 import { MapPin, FileText, Building2, Phone, Mail, Globe } from 'lucide-react';
+import type { AboutVariant } from '@/lib/themes/registry';
 import type { Metadata } from 'next';
 
 interface AboutPageProps {
@@ -26,9 +27,13 @@ export default async function AboutPage({ params }: AboutPageProps) {
 
   const t = getTranslations(agency.locale ?? 'fr');
 
-  // Enterprise → Luxury About
-  if (agency.active_plan === PLANS.ENTERPRISE) {
-    return <LuxuryAboutSection agency={agency} />;
+  const manifest = getThemeManifest(agency.theme);
+  const aboutSection = manifest.sections.find((s) => s.id === 'about');
+  const aboutVariant = (aboutSection?.variant as AboutVariant) || 'about-simple';
+
+  // Use theme-aware about for luxury/prominent themes
+  if (aboutVariant === 'about-luxury' || aboutVariant === 'about-prominent') {
+    return <AboutSection variant={aboutVariant} agency={agency} />;
   }
 
   const accentColor = agency.accent_color || agency.primary_color || '#234E6F';

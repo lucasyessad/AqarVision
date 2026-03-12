@@ -9,7 +9,8 @@ import { ConditionalMap } from '@/components/agency/location-map';
 import { SocialFeedWidget } from '@/components/agency/social-feed-widget';
 import { fetchSocialFeed } from '@/lib/social/fetch-feed';
 import { getTranslations } from '@/lib/i18n';
-import { PAGINATION, PLANS, LOCALE, MESSAGES } from '@/config';
+import { PAGINATION, LOCALE, MESSAGES } from '@/config';
+import { getThemeManifest } from '@/lib/themes';
 import { formatPrice, getLocationLabel } from '@/lib/utils/format';
 import type { Agency, Property } from '@/types/database';
 import type { Metadata } from 'next';
@@ -103,8 +104,11 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
       : Promise.resolve({ posts: [], embeds: [], hasApiData: false }),
   ]);
 
-  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
-  const isDark = agency.theme_mode === 'dark';
+  const manifest = getThemeManifest(agency.theme);
+  const isPremium = manifest.sections.some(
+    (s) => s.id === 'properties' && s.variant === 'properties-premium'
+  );
+  const isDark = manifest.style.themeMode === 'dark';
   const accentColor = agency.secondary_color || agency.primary_color;
 
   // WhatsApp message
@@ -127,7 +131,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
     </>
   );
 
-  if (isEnterprise) {
+  if (isPremium) {
     return (
       <article className={`py-24 ${isDark ? 'bg-gray-950 text-white' : 'bg-white text-gray-900'}`}>
         {structuredData}

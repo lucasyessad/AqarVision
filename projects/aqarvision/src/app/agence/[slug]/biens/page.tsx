@@ -3,10 +3,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getAgencyBySlug, getAgencyProperties, getAgencyPropertiesCount } from '@/lib/queries/agency';
 import { getTranslations } from '@/lib/i18n';
-import { PAGINATION, PLANS } from '@/config';
+import { getThemeManifest } from '@/lib/themes';
+import { PAGINATION } from '@/config';
 import { formatPrice, getLocationLabel } from '@/lib/utils/format';
 import { MapPin, Maximize2, BedDouble, Home, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Agency, Property } from '@/types/database';
+import type { PropertiesVariant } from '@/lib/themes/registry';
 import type { Metadata } from 'next';
 
 interface BiensPageProps {
@@ -25,18 +27,19 @@ export async function generateMetadata({ params }: BiensPageProps): Promise<Meta
 function PropertyCard({
   property,
   agency,
-  luxury,
+  variant,
   t,
 }: {
   property: Property;
   agency: Agency;
-  luxury: boolean;
+  variant: PropertiesVariant;
   t: ReturnType<typeof getTranslations>;
 }) {
   const isDark = agency.theme_mode === 'dark';
   const accentColor = agency.accent_color || agency.secondary_color || agency.primary_color;
+  const isPremium = variant === 'properties-premium';
 
-  if (luxury) {
+  if (isPremium) {
     return (
       <Link
         href={`/agence/${agency.slug}/biens/${property.id}`}
@@ -84,7 +87,7 @@ function PropertyCard({
     );
   }
 
-  // Basic card — design system
+  // Standard card — design system
   return (
     <Link
       href={`/agence/${agency.slug}/biens/${property.id}`}
@@ -154,6 +157,8 @@ export default async function BiensPage({ params, searchParams }: BiensPageProps
   if (!agency) notFound();
 
   const t = getTranslations(agency.locale ?? 'fr');
+  const manifest = getThemeManifest(agency.theme);
+
   const currentPage = Math.max(1, parseInt(pageStr || '1', 10));
   const offset = (currentPage - 1) * PAGINATION.PROPERTIES_PER_PAGE;
 
@@ -163,15 +168,17 @@ export default async function BiensPage({ params, searchParams }: BiensPageProps
   ]);
 
   const totalPages = Math.ceil(totalCount / PAGINATION.PROPERTIES_PER_PAGE);
-  const isEnterprise = agency.active_plan === PLANS.ENTERPRISE;
-  const isDark = agency.theme_mode === 'dark';
+  const propertiesSection = manifest.sections.find((s) => s.id === 'properties');
+  const propertiesVariant = (propertiesSection?.variant as PropertiesVariant) || 'properties-grid';
+  const isPremium = propertiesVariant === 'properties-premium';
+  const isDark = manifest.style.themeMode === 'dark';
   const accentColor = agency.accent_color || agency.secondary_color || agency.primary_color;
 
   const plural = totalCount > 1 ? 's' : '';
   const availableText = t('properties.available', { count: totalCount, plural });
 
-  // Enterprise → Luxury listing
-  if (isEnterprise) {
+  // Premium/Luxury themes → centered heading with accent line
+  if (isPremium) {
     return (
       <section className={`py-24 ${isDark ? 'bg-gray-950' : 'bg-gray-50'}`}>
         <div className="mx-auto max-w-7xl px-6">
@@ -207,7 +214,7 @@ export default async function BiensPage({ params, searchParams }: BiensPageProps
                   key={property.id}
                   property={property}
                   agency={agency}
-                  luxury
+                  variant={propertiesVariant}
                   t={t}
                 />
               ))}
@@ -218,7 +225,6 @@ export default async function BiensPage({ params, searchParams }: BiensPageProps
             </p>
           )}
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="mt-16 flex items-center justify-center gap-3">
               {currentPage > 1 && (
@@ -249,7 +255,7 @@ export default async function BiensPage({ params, searchParams }: BiensPageProps
     );
   }
 
-  // Starter / Pro → Listing professionnel
+  // Standard themes → professional listing
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
       <div className="mb-8 flex items-center justify-between">
@@ -270,7 +276,7 @@ export default async function BiensPage({ params, searchParams }: BiensPageProps
               key={property.id}
               property={property}
               agency={agency}
-              luxury={false}
+              variant={propertiesVariant}
               t={t}
             />
           ))}
@@ -284,7 +290,6 @@ export default async function BiensPage({ params, searchParams }: BiensPageProps
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-12 flex items-center justify-center gap-2">
           {currentPage > 1 && (
