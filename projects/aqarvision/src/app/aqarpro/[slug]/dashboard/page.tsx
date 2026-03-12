@@ -5,6 +5,7 @@ import { Home, Users, Eye, TrendingUp, Plus, ArrowRight, Clock } from 'lucide-re
 import { StatCard } from '@/components/ui/stat-card';
 import { Badge } from '@/components/ui/badge';
 import { getPlanConfig } from '@/config';
+import { FadeInUp, StaggerContainer } from '@/components/ui/animated-sections';
 
 /* ─── Lead status badge ──────────────────────────── */
 
@@ -100,51 +101,62 @@ export default async function DashboardPage({
   return (
     <div className="flex flex-col gap-8">
       {/* Welcome */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-heading-lg text-neutral-900">Bonjour, {firstName}</h1>
-          <p className="text-body-sm text-neutral-500 mt-0.5">
-            {now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-          </p>
+      <FadeInUp>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-heading-lg text-neutral-900">Bonjour, {firstName}</h1>
+            <p className="text-body-sm text-neutral-500 mt-0.5">
+              {now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            </p>
+          </div>
+          <Link
+            href={`/aqarpro/${slug}/properties/new`}
+            className="inline-flex items-center gap-2 h-10 px-4 bg-primary-600 text-white text-body-sm font-semibold rounded-md hover:bg-primary-700 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Ajouter un bien
+          </Link>
         </div>
-        <Link
-          href={`/aqarpro/${slug}/properties/new`}
-          className="inline-flex items-center gap-2 h-10 px-4 bg-primary-600 text-white text-body-sm font-semibold rounded-md hover:bg-primary-700 transition-colors"
-        >
-          <Plus className="h-4 w-4" />
-          Ajouter un bien
-        </Link>
-      </div>
+      </FadeInUp>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          label="Biens actifs"
-          value={`${activeProperties ?? 0} / ${propLimit}`}
-          icon={Home}
-        />
-        <StatCard
-          label="Vues ce mois"
-          value={(viewsThisMonth ?? 0).toLocaleString('fr-FR')}
-          icon={Eye}
-          trend={{ value: viewsTrend, label: 'vs mois dernier' }}
-        />
-        <StatCard
-          label="Leads ce mois"
-          value={leadsThisMonth ?? 0}
-          icon={Users}
-          trend={{ value: leadsTrend, label: 'vs mois dernier' }}
-        />
-        <StatCard
-          label="Taux de conversion"
-          value={`${conversionRate}%`}
-          icon={TrendingUp}
-        />
-      </div>
+      <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <FadeInUp>
+          <StatCard
+            label="Biens actifs"
+            value={`${activeProperties ?? 0} / ${propLimit}`}
+            icon={Home}
+          />
+        </FadeInUp>
+        <FadeInUp>
+          <StatCard
+            label="Vues ce mois"
+            value={(viewsThisMonth ?? 0).toLocaleString('fr-FR')}
+            icon={Eye}
+            trend={{ value: viewsTrend, label: 'vs mois dernier' }}
+          />
+        </FadeInUp>
+        <FadeInUp>
+          <StatCard
+            label="Leads ce mois"
+            value={leadsThisMonth ?? 0}
+            icon={Users}
+            trend={{ value: leadsTrend, label: 'vs mois dernier' }}
+          />
+        </FadeInUp>
+        <FadeInUp>
+          <StatCard
+            label="Taux de conversion"
+            value={`${conversionRate}%`}
+            icon={TrendingUp}
+          />
+        </FadeInUp>
+      </StaggerContainer>
 
       {/* Lower section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent leads */}
+        <FadeInUp>
         <div className="lg:col-span-2 bg-white rounded-lg border border-neutral-200">
           <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200">
             <h2 className="text-heading-sm text-neutral-900">Derniers leads</h2>
@@ -170,8 +182,10 @@ export default async function DashboardPage({
             <div className="py-12 text-center text-body-md text-neutral-400">Aucun lead pour l&apos;instant</div>
           )}
         </div>
+        </FadeInUp>
 
         {/* Activity feed */}
+        <FadeInUp>
         <div className="bg-white rounded-lg border border-neutral-200">
           <div className="px-6 py-4 border-b border-neutral-200">
             <h2 className="text-heading-sm text-neutral-900">Activité récente</h2>
@@ -195,6 +209,7 @@ export default async function DashboardPage({
             <div className="py-12 text-center text-body-md text-neutral-400">Aucune activité</div>
           )}
         </div>
+        </FadeInUp>
       </div>
     </div>
   );

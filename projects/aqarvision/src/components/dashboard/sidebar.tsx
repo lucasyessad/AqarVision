@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Building2,
   LayoutDashboard,
@@ -94,9 +95,11 @@ export function Sidebar({
       : pathname.startsWith(href);
 
   return (
-    <aside
+    <motion.aside
+      layout
+      transition={{ duration: 0.2, ease: 'easeOut' }}
       className={[
-        'fixed left-0 top-0 bottom-0 z-30 flex flex-col bg-white border-r border-neutral-200 transition-all duration-200',
+        'fixed left-0 top-0 bottom-0 z-30 flex flex-col bg-white border-r border-neutral-200',
         collapsed ? 'w-16' : 'w-[260px]',
       ].join(' ')}
     >
@@ -105,12 +108,20 @@ export function Sidebar({
         <div className="w-8 h-8 bg-or rounded-lg flex items-center justify-center shrink-0">
           <Building2 className="h-5 w-5 text-white" />
         </div>
-        {!collapsed && (
-          <div className="flex-1 min-w-0">
-            <p className="text-body-sm font-semibold text-foreground truncate">{agencyName}</p>
-            <p className="text-caption text-muted-foreground">AqarPro</p>
-          </div>
-        )}
+        <AnimatePresence>
+          {!collapsed && (
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: 'auto' }}
+              exit={{ opacity: 0, width: 0 }}
+              transition={{ duration: 0.15 }}
+              className="flex-1 min-w-0"
+            >
+              <p className="text-body-sm font-semibold text-foreground truncate">{agencyName}</p>
+              <p className="text-caption text-muted-foreground">AqarPro</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Main nav */}
@@ -126,9 +137,18 @@ export function Sidebar({
         <div className="my-3 border-t border-neutral-100" />
 
         {/* Gestion */}
-        {!collapsed && (
-          <p className="px-3 mb-1.5 text-caption text-muted-foreground uppercase tracking-wider">Gestion</p>
-        )}
+        <AnimatePresence>
+          {!collapsed && (
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: 'auto' }}
+              exit={{ opacity: 0, width: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <p className="px-3 mb-1.5 text-caption text-muted-foreground uppercase tracking-wider">Gestion</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <ul className="flex flex-col gap-0.5">
           {settingsItems.map(item => (
             <li key={item.href}>
@@ -149,7 +169,19 @@ export function Sidebar({
               className="flex items-center gap-3 px-3 h-10 rounded-md transition-colors text-body-md font-medium text-or hover:bg-muted"
             >
               <ExternalLink className="h-5 w-5 shrink-0" />
-              {!collapsed && <span className="truncate">Voir ma vitrine</span>}
+              <AnimatePresence>
+                {!collapsed && (
+                  <motion.div
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: 'auto' }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="truncate"
+                  >
+                    Voir ma vitrine
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </a>
           </>
         )}
@@ -157,29 +189,46 @@ export function Sidebar({
 
       {/* User profile */}
       <div className="border-t border-neutral-200 p-3">
-        {!collapsed ? (
-          <div className="flex items-center gap-2.5 px-2 py-2 rounded-md hover:bg-muted transition-colors">
-            <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center shrink-0">
-              <span className="text-caption font-semibold text-or">
-                {userName.charAt(0).toUpperCase() || 'U'}
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-body-sm font-medium text-foreground truncate">{userName || 'Utilisateur'}</p>
-              <p className="text-caption text-muted-foreground truncate">{userEmail}</p>
-            </div>
-            <Link href={`${base}/logout`} className="text-muted-foreground hover:text-neutral-700 transition-colors">
-              <LogOut className="h-4 w-4" />
-            </Link>
-          </div>
-        ) : (
-          <Link
-            href={`${base}/logout`}
-            className="flex items-center justify-center h-9 w-full text-muted-foreground hover:text-neutral-700 transition-colors rounded-md hover:bg-muted"
-          >
-            <LogOut className="h-4 w-4" />
-          </Link>
-        )}
+        <AnimatePresence mode="wait">
+          {!collapsed ? (
+            <motion.div
+              key="profile-expanded"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="flex items-center gap-2.5 px-2 py-2 rounded-md hover:bg-muted transition-colors"
+            >
+              <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center shrink-0">
+                <span className="text-caption font-semibold text-or">
+                  {userName.charAt(0).toUpperCase() || 'U'}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-body-sm font-medium text-foreground truncate">{userName || 'Utilisateur'}</p>
+                <p className="text-caption text-muted-foreground truncate">{userEmail}</p>
+              </div>
+              <Link href={`${base}/logout`} className="text-muted-foreground hover:text-neutral-700 transition-colors">
+                <LogOut className="h-4 w-4" />
+              </Link>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="profile-collapsed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <Link
+                href={`${base}/logout`}
+                className="flex items-center justify-center h-9 w-full text-muted-foreground hover:text-neutral-700 transition-colors rounded-md hover:bg-muted"
+              >
+                <LogOut className="h-4 w-4" />
+              </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Collapse toggle */}
@@ -194,7 +243,7 @@ export function Sidebar({
           <ChevronLeft className="h-3 w-3 text-neutral-600" />
         )}
       </button>
-    </aside>
+    </motion.aside>
   );
 }
 
@@ -230,7 +279,19 @@ function NavLink({
           </span>
         )}
       </div>
-      {!collapsed && <span className="truncate">{item.label}</span>}
+      <AnimatePresence>
+        {!collapsed && (
+          <motion.span
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: 'auto' }}
+            exit={{ opacity: 0, width: 0 }}
+            transition={{ duration: 0.15 }}
+            className="truncate"
+          >
+            {item.label}
+          </motion.span>
+        )}
+      </AnimatePresence>
     </Link>
   );
 }

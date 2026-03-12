@@ -10,6 +10,7 @@ import { fetchSocialFeed } from '@/lib/social/fetch-feed';
 import { getTranslations } from '@/lib/i18n';
 import { formatPrice, getLocationLabel } from '@/lib/utils/format';
 import { PLANS } from '@/config';
+import { FadeInUp, FadeIn, StaggerContainer } from '@/components/ui/animated-sections';
 import { ArrowRight, MapPin, Maximize2, BedDouble, Phone } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -93,6 +94,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
           </div>
         )}
 
+        <FadeIn>
         <div className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32 text-center">
           {agency.logo_url && (
             <Image
@@ -126,6 +128,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
               {agency.wilaya}{agency.address ? ` — ${agency.address}` : ''}
             </p>
           )}
+          <FadeInUp delay={0.2}>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href={`/agence/${slug}/biens`}
@@ -142,12 +145,15 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
               <Phone className="h-4 w-4" /> {t('nav.contact')}
             </Link>
           </div>
+          </FadeInUp>
         </div>
+        </FadeIn>
       </section>
 
       {/* ── Properties Section ── */}
       {properties.length > 0 && (
         <section className="mx-auto max-w-7xl px-6 py-16">
+          <FadeInUp>
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-heading-lg text-foreground">{t('properties.featured')}</h2>
@@ -163,13 +169,14 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
               {t('properties.viewAll')} <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
+          </FadeInUp>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {properties.map((property) => (
+              <FadeInUp key={property.id}>
               <Link
-                key={property.id}
                 href={`/agence/${slug}/biens/${property.id}`}
-                className="group bg-white overflow-hidden border border-neutral-200 hover:shadow-lg hover:border-neutral-300 transition-all"
+                className="group bg-white overflow-hidden border border-neutral-200 hover:shadow-lg hover:border-neutral-300 transition-all block"
                 style={{ borderRadius: 'var(--agency-radius, 0.75rem)' }}
               >
                 <div className="relative aspect-[4/3] bg-neutral-100">
@@ -221,8 +228,9 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
                   </p>
                 </div>
               </Link>
+              </FadeInUp>
             ))}
-          </div>
+          </StaggerContainer>
 
           <div className="mt-8 text-center sm:hidden">
             <Link
@@ -240,6 +248,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
       {agency.description && (
         <section className="bg-white border-t border-neutral-200">
           <div className="mx-auto max-w-7xl px-6 py-16">
+            <FadeInUp>
             <div className="max-w-2xl">
               <h2 className="text-heading-lg text-foreground">
                 {t('about.heading', { name: agency.name })}
@@ -256,12 +265,14 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
                 {t('about.readMore')} <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
+            </FadeInUp>
           </div>
         </section>
       )}
 
       {/* ── CTA Contact ── */}
       <section className="mx-auto max-w-7xl px-6 py-16">
+        <FadeInUp>
         <div
           className="p-10 sm:p-14 text-center text-white"
           style={{ backgroundColor: accentColor, borderRadius: 'var(--agency-radius, 1rem)' }}
@@ -291,6 +302,7 @@ export default async function AgencyPage({ params }: AgencyPageProps) {
             )}
           </div>
         </div>
+        </FadeInUp>
       </section>
 
       <SocialFeedSection

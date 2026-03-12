@@ -6,6 +6,9 @@ import {
 } from 'lucide-react';
 import { HeroSearchBar } from '@/components/search/hero-search-bar';
 import { Suspense } from 'react';
+import {
+  FadeInUp, StaggerContainer, AnimatedCard, CounterAnimation,
+} from '@/components/ui/animated-sections';
 
 /* ─── Data ─────────────────────────────────────────────────────── */
 
@@ -73,39 +76,43 @@ function Hero() {
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white/[0.02] rounded-full blur-[100px] pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center text-center px-6 py-20 max-w-[900px] mx-auto w-full">
-        <div className="animate-fade-in-up">
+        <FadeInUp>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-white/80 text-xs font-medium mb-6 backdrop-blur-sm">
             <Search className="h-3.5 w-3.5" />
             +12 000 annonces sur 48 wilayas
           </div>
-        </div>
+        </FadeInUp>
 
-        <h1 className="animate-fade-in-up font-vitrine text-display-xl text-white mb-5 leading-tight">
-          Trouvez votre prochain bien<br />
-          <span className="text-or">en Algérie</span>
-        </h1>
-        <p className="animate-fade-in-up text-body-lg text-white/60 mb-10 max-w-xl">
-          Des milliers d&apos;annonces vérifiées dans 48 wilayas.
-          Recherche avancée, alertes, carte interactive — 100% gratuit.
-        </p>
+        <FadeInUp delay={0.1}>
+          <h1 className="font-vitrine text-display-xl text-white mb-5 leading-tight">
+            Trouvez votre prochain bien<br />
+            <span className="text-or">en Algérie</span>
+          </h1>
+        </FadeInUp>
+        <FadeInUp delay={0.2}>
+          <p className="text-body-lg text-white/60 mb-10 max-w-xl">
+            Des milliers d&apos;annonces vérifiées dans 48 wilayas.
+            Recherche avancée, alertes, carte interactive — 100% gratuit.
+          </p>
+        </FadeInUp>
 
         {/* Barre de recherche Github */}
-        <div className="animate-fade-in-up w-full">
+        <FadeInUp delay={0.3} className="w-full">
           <HeroSearchBar />
-        </div>
+        </FadeInUp>
       </div>
 
       {/* Social proof */}
-      <div className="w-full glass-dark border-t border-white/10">
+      <StaggerContainer className="w-full glass-dark border-t border-white/10">
         <div className="max-w-content-xl mx-auto px-6 py-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-white/50">
           {STATS.map(s => (
             <div key={s.label} className="flex items-center gap-2">
-              <span className="font-semibold text-or text-sm">{s.value}</span>
+              <CounterAnimation value={s.value} className="font-semibold text-or text-sm" />
               <span className="text-xs">{s.label}</span>
             </div>
           ))}
         </div>
-      </div>
+      </StaggerContainer>
     </section>
   );
 }
@@ -121,33 +128,66 @@ function PopularCities() {
           <h2 className="font-vitrine text-heading-2 text-foreground mb-3">Explorer par ville</h2>
           <p className="text-body text-muted-foreground">Des annonces dans toutes les wilayas d&apos;Algérie</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
           {CITIES.map(city => (
-            <Link
-              key={city.name}
-              href={`/recherche?q=${encodeURIComponent(city.name)}`}
-              className="group relative overflow-hidden rounded-2xl aspect-[3/2] block shadow-card hover:shadow-elevated transition-all duration-300"
-            >
-              <Image
-                src={city.image}
-                alt={city.name}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-5 transition-transform duration-300 group-hover:-translate-y-1">
-                <h3 className="text-heading-4 font-semibold text-white">{city.name}</h3>
-                <p className="text-body-sm text-white/70">{city.count.toLocaleString('fr-FR')} annonces</p>
-              </div>
-            </Link>
+            <AnimatedCard key={city.name}>
+              <Link
+                href={`/recherche?q=${encodeURIComponent(city.name)}`}
+                className="group relative overflow-hidden rounded-2xl aspect-[3/2] block shadow-card hover:shadow-elevated transition-all duration-300"
+              >
+                <Image
+                  src={city.image}
+                  alt={city.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-5 transition-transform duration-300 group-hover:-translate-y-1">
+                  <h3 className="text-heading-4 font-semibold text-white">{city.name}</h3>
+                  <p className="text-body-sm text-white/70">{city.count.toLocaleString('fr-FR')} annonces</p>
+                </div>
+              </Link>
+            </AnimatedCard>
           ))}
-        </div>
+        </StaggerContainer>
         <div className="mt-8 text-center">
           <Link href="/recherche" className="inline-flex items-center gap-2 text-body-sm font-medium text-or hover:text-or/80 transition-colors">
             Voir toutes les annonces <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Pourquoi AqarVision ──────────────────────────────────────── */
+
+function WhySection() {
+  const features = [
+    { icon: Shield, title: 'Annonces vérifiées', desc: 'Chaque bien est vérifié par notre équipe avant publication.' },
+    { icon: Zap, title: 'Recherche intelligente', desc: 'Score de confiance, alertes personnalisées, carte interactive.' },
+    { icon: Users, title: '320+ agences', desc: 'Un réseau d\'agences partenaires couvrant 48 wilayas.' },
+  ];
+
+  return (
+    <section className="section-padding bg-blanc-casse">
+      <div className="max-w-content-xl mx-auto px-6">
+        <FadeInUp className="text-center mb-12">
+          <p className="text-xs font-semibold text-or uppercase tracking-widest mb-3">Pourquoi AqarVision</p>
+          <h2 className="font-vitrine text-heading-2 text-foreground">La confiance au coeur de l&apos;immobilier</h2>
+        </FadeInUp>
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map(f => (
+            <FadeInUp key={f.title} className="text-center">
+              <div className="mx-auto w-14 h-14 rounded-2xl bg-bleu-nuit/5 flex items-center justify-center mb-4">
+                <f.icon className="h-6 w-6 text-or" />
+              </div>
+              <h3 className="text-heading-4 font-semibold text-foreground mb-2">{f.title}</h3>
+              <p className="text-body-sm text-muted-foreground">{f.desc}</p>
+            </FadeInUp>
+          ))}
+        </StaggerContainer>
       </div>
     </section>
   );
@@ -160,7 +200,7 @@ function ProBanner() {
     <section className="section-padding bg-bleu-nuit relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(184,150,62,0.08),transparent_50%)]" />
       <div className="absolute top-10 right-10 w-64 h-64 bg-or/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="relative max-w-content mx-auto flex flex-col md:flex-row items-center gap-8 px-6">
+      <FadeInUp className="relative max-w-content mx-auto flex flex-col md:flex-row items-center gap-8 px-6">
         <div className="flex-1">
           <span className="text-caption font-bold text-or uppercase tracking-widest mb-2 block">AqarPro</span>
           <h2 className="font-vitrine text-heading-2 text-white mb-3">
@@ -177,7 +217,7 @@ function ProBanner() {
         >
           Découvrir AqarPro <ArrowRight className="h-4 w-4" />
         </Link>
-      </div>
+      </FadeInUp>
     </section>
   );
 }
@@ -247,6 +287,7 @@ export default function HomePage() {
       <main>
         <Hero />
         <PopularCities />
+        <WhySection />
         <ProBanner />
       </main>
       <Footer />
