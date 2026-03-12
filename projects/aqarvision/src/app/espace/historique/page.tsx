@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { History, Trash2, Search } from "lucide-react";
+import { History, Search } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getSearchHistory } from "@/lib/queries/alerts";
 import { ClearHistoryButton } from "./clear-button";
 
 function formatRelativeTime(dateString: string): string {
@@ -24,39 +25,40 @@ function formatRelativeTime(dateString: string): string {
 }
 
 function buildSearchUrl(entry: {
-  query?: string | null;
-  wilaya_id?: number | null;
-  type_bien?: string | null;
-  prix_min?: number | null;
-  prix_max?: number | null;
-  type_transaction?: string | null;
+  query_text?: string | null;
+  filters?: Record<string, unknown> | null;
 }): string {
   const params = new URLSearchParams();
-  if (entry.query) params.set("q", entry.query);
-  if (entry.wilaya_id) params.set("wilaya", entry.wilaya_id.toString());
-  if (entry.type_bien) params.set("type", entry.type_bien);
-  if (entry.prix_min) params.set("prix_min", entry.prix_min.toString());
-  if (entry.prix_max) params.set("prix_max", entry.prix_max.toString());
-  if (entry.type_transaction) params.set("transaction", entry.type_transaction);
-  return `/recherche?${params.toString()}`;
+  if (entry.query_text) params.set("q", entry.query_text);
+  if (entry.filters && typeof entry.filters === "object") {
+    const f = entry.filters as Record<string, string>;
+    if (f.transaction_type) params.set("transaction_type", f.transaction_type);
+    if (f.wilaya) params.set("wilaya", f.wilaya);
+    if (f.property_type) params.set("property_type", f.property_type);
+    if (f.price_min) params.set("price_min", f.price_min);
+    if (f.price_max) params.set("price_max", f.price_max);
+    if (f.surface_min) params.set("surface_min", f.surface_min);
+    if (f.surface_max) params.set("surface_max", f.surface_max);
+  }
+  const qs = params.toString();
+  return `/recherche${qs ? `?${qs}` : ""}`;
 }
 
 function buildFiltersSummary(entry: {
-  query?: string | null;
-  wilaya_id?: number | null;
-  type_bien?: string | null;
-  prix_min?: number | null;
-  prix_max?: number | null;
-  type_transaction?: string | null;
-  results_count?: number | null;
+  query_text?: string | null;
+  filters?: Record<string, unknown> | null;
 }): string {
   const parts: string[] = [];
-  if (entry.type_transaction) parts.push(entry.type_transaction);
-  if (entry.type_bien) parts.push(entry.type_bien);
-  if (entry.prix_min || entry.prix_max) {
-    const min = entry.prix_min ? `${(entry.prix_min / 1000000).toFixed(1)}M` : "0";
-    const max = entry.prix_max ? `${(entry.prix_max / 1000000).toFixed(1)}M` : "+";
-    parts.push(`${min} - ${max} DA`);
+  if (entry.filters && typeof entry.filters === "object") {
+    const f = entry.filters as Record<string, string>;
+    if (f.transaction_type) parts.push(f.transaction_type);
+    if (f.property_type) parts.push(f.property_type);
+    if (f.wilaya) parts.push(f.wilaya);
+    if (f.price_min || f.price_max) {
+      const min = f.price_min ? `${(Number(f.price_min) / 1000000).toFixed(1)}M` : "0";
+      const max = f.price_max ? `${(Number(f.price_max) / 1000000).toFixed(1)}M` : "+";
+      parts.push(`${min} - ${max} DA`);
+    }
   }
   return parts.join(" · ");
 }
@@ -67,14 +69,8 @@ export default async function HistoriquePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: history } = await supabase
-    .from("search_history")
-    .select("*")
-    .eq("visitor_id", user!.id)
-    .order("created_at", { ascending: false })
-    .limit(50);
-
-  const count = history?.length ?? 0;
+  const history = user ? await getSearchHistory(user.id) : [];
+  const count = history.length;
 
   return (
     <div>
@@ -94,15 +90,15 @@ export default async function HistoriquePage() {
         <div className="text-center py-16">
           <History className="h-12 w-12 text-gray-300 mx-auto mb-4" />
           <h2 className="text-lg font-medium text-gray-900 mb-2">
-            Aucune recherche recente
+            Aucune recherche récente
           </h2>
           <p className="text-sm text-gray-500 mb-6">
-            Vos recherches apparaitront ici pour vous permettre de les relancer
+            Vos recherches apparaîtront ici pour vous permettre de les relancer
             facilement.
           </p>
           <Link
             href="/recherche"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0c1b2a] text-white text-sm font-medium rounded-lg hover:bg-[#0c1b2a]/90 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-bleu-nuit text-white text-sm font-medium rounded-lg hover:bg-bleu-nuit/90 transition-colors"
           >
             <Search className="h-4 w-4" />
             Lancer une recherche
@@ -110,7 +106,7 @@ export default async function HistoriquePage() {
         </div>
       ) : (
         <div className="space-y-2">
-          {history!.map((entry) => {
+          {history.map((entry) => {
             const filtersSummary = buildFiltersSummary(entry);
 
             return (
@@ -124,7 +120,7 @@ export default async function HistoriquePage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">
-                    {entry.query || "Recherche sans texte"}
+                    {entry.query_text || "Recherche sans texte"}
                   </p>
                   {filtersSummary && (
                     <p className="text-xs text-gray-500 mt-0.5 truncate">
@@ -136,11 +132,6 @@ export default async function HistoriquePage() {
                   <p className="text-xs text-gray-400">
                     {formatRelativeTime(entry.created_at)}
                   </p>
-                  {entry.results_count != null && (
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {entry.results_count} resultat{entry.results_count !== 1 ? "s" : ""}
-                    </p>
-                  )}
                 </div>
               </Link>
             );

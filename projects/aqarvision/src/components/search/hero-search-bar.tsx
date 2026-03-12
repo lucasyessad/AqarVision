@@ -109,7 +109,7 @@ function DropdownSelect({
 /* ═══════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════ */
-export function BarreRechercheHero() {
+export function HeroSearchBar() {
   const router = useRouter();
 
   const [transaction, setTransaction] = useState("");

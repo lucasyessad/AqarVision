@@ -8,6 +8,7 @@ import {
   LogOut,
   Building2,
   FolderOpen,
+  Bell,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
@@ -15,6 +16,7 @@ const liens = [
   { href: "/espace/favoris", label: "Favoris", icon: Heart },
   { href: "/espace/historique", label: "Historique", icon: History },
   { href: "/espace/collections", label: "Collections", icon: FolderOpen },
+  { href: "/espace/alertes", label: "Alertes", icon: Bell },
   { href: "/espace/messages", label: "Messages", icon: MessageSquare },
   { href: "/espace/profil", label: "Mon profil", icon: User },
 ];
@@ -34,12 +36,12 @@ export default async function EspaceLayout({
   }
 
   const { data: profile } = await supabase
-    .from("visitor_profiles")
-    .select("nom, telephone")
+    .from("user_profiles")
+    .select("full_name, phone")
     .eq("id", user.id)
     .single();
 
-  const visitorName = profile?.nom || user.email || "Visiteur";
+  const visitorName = profile?.full_name || user.email || "Visiteur";
 
   return (
     <div className="min-h-screen bg-[#fafbfc]">

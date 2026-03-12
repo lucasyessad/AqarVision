@@ -357,24 +357,20 @@ describe('SEO wilaya page', () => {
   });
 });
 
-// ─── Search History Improved ──────────────────────────────────────
+// ─── Search History (unified into /espace/historique) ──────────────
 
-describe('search history content', () => {
-  const source = readSource('app/recherches/recherches-content.tsx');
+describe('search history page', () => {
+  const source = readSource('app/espace/historique/page.tsx');
 
-  it('groups entries by date', () => {
-    expect(source).toContain('groupByDate');
-    expect(source).toContain("Aujourd'hui");
-    expect(source).toContain('Hier');
+  it('uses AqarSearch queries', () => {
+    expect(source).toContain('getSearchHistory');
   });
 
-  it('shows filter tags', () => {
-    expect(source).toContain('getFilterTags');
-    expect(source).toContain('FILTER_LABELS');
+  it('has relative time formatting', () => {
+    expect(source).toContain('formatRelativeTime');
   });
 
-  it('maps transaction types to French', () => {
-    expect(source).toContain('Vente');
-    expect(source).toContain('Location');
+  it('builds search URLs from filters', () => {
+    expect(source).toContain('buildSearchUrl');
   });
 });

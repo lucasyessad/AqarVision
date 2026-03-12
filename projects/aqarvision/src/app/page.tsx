@@ -4,8 +4,7 @@ import {
   Building2, ArrowRight, Search, Shield, Star, MapPin,
   CheckCircle2, Users, Zap,
 } from 'lucide-react';
-import { SearchBar } from '@/components/search/search-bar';
-import { BarreRechercheHero } from '@/components/recherche/barre-recherche-hero';
+import { HeroSearchBar } from '@/components/search/hero-search-bar';
 import { Suspense } from 'react';
 
 /* ─── Data ─────────────────────────────────────────────────────── */
@@ -92,7 +91,7 @@ function Hero() {
 
         {/* Barre de recherche Github */}
         <div className="animate-fade-in-up w-full">
-          <BarreRechercheHero />
+          <HeroSearchBar />
         </div>
       </div>
 
@@ -195,7 +194,7 @@ function Footer() {
             {
               title: 'AqarSearch',
               links: ['Rechercher un bien', 'Alertes de recherche', 'Mes favoris', 'Prix du marché'],
-              hrefs: ['/recherche', '/alertes', '/favoris', '/prix-immobilier'],
+              hrefs: ['/recherche', '/espace/alertes', '/espace/favoris', '/prix-immobilier'],
             },
             {
               title: 'AqarPro',
