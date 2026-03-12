@@ -2,7 +2,9 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { agencyBrandingSchema, agencyLuxuryBrandingSchema, agencyWilayasSchema } from '@/lib/validators';
+import { validateThemeForPlan } from '@/lib/validators/theme';
 import type { AgencyWilayaInput } from '@/lib/validators';
+import type { AgencyPlan } from '@/types/database';
 import { UPLOADS, PLANS, STORAGE } from '@/config';
 
 interface ActionResult {
@@ -76,8 +78,18 @@ export async function updateAgencyBranding(
   const auth = await verifyAgencyOwnership(agencyId);
   if (auth.error) return auth.error;
 
-  const isEnterprise = auth.agency.active_plan === PLANS.ENTERPRISE;
+  const plan = (auth.agency.active_plan || 'starter') as AgencyPlan;
+  const isEnterprise = plan === 'enterprise';
   const schema = isEnterprise ? agencyLuxuryBrandingSchema : agencyBrandingSchema;
+
+  // Validate theme is available for the agency's plan
+  const themeValue = formData.theme as string | undefined;
+  if (themeValue) {
+    const themeCheck = validateThemeForPlan(themeValue, plan);
+    if (!themeCheck.valid) {
+      return { success: false, error: themeCheck.error || 'Thème non disponible' };
+    }
+  }
 
   // Valider les données
   const result = schema.safeParse(formData);
