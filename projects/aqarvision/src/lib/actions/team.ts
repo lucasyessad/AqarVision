@@ -6,13 +6,14 @@ import { revalidatePath } from 'next/cache';
 import { proPattern } from '@/lib/utils/paths';
 import { getAgencyForCurrentUser } from './auth';
 import { isAuthError } from './auth-utils';
+import { inviteMemberSchema } from '@/lib/validators/team';
 
 interface ActionResult {
   success: boolean;
   error?: string;
 }
 
-const VALID_ROLES = ['admin', 'agent', 'viewer'] as const;
+const VALID_ROLES = ['admin', 'agent', 'viewer'] as const; // kept for updateMemberRole
 
 export async function inviteMember(
   email: string,
@@ -22,12 +23,9 @@ export async function inviteMember(
   const auth = await getAgencyForCurrentUser();
   if (isAuthError(auth)) return auth;
 
-  if (!VALID_ROLES.includes(role as typeof VALID_ROLES[number])) {
-    return { success: false, error: 'Rôle invalide' };
-  }
-
-  if (!email || !email.includes('@')) {
-    return { success: false, error: 'Email invalide' };
+  const validated = inviteMemberSchema.safeParse({ email, role, fullName });
+  if (!validated.success) {
+    return { success: false, error: validated.error.errors[0]?.message || 'Données invalides' };
   }
 
   const supabase = await createClient();

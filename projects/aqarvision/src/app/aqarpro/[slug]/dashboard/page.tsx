@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { Home, Users, Eye, TrendingUp, Plus, ArrowRight, Clock } from 'lucide-react';
+import { Home, Users, Eye, TrendingUp, Plus, ArrowRight, Clock, CalendarCheck } from 'lucide-react';
 import { StatCard } from '@/components/ui/stat-card';
 import { Badge } from '@/components/ui/badge';
 import { getPlanConfig } from '@/config';
 import { FadeInUp, StaggerContainer } from '@/components/ui/animated-sections';
+import { DashboardCustomizer } from '@/components/dashboard/dashboard-customizer';
 
 /* ─── Lead status badge ──────────────────────────── */
 
@@ -67,6 +68,8 @@ export default async function DashboardPage({
     { count: viewsLastMonth },
     { data: recentLeads },
     { data: recentActivity },
+    { data: dashPrefs },
+    { count: pendingVisitRequests },
   ] = await Promise.all([
     supabase.from('properties').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).eq('status', 'active'),
     supabase.from('leads').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).gte('created_at', firstOfMonth),
@@ -76,7 +79,14 @@ export default async function DashboardPage({
     supabase.from('property_views').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).gte('created_at', lastMonth).lte('created_at', endLastMonth),
     supabase.from('leads').select('id, name, status, created_at, property_id, properties(title)').eq('agency_id', agencyId).order('created_at', { ascending: false }).limit(5),
     supabase.from('analytics_events').select('id, event_type, metadata, created_at').eq('agency_id', agencyId).order('created_at', { ascending: false }).limit(8),
+    supabase.from('agency_dashboard_preferences').select('*').eq('agency_id', agencyId).maybeSingle(),
+    supabase.from('visit_requests').select('id', { count: 'exact', head: true }).eq('agency_id', agencyId).eq('status', 'pending'),
   ]);
+
+  const prefs = dashPrefs;
+  const widgetOrder = prefs?.widget_order ?? ['stats', 'recent_leads', 'activity', 'visit_requests'];
+  const hiddenWidgets: string[] = prefs?.hidden_widgets ?? [];
+  const isVisible = (id: string) => !hiddenWidgets.includes(id);
 
   const leadsTrend = leadsLastMonth
     ? Math.round((((leadsThisMonth ?? 0) - (leadsLastMonth ?? 0)) / Math.max(leadsLastMonth ?? 1, 1)) * 100)
@@ -109,108 +119,149 @@ export default async function DashboardPage({
               {now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
-          <Link
-            href={`/aqarpro/${slug}/properties/new`}
-            className="inline-flex items-center gap-2 h-10 px-4 bg-primary-600 text-white text-body-sm font-semibold rounded-md hover:bg-primary-700 transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            Ajouter un bien
-          </Link>
+          <div className="flex items-center gap-2">
+            <DashboardCustomizer
+              currentOrder={widgetOrder}
+              hiddenWidgets={hiddenWidgets}
+            />
+            <Link
+              href={`/aqarpro/${slug}/properties/new`}
+              className="inline-flex items-center gap-2 h-10 px-4 bg-primary-600 text-white text-body-sm font-semibold rounded-md hover:bg-primary-700 transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              Ajouter un bien
+            </Link>
+          </div>
         </div>
       </FadeInUp>
 
       {/* Stat cards */}
-      <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <FadeInUp>
-          <StatCard
-            label="Biens actifs"
-            value={`${activeProperties ?? 0} / ${propLimit}`}
-            icon={Home}
-          />
-        </FadeInUp>
-        <FadeInUp>
-          <StatCard
-            label="Vues ce mois"
-            value={(viewsThisMonth ?? 0).toLocaleString('fr-FR')}
-            icon={Eye}
-            trend={{ value: viewsTrend, label: 'vs mois dernier' }}
-          />
-        </FadeInUp>
-        <FadeInUp>
-          <StatCard
-            label="Leads ce mois"
-            value={leadsThisMonth ?? 0}
-            icon={Users}
-            trend={{ value: leadsTrend, label: 'vs mois dernier' }}
-          />
-        </FadeInUp>
-        <FadeInUp>
-          <StatCard
-            label="Taux de conversion"
-            value={`${conversionRate}%`}
-            icon={TrendingUp}
-          />
-        </FadeInUp>
-      </StaggerContainer>
+      {isVisible('stats') && (
+        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <FadeInUp>
+            <StatCard
+              label="Biens actifs"
+              value={`${activeProperties ?? 0} / ${propLimit}`}
+              icon={Home}
+            />
+          </FadeInUp>
+          <FadeInUp>
+            <StatCard
+              label="Vues ce mois"
+              value={(viewsThisMonth ?? 0).toLocaleString('fr-FR')}
+              icon={Eye}
+              trend={{ value: viewsTrend, label: 'vs mois dernier' }}
+            />
+          </FadeInUp>
+          <FadeInUp>
+            <StatCard
+              label="Leads ce mois"
+              value={leadsThisMonth ?? 0}
+              icon={Users}
+              trend={{ value: leadsTrend, label: 'vs mois dernier' }}
+            />
+          </FadeInUp>
+          <FadeInUp>
+            <StatCard
+              label="Taux de conversion"
+              value={`${conversionRate}%`}
+              icon={TrendingUp}
+            />
+          </FadeInUp>
+        </StaggerContainer>
+      )}
 
       {/* Lower section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent leads */}
-        <FadeInUp>
-        <div className="lg:col-span-2 bg-white rounded-lg border border-neutral-200">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200">
-            <h2 className="text-heading-sm text-neutral-900">Derniers leads</h2>
-            <Link href={`/aqarpro/${slug}/leads`} className="flex items-center gap-1 text-body-sm text-primary-600 hover:text-primary-700 font-medium transition-colors">
-              Voir tout <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-
-          {recentLeads && recentLeads.length > 0 ? (
-            <div className="divide-y divide-neutral-100">
-              {recentLeads.map((lead: any) => (
-                <Link key={lead.id} href={`/aqarpro/${slug}/leads/${lead.id}`} className="flex items-center gap-4 px-6 py-4 hover:bg-neutral-50 transition-colors">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-body-sm font-medium text-neutral-900 truncate">{lead.name}</p>
-                    <p className="text-caption text-neutral-500 truncate">{(lead.properties as any)?.title ?? 'Bien non spécifié'}</p>
-                  </div>
-                  <p className="text-caption text-neutral-400 shrink-0">{formatDate(lead.created_at)}</p>
-                  <LeadStatusBadge status={lead.status} />
-                </Link>
-              ))}
+        {isVisible('recent_leads') && (
+          <FadeInUp>
+          <div className="lg:col-span-2 bg-white rounded-lg border border-neutral-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200">
+              <h2 className="text-heading-sm text-neutral-900">Derniers leads</h2>
+              <Link href={`/aqarpro/${slug}/leads`} className="flex items-center gap-1 text-body-sm text-primary-600 hover:text-primary-700 font-medium transition-colors">
+                Voir tout <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
-          ) : (
-            <div className="py-12 text-center text-body-md text-neutral-400">Aucun lead pour l&apos;instant</div>
-          )}
-        </div>
-        </FadeInUp>
+
+            {recentLeads && recentLeads.length > 0 ? (
+              <div className="divide-y divide-neutral-100">
+                {recentLeads.map((lead: any) => (
+                  <Link key={lead.id} href={`/aqarpro/${slug}/leads/${lead.id}`} className="flex items-center gap-4 px-6 py-4 hover:bg-neutral-50 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-body-sm font-medium text-neutral-900 truncate">{lead.name}</p>
+                      <p className="text-caption text-neutral-500 truncate">{(lead.properties as any)?.title ?? 'Bien non spécifié'}</p>
+                    </div>
+                    <p className="text-caption text-neutral-400 shrink-0">{formatDate(lead.created_at)}</p>
+                    <LeadStatusBadge status={lead.status} />
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="py-12 text-center text-body-md text-neutral-400">Aucun lead pour l&apos;instant</div>
+            )}
+          </div>
+          </FadeInUp>
+        )}
 
         {/* Activity feed */}
-        <FadeInUp>
-        <div className="bg-white rounded-lg border border-neutral-200">
-          <div className="px-6 py-4 border-b border-neutral-200">
-            <h2 className="text-heading-sm text-neutral-900">Activité récente</h2>
-          </div>
-
-          {recentActivity && recentActivity.length > 0 ? (
-            <div className="px-6 py-4 flex flex-col gap-4">
-              {recentActivity.map((event: any) => (
-                <div key={event.id} className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-primary-50 flex items-center justify-center shrink-0 mt-0.5">
-                    <Clock className="h-3.5 w-3.5 text-primary-500" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-body-sm text-neutral-700">{eventLabel(event.event_type, event.metadata)}</p>
-                    <p className="text-caption text-neutral-400 mt-0.5">{formatDate(event.created_at)}</p>
-                  </div>
-                </div>
-              ))}
+        {isVisible('activity') && (
+          <FadeInUp>
+          <div className="bg-white rounded-lg border border-neutral-200">
+            <div className="px-6 py-4 border-b border-neutral-200">
+              <h2 className="text-heading-sm text-neutral-900">Activité récente</h2>
             </div>
-          ) : (
-            <div className="py-12 text-center text-body-md text-neutral-400">Aucune activité</div>
-          )}
-        </div>
-        </FadeInUp>
+
+            {recentActivity && recentActivity.length > 0 ? (
+              <div className="px-6 py-4 flex flex-col gap-4">
+                {recentActivity.map((event: any) => (
+                  <div key={event.id} className="flex items-start gap-3">
+                    <div className="w-7 h-7 rounded-full bg-primary-50 flex items-center justify-center shrink-0 mt-0.5">
+                      <Clock className="h-3.5 w-3.5 text-primary-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-body-sm text-neutral-700">{eventLabel(event.event_type, event.metadata)}</p>
+                      <p className="text-caption text-neutral-400 mt-0.5">{formatDate(event.created_at)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-12 text-center text-body-md text-neutral-400">Aucune activité</div>
+            )}
+          </div>
+          </FadeInUp>
+        )}
       </div>
+
+      {/* Visit requests widget */}
+      {isVisible('visit_requests') && (
+        <FadeInUp>
+          <div className="bg-white rounded-lg border border-neutral-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-200">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center">
+                  <CalendarCheck className="h-4.5 w-4.5 text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="text-heading-sm text-neutral-900">Demandes de visite</h2>
+                  <p className="text-caption text-neutral-500">
+                    {(pendingVisitRequests ?? 0) === 0
+                      ? 'Aucune demande en attente'
+                      : `${pendingVisitRequests} demande${(pendingVisitRequests ?? 0) > 1 ? 's' : ''} en attente`}
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/aqarpro/${slug}/visit-requests`}
+                className="flex items-center gap-1 text-body-sm text-primary-600 hover:text-primary-700 font-medium transition-colors"
+              >
+                Gérer <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </div>
+        </FadeInUp>
+      )}
     </div>
   );
 }

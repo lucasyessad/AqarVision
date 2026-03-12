@@ -65,6 +65,9 @@ export function HeaderLuxury({ agency }: HeaderLuxuryProps) {
     { href: `/agence/${agency.slug}`, label: t('nav.home') },
     { href: `/agence/${agency.slug}/biens`, label: t('nav.properties') },
     { href: `/agence/${agency.slug}/a-propos`, label: t('nav.about') },
+    { href: `/agence/${agency.slug}/equipe`, label: t('nav.team') },
+    { href: `/agence/${agency.slug}/services`, label: t('nav.services') },
+    { href: `/agence/${agency.slug}/zones`, label: t('nav.zones') },
     { href: `/agence/${agency.slug}/contact`, label: t('nav.contact') },
   ];
 

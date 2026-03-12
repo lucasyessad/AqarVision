@@ -1,24 +1,11 @@
 'use server';
 
 import Anthropic from '@anthropic-ai/sdk';
-import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { getPlanConfig } from '@/config';
+import { aiDescriptionInputSchema, type AiDescriptionInput } from '@/lib/validators/ai';
 
-const inputSchema = z.object({
-  title: z.string().optional(),
-  type: z.string(),
-  transaction_type: z.enum(['sale', 'rent']),
-  surface: z.number().optional(),
-  rooms: z.number().optional(),
-  bathrooms: z.number().optional(),
-  wilaya: z.string().optional(),
-  commune: z.string().optional(),
-  features: z.array(z.string()).optional(),
-  price: z.number().optional(),
-});
-
-type GenerateInput = z.infer<typeof inputSchema>;
+type GenerateInput = AiDescriptionInput;
 
 interface GenerateResult {
   title?: string;
@@ -82,7 +69,7 @@ export async function generatePropertyDescription(
   }
 
   // 4. Validate input
-  const validated = inputSchema.safeParse(rawInput);
+  const validated = aiDescriptionInputSchema.safeParse(rawInput);
   if (!validated.success) {
     return { error: 'Données invalides: ' + validated.error.errors[0]?.message };
   }

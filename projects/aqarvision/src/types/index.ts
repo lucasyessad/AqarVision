@@ -1,4 +1,8 @@
-/** Types principaux du projet AqarVision */
+/**
+ * @deprecated Legacy types for v1 [locale]/[agence] routes.
+ * New code should use types from '@/types/database' instead.
+ * These will be removed when v1 routes are fully migrated to /agence/[slug]/.
+ */
 
 // Constantes réutilisables
 export const TYPES_BIEN: TypeBien[] = [

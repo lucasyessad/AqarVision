@@ -461,3 +461,12 @@ export interface AgencyResponsivenessStats {
   responsiveness_level: ResponsivenessLevel;
   updated_at: string;
 }
+
+export interface DashboardPreferences {
+  id: string;
+  agency_id: string;
+  widget_order: string[];
+  hidden_widgets: string[];
+  created_at: string;
+  updated_at: string;
+}

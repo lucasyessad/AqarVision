@@ -1,6 +1,8 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { Eye } from 'lucide-react';
 import { PLANS } from '@/config';
 import { BrandingForm } from './form';
 import type { AgencyWilaya } from '@/types/database';
@@ -39,11 +41,20 @@ export default async function BrandingPage() {
 
   return (
     <div className="mx-auto max-w-6xl p-6 lg:p-8">
-      <div className="mb-8">
-        <h1 className="text-heading-lg text-neutral-900">Branding & Personnalisation</h1>
-        <p className="mt-1 text-body-sm text-neutral-500">
-          Personnalisez l&apos;apparence de votre site vitrine
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-heading-lg text-neutral-900">Branding & Personnalisation</h1>
+          <p className="mt-1 text-body-sm text-neutral-500">
+            Personnalisez l&apos;apparence de votre site vitrine
+          </p>
+        </div>
+        <Link
+          href={`/aqarpro/${agency.slug}/settings/branding/preview`}
+          className="inline-flex items-center gap-2 h-10 px-4 text-body-sm font-semibold text-primary-600 border border-primary-200 rounded-md hover:bg-primary-50 transition-colors"
+        >
+          <Eye className="h-4 w-4" />
+          Prévisualiser la vitrine
+        </Link>
       </div>
 
       {/* Aperçu cover (Enterprise) */}
