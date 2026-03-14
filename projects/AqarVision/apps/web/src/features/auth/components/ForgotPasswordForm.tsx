@@ -3,11 +3,32 @@
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Link } from "@/lib/i18n/navigation";
-import { signInAction, type AuthFormState } from "../actions/auth.action";
+import { forgotPasswordAction, type ForgotPasswordFormState } from "../actions/auth.action";
 
-export function LoginForm() {
+export function ForgotPasswordForm() {
   const t = useTranslations("auth");
-  const [state, formAction, isPending] = useActionState<AuthFormState, FormData>(signInAction, null);
+  const [state, formAction, isPending] = useActionState<ForgotPasswordFormState, FormData>(forgotPasswordAction, null);
+
+  if (state?.success) {
+    return (
+      <div className="rounded-lg bg-green-50 p-6 text-center">
+        <div className="mb-2 text-2xl">&#9993;</div>
+        <h3 className="mb-2 text-lg font-semibold text-green-800">
+          {t("reset_email_sent_title")}
+        </h3>
+        <p className="text-sm text-green-700">
+          {t("reset_email_sent_message")}
+        </p>
+        <Link
+          href="/auth/login"
+          className="mt-4 inline-block text-sm font-medium text-gold hover:underline"
+        >
+          {t("back_to_login")}
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <form action={formAction} className="space-y-4">
       {state?.success === false && (
@@ -15,6 +36,9 @@ export function LoginForm() {
           {state.error.message}
         </div>
       )}
+      <p className="text-sm text-gray-500">
+        {t("forgot_password_instructions")}
+      </p>
       <div>
         <label
           htmlFor="email"
@@ -31,35 +55,12 @@ export function LoginForm() {
           className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-night focus:outline-none focus:ring-2 focus:ring-blue-night/20"
         />
       </div>
-      <div>
-        <label
-          htmlFor="password"
-          className="mb-1 block text-sm font-medium text-gray-700"
-        >
-          {t("password")}
-        </label>
-        <input
-          id="password"
-          type="password"
-          name="password"
-          required
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-night focus:outline-none focus:ring-2 focus:ring-blue-night/20"
-        />
-      </div>
-      <div className="flex items-center justify-end">
-        <Link
-          href="/auth/forgot-password"
-          className="text-sm text-gold hover:underline"
-        >
-          {t("forgot_password")}
-        </Link>
-      </div>
       <button
         type="submit"
         disabled={isPending}
         className="w-full rounded-lg bg-blue-night px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-night/90 disabled:opacity-50"
       >
-        {isPending ? t("logging_in") : t("login_button")}
+        {isPending ? t("sending") : t("send_reset_link")}
       </button>
     </form>
   );
