@@ -102,8 +102,10 @@ export function isThemeAvailable(themeId: string, plan: string): boolean {
  * getAvailableThemes("enterprise")  // all themes
  */
 export function getAvailableThemes(plan: string): string[] {
-  // Import THEME_REGISTRY lazily to avoid top-level circular deps in tests.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { THEME_REGISTRY } = require("@/lib/themes/registry") as { THEME_REGISTRY: Array<{ id: string }> };
-  return THEME_REGISTRY.map((t) => t.id).filter((id) => isThemeAvailable(id, plan));
+  const ALL_THEME_IDS = [
+    "minimal", "corporate-navy", "swiss-minimal", "modern",
+    "mediterranee", "marocain-contemporain", "pastel-doux", "organique-eco", "professional",
+    "luxe-noir", "editorial-07", "art-deco", "neo-brutalist", "luxury", "bold",
+  ];
+  return ALL_THEME_IDS.filter((id) => isThemeAvailable(id, plan));
 }

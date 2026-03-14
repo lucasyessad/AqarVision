@@ -111,15 +111,15 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
       style={{ background: "var(--bg-secondary)", borderColor: "var(--border-light)" }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-2 px-6 py-5">
-        <span className="text-lg font-extrabold tracking-tight" style={{ color: "var(--text-primary)" }}>
+      <div className="flex items-center gap-1.5 px-6 py-5">
+        <span className="font-display text-lg font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
           Aqar
         </span>
         <span
           className="aqar-pulse inline-block h-2 w-2 rounded-full"
-          style={{ background: "var(--cyan)" }}
+          style={{ background: "var(--coral)" }}
         />
-        <span className="text-lg font-extrabold" style={{ color: "var(--cyan)" }}>Pro</span>
+        <span className="font-display text-lg font-bold italic" style={{ color: "var(--coral)" }}>Pro</span>
       </div>
 
       {/* Nav */}
@@ -132,12 +132,12 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
               href={item.href as `/${string}`}
               className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
               style={{
-                background: active ? "var(--bg-tertiary)" : "transparent",
-                color: active ? "var(--cyan)" : "var(--text-muted, var(--text-secondary))",
-                borderLeft: active ? `2px solid var(--cyan)` : "2px solid transparent",
+                background: active ? "var(--coral-ghost)" : "transparent",
+                color: active ? "var(--coral)" : "var(--text-secondary)",
+                borderLeft: active ? `2px solid var(--coral)` : "2px solid transparent",
               }}
             >
-              <span style={{ color: active ? "var(--cyan)" : "var(--text-tertiary)" }}>{item.icon}</span>
+              <span style={{ color: active ? "var(--coral)" : "var(--text-tertiary)" }}>{item.icon}</span>
               {t(`nav.${item.key}` as Parameters<typeof t>[0])}
             </Link>
           );
@@ -159,8 +159,8 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
                 href={item.href as `/${string}`}
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all"
                 style={{
-                  background: active ? "var(--bg-tertiary)" : "transparent",
-                  color: active ? "var(--cyan)" : "var(--text-secondary)",
+                  background: active ? "var(--coral-ghost)" : "transparent",
+                  color: active ? "var(--coral)" : "var(--text-secondary)",
                   fontWeight: active ? 500 : 400,
                 }}
               >
@@ -180,8 +180,8 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
             rel="noopener noreferrer"
             className="flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors"
             style={{
-              borderColor: "rgba(0,229,191,0.3)",
-              color: "var(--cyan)",
+              borderColor: "var(--coral-glow)",
+              color: "var(--coral)",
             }}
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -197,7 +197,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
         <div className="flex items-center gap-3">
           <div
             className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-            style={{ background: "var(--bg-surface)", color: "var(--cyan)" }}
+            style={{ background: "var(--warm-100)", color: "var(--coral)" }}
           >
             {(fullName ?? userEmail).charAt(0).toUpperCase()}
           </div>

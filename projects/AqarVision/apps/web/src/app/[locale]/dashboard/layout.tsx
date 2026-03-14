@@ -67,7 +67,7 @@ export default async function DashboardLayout({
         {showOnboardingBanner && (
           <div
             className="border-b px-8 py-3"
-            style={{ borderColor: "rgba(245,166,35,0.2)", background: "rgba(245,166,35,0.07)" }}
+            style={{ borderColor: "var(--amber-glow)", background: "var(--warning-ghost)" }}
           >
             <div className="flex items-center justify-between">
               <p className="text-sm" style={{ color: "var(--text-secondary)" }}>

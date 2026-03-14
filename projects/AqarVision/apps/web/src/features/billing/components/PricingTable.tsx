@@ -73,7 +73,7 @@ function PlanCard({
       </div>
 
       <p className="mt-1 text-xs text-gray-400">
-        ~{indicativeDzd.toLocaleString()} DZD ({t("per_month")})
+        ~{new Intl.NumberFormat("fr-FR").format(indicativeDzd)} DZD ({t("per_month")})
       </p>
 
       <ul className="mt-6 flex-1 space-y-3">

@@ -35,7 +35,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.borderColor = "var(--border-hover)";
         (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 48px rgba(0,0,0,0.35)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 36px rgba(0,0,0,0.10)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLElement).style.borderColor = "var(--border-light)";

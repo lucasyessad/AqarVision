@@ -8,35 +8,51 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Legacy tokens (kept for compatibility)
+        // ── Legacy tokens (kept for compatibility) ───────────
         "blue-night": "#1a365d",
         gold: "#d4af37",
         "off-white": "#f7fafc",
-        // ── Indigo Nuit design system ───────────────────────────
+
+        // ── Charbon & Corail design system ──────────────────
+        coral: {
+          DEFAULT: "#E8725C",
+          hover:   "#D4624D",
+          light:   "#F0998A",
+        },
+        charcoal: {
+          950: "#1C1C1E",
+          900: "#2C2C2E",
+          800: "#3A3A3C",
+          700: "#48484A",
+          600: "#636366",
+          500: "#8E8E93",
+          400: "#AEAEB2",
+          300: "#C7C7CC",
+          200: "#D1D1D6",
+          100: "#E5E5EA",
+        },
+        warm: {
+          50:  "#FDFCFA",
+          100: "#F5F0EB",
+          200: "#EBE5DD",
+          300: "#DDD5CA",
+        },
         aqar: {
-          deep:    "#060B18",   // body background
-          bg:      "#0A1222",   // page sections
-          "bg-2":  "#0F1A2E",   // secondary sections
-          "bg-3":  "#142240",   // tertiary / hover states
-          card:    "#111D33",   // cards
-          "card-hover": "#162545",
-          surface: "#1A2D4A",   // chip backgrounds, small surfaces
-          cyan:    "#00E5BF",   // primary accent
-          "cyan-dim": "#00C4A3",
-          amber:   "#F5A623",   // secondary accent
-          red:     "#FF4757",   // error / danger
-          text:    "#E8EDF5",   // primary text
-          muted:   "#8B95A8",   // secondary text
-          faint:   "#5A6478",   // tertiary text / labels
-          border:  "#1E3050",
-          "border-light": "#162540",
-          "border-hover": "#2A4060",
+          // Semantic aliases for component usage
+          page:    "#FDFCFA",
+          surface: "#FFFFFF",
+          sunken:  "#F5F0EB",
+          coral:   "#E8725C",
+          amber:   "#D4943A",
+          red:     "#D14545",
+          success: "#3B9B6D",
         },
       },
       fontFamily: {
-        sans: ["Plus Jakarta Sans", "Noto Sans Arabic", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
-        arabic: ["Noto Sans Arabic", "sans-serif"],
+        display: ["Libre Baskerville", "Georgia", "serif"],
+        sans:    ["Figtree", "Noto Sans Arabic", "system-ui", "sans-serif"],
+        mono:    ["JetBrains Mono", "monospace"],
+        arabic:  ["Noto Sans Arabic", "sans-serif"],
       },
     },
   },

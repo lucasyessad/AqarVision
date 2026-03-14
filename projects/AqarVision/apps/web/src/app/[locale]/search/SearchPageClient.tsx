@@ -66,7 +66,7 @@ export function SearchPageClient({
       <nav
         className="sticky top-0 z-40 border-b"
         style={{
-          background: "rgba(6, 11, 24, 0.85)",
+          background: "rgba(253, 252, 250, 0.92)",
           backdropFilter: "blur(20px)",
           borderColor: "var(--border-light)",
         }}
@@ -77,7 +77,7 @@ export function SearchPageClient({
             <span style={{ color: "var(--text-primary)" }}>Aqar</span>
             <span
               className="aqar-pulse inline-block h-2 w-2 rounded-full"
-              style={{ background: "var(--cyan)" }}
+              style={{ background: "var(--coral)" }}
             />
           </Link>
 
@@ -97,7 +97,7 @@ export function SearchPageClient({
           style={{
             width: "700px",
             height: "700px",
-            background: "radial-gradient(circle, rgba(0,229,191,0.07) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(232,114,92,0.06) 0%, transparent 70%)",
           }}
         />
 
@@ -105,11 +105,11 @@ export function SearchPageClient({
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-medium"
           style={{
             background: "var(--cyan-ghost)",
-            borderColor: "rgba(0,229,191,0.15)",
-            color: "var(--cyan)",
+            borderColor: "var(--coral-glow)",
+            color: "var(--coral)",
           }}
         >
-          <span className="aqar-pulse inline-block h-1.5 w-1.5 rounded-full" style={{ background: "var(--cyan)" }} />
+          <span className="aqar-pulse inline-block h-1.5 w-1.5 rounded-full" style={{ background: "var(--coral)" }} />
           {t("title")}
         </div>
 

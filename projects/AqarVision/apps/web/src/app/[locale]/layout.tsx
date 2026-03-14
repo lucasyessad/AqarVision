@@ -1,14 +1,22 @@
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Figtree, Libre_Baskerville, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { routing } from "@/lib/i18n/routing";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const figtree = Figtree({
   subsets: ["latin"],
   display: "swap",
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-sans",
+});
+
+const libreBaskerville = Libre_Baskerville({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -44,7 +52,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={dir}
-      className={`${plusJakartaSans.variable} ${jetbrainsMono.variable}`}
+      className={`${figtree.variable} ${libreBaskerville.variable} ${jetbrainsMono.variable}`}
     >
       <body className="min-h-screen font-sans" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
