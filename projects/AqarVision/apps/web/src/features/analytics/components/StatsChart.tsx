@@ -31,10 +31,10 @@ export function StatsChart({ stats }: StatsChartProps) {
         <div className="flex items-end gap-1" style={{ height: "160px" }}>
           {stats.map((day) => {
             const heightPercent = (day.total_views / maxViews) * 100;
-            const label = day.day.slice(5); // MM-DD
+            const label = day.stat_date.slice(5); // MM-DD
             return (
               <div
-                key={`views-${day.day}`}
+                key={`views-${day.stat_date}`}
                 className="group relative flex flex-1 flex-col items-center justify-end"
                 style={{ height: "100%" }}
               >
@@ -63,10 +63,10 @@ export function StatsChart({ stats }: StatsChartProps) {
         <div className="flex items-end gap-1" style={{ height: "160px" }}>
           {stats.map((day) => {
             const heightPercent = (day.total_leads / maxLeads) * 100;
-            const label = day.day.slice(5);
+            const label = day.stat_date.slice(5);
             return (
               <div
-                key={`leads-${day.day}`}
+                key={`leads-${day.stat_date}`}
                 className="group relative flex flex-1 flex-col items-center justify-end"
                 style={{ height: "100%" }}
               >

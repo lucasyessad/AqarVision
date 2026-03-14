@@ -1,34 +1,197 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { useEffect, useRef, useCallback } from "react";
+import type { MapBounds } from "../schemas/search.schema";
 
-export function SearchMap() {
-  const t = useTranslations("search");
+// Minimal type declarations for maplibre-gl so the file compiles without the package installed
+// Once maplibre-gl is installed, these types are provided by the package itself.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MapLibreMap = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MapLibreMarker = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MapLibrePopup = any;
+
+export interface MapListing {
+  id: string;
+  lat: number;
+  lng: number;
+  price: number;
+  currency: string;
+  title: string;
+  slug: string;
+}
+
+interface SearchMapProps {
+  listings: MapListing[];
+  onBoundsChange: (bounds: MapBounds) => void;
+}
+
+function formatPrice(price: number, currency: string): string {
+  return new Intl.NumberFormat("fr-DZ", {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+}
+
+export function SearchMap({ listings, onBoundsChange }: SearchMapProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<MapLibreMap>(null);
+  const markersRef = useRef<MapLibreMarker[]>([]);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Debounced bounds change handler
+  const handleBoundsChange = useCallback(
+    (map: MapLibreMap) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      debounceTimerRef.current = setTimeout(() => {
+        const rawBounds = map.getBounds();
+        const bounds: MapBounds = {
+          north: rawBounds.getNorth(),
+          south: rawBounds.getSouth(),
+          east: rawBounds.getEast(),
+          west: rawBounds.getWest(),
+        };
+        onBoundsChange(bounds);
+      }, 500);
+    },
+    [onBoundsChange]
+  );
+
+  // Initialize map
+  useEffect(() => {
+    if (!containerRef.current || mapRef.current) return;
+
+    let mapInstance: MapLibreMap;
+
+    // Dynamic import to ensure client-side only loading
+    import("maplibre-gl").then((maplibre) => {
+      if (!containerRef.current) return;
+
+      mapInstance = new maplibre.Map({
+        container: containerRef.current,
+        style: {
+          version: 8,
+          sources: {
+            osm: {
+              type: "raster",
+              tiles: [
+                process.env.NEXT_PUBLIC_MAPTILER_KEY
+                  ? `https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`
+                  : "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              ],
+              tileSize: 256,
+              attribution: process.env.NEXT_PUBLIC_MAPTILER_KEY
+                ? "© MapTiler © OpenStreetMap contributors"
+                : "© OpenStreetMap contributors",
+            },
+          },
+          layers: [
+            {
+              id: "osm",
+              type: "raster",
+              source: "osm",
+              minzoom: 0,
+              maxzoom: 22,
+            },
+          ],
+        },
+        // Algeria center: Algiers
+        center: [3.0588, 36.7372],
+        zoom: 6,
+      });
+
+      mapRef.current = mapInstance;
+
+      // Emit bounds on move end
+      mapInstance.on("moveend", () => {
+        handleBoundsChange(mapInstance);
+      });
+
+      // Initial bounds emit after map loads
+      mapInstance.on("load", () => {
+        handleBoundsChange(mapInstance);
+      });
+    });
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Update markers when listings change
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    const map = mapRef.current;
+
+    // Remove existing markers
+    markersRef.current.forEach((marker: MapLibreMarker) => marker.remove());
+    markersRef.current = [];
+
+    import("maplibre-gl").then((maplibre) => {
+      listings.forEach((listing) => {
+        if (typeof listing.lat !== "number" || typeof listing.lng !== "number") {
+          return;
+        }
+
+        // Create custom marker element
+        const el = document.createElement("div");
+        el.className =
+          "cursor-pointer rounded-full bg-[#1a365d] px-2 py-1 text-xs font-bold text-white shadow-md hover:bg-[#d4af37] transition-colors whitespace-nowrap";
+        el.textContent = formatPrice(listing.price, listing.currency);
+
+        // Popup content
+        const popupHtml = `
+          <div class="p-2 min-w-[160px]">
+            <p class="text-xs font-semibold text-[#2d3748] truncate mb-1">${listing.title}</p>
+            <p class="text-sm font-bold text-[#1a365d] mb-2">${formatPrice(listing.price, listing.currency)}</p>
+            <a
+              href="/fr/l/${listing.slug}"
+              class="block w-full rounded bg-[#1a365d] px-3 py-1 text-center text-xs font-medium text-white hover:bg-[#d4af37] transition-colors"
+            >
+              Voir l'annonce
+            </a>
+          </div>
+        `;
+
+        const popup: MapLibrePopup = new maplibre.Popup({
+          closeButton: true,
+          closeOnClick: false,
+          offset: 25,
+          maxWidth: "200px",
+        }).setHTML(popupHtml);
+
+        const marker: MapLibreMarker = new maplibre.Marker({ element: el })
+          .setLngLat([listing.lng, listing.lat])
+          .setPopup(popup)
+          .addTo(map);
+
+        markersRef.current.push(marker);
+      });
+    });
+  }, [listings]);
 
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-sm">
-      {/* MapLibre integration in future sprint */}
       <div
-        id="map"
-        className="flex h-64 items-center justify-center bg-gray-100 lg:h-80"
-      >
-        <div className="text-center">
-          <svg
-            className="mx-auto mb-2 h-10 w-10 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
-            />
-          </svg>
-          <p className="text-sm text-gray-500">{t("map_coming_soon")}</p>
-        </div>
-      </div>
+        ref={containerRef}
+        className="h-64 w-full lg:h-80"
+        aria-label="Carte des annonces immobilières"
+        role="img"
+      />
     </div>
   );
 }

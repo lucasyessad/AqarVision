@@ -4,6 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { getListingBySlug } from "@/features/marketplace/services/search.service";
 import { generateListingJsonLd } from "@/lib/seo/json-ld";
 import { Link } from "@/lib/i18n/navigation";
+import { recordView } from "@/features/marketplace/actions/view-history.action";
+import { getListingNote } from "@/features/marketplace/actions/listing-notes.action";
+import { ListingNoteWidget } from "@/features/marketplace/components/ListingNoteWidget";
+import { MortgageCalculator } from "@/features/marketplace/components/MortgageCalculator";
 
 interface ListingPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -62,6 +66,12 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
   if (!listing) {
     notFound();
   }
+
+  // Record view in history (fire without blocking render)
+  void recordView(listing.id);
+
+  // Fetch user's private note for this listing (null if not logged in)
+  const existingNote = await getListingNote(listing.id);
 
   const jsonLd = generateListingJsonLd({
     title: listing.title,
@@ -227,9 +237,10 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
             )}
           </div>
 
-          {/* Sidebar: Agency card */}
+          {/* Sidebar */}
           <div className="w-full shrink-0 lg:w-80">
-            <div className="sticky top-4 rounded-xl bg-white p-6 shadow-sm">
+            <div className="sticky top-4 space-y-4">
+            <div className="rounded-xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 {listing.agency_logo_url ? (
                   <img
@@ -272,6 +283,18 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                   {t("contact_agency")}
                 </Link>
               )}
+            </div>
+
+            {/* Note privée */}
+            <ListingNoteWidget
+              listingId={listing.id}
+              initialContent={existingNote?.content ?? ""}
+            />
+
+            {/* Calculateur hypothécaire */}
+            {listing.current_price > 0 && (
+              <MortgageCalculator defaultPrice={listing.current_price} />
+            )}
             </div>
           </div>
         </div>

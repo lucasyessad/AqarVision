@@ -5,6 +5,35 @@
     "cta": {
       "search": "البحث عن عقار",
       "login": "الفضاء المهني"
+    },
+    "search_bar": {
+      "wilaya_placeholder": "اختر الولاية",
+      "type_placeholder": "نوع العقار",
+      "button": "بحث"
+    },
+    "stats": {
+      "listings": "إعلان",
+      "agencies": "وكالة شريكة",
+      "wilayas": "ولاية مغطاة",
+      "transactions": "صفقة منجزة"
+    },
+    "cities": {
+      "title": "المدن الأكثر طلباً",
+      "subtitle": "أكثر أسواق العقارات نشاطاً في الجزائر"
+    },
+    "advantages": {
+      "title": "لماذا تختار AqarVision؟",
+      "verified_title": "إعلانات موثّقة",
+      "verified_desc": "يتم مراجعة كل إعلان من قِبَل فريقنا لضمان معلومات دقيقة وموثوقة.",
+      "ai_title": "بحث بالذكاء الاصطناعي",
+      "ai_desc": "يحلّل محرّكنا الذكي تفضيلاتك لاقتراح أكثر العقارات ملاءمةً لك.",
+      "agencies_title": "وكالات معتمدة",
+      "agencies_desc": "جميع الوكالات الشريكة معتمدة ومُقيَّمة من قِبَل مستخدمينا."
+    },
+    "pro_banner": {
+      "title": "هل أنت وكالة عقارية؟",
+      "subtitle": "انشر إعلاناتك، أدر عملاءك المحتملين، وطوّر أعمالك مع AqarPro.",
+      "cta": "ابدأ مجاناً"
     }
   },
   "nav": {
@@ -61,7 +90,39 @@
     "password_updated_title": "تم تحديث كلمة المرور",
     "password_updated_message": "تم تحديث كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول.",
     "check_email_title": "تحقق من بريدك الإلكتروني",
-    "check_email_message": "تم إرسال بريد التأكيد. انقر على الرابط لتفعيل حسابك."
+    "check_email_message": "تم إرسال بريد التأكيد. انقر على الرابط لتفعيل حسابك.",
+    "mode_visitor": "أبحث عن عقار",
+    "mode_pro": "الفضاء المهني (وكالة)",
+    "mode_visitor_hint": "سجل الدخول للوصول إلى مفضلاتك وتنبيهاتك.",
+    "mode_pro_hint": "سجل الدخول لإدارة إعلاناتك وعملائك.",
+    "pro_no_account_hint": "ليس لديك وكالة بعد؟"
+  },
+  "espace": {
+    "page_title": "مساحتي",
+    "space_label": "مساحتي",
+    "nav": {
+      "home": "الرئيسية",
+      "favorites": "المفضلة",
+      "alertes": "التنبيهات",
+      "historique": "السجل",
+      "profil": "الملف الشخصي"
+    },
+    "welcome_title": "مرحباً، {name}",
+    "welcome_subtitle": "مرحباً بك في مساحتك الشخصية على AqarVision.",
+    "card_favorites_desc": "عقاراتك المحفوظة",
+    "card_alertes_desc": "بحثك المحفوظة والتنبيهات",
+    "card_historique_desc": "العقارات التي زرتها",
+    "card_profil_desc": "معلوماتك الشخصية",
+    "search_cta_title": "تبحث عن عقار؟",
+    "search_cta_subtitle": "تصفح آلاف الإعلانات عبر الـ 58 ولاية في الجزائر.",
+    "search_cta_button": "ابدأ البحث",
+    "placeholder_coming_soon": "الميزة قادمة قريباً",
+    "profil_email": "البريد الإلكتروني",
+    "profil_name": "الاسم الكامل",
+    "profil_phone": "الهاتف",
+    "profil_no_name": "غير محدد",
+    "profil_not_set": "غير محدد",
+    "profil_edit_coming_soon": "تعديل الملف الشخصي سيتوفر قريباً."
   },
   "dashboard": {
     "title": "لوحة التحكم",
@@ -69,6 +130,7 @@
       "overview": "نظرة عامة",
       "listings": "الإعلانات",
       "leads": "العملاء المحتملون",
+      "visit_requests": "طلبات الزيارة",
       "analytics": "الإحصائيات",
       "settings": "الإعدادات",
       "team": "الفريق",

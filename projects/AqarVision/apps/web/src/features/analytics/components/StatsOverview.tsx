@@ -49,8 +49,8 @@ export function StatsOverview({ summary }: StatsOverviewProps) {
     },
     {
       label: t("new_listings"),
-      value: summary.total_new_listings.toLocaleString(),
-      trend: summary.trend_new_listings,
+      value: summary.total_listings.toLocaleString(),
+      trend: summary.trend_listings,
     },
     {
       label: t("conversion"),

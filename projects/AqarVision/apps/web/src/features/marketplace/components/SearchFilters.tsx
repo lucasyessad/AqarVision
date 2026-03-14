@@ -5,26 +5,39 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import { LISTING_TYPES, PROPERTY_TYPES } from "@/features/listings/schemas/listing.schema";
 
+// Algeria has 58 wilayas
+const WILAYA_OPTIONS = Array.from({ length: 58 }, (_, i) => i + 1);
+
 interface SearchFiltersProps {
   isOpen: boolean;
   onToggle: () => void;
+  onSaveSearch?: () => void;
 }
 
-export function SearchFilters({ isOpen, onToggle }: SearchFiltersProps) {
+export function SearchFilters({ isOpen, onToggle, onSaveSearch }: SearchFiltersProps) {
   const t = useTranslations("search");
   const tListings = useTranslations("listings");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // Existing filters
   const [listingTypes, setListingTypes] = useState<string[]>(
     searchParams.get("listing_type")?.split(",").filter(Boolean) ?? []
   );
   const [propertyTypes, setPropertyTypes] = useState<string[]>(
     searchParams.get("property_type")?.split(",").filter(Boolean) ?? []
   );
-  const [wilayaCode, setWilayaCode] = useState(
-    searchParams.get("wilaya_code") ?? ""
+  // Multi-select wilayas (comma-separated in URL)
+  const [wilayaCodes, setWilayaCodes] = useState<number[]>(
+    searchParams
+      .get("wilaya_codes")
+      ?.split(",")
+      .map(Number)
+      .filter((n) => !isNaN(n)) ??
+      (searchParams.get("wilaya_code")
+        ? [Number(searchParams.get("wilaya_code"))]
+        : [])
   );
   const [priceMin, setPriceMin] = useState(
     searchParams.get("price_min") ?? ""
@@ -39,10 +52,46 @@ export function SearchFilters({ isOpen, onToggle }: SearchFiltersProps) {
     searchParams.get("surface_min") ?? ""
   );
 
+  // New: floor range
+  const [floorMin, setFloorMin] = useState(
+    searchParams.get("floor_min") ?? ""
+  );
+  const [floorMax, setFloorMax] = useState(
+    searchParams.get("floor_max") ?? ""
+  );
+
+  // New: equipment (boolean amenities stored in details jsonb)
+  const [hasElevator, setHasElevator] = useState(
+    searchParams.get("has_elevator") === "true"
+  );
+  const [hasParking, setHasParking] = useState(
+    searchParams.get("has_parking") === "true"
+  );
+  const [hasBalcony, setHasBalcony] = useState(
+    searchParams.get("has_balcony") === "true"
+  );
+  const [hasPool, setHasPool] = useState(
+    searchParams.get("has_pool") === "true"
+  );
+  const [hasGarden, setHasGarden] = useState(
+    searchParams.get("has_garden") === "true"
+  );
+  const [furnished, setFurnished] = useState(
+    searchParams.get("furnished") === "true"
+  );
+
+  // Wilaya dropdown open state
+  const [wilayaOpen, setWilayaOpen] = useState(false);
+
+  const toggleWilaya = (code: number) => {
+    setWilayaCodes((prev) =>
+      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
+    );
+  };
+
   const applyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    // Preserve q
     if (listingTypes.length > 0) {
       params.set("listing_type", listingTypes[0]!);
     } else {
@@ -55,35 +104,53 @@ export function SearchFilters({ isOpen, onToggle }: SearchFiltersProps) {
       params.delete("property_type");
     }
 
-    if (wilayaCode) {
-      params.set("wilaya_code", wilayaCode);
+    // Multi-wilaya support
+    params.delete("wilaya_code");
+    if (wilayaCodes.length === 1) {
+      params.set("wilaya_code", String(wilayaCodes[0]));
+      params.delete("wilaya_codes");
+    } else if (wilayaCodes.length > 1) {
+      params.set("wilaya_codes", wilayaCodes.join(","));
     } else {
-      params.delete("wilaya_code");
+      params.delete("wilaya_codes");
     }
 
-    if (priceMin) {
-      params.set("price_min", priceMin);
-    } else {
-      params.delete("price_min");
-    }
+    if (priceMin) params.set("price_min", priceMin);
+    else params.delete("price_min");
 
-    if (priceMax) {
-      params.set("price_max", priceMax);
-    } else {
-      params.delete("price_max");
-    }
+    if (priceMax) params.set("price_max", priceMax);
+    else params.delete("price_max");
 
-    if (roomsMin) {
-      params.set("rooms_min", roomsMin);
-    } else {
-      params.delete("rooms_min");
-    }
+    if (roomsMin) params.set("rooms_min", roomsMin);
+    else params.delete("rooms_min");
 
-    if (surfaceMin) {
-      params.set("surface_min", surfaceMin);
-    } else {
-      params.delete("surface_min");
-    }
+    if (surfaceMin) params.set("surface_min", surfaceMin);
+    else params.delete("surface_min");
+
+    if (floorMin) params.set("floor_min", floorMin);
+    else params.delete("floor_min");
+
+    if (floorMax) params.set("floor_max", floorMax);
+    else params.delete("floor_max");
+
+    // Equipment booleans
+    if (hasElevator) params.set("has_elevator", "true");
+    else params.delete("has_elevator");
+
+    if (hasParking) params.set("has_parking", "true");
+    else params.delete("has_parking");
+
+    if (hasBalcony) params.set("has_balcony", "true");
+    else params.delete("has_balcony");
+
+    if (hasPool) params.set("has_pool", "true");
+    else params.delete("has_pool");
+
+    if (hasGarden) params.set("has_garden", "true");
+    else params.delete("has_garden");
+
+    if (furnished) params.set("furnished", "true");
+    else params.delete("furnished");
 
     params.delete("page");
     router.push(`${pathname}?${params.toString()}`);
@@ -92,11 +159,19 @@ export function SearchFilters({ isOpen, onToggle }: SearchFiltersProps) {
   const resetFilters = () => {
     setListingTypes([]);
     setPropertyTypes([]);
-    setWilayaCode("");
+    setWilayaCodes([]);
     setPriceMin("");
     setPriceMax("");
     setRoomsMin("");
     setSurfaceMin("");
+    setFloorMin("");
+    setFloorMax("");
+    setHasElevator(false);
+    setHasParking(false);
+    setHasBalcony(false);
+    setHasPool(false);
+    setHasGarden(false);
+    setFurnished(false);
 
     const params = new URLSearchParams();
     const q = searchParams.get("q");
@@ -174,20 +249,45 @@ export function SearchFilters({ isOpen, onToggle }: SearchFiltersProps) {
           </div>
         </div>
 
-        {/* Wilaya */}
+        {/* Multi-select Wilaya */}
         <div className="mb-4">
           <h4 className="mb-2 text-xs font-medium text-[#2d3748]">
             {t("wilaya_filter")}
+            {wilayaCodes.length > 0 && (
+              <span className="ms-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#1a365d] text-[10px] text-white">
+                {wilayaCodes.length}
+              </span>
+            )}
           </h4>
-          <input
-            type="number"
-            value={wilayaCode}
-            onChange={(e) => setWilayaCode(e.target.value)}
-            min={1}
-            max={58}
-            placeholder="1-58"
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
-          />
+          <button
+            type="button"
+            onClick={() => setWilayaOpen((o) => !o)}
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-start text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+          >
+            {wilayaCodes.length === 0
+              ? "Sélectionner wilayas..."
+              : wilayaCodes.length === 1
+              ? `Wilaya ${wilayaCodes[0]}`
+              : `${wilayaCodes.length} wilayas sélectionnées`}
+          </button>
+          {wilayaOpen && (
+            <div className="mt-1 max-h-40 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-md">
+              {WILAYA_OPTIONS.map((code) => (
+                <label
+                  key={code}
+                  className="flex cursor-pointer items-center gap-2 px-3 py-1.5 text-sm text-[#2d3748] hover:bg-gray-50"
+                >
+                  <input
+                    type="checkbox"
+                    checked={wilayaCodes.includes(code)}
+                    onChange={() => toggleWilaya(code)}
+                    className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
+                  />
+                  Wilaya {code}
+                </label>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Price range */}
@@ -243,6 +343,94 @@ export function SearchFilters({ isOpen, onToggle }: SearchFiltersProps) {
           />
         </div>
 
+        {/* Floor range */}
+        <div className="mb-4">
+          <h4 className="mb-2 text-xs font-medium text-[#2d3748]">
+            Étage (min – max)
+          </h4>
+          <div className="flex gap-2">
+            <input
+              type="number"
+              value={floorMin}
+              onChange={(e) => setFloorMin(e.target.value)}
+              placeholder="Min"
+              min={0}
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+            />
+            <input
+              type="number"
+              value={floorMax}
+              onChange={(e) => setFloorMax(e.target.value)}
+              placeholder="Max"
+              min={0}
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+            />
+          </div>
+        </div>
+
+        {/* Equipment / Amenities */}
+        <div className="mb-4">
+          <h4 className="mb-2 text-xs font-medium text-[#2d3748]">
+            Équipements
+          </h4>
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-2 text-sm text-[#2d3748]">
+              <input
+                type="checkbox"
+                checked={hasElevator}
+                onChange={(e) => setHasElevator(e.target.checked)}
+                className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
+              />
+              Ascenseur
+            </label>
+            <label className="flex items-center gap-2 text-sm text-[#2d3748]">
+              <input
+                type="checkbox"
+                checked={hasParking}
+                onChange={(e) => setHasParking(e.target.checked)}
+                className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
+              />
+              Parking
+            </label>
+            <label className="flex items-center gap-2 text-sm text-[#2d3748]">
+              <input
+                type="checkbox"
+                checked={hasBalcony}
+                onChange={(e) => setHasBalcony(e.target.checked)}
+                className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
+              />
+              Balcon
+            </label>
+            <label className="flex items-center gap-2 text-sm text-[#2d3748]">
+              <input
+                type="checkbox"
+                checked={hasPool}
+                onChange={(e) => setHasPool(e.target.checked)}
+                className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
+              />
+              Piscine
+            </label>
+            <label className="flex items-center gap-2 text-sm text-[#2d3748]">
+              <input
+                type="checkbox"
+                checked={hasGarden}
+                onChange={(e) => setHasGarden(e.target.checked)}
+                className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
+              />
+              Jardin
+            </label>
+            <label className="flex items-center gap-2 text-sm text-[#2d3748]">
+              <input
+                type="checkbox"
+                checked={furnished}
+                onChange={(e) => setFurnished(e.target.checked)}
+                className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
+              />
+              Meublé
+            </label>
+          </div>
+        </div>
+
         {/* Apply button */}
         <button
           type="button"
@@ -251,6 +439,20 @@ export function SearchFilters({ isOpen, onToggle }: SearchFiltersProps) {
         >
           {t("button")}
         </button>
+
+        {/* Save search as alert */}
+        {onSaveSearch && (
+          <button
+            type="button"
+            onClick={onSaveSearch}
+            className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-[#d4af37] px-4 py-2 text-sm font-medium text-[#d4af37] transition-colors hover:bg-[#d4af37]/10"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+            Sauvegarder cette recherche
+          </button>
+        )}
       </div>
     </aside>
   );

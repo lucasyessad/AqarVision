@@ -1,9 +1,24 @@
-import { useTranslations } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
 import { LoginForm } from "@/features/auth/components";
 
-export default function LoginPage() {
-  const t = useTranslations("auth");
+interface LoginPageProps {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ mode?: "visitor" | "pro" }>;
+}
+
+export async function generateMetadata({ params }: LoginPageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "auth" });
+  return { title: t("login_title") };
+}
+
+export default async function LoginPage({ params, searchParams }: LoginPageProps) {
+  const { locale } = await params;
+  const { mode = "visitor" } = await searchParams;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: "auth" });
 
   return (
     <div className="rounded-xl bg-white p-8 shadow-lg">
@@ -13,8 +28,10 @@ export default function LoginPage() {
           {t("login_title")}
         </p>
       </div>
-      <LoginForm />
-      <p className="mt-4 text-center text-sm text-gray-500">
+
+      <LoginForm locale={locale} defaultMode={mode} />
+
+      <p className="mt-6 text-center text-sm text-gray-500">
         {t("no_account")}{" "}
         <Link
           href="/auth/signup"

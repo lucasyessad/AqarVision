@@ -1,10 +1,39 @@
 {
   "homepage": {
-    "title": "Trouvez votre bien immobilier en Algerie",
-    "subtitle": "La plateforme immobiliere intelligente pour la recherche, la gestion et l'analyse",
+    "title": "Trouvez votre bien immobilier en Algérie",
+    "subtitle": "La plateforme immobilière intelligente pour la recherche, la gestion et l'analyse",
     "cta": {
       "search": "Rechercher un bien",
       "login": "Espace professionnel"
+    },
+    "search_bar": {
+      "wilaya_placeholder": "Sélectionnez une wilaya",
+      "type_placeholder": "Type de bien",
+      "button": "Rechercher"
+    },
+    "stats": {
+      "listings": "annonces",
+      "agencies": "agences partenaires",
+      "wilayas": "wilayas couvertes",
+      "transactions": "transactions réalisées"
+    },
+    "cities": {
+      "title": "Villes populaires",
+      "subtitle": "Les marchés immobiliers les plus actifs d'Algérie"
+    },
+    "advantages": {
+      "title": "Pourquoi choisir AqarVision ?",
+      "verified_title": "Annonces vérifiées",
+      "verified_desc": "Chaque annonce est contrôlée par notre équipe pour garantir des informations fiables.",
+      "ai_title": "Recherche IA",
+      "ai_desc": "Notre moteur d'IA analyse vos préférences pour vous proposer les biens les plus pertinents.",
+      "agencies_title": "Agences certifiées",
+      "agencies_desc": "Toutes les agences partenaires sont certifiées et évaluées par nos utilisateurs."
+    },
+    "pro_banner": {
+      "title": "Vous êtes une agence ?",
+      "subtitle": "Publiez vos annonces, gérez vos leads et boostez vos ventes avec AqarPro.",
+      "cta": "Commencer gratuitement"
     }
   },
   "nav": {
@@ -61,7 +90,39 @@
     "password_updated_title": "Mot de passe mis a jour",
     "password_updated_message": "Votre mot de passe a ete mis a jour avec succes. Vous pouvez maintenant vous connecter.",
     "check_email_title": "Verifiez votre email",
-    "check_email_message": "Un email de confirmation a ete envoye. Cliquez sur le lien pour activer votre compte."
+    "check_email_message": "Un email de confirmation a ete envoye. Cliquez sur le lien pour activer votre compte.",
+    "mode_visitor": "Je cherche un bien",
+    "mode_pro": "Espace Pro (Agence)",
+    "mode_visitor_hint": "Connectez-vous pour acceder a vos favoris et alertes.",
+    "mode_pro_hint": "Connectez-vous pour gerer vos annonces et vos prospects.",
+    "pro_no_account_hint": "Pas encore d'agence ?"
+  },
+  "espace": {
+    "page_title": "Mon espace",
+    "space_label": "Mon espace",
+    "nav": {
+      "home": "Accueil",
+      "favorites": "Favoris",
+      "alertes": "Alertes",
+      "historique": "Historique",
+      "profil": "Profil"
+    },
+    "welcome_title": "Bonjour, {name}",
+    "welcome_subtitle": "Bienvenue dans votre espace personnel AqarVision.",
+    "card_favorites_desc": "Vos biens immobiliers sauvegardes",
+    "card_alertes_desc": "Vos recherches sauvegardees et alertes",
+    "card_historique_desc": "Les biens que vous avez consultes",
+    "card_profil_desc": "Vos informations personnelles",
+    "search_cta_title": "Vous cherchez un bien ?",
+    "search_cta_subtitle": "Parcourez des milliers d'annonces a travers les 58 wilayas d'Algerie.",
+    "search_cta_button": "Lancer une recherche",
+    "placeholder_coming_soon": "Fonctionnalite bientot disponible",
+    "profil_email": "Adresse e-mail",
+    "profil_name": "Nom complet",
+    "profil_phone": "Telephone",
+    "profil_no_name": "Non renseigne",
+    "profil_not_set": "Non renseigne",
+    "profil_edit_coming_soon": "La modification du profil sera bientot disponible."
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -69,6 +130,7 @@
       "overview": "Vue d'ensemble",
       "listings": "Annonces",
       "leads": "Prospects",
+      "visit_requests": "Demandes de visites",
       "analytics": "Statistiques",
       "settings": "Parametres",
       "team": "Equipe",

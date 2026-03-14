@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAgencyStats, getAgencySummary } from "@/features/analytics/services/analytics.service";
-import { StatsOverview, StatsChart } from "@/features/analytics/components";
+import { getAdvancedAnalytics } from "@/features/analytics/services/advanced-analytics.service";
+import { StatsOverview, StatsChart, AdvancedAnalytics } from "@/features/analytics/components";
 
 export default async function AnalyticsDashboardPage({
   params,
@@ -46,9 +47,10 @@ export default async function AnalyticsDashboardPage({
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   const formatDate = (d: Date) => d.toISOString().split("T")[0] ?? "";
 
-  const [summary, dailyStats] = await Promise.all([
+  const [summary, dailyStats, advancedData] = await Promise.all([
     getAgencySummary(supabase, agencyId),
     getAgencyStats(supabase, agencyId, formatDate(thirtyDaysAgo), formatDate(now)),
+    getAdvancedAnalytics(supabase, agencyId),
   ]);
 
   return (
@@ -64,6 +66,13 @@ export default async function AnalyticsDashboardPage({
 
       <section>
         <StatsChart stats={dailyStats} />
+      </section>
+
+      <section>
+        <h2 className="mb-4 text-lg font-semibold text-blue-night">
+          Analyses avancées
+        </h2>
+        <AdvancedAnalytics data={advancedData} />
       </section>
     </div>
   );

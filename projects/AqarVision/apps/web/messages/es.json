@@ -5,6 +5,35 @@
     "cta": {
       "search": "Buscar propiedades",
       "login": "Espacio profesional"
+    },
+    "search_bar": {
+      "wilaya_placeholder": "Selecciona una wilaya",
+      "type_placeholder": "Tipo de propiedad",
+      "button": "Buscar"
+    },
+    "stats": {
+      "listings": "anuncios",
+      "agencies": "agencias asociadas",
+      "wilayas": "wilayas cubiertas",
+      "transactions": "transacciones realizadas"
+    },
+    "cities": {
+      "title": "Ciudades populares",
+      "subtitle": "Los mercados inmobiliarios más activos de Argelia"
+    },
+    "advantages": {
+      "title": "¿Por qué elegir AqarVision?",
+      "verified_title": "Anuncios verificados",
+      "verified_desc": "Cada anuncio es revisado por nuestro equipo para garantizar información fiable.",
+      "ai_title": "Búsqueda con IA",
+      "ai_desc": "Nuestro motor de IA analiza tus preferencias para mostrarte las propiedades más relevantes.",
+      "agencies_title": "Agencias certificadas",
+      "agencies_desc": "Todas las agencias asociadas están certificadas y valoradas por nuestros usuarios."
+    },
+    "pro_banner": {
+      "title": "¿Eres una agencia?",
+      "subtitle": "Publica tus anuncios, gestiona tus leads y haz crecer tu negocio con AqarPro.",
+      "cta": "Empezar gratis"
     }
   },
   "nav": {
@@ -61,7 +90,39 @@
     "password_updated_title": "Contrasena actualizada",
     "password_updated_message": "Tu contrasena ha sido actualizada exitosamente. Ya puedes iniciar sesion.",
     "check_email_title": "Revisa tu correo",
-    "check_email_message": "Se ha enviado un correo de confirmacion. Haz clic en el enlace para activar tu cuenta."
+    "check_email_message": "Se ha enviado un correo de confirmacion. Haz clic en el enlace para activar tu cuenta.",
+    "mode_visitor": "Busco una propiedad",
+    "mode_pro": "Espacio Pro (Agencia)",
+    "mode_visitor_hint": "Inicia sesion para acceder a tus favoritos y alertas.",
+    "mode_pro_hint": "Inicia sesion para gestionar tus anuncios y clientes.",
+    "pro_no_account_hint": "¿Aun no tienes agencia?"
+  },
+  "espace": {
+    "page_title": "Mi espacio",
+    "space_label": "Mi espacio",
+    "nav": {
+      "home": "Inicio",
+      "favorites": "Favoritos",
+      "alertes": "Alertas",
+      "historique": "Historial",
+      "profil": "Perfil"
+    },
+    "welcome_title": "Hola, {name}",
+    "welcome_subtitle": "Bienvenido a tu espacio personal AqarVision.",
+    "card_favorites_desc": "Tus propiedades guardadas",
+    "card_alertes_desc": "Tus busquedas guardadas y alertas",
+    "card_historique_desc": "Propiedades que has visto",
+    "card_profil_desc": "Tu informacion personal",
+    "search_cta_title": "¿Buscas una propiedad?",
+    "search_cta_subtitle": "Explora miles de anuncios en las 58 wilayas de Argelia.",
+    "search_cta_button": "Iniciar busqueda",
+    "placeholder_coming_soon": "Funcion disponible pronto",
+    "profil_email": "Correo electronico",
+    "profil_name": "Nombre completo",
+    "profil_phone": "Telefono",
+    "profil_no_name": "No especificado",
+    "profil_not_set": "No especificado",
+    "profil_edit_coming_soon": "La edicion del perfil estara disponible pronto."
   },
   "dashboard": {
     "title": "Panel de control",
@@ -69,6 +130,7 @@
       "overview": "Vista general",
       "listings": "Anuncios",
       "leads": "Prospectos",
+      "visit_requests": "Solicitudes de visita",
       "analytics": "Estadisticas",
       "settings": "Configuracion",
       "team": "Equipo",

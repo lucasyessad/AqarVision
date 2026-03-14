@@ -32,7 +32,7 @@ export async function signInAction(
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  const { data: signInData, error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error) {
     return {
@@ -42,8 +42,31 @@ export async function signInAction(
     };
   }
 
-  const redirectTo = (formData.get("redirect") as string) || "/fr/dashboard";
-  redirect(redirectTo);
+  // Smart routing: check agency membership to determine destination
+  const userId = signInData.user?.id;
+  const locale = (formData.get("locale") as string) || "fr";
+  const redirectOverride = formData.get("redirect") as string | null;
+
+  if (redirectOverride) {
+    redirect(redirectOverride);
+  }
+
+  if (userId) {
+    const { data: membership } = await supabase
+      .from("agency_memberships")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle();
+
+    if (membership && ["owner", "admin", "agent"].includes(membership.role)) {
+      redirect(`/${locale}/dashboard`);
+    }
+  }
+
+  // No active agency membership → visiteur space
+  redirect(`/${locale}/espace`);
 }
 
 // ── Sign Up ──────────────────────────────────

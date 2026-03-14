@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
 import type { SearchResultDto } from "../types/search.types";
+import { TrustBadge } from "./TrustBadge";
 
 function formatPrice(price: number, currency: string): string {
   return new Intl.NumberFormat("fr-DZ", {
@@ -56,10 +57,24 @@ function SearchResultCard({ listing }: SearchResultCardProps) {
 
       {/* Content */}
       <div className="p-4">
-        {/* Property type badge */}
-        <span className="mb-1 inline-block rounded bg-[#d4af37]/15 px-2 py-0.5 text-xs font-medium text-[#d4af37]">
-          {tListings(listing.property_type)}
-        </span>
+        {/* Badges row: property type + trust score */}
+        <div className="mb-1 flex flex-wrap items-center gap-1.5">
+          <span className="inline-block rounded bg-[#d4af37]/15 px-2 py-0.5 text-xs font-medium text-[#d4af37]">
+            {tListings(listing.property_type)}
+          </span>
+          <TrustBadge
+            listing={{
+              has_photos: listing.cover_url !== null,
+              // description is not available in search results DTO — assume partial
+              description: "",
+              price: listing.current_price,
+              agency: {
+                // is_verified is not in SearchResultDto — default false until DTO is extended
+                is_verified: (listing as SearchResultDto & { agency_is_verified?: boolean }).agency_is_verified ?? false,
+              },
+            }}
+          />
+        </div>
 
         <h3 className="mb-1 truncate text-sm font-semibold text-[#2d3748]">
           {listing.title}

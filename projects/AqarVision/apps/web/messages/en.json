@@ -5,6 +5,35 @@
     "cta": {
       "search": "Search properties",
       "login": "Professional space"
+    },
+    "search_bar": {
+      "wilaya_placeholder": "Select a wilaya",
+      "type_placeholder": "Property type",
+      "button": "Search"
+    },
+    "stats": {
+      "listings": "listings",
+      "agencies": "partner agencies",
+      "wilayas": "wilayas covered",
+      "transactions": "transactions completed"
+    },
+    "cities": {
+      "title": "Popular cities",
+      "subtitle": "The most active real estate markets in Algeria"
+    },
+    "advantages": {
+      "title": "Why choose AqarVision?",
+      "verified_title": "Verified listings",
+      "verified_desc": "Every listing is reviewed by our team to ensure accurate and reliable information.",
+      "ai_title": "AI-powered search",
+      "ai_desc": "Our AI engine analyzes your preferences to surface the most relevant properties.",
+      "agencies_title": "Certified agencies",
+      "agencies_desc": "All partner agencies are certified and rated by our users."
+    },
+    "pro_banner": {
+      "title": "Are you an agency?",
+      "subtitle": "Publish your listings, manage your leads, and grow your business with AqarPro.",
+      "cta": "Get started for free"
     }
   },
   "nav": {
@@ -61,7 +90,39 @@
     "password_updated_title": "Password updated",
     "password_updated_message": "Your password has been updated successfully. You can now log in.",
     "check_email_title": "Check your email",
-    "check_email_message": "A confirmation email has been sent. Click the link to activate your account."
+    "check_email_message": "A confirmation email has been sent. Click the link to activate your account.",
+    "mode_visitor": "I'm looking for a property",
+    "mode_pro": "Pro Space (Agency)",
+    "mode_visitor_hint": "Log in to access your favorites and alerts.",
+    "mode_pro_hint": "Log in to manage your listings and leads.",
+    "pro_no_account_hint": "No agency yet?"
+  },
+  "espace": {
+    "page_title": "My space",
+    "space_label": "My space",
+    "nav": {
+      "home": "Home",
+      "favorites": "Favorites",
+      "alertes": "Alerts",
+      "historique": "History",
+      "profil": "Profile"
+    },
+    "welcome_title": "Hello, {name}",
+    "welcome_subtitle": "Welcome to your personal AqarVision space.",
+    "card_favorites_desc": "Your saved properties",
+    "card_alertes_desc": "Your saved searches and alerts",
+    "card_historique_desc": "Properties you have viewed",
+    "card_profil_desc": "Your personal information",
+    "search_cta_title": "Looking for a property?",
+    "search_cta_subtitle": "Browse thousands of listings across Algeria's 58 wilayas.",
+    "search_cta_button": "Start searching",
+    "placeholder_coming_soon": "Feature coming soon",
+    "profil_email": "Email address",
+    "profil_name": "Full name",
+    "profil_phone": "Phone",
+    "profil_no_name": "Not set",
+    "profil_not_set": "Not set",
+    "profil_edit_coming_soon": "Profile editing will be available soon."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -69,6 +130,7 @@
       "overview": "Overview",
       "listings": "Listings",
       "leads": "Leads",
+      "visit_requests": "Visit Requests",
       "analytics": "Analytics",
       "settings": "Settings",
       "team": "Team",
