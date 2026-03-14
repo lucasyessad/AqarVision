@@ -1225,21 +1225,21 @@ create index idx_communes_wilaya_code on communes(wilaya_code);
 
 -- Seed des 58 wilayas (à compléter avec les 1541 communes)
 insert into wilayas (code, name_fr, name_ar) values
-  ('01', 'Adrar', 'أدرار'), ('02', 'Chlef', 'الشلف'), ('03', 'Laghouat', 'الأغواط'),
+  ('01', 'Adrar', 'أدرار'), ('02', 'Chlef', 'الشلٝ'), ('03', 'Laghouat', 'الأغواط'),
   ('04', 'Oum El Bouaghi', 'أم البواقي'), ('05', 'Batna', 'باتنة'), ('06', 'Béjaïa', 'بجاية'),
   ('07', 'Biskra', 'بسكرة'), ('08', 'Béchar', 'بشار'), ('09', 'Blida', 'البليدة'),
   ('10', 'Bouira', 'البويرة'), ('11', 'Tamanrasset', 'تمنراست'), ('12', 'Tébessa', 'تبسة'),
   ('13', 'Tlemcen', 'تلمسان'), ('14', 'Tiaret', 'تيارت'), ('15', 'Tizi Ouzou', 'تيزي وزو'),
-  ('16', 'Alger', 'الجزائر'), ('17', 'Djelfa', 'الجلفة'), ('18', 'Jijel', 'جيجل'),
-  ('19', 'Sétif', 'سطيف'), ('20', 'Saïda', 'سعيدة'), ('21', 'Skikda', 'سكيكدة'),
+  ('16', 'Alger', 'الجزائر'), ('17', 'Djelfa', 'الجلٝة'), ('18', 'Jijel', 'جيجل'),
+  ('19', 'Sétif', 'سطيٝ'), ('20', 'Saïda', 'سعيدة'), ('21', 'Skikda', 'سكيكدة'),
   ('22', 'Sidi Bel Abbès', 'سيدي بلعباس'), ('23', 'Annaba', 'عنابة'), ('24', 'Guelma', 'قالمة'),
   ('25', 'Constantine', 'قسنطينة'), ('26', 'Médéa', 'المدية'), ('27', 'Mostaganem', 'مستغانم'),
   ('28', 'M''Sila', 'المسيلة'), ('29', 'Mascara', 'معسكر'), ('30', 'Ouargla', 'ورقلة'),
   ('31', 'Oran', 'وهران'), ('32', 'El Bayadh', 'البيض'), ('33', 'Illizi', 'إليزي'),
   ('34', 'Bordj Bou Arréridj', 'برج بوعريريج'), ('35', 'Boumerdès', 'بومرداس'),
-  ('36', 'El Tarf', 'الطارف'), ('37', 'Tindouf', 'تندوف'), ('38', 'Tissemsilt', 'تيسمسيلت'),
+  ('36', 'El Tarf', 'الطارٝ'), ('37', 'Tindouf', 'تندوٝ'), ('38', 'Tissemsilt', 'تيسمسيلت'),
   ('39', 'El Oued', 'الوادي'), ('40', 'Khenchela', 'خنشلة'), ('41', 'Souk Ahras', 'سوق أهراس'),
-  ('42', 'Tipaza', 'تيبازة'), ('43', 'Mila', 'ميلة'), ('44', 'Aïn Defla', 'عين الدفلى'),
+  ('42', 'Tipaza', 'تيبازة'), ('43', 'Mila', 'ميلة'), ('44', 'Aïn Defla', 'عين الدٝلى'),
   ('45', 'Naâma', 'النعامة'), ('46', 'Aïn Témouchent', 'عين تموشنت'),
   ('47', 'Ghardaïa', 'غرداية'), ('48', 'Relizane', 'غليزان'),
   ('49', 'El M''Ghair', 'المغير'), ('50', 'El Meniaa', 'المنيعة'),
@@ -1740,7 +1740,7 @@ await emitDomainEvent(supabase, {
 /fr/buy/alger               → SEO page : vente à Alger
 /fr/rent/oran               → SEO page : location à Oran
 /fr/l/appartement-f3-alger  → Listing detail FR
-/ar/l/شقة-ف3-الجزائر       → Listing detail AR
+/ar/l/شقة-ٝ3-الجزائر       → Listing detail AR
 /fr/a/agence-immobiliere    → Agency profile FR
 ```
 

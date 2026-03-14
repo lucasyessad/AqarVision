@@ -181,6 +181,112 @@ Migrations in `supabase/migrations/` (execute in order):
 
 M00 Foundations → M01 Auth → M02 Agencies → M03 Listings → M04 Media → M09 AI → M05 Search/SEO → M06 Leads → M07 Favorites → M08 Billing → M10 Moderation → M11 Analytics → M12 Deployment
 
+## Skills & Agents Available
+
+This project has a curated set of skills, agents, and commands installed in `.claude/`.
+
+### Skills (`.claude/skills/`)
+
+| Skill | Source | Usage |
+|-------|--------|-------|
+| **claude-api** | Anthropic | Build AI features with Claude SDK |
+| **frontend-design** | Anthropic | Production-grade UI with distinctive design |
+| **webapp-testing** | Anthropic | Playwright-based testing workflows |
+| **pdf** | Anthropic | PDF generation/processing |
+| **xlsx** | Anthropic | Spreadsheet data export/analysis |
+| **doc-coauthoring** | Anthropic | Technical documentation co-authoring |
+| **skill-creator** | Anthropic | Create new custom skills |
+| **ui-ux-pro-max** | nextlevelbuilder | 50+ UI styles, 161 palettes, 99 UX guidelines |
+| **ui-styling** | nextlevelbuilder | shadcn/ui + Tailwind implementation |
+| **design-system** | nextlevelbuilder | Token architecture, component specs |
+| **design** | nextlevelbuilder | Logo, CIP, slides, social media |
+| **brand** | nextlevelbuilder | Brand voice & visual identity |
+| **banner-design** | nextlevelbuilder | Social media & ad banners |
+| **slides** | nextlevelbuilder | HTML presentations with Chart.js |
+| **writing-plans** | obra/superpowers (upgraded: architecture-guidance branch) | Structured planning with file structure design, plan-document-reviewer, chunks ≤1000 lines |
+| **executing-plans** | obra/superpowers | Execute plans with parallel agents |
+| **subagent-driven-development** | obra/superpowers (upgraded: improve-skills-from-feedback branch) | 2-stage review (spec-compliance + code-quality), context isolation, real bug fixes |
+| **brainstorming** | obra/superpowers (upgraded: architecture-guidance branch) | Spec-document-reviewer loop, file isolation principles |
+| **dispatching-parallel-agents** | obra/superpowers | Launch multiple independent agents |
+| **systematic-debugging** | obra/superpowers | Root-cause tracing & debugging |
+| **test-driven-development** | obra/superpowers | TDD workflow |
+| **requesting-code-review** | obra/superpowers | Peer code review workflow |
+| **verification-before-completion** | obra/superpowers | Pre-delivery validation |
+| **finishing-a-development-branch** | obra/superpowers | Branch cleanup & finalization |
+| **using-git-worktrees** | obra/superpowers | Git worktree management |
+| **planning-with-files** | OthmanAdi (upgraded: session-handoff branch) | Session management, handoff scripts, RESUME.md for long tasks |
+
+### Agents (`.claude/agents/`)
+
+| Agent | Specialty |
+|-------|-----------|
+| **nextjs-developer** | Next.js 15 App Router specialist |
+| **typescript-pro** | TypeScript 5+ advanced patterns |
+| **react-specialist** | React 18+ modern patterns |
+| **fullstack-developer** | End-to-end feature development |
+| **backend-developer** | Server-side, auth, DB design |
+| **frontend-developer** | UI components, state, accessibility |
+| **api-designer** | REST/GraphQL API architecture |
+| **postgres-pro** | PostgreSQL optimization & tuning |
+| **sql-pro** | SQL queries, indexes, performance |
+| **security-auditor** | Security vulnerability detection |
+| **code-reviewer** | Code quality review |
+| **test-automator** | Automated testing frameworks |
+| **qa-expert** | Quality assurance processes |
+| **performance-engineer** | Frontend & backend optimization |
+| **seo-specialist** | SEO strategy & implementation |
+| **payment-integration** | Stripe & payment systems |
+| **mobile-developer** | React Native / Expo |
+| **ui-designer** | UI/UX design patterns |
+| **devops-engineer** | CI/CD, deployment automation |
+
+### Commands (`.claude/commands/`)
+
+- `/write-plan` — Create structured implementation plan
+- `/execute-plan` — Execute plan with subagents
+- `/brainstorm` — Collaborative brainstorming session
+
+### Reviewer Prompts (installed with skills)
+
+| File | Location | Usage |
+|------|----------|-------|
+| **spec-document-reviewer-prompt.md** | `.claude/skills/brainstorming/` | Dispatched after spec writing to verify completeness, coverage, YAGNI |
+| **plan-document-reviewer-prompt.md** | `.claude/skills/writing-plans/` | Dispatched after each plan chunk to verify decomposition, file structure, sizes |
+| **code-quality-reviewer-prompt.md** | `.claude/skills/subagent-driven-development/` | Dispatched after spec-compliance review for quality check |
+
+### Development Workflow
+
+```
+1. /brainstorm          → Design & spec (+ spec-document-reviewer loop)
+2. /write-plan          → Plan structuré (+ plan-document-reviewer loop)
+3. /execute-plan        → Subagent-driven execution with 2-stage review:
+                           a) Spec-compliance review
+                           b) Code-quality review
+4. verification-before-completion → Gate function before any completion claim
+5. finishing-a-development-branch → Tests → 4 options → cleanup
+```
+
+### How to Use
+
+Reference skills in prompts:
+```
+Use the frontend-design skill for this component
+Apply the ui-ux-pro-max skill for the search page
+Use the webapp-testing skill to write E2E tests
+Use the systematic-debugging skill to trace this bug
+```
+
+Agents are auto-dispatched by Claude Code based on task context.
+
+## Reference Repos
+
+10 repos de référence clonés dans `../../resources/` avec patterns extraits dans `ARCHITECTURE-PATTERNS.md` :
+- **nextjs-subscription-payments** — Stripe + Supabase billing pattern
+- **saas-starter-kit** — Multi-tenant RBAC, invitations
+- **cal.com** — Monorepo production Next.js, vertical slices, DTO boundary, DI
+- **microrealestate** — Domain model immobilier, calcul loyer, PDF contrats
+- **sharetribe** — Marketplace patterns, custom fields, transaction lifecycle, reviews
+
 ## Parent Workspace
 
 This project lives in `projects/AqarVision/` within a PersoDev workspace. Library resources (skills, subagents, workflows) are accessible via `../../library/`.

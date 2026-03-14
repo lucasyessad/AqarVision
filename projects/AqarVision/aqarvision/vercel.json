@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm turbo run build --filter=@aqarvision/web",
+  "installCommand": "pnpm install",
+  "framework": "nextjs"
+}
