@@ -62,6 +62,28 @@ export async function recordView(
 }
 
 /**
+ * Returns the listing IDs the current user has viewed (up to 500).
+ * Returns empty array for unauthenticated users.
+ */
+export async function getViewedListingIds(): Promise<string[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  const { data } = await supabase
+    .from("view_history")
+    .select("listing_id")
+    .eq("user_id", user.id)
+    .order("viewed_at", { ascending: false })
+    .limit(500);
+
+  return (data ?? []).map((r) => r.listing_id as string);
+}
+
+/**
  * Clears all view history for the authenticated user.
  */
 export async function clearViewHistory(): Promise<ActionResult<null>> {

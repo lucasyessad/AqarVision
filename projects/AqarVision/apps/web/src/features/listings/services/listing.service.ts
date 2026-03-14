@@ -66,7 +66,7 @@ function mapListing(
     surface_m2: (row.surface_m2 as number) ?? null,
     rooms: (row.rooms as number) ?? null,
     bathrooms: (row.bathrooms as number) ?? null,
-    wilaya_code: row.wilaya_code as number,
+    wilaya_code: row.wilaya_code as string,
     commune_id: (row.commune_id as number) ?? null,
     version: row.version as number,
     published_at: (row.published_at as string) ?? null,

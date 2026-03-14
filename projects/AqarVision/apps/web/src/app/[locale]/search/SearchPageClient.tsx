@@ -17,6 +17,7 @@ interface SearchPageClientProps {
   pageSize: number;
   locale: string;
   wilayas: { code: string; name: string }[];
+  viewedIds: string[];
 }
 
 export function SearchPageClient({
@@ -26,6 +27,7 @@ export function SearchPageClient({
   pageSize,
   locale,
   wilayas,
+  viewedIds,
 }: SearchPageClientProps) {
   const t = useTranslations("search");
   const [showFilters, setShowFilters] = useState(false);
@@ -190,6 +192,7 @@ export function SearchPageClient({
                     totalCount={totalCount}
                     page={page}
                     pageSize={pageSize}
+                    viewedIds={viewedIds}
                   />
                 </div>
               </div>
@@ -200,6 +203,7 @@ export function SearchPageClient({
                 totalCount={totalCount}
                 page={page}
                 pageSize={pageSize}
+                viewedIds={viewedIds}
               />
             )}
           </div>

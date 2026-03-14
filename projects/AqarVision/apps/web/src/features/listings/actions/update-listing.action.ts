@@ -19,7 +19,7 @@ export async function updateListingAction(
       ? Number(formData.get("current_price"))
       : undefined,
     wilaya_code: formData.get("wilaya_code")
-      ? Number(formData.get("wilaya_code"))
+      ? (formData.get("wilaya_code") as string)
       : undefined,
     commune_id: formData.get("commune_id")
       ? Number(formData.get("commune_id"))

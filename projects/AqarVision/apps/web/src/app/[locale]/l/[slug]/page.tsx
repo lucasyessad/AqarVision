@@ -9,6 +9,7 @@ import { recordView } from "@/features/marketplace/actions/view-history.action";
 import { getListingNote } from "@/features/marketplace/actions/listing-notes.action";
 import { ListingNoteWidget } from "@/features/marketplace/components/ListingNoteWidget";
 import { MortgageCalculator } from "@/features/marketplace/components/MortgageCalculator";
+import { PhotoGallery } from "@/features/marketplace/components/PhotoGallery";
 
 interface ListingPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -87,8 +88,6 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
     surface: listing.surface_m2,
   });
 
-  const coverImage = listing.media.find((m) => m.is_cover) ?? listing.media[0];
-
   return (
     <main className="min-h-screen bg-[#f7fafc]">
       {/* JSON-LD */}
@@ -97,49 +96,10 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Image gallery */}
+      {/* Image gallery with lightbox */}
       <div className="bg-gray-100">
         <div className="mx-auto max-w-7xl">
-          {listing.media.length > 0 ? (
-            <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
-              {/* Main image */}
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src={coverImage?.storage_path ?? ""}
-                  alt={listing.title}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              {/* Secondary images */}
-              <div className="grid grid-cols-2 gap-1">
-                {listing.media.slice(1, 5).map((media) => (
-                  <div key={media.id} className="aspect-[4/3] overflow-hidden">
-                    <img
-                      src={media.storage_path}
-                      alt={listing.title}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="flex aspect-[21/9] items-center justify-center">
-              <svg
-                className="h-16 w-16 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                />
-              </svg>
-            </div>
-          )}
+          <PhotoGallery media={listing.media} title={listing.title} />
         </div>
       </div>
 
@@ -202,6 +162,17 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                   <p className="text-xs text-[#a0aec0]">{tListings("surface")}</p>
                   <p className="text-sm font-semibold text-[#2d3748]">
                     {listing.surface_m2} m&sup2;
+                  </p>
+                </div>
+              )}
+              {listing.surface_m2 !== null && listing.surface_m2 > 0 && listing.current_price > 0 && (
+                <div>
+                  <p className="text-xs text-[#a0aec0]">Prix / m²</p>
+                  <p className="text-sm font-semibold text-[#2d3748]">
+                    {formatPrice(
+                      Math.round(listing.current_price / listing.surface_m2),
+                      listing.currency
+                    )}
                   </p>
                 </div>
               )}

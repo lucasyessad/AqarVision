@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { searchListingsAction } from "@/features/marketplace/actions/search.action";
 import { getWilayas } from "@/features/marketplace/services/search.service";
+import { getViewedListingIds } from "@/features/marketplace/actions/view-history.action";
 import { createClient } from "@/lib/supabase/server";
 import { SearchPageClient } from "./SearchPageClient";
 
@@ -58,9 +59,10 @@ export default async function SearchPage({
   if (sp.surface_min) filters.surface_min = Number(sp.surface_min);
 
   const supabase = await createClient();
-  const [result, wilayas] = await Promise.all([
+  const [result, wilayas, viewedIds] = await Promise.all([
     searchListingsAction(filters),
     getWilayas(supabase),
+    getViewedListingIds(),
   ]);
 
   const data = result.success
@@ -75,6 +77,7 @@ export default async function SearchPage({
       pageSize={data.page_size}
       locale={locale}
       wilayas={wilayas}
+      viewedIds={viewedIds}
     />
   );
 }

@@ -15,7 +15,7 @@ export async function createListingAction(
     listing_type: formData.get("listing_type"),
     property_type: formData.get("property_type"),
     current_price: Number(formData.get("current_price")),
-    wilaya_code: Number(formData.get("wilaya_code")),
+    wilaya_code: formData.get("wilaya_code") as string,
     commune_id: formData.get("commune_id")
       ? Number(formData.get("commune_id"))
       : undefined,

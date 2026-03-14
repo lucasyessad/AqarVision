@@ -61,7 +61,11 @@ export function SubscriptionCard({
     window.location.href = state.data.portal_url;
   }
 
-  const periodEnd = new Date(subscription.current_period_end).toLocaleDateString();
+  const periodEnd = new Date(subscription.current_period_end).toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">

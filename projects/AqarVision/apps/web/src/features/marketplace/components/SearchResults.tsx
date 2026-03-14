@@ -18,9 +18,10 @@ function formatPrice(price: number, currency: string): string {
 
 interface SearchResultCardProps {
   listing: SearchResultDto;
+  isViewed: boolean;
 }
 
-function SearchResultCard({ listing }: SearchResultCardProps) {
+function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
   const tListings = useTranslations("listings");
   const t = useTranslations("search");
 
@@ -31,6 +32,11 @@ function SearchResultCard({ listing }: SearchResultCardProps) {
     >
       {/* Cover image */}
       <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-xl bg-gray-200">
+        {isViewed && (
+          <span className="absolute start-2 top-2 z-10 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-medium text-gray-500 shadow-sm backdrop-blur-sm">
+            Déjà consulté
+          </span>
+        )}
         {listing.cover_url ? (
           <img
             src={listing.cover_url}
@@ -94,6 +100,11 @@ function SearchResultCard({ listing }: SearchResultCardProps) {
           {listing.surface_m2 !== null && (
             <span>{listing.surface_m2} m&sup2;</span>
           )}
+          {listing.surface_m2 !== null && listing.surface_m2 > 0 && (
+            <span className="font-medium text-[#2d3748]/60">
+              {Math.round(listing.current_price / listing.surface_m2).toLocaleString("fr-DZ")} {listing.currency}/m²
+            </span>
+          )}
           <span className="ms-auto">
             {listing.wilaya_name}
           </span>
@@ -118,6 +129,7 @@ interface SearchResultsProps {
   totalCount: number;
   page: number;
   pageSize: number;
+  viewedIds?: string[];
 }
 
 export function SearchResults({
@@ -125,6 +137,7 @@ export function SearchResults({
   totalCount,
   page,
   pageSize,
+  viewedIds = [],
 }: SearchResultsProps) {
   const t = useTranslations("search");
   const router = useRouter();
@@ -177,7 +190,11 @@ export function SearchResults({
       {/* Grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {results.map((listing) => (
-          <SearchResultCard key={listing.id} listing={listing} />
+          <SearchResultCard
+            key={listing.id}
+            listing={listing}
+            isViewed={viewedIds.includes(listing.id)}
+          />
         ))}
       </div>
 

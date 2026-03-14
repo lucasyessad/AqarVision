@@ -36,7 +36,7 @@ export interface ListingDto {
   surface_m2: number | null;
   rooms: number | null;
   bathrooms: number | null;
-  wilaya_code: number;
+  wilaya_code: string;
   commune_id: number | null;
   version: number;
   published_at: string | null;
