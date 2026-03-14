@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aqar — L'immobilier autrement</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Figtree:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   AQAR DESIGN SYSTEM — CHARBON & CORAIL
+   ============================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  /* Charcoal ramp */
+  --charcoal-950:#1C1C1E;
+  --charcoal-900:#2C2C2E;
+  --charcoal-800:#3A3A3C;
+  --charcoal-700:#48484A;
+  --charcoal-600:#636366;
+  --charcoal-500:#8E8E93;
+  --charcoal-400:#AEAEB2;
+  --charcoal-300:#C7C7CC;
+  --charcoal-200:#D1D1D6;
+  --charcoal-100:#E5E5EA;
+
+  /* Warm whites */
+  --warm-50:#FDFCFA;
+  --warm-100:#F5F0EB;
+  --warm-200:#EBE5DD;
+  --warm-300:#DDD5CA;
+
+  /* Corail */
+  --coral:#E8725C;
+  --coral-hover:#D4624D;
+  --coral-light:#F0998A;
+  --coral-ghost:rgba(232,114,92,.08);
+  --coral-glow:rgba(232,114,92,.15);
+
+  /* Semantic */
+  --success:#3B9B6D;
+  --success-ghost:rgba(59,155,109,.08);
+  --warning:#D4943A;
+  --warning-ghost:rgba(212,148,58,.08);
+  --danger:#D14545;
+
+  /* Layout */
+  --bg-page:var(--warm-50);
+  --bg-surface:#FFFFFF;
+  --bg-sunken:var(--warm-100);
+  --bg-dark:var(--charcoal-950);
+  --bg-dark-surface:var(--charcoal-900);
+
+  --text-primary:var(--charcoal-950);
+  --text-secondary:var(--charcoal-600);
+  --text-tertiary:var(--charcoal-500);
+  --text-inverse:#FFFFFF;
+
+  --border:var(--charcoal-100);
+  --border-light:var(--warm-200);
+  --border-hover:var(--charcoal-300);
+
+  --radius:8px;
+  --radius-lg:12px;
+  --radius-xl:16px;
+  --radius-full:999px;
+
+  --font-display:'Libre Baskerville',Georgia,serif;
+  --font-body:'Figtree',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+
+  --shadow-sm:0 1px 3px rgba(0,0,0,.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.08);
+  --shadow-card:0 1px 4px rgba(0,0,0,.03);
+  --shadow-card-hover:0 12px 36px rgba(0,0,0,.1);
+
+  --transition:all .2s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg-page);color:var(--text-primary);font-weight:400;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--coral);color:white}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav{position:sticky;top:0;z-index:100;background:rgba(253,252,250,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--text-primary);letter-spacing:-.01em}
+.nav-logo span{color:var(--coral)}
+.nav-links{display:flex;gap:.25rem;align-items:center}
+.nav-link{padding:.45rem .9rem;font-size:.84rem;color:var(--text-secondary);border-radius:var(--radius);transition:var(--transition);font-weight:400}
+.nav-link:hover{color:var(--text-primary);background:var(--warm-100)}
+.nav-link.active{color:var(--coral);font-weight:500}
+.nav-right{display:flex;align-items:center;gap:.6rem}
+.nav-icon{width:36px;height:36px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:var(--transition);cursor:pointer;background:transparent;border:1px solid var(--border);font-size:.85rem}
+.nav-icon:hover{border-color:var(--border-hover);color:var(--text-primary);background:var(--warm-100)}
+.nav-cta{background:var(--charcoal-950);color:var(--text-inverse);padding:.5rem 1.2rem;border-radius:var(--radius);font-size:.82rem;font-weight:500;transition:var(--transition);border:none;cursor:pointer}
+.nav-cta:hover{background:var(--coral)}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero{padding:5rem 2rem 4rem;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.hero-text{}
+.hero-label{display:inline-flex;align-items:center;gap:.5rem;background:var(--coral-ghost);padding:.4rem 1rem;border-radius:var(--radius-full);font-size:.75rem;color:var(--coral);font-weight:500;margin-bottom:1.5rem}
+.hero-label .dot{width:5px;height:5px;background:var(--coral);border-radius:50%}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.2rem,4vw,3.4rem);line-height:1.12;letter-spacing:-.02em;margin-bottom:1rem}
+.hero h1 em{font-style:italic;color:var(--coral)}
+.hero p{color:var(--text-secondary);font-size:1rem;max-width:440px;line-height:1.7;margin-bottom:2rem}
+
+/* SEARCH BAR */
+.search-bar{background:var(--bg-surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:5px;display:flex;align-items:center;gap:3px;transition:var(--transition);box-shadow:var(--shadow-sm)}
+.search-bar:focus-within{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral-ghost)}
+.search-tab{padding:.6rem 1rem;border-radius:var(--radius);font-size:.82rem;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:var(--transition);border:none;background:transparent}
+.search-tab:hover{color:var(--text-primary)}
+.search-tab.active{background:var(--charcoal-950);color:var(--text-inverse)}
+.search-sep{width:1px;height:24px;background:var(--border)}
+.search-input{flex:1;background:transparent;border:none;color:var(--text-primary);padding:.6rem .8rem;font-family:var(--font-body);font-size:.88rem;outline:none;min-width:0}
+.search-input::placeholder{color:var(--text-tertiary)}
+.search-btn{background:var(--coral);color:white;padding:.6rem 1.4rem;border-radius:var(--radius);font-size:.82rem;font-weight:600;border:none;cursor:pointer;transition:var(--transition);white-space:nowrap;font-family:var(--font-body)}
+.search-btn:hover{background:var(--coral-hover)}
+
+/* QUICK FILTERS */
+.quick-filters{display:flex;gap:.4rem;margin-top:1rem;flex-wrap:wrap}
+.qf{padding:.35rem .8rem;border:1px solid var(--border);border-radius:var(--radius-full);font-size:.75rem;color:var(--text-secondary);cursor:pointer;transition:var(--transition);background:transparent;font-family:var(--font-body)}
+.qf:hover{border-color:var(--coral);color:var(--coral);background:var(--coral-ghost)}
+
+/* HERO VISUAL */
+.hero-visual{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.8rem;height:480px}
+.hv-1{grid-row:1/3;border-radius:var(--radius-xl) var(--radius) var(--radius) var(--radius-xl);background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80') center/cover;box-shadow:var(--shadow-md)}
+.hv-2{border-radius:var(--radius) var(--radius-xl) var(--radius) var(--radius);background:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80') center/cover;box-shadow:var(--shadow-md)}
+.hv-3{border-radius:var(--radius) var(--radius) var(--radius-xl) var(--radius);background:var(--charcoal-950);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:white;padding:1.5rem;box-shadow:var(--shadow-md)}
+.hv-3 .num{font-family:var(--font-display);font-size:2.2rem}
+.hv-3 .lbl{font-size:.7rem;opacity:.5;margin-top:.3rem;text-transform:uppercase;letter-spacing:.08em}
+.hv-3 .coral-dot{width:24px;height:3px;background:var(--coral);border-radius:2px;margin:.8rem 0}
+
+/* ============================================
+   TRUST BAR
+   ============================================ */
+.trust-section{max-width:1280px;margin:0 auto;padding:0 2rem}
+.trust-bar{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.trust-item{padding:1.5rem;text-align:center;border-right:1px solid var(--border)}
+.trust-item:last-child{border:none}
+.trust-num{font-family:var(--font-display);font-size:1.5rem}
+.trust-num.coral{color:var(--coral)}
+.trust-label{font-size:.7rem;color:var(--text-tertiary);margin-top:.2rem}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+.container{max-width:1280px;margin:0 auto;padding:0 2rem}
+section{padding:4rem 0}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2rem}
+.section-label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);font-weight:500}
+.section-title{font-family:var(--font-display);font-size:1.5rem;margin-top:.2rem}
+.section-link{font-size:.82rem;color:var(--coral);font-weight:500;display:flex;align-items:center;gap:.3rem;transition:var(--transition)}
+.section-link:hover{gap:.5rem}
+.divider{height:1px;background:var(--border)}
+
+/* ============================================
+   PROPERTY CARDS
+   ============================================ */
+.listings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:var(--transition);cursor:pointer;position:relative}
+.card:hover{border-color:var(--border-hover);transform:translateY(-4px);box-shadow:var(--shadow-card-hover)}
+.card-img{height:210px;background-size:cover;background-position:center;position:relative}
+.card-badge{position:absolute;top:.8rem;left:.8rem;padding:.3rem .7rem;border-radius:var(--radius);font-size:.65rem;font-weight:600;letter-spacing:.02em;z-index:1}
+.badge-new{background:var(--charcoal-950);color:white}
+.badge-exclu{background:var(--coral);color:white}
+.badge-premium{background:var(--warning);color:white}
+.badge-reduced{background:var(--danger);color:white}
+.card-fav{position:absolute;top:.8rem;right:.8rem;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:.8rem;z-index:1;cursor:pointer;transition:var(--transition);border:none;color:var(--text-secondary)}
+.card-fav:hover{background:var(--coral);color:white}
+.card-fav.active{background:var(--coral);color:white}
+.card-body{padding:1.2rem}
+.card-loc{font-size:.7rem;color:var(--coral);letter-spacing:.05em;font-weight:500;margin-bottom:.3rem}
+.card-price{font-family:var(--font-display);font-size:1.25rem;letter-spacing:-.01em}
+.card-price small{font-family:var(--font-body);font-size:.7rem;color:var(--text-tertiary);font-weight:400;margin-left:.3rem}
+.card-title{font-size:.85rem;color:var(--text-secondary);margin:.4rem 0 .8rem}
+.card-meta{display:flex;gap:.5rem;flex-wrap:wrap}
+.card-pill{background:var(--warm-100);padding:.25rem .6rem;border-radius:var(--radius);font-size:.7rem;color:var(--text-secondary)}
+.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--border)}
+.card-agency{display:flex;align-items:center;gap:.5rem;font-size:.7rem;color:var(--text-tertiary)}
+.card-agency-dot{width:20px;height:20px;border-radius:50%;background:var(--warm-100);display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:700;color:var(--coral)}
+.card-time{font-size:.68rem;color:var(--text-tertiary)}
+
+/* VIEWED OVERLAY */
+.card-viewed-overlay{position:absolute;inset:0;background:rgba(253,252,250,.12);pointer-events:none;border-radius:var(--radius-lg)}
+.card-viewed-tag{position:absolute;bottom:.8rem;right:.8rem;background:var(--charcoal-800);color:var(--charcoal-300);padding:.2rem .55rem;border-radius:var(--radius);font-size:.6rem;font-weight:500;z-index:1}
+
+/* ============================================
+   SEARCH RESULTS — SPLIT VIEW
+   ============================================ */
+.results-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 0;border-bottom:1px solid var(--border)}
+.results-count{font-size:.88rem;color:var(--text-secondary)}
+.results-count strong{color:var(--text-primary);font-weight:600}
+.results-controls{display:flex;gap:.5rem;align-items:center}
+.results-sort{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:.45rem .8rem;font-size:.78rem;color:var(--text-secondary);font-family:var(--font-body);cursor:pointer;outline:none;appearance:none;padding-right:1.8rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238E8E93'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .7rem center}
+.view-toggle{display:flex;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.view-btn{padding:.45rem .65rem;background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;font-size:.8rem;transition:var(--transition)}
+.view-btn.active{background:var(--charcoal-950);color:white}
+
+/* ACTIVE FILTER TAGS */
+.active-filters{display:flex;gap:.4rem;flex-wrap:wrap;padding:1rem 0;align-items:center}
+.filter-tag{display:flex;align-items:center;gap:.3rem;background:var(--coral-ghost);border:1px solid var(--coral-glow);padding:.28rem .65rem;border-radius:var(--radius-full);font-size:.72rem;color:var(--coral);font-weight:500}
+.filter-tag .x{cursor:pointer;opacity:.5;font-size:.6rem;margin-left:.1rem}
+.filter-tag .x:hover{opacity:1}
+.filter-reset{font-size:.72rem;color:var(--text-tertiary);cursor:pointer;margin-left:.5rem;transition:var(--transition)}
+.filter-reset:hover{color:var(--danger)}
+
+/* SPLIT VIEW */
+.split-view{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:520px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.split-list{background:var(--bg-surface);overflow-y:auto;max-height:520px}
+.split-map{background:var(--warm-100);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-left:1px solid var(--border)}
+.map-placeholder{color:var(--text-tertiary);font-size:.85rem;text-align:center}
+.map-placeholder .icon{font-size:2.5rem;margin-bottom:.5rem;display:block;opacity:.25}
+.map-pins{position:absolute;inset:0}
+.map-pin{position:absolute;background:var(--bg-surface);border:1.5px solid var(--border);padding:.2rem .55rem;border-radius:var(--radius);font-size:.7rem;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap;box-shadow:var(--shadow-sm);color:var(--text-primary)}
+.map-pin:hover{background:var(--coral);color:white;border-color:var(--coral);box-shadow:0 4px 12px rgba(232,114,92,.25)}
+
+/* LIST ITEMS */
+.list-item{display:grid;grid-template-columns:150px 1fr;gap:1rem;padding:1rem 1.2rem;border-bottom:1px solid var(--border);transition:var(--transition);cursor:pointer}
+.list-item:hover{background:var(--warm-50)}
+.list-item-img{height:100px;border-radius:var(--radius);background-size:cover;background-position:center;position:relative}
+.list-item-badge{position:absolute;top:.4rem;left:.4rem;font-size:.55rem;padding:.15rem .4rem;border-radius:4px;font-weight:600}
+.list-item-body{display:flex;flex-direction:column;justify-content:center}
+.list-item-price{font-family:var(--font-display);font-size:1.05rem}
+.list-item-price small{font-family:var(--font-body);font-weight:400;color:var(--text-tertiary);font-size:.68rem;margin-left:.3rem}
+.list-item-title{font-size:.8rem;color:var(--text-secondary);margin:.2rem 0 .5rem}
+.list-item-meta{display:flex;gap:.4rem}
+.list-item-pill{font-size:.65rem;color:var(--text-secondary);background:var(--warm-100);padding:.15rem .45rem;border-radius:4px}
+.list-item-footer{display:flex;justify-content:space-between;margin-top:.4rem}
+.list-item-loc{font-size:.65rem;color:var(--coral);font-weight:500}
+.list-item-time{font-size:.6rem;color:var(--text-tertiary)}
+
+/* ============================================
+   PROPERTY DETAIL
+   ============================================ */
+.detail-preview{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-md)}
+.detail-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;height:400px}
+.dg-main{grid-row:1/3;background:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80') center/cover}
+.dg-2{background:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80') center/cover}
+.dg-3{background:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80') center/cover}
+.dg-4{background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80') center/cover;position:relative}
+.dg-more{position:absolute;inset:0;background:rgba(28,28,30,.55);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:500;color:white;backdrop-filter:blur(2px)}
+
+.detail-content{display:grid;grid-template-columns:1fr 360px;gap:0}
+.detail-main{padding:2rem;border-right:1px solid var(--border)}
+.detail-sidebar{padding:2rem;background:var(--warm-50)}
+
+.detail-type{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--coral);font-weight:500}
+.detail-price-row{display:flex;align-items:baseline;gap:.8rem;margin:.3rem 0}
+.detail-price{font-family:var(--font-display);font-size:2rem;letter-spacing:-.02em}
+.detail-price-sqm{font-size:.82rem;color:var(--text-tertiary)}
+.detail-badges{display:flex;gap:.4rem;margin:.5rem 0 1.2rem}
+.detail-badges span{padding:.25rem .6rem;border-radius:var(--radius);font-size:.68rem;font-weight:500}
+.detail-location{font-size:.9rem;color:var(--text-secondary);margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
+
+/* FEATURE GRID */
+.detail-feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:1.5rem 0}
+.detail-feat{background:var(--warm-100);padding:.8rem;border-radius:var(--radius);text-align:center}
+.detail-feat .val{font-size:1.1rem;font-weight:700}
+.detail-feat .lbl{font-size:.65rem;color:var(--text-tertiary);margin-top:.2rem}
+
+/* DESCRIPTION */
+.detail-desc{color:var(--text-secondary);font-size:.88rem;line-height:1.75;margin:1.2rem 0;border-left:3px solid var(--coral);padding-left:1rem}
+.detail-desc .more{color:var(--coral);cursor:pointer;font-weight:500}
+
+/* CHARACTERISTICS */
+.chars-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .8rem;margin:1.2rem 0}
+.char-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.82rem}
+.char-label{color:var(--text-tertiary)}
+.char-val{font-weight:500}
+
+/* DPE */
+.dpe{margin:1.5rem 0}
+.dpe-title{font-size:.85rem;font-weight:600;margin-bottom:.6rem}
+.dpe-bar{display:flex;gap:2px}
+.dpe-seg{flex:1;height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:600;opacity:.25;transition:var(--transition)}
+.dpe-seg.active{opacity:1;transform:scaleY(1.12);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.dpe-info{font-size:.7rem;color:var(--text-tertiary);margin-top:.5rem}
+
+/* SIDEBAR CONTACT */
+.contact-box{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm)}
+.contact-agency{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem}
+.contact-logo{width:44px;height:44px;border-radius:var(--radius);background:var(--charcoal-950);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--coral)}
+.contact-name{font-weight:600;font-size:.9rem}
+.contact-rating{font-size:.72rem;color:var(--warning)}
+.contact-btns{display:flex;flex-direction:column;gap:.5rem}
+.btn-contact{width:100%;padding:.75rem;border-radius:var(--radius);font-family:var(--font-body);font-size:.85rem;font-weight:600;cursor:pointer;transition:var(--transition);border:none;text-align:center}
+.btn-primary{background:var(--coral);color:white}
+.btn-primary:hover{background:var(--coral-hover)}
+.btn-dark{background:var(--charcoal-950);color:white}
+.btn-dark:hover{background:var(--charcoal-800)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text-primary)}
+.btn-outline:hover{border-color:var(--coral);color:var(--coral)}
+
+/* MORTGAGE MINI CALC */
+.mortgage-box{margin-top:1.2rem;padding:1.2rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg)}
+.mortgage-label{font-size:.7rem;color:var(--text-tertiary);margin-bottom:.2rem}
+.mortgage-amount{font-family:var(--font-display);font-size:1.3rem;color:var(--coral)}
+.mortgage-detail{font-size:.68rem;color:var(--text-tertiary);margin-top:.3rem}
+
+/* PRICE COMPARE */
+.price-compare{margin-top:1rem;padding:1rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg)}
+.price-compare-title{font-size:.78rem;font-weight:600;margin-bottom:.6rem}
+.price-bar-wrap{display:flex;align-items:center;gap:.6rem}
+.price-bar{flex:1;height:6px;background:var(--warm-200);border-radius:3px;position:relative}
+.price-bar-fill{height:100%;background:linear-gradient(90deg,var(--success),var(--coral));border-radius:3px}
+.price-bar-marker{position:absolute;top:-6px;width:3px;height:18px;background:var(--charcoal-950);border-radius:1px}
+.price-labels{display:flex;justify-content:space-between;margin-top:.5rem;font-size:.68rem}
+.price-diff{font-weight:600}
+.price-diff.good{color:var(--success)}
+
+/* ============================================
+   CITIES
+   ============================================ */
+.cities-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem}
+.city-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem;text-align:center;transition:var(--transition);cursor:pointer}
+.city-card:hover{border-color:var(--coral);box-shadow:var(--shadow-md)}
+.city-name{font-family:var(--font-display);font-weight:700;font-size:.92rem;margin-bottom:.2rem}
+.city-count{font-size:.72rem;color:var(--text-tertiary)}
+.city-trend{font-size:.65rem;color:var(--success);margin-top:.3rem;font-weight:500}
+.city-trend.down{color:var(--danger)}
+
+/* ============================================
+   CTA BANNER
+   ============================================ */
+.cta-banner{background:var(--charcoal-950);border-radius:var(--radius-xl);padding:3rem;display:flex;justify-content:space-between;align-items:center;color:white}
+.cta-banner h2{font-family:var(--font-display);font-size:1.6rem;margin-bottom:.5rem}
+.cta-banner p{color:var(--charcoal-400);font-size:.9rem;max-width:400px}
+.cta-banner-btns{display:flex;gap:.8rem}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer{border-top:1px solid var(--border);padding:3rem 0 2rem;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2rem}
+.footer-brand{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:.8rem}
+.footer-brand span{color:var(--coral)}
+.footer-desc{font-size:.8rem;color:var(--text-tertiary);line-height:1.7;max-width:280px}
+.footer-col-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-tertiary);margin-bottom:1rem;font-weight:500}
+.footer-link{display:block;font-size:.82rem;color:var(--text-secondary);padding:.2rem 0;transition:var(--transition)}
+.footer-link:hover{color:var(--coral)}
+.footer-bottom{display:flex;justify-content:space-between;padding-top:1.5rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--text-tertiary)}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;gap:2rem;padding:3rem 2rem}
+  .hero-visual{height:350px}
+  .listings-grid{grid-template-columns:repeat(2,1fr)}
+  .cities-grid{grid-template-columns:repeat(3,1fr)}
+  .detail-content{grid-template-columns:1fr}
+  .detail-sidebar{border-top:1px solid var(--border);border-left:none}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .cta-banner{flex-direction:column;text-align:center;gap:1.5rem}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .search-bar{flex-wrap:wrap}
+  .search-tab{padding:.5rem .7rem;font-size:.78rem}
+  .listings-grid{grid-template-columns:1fr}
+  .trust-bar{grid-template-columns:1fr 1fr}
+  .split-view{grid-template-columns:1fr}
+  .split-map{display:none}
+  .cities-grid{grid-template-columns:repeat(2,1fr)}
+  .detail-gallery{grid-template-columns:1fr;height:250px}
+  .dg-main{grid-row:auto}.dg-2,.dg-3{display:none}
+  .detail-feat-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr}
+  .cta-banner-btns{flex-direction:column;width:100%}
+  .cta-banner-btns .btn-contact{width:100%}
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-text{animation:fadeUp .6s ease both}
+.hero-visual{animation:fadeUp .6s ease .15s both}
+.card{animation:fadeUp .5s ease both}
+.card:nth-child(2){animation-delay:.06s}
+.card:nth-child(3){animation-delay:.12s}
+</style>
+</head>
+<body>
+
+<!-- ========== NAVIGATION ========== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Aqar<span>.</span></a>
+    <div class="nav-links">
+      <a href="#" class="nav-link active">Acheter</a>
+      <a href="#" class="nav-link">Louer</a>
+      <a href="#" class="nav-link">Estimer</a>
+      <a href="#" class="nav-link">Prix au m²</a>
+      <a href="#" class="nav-link">Professionnels</a>
+    </div>
+    <div class="nav-right">
+      <button class="nav-icon" title="Mémo">♡</button>
+      <button class="nav-icon" title="Alertes">🔔</button>
+      <button class="nav-cta">Se connecter</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-label"><span class="dot"></span> 12 450 biens au Maroc</div>
+    <h1>Des adresses <em>singulières</em> pour des vies qui le sont tout autant</h1>
+    <p>Recherche intelligente, données marché en temps réel, alertes instantanées. L'immobilier marocain, réinventé.</p>
+
+    <div class="search-bar">
+      <button class="search-tab active">Acheter</button>
+      <button class="search-tab">Louer</button>
+      <div class="search-sep"></div>
+      <input class="search-input" type="text" placeholder="Ville, quartier ou code postal">
+      <div class="search-sep"></div>
+      <input class="search-input" type="text" placeholder="Type" style="max-width:110px">
+      <div class="search-sep"></div>
+      <input class="search-input" type="text" placeholder="Budget" style="max-width:120px">
+      <button class="search-btn">Rechercher</button>
+    </div>
+
+    <div class="quick-filters">
+      <button class="qf">Appartement</button>
+      <button class="qf">Villa</button>
+      <button class="qf">Riad</button>
+      <button class="qf">Terrain</button>
+      <button class="qf">Avec piscine</button>
+      <button class="qf">Vue mer</button>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hv-1"></div>
+    <div class="hv-2"></div>
+    <div class="hv-3">
+      <div class="num">8 200+</div>
+      <div class="coral-dot"></div>
+      <div class="lbl">Transactions en 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TRUST ========== -->
+<div class="trust-section">
+  <div class="trust-bar">
+    <div class="trust-item"><div class="trust-num coral">12 450</div><div class="trust-label">Biens actifs</div></div>
+    <div class="trust-item"><div class="trust-num">8 200+</div><div class="trust-label">Transactions 2025</div></div>
+    <div class="trust-item"><div class="trust-num coral">14 500</div><div class="trust-label">MAD/m² moy. Casa</div></div>
+    <div class="trust-item"><div class="trust-num">+3.2%</div><div class="trust-label">Évolution 12 mois</div></div>
+  </div>
+</div>
+
+<!-- ========== FEATURED LISTINGS ========== -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div><div class="section-label">Sélection</div><div class="section-title">Biens récents à Casablanca</div></div>
+    <a href="#" class="section-link">Voir tout →</a>
+  </div>
+  <div class="listings-grid">
+
+    <div class="card">
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80')">
+        <span class="card-badge badge-exclu">Exclusivité</span>
+        <div class="card-fav">♡</div>
+      </div>
+      <div class="card-body">
+        <div class="card-loc">Anfa Supérieur · Casablanca</div>
+        <div class="card-price">6 500 000 MAD <small>21 667 MAD/m²</small></div>
+        <div class="card-title">Villa contemporaine avec piscine et jardin paysager</div>
+        <div class="card-meta">
+          <span class="card-pill">300 m²</span>
+          <span class="card-pill">5 ch.</span>
+          <span class="card-pill">3 SDB</span>
+          <span class="card-pill">Piscine</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-agency"><div class="card-agency-dot">P</div> Premium Immo</div>
+          <div class="card-time">Il y a 2h</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80')">
+        <span class="card-badge badge-new">Nouveau</span>
+        <div class="card-fav">♡</div>
+      </div>
+      <div class="card-body">
+        <div class="card-loc">Gauthier · Casablanca</div>
+        <div class="card-price">1 450 000 MAD <small>16 111 MAD/m²</small></div>
+        <div class="card-title">Appartement rénové 3 pièces, lumineux, plein sud</div>
+        <div class="card-meta">
+          <span class="card-pill">90 m²</span>
+          <span class="card-pill">2 ch.</span>
+          <span class="card-pill">Balcon</span>
+          <span class="card-pill">Ascenseur</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-agency"><div class="card-agency-dot">A</div> Atlas Realty</div>
+          <div class="card-time">Il y a 5h</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="position:relative">
+      <div class="card-viewed-overlay"></div>
+      <div class="card-viewed-tag">Consulté</div>
+      <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80')">
+        <span class="card-badge badge-reduced">-8% Prix</span>
+        <div class="card-fav active">♥</div>
+      </div>
+      <div class="card-body">
+        <div class="card-loc">Corniche · Casablanca</div>
+        <div class="card-price">3 200 000 MAD <small>22 857 MAD/m²</small></div>
+        <div class="card-title">Penthouse vue mer panoramique avec terrasse privée</div>
+        <div class="card-meta">
+          <span class="card-pill">140 m²</span>
+          <span class="card-pill">3 ch.</span>
+          <span class="card-pill">Terrasse</span>
+          <span class="card-pill">Vue mer</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-agency"><div class="card-agency-dot">M</div> Maroc Sotheby's</div>
+          <div class="card-time">Il y a 1j</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<!-- ========== SEARCH RESULTS SPLIT VIEW ========== -->
+<div class="container"><div class="divider"></div></div>
+<div class="container">
+<section>
+  <div class="section-header">
+    <div><div class="section-label">Résultats</div><div class="section-title">Vue recherche : Liste + Carte</div></div>
+  </div>
+
+  <div class="results-header">
+    <div class="results-count"><strong>234</strong> biens à <strong>Casablanca</strong></div>
+    <div class="results-controls">
+      <select class="results-sort">
+        <option>Tri : Pertinence</option>
+        <option>Prix croissant</option>
+        <option>Prix décroissant</option>
+        <option>Prix/m² croissant</option>
+        <option>Surface décroissante</option>
+        <option>Plus récent</option>
+      </select>
+      <div class="view-toggle">
+        <button class="view-btn active">☰</button>
+        <button class="view-btn">⊞</button>
+        <button class="view-btn">◉</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="active-filters">
+    <span class="filter-tag">Acheter <span class="x">✕</span></span>
+    <span class="filter-tag">Appartement <span class="x">✕</span></span>
+    <span class="filter-tag">Casablanca <span class="x">✕</span></span>
+    <span class="filter-tag">&lt; 2 000 000 MAD <span class="x">✕</span></span>
+    <span class="filter-tag">2+ chambres <span class="x">✕</span></span>
+    <span class="filter-reset">Tout effacer</span>
+  </div>
+
+  <div class="split-view">
+    <div class="split-list">
+      <div class="list-item">
+        <div class="list-item-img" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=300&q=80')">
+          <span class="list-item-badge badge-new">Nouveau</span>
+        </div>
+        <div class="list-item-body">
+          <div class="list-item-price">1 450 000 MAD <small>16 111 MAD/m²</small></div>
+          <div class="list-item-title">Appartement rénové 3 pièces avec balcon</div>
+          <div class="list-item-meta"><span class="list-item-pill">90 m²</span><span class="list-item-pill">2 ch.</span><span class="list-item-pill">Balcon</span></div>
+          <div class="list-item-footer"><span class="list-item-loc">Gauthier, Casablanca</span><span class="list-item-time">Il y a 5h</span></div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-img" style="background-image:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=300&q=80')">
+          <span class="list-item-badge badge-exclu">Exclu</span>
+        </div>
+        <div class="list-item-body">
+          <div class="list-item-price">1 850 000 MAD <small>15 417 MAD/m²</small></div>
+          <div class="list-item-title">Duplex traversant avec terrasse et parking</div>
+          <div class="list-item-meta"><span class="list-item-pill">120 m²</span><span class="list-item-pill">3 ch.</span><span class="list-item-pill">Parking</span></div>
+          <div class="list-item-footer"><span class="list-item-loc">Bourgogne, Casablanca</span><span class="list-item-time">Il y a 1j</span></div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-img" style="background-image:url('https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=300&q=80')"></div>
+        <div class="list-item-body">
+          <div class="list-item-price">980 000 MAD <small>14 000 MAD/m²</small></div>
+          <div class="list-item-title">Studio meublé proche tramway</div>
+          <div class="list-item-meta"><span class="list-item-pill">70 m²</span><span class="list-item-pill">1 ch.</span><span class="list-item-pill">Meublé</span></div>
+          <div class="list-item-footer"><span class="list-item-loc">Maârif, Casablanca</span><span class="list-item-time">Il y a 2j</span></div>
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-item-img" style="background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=300&q=80')"></div>
+        <div class="list-item-body">
+          <div class="list-item-price">1 650 000 MAD <small>15 000 MAD/m²</small></div>
+          <div class="list-item-title">Appartement 4 pièces vue dégagée</div>
+          <div class="list-item-meta"><span class="list-item-pill">110 m²</span><span class="list-item-pill">3 ch.</span><span class="list-item-pill">Asc.</span></div>
+          <div class="list-item-footer"><span class="list-item-loc">Triangle d'Or, Casablanca</span><span class="list-item-time">Il y a 3j</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="split-map">
+      <div class="map-pins">
+        <div class="map-pin" style="top:20%;left:28%">1.45M</div>
+        <div class="map-pin" style="top:38%;left:52%">1.85M</div>
+        <div class="map-pin" style="top:58%;left:32%">980K</div>
+        <div class="map-pin" style="top:30%;left:68%">1.65M</div>
+        <div class="map-pin" style="top:50%;left:58%">2.1M</div>
+        <div class="map-pin" style="top:68%;left:42%">1.2M</div>
+      </div>
+      <div class="map-placeholder">
+        <span class="icon">🗺</span>
+        Carte interactive Mapbox<br><span style="font-size:.7rem;opacity:.6">Zoom · Pan · Dessin de zone · Isochrones</span>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ========== PROPERTY DETAIL ========== -->
+<div class="container"><div class="divider"></div></div>
+<div class="container">
+<section>
+  <div class="section-header">
+    <div><div class="section-label">Fiche bien</div><div class="section-title">Aperçu page détail</div></div>
+  </div>
+  <div class="detail-preview">
+    <div class="detail-gallery">
+      <div class="dg-main"></div>
+      <div class="dg-2"></div>
+      <div class="dg-3"></div>
+      <div class="dg-4"><div class="dg-more">+18 photos</div></div>
+    </div>
+    <div class="detail-content">
+      <div class="detail-main">
+        <div class="detail-type">Villa · Vente</div>
+        <div class="detail-price-row">
+          <div class="detail-price">6 500 000 MAD</div>
+          <div class="detail-price-sqm">21 667 MAD/m²</div>
+        </div>
+        <div class="detail-badges">
+          <span style="background:var(--coral-ghost);color:var(--coral)">Exclusivité</span>
+          <span style="background:var(--success-ghost);color:var(--success)">Vérifié Aqar</span>
+          <span style="background:var(--warning-ghost);color:var(--warning)">Premium</span>
+        </div>
+        <div class="detail-location">📍 Anfa Supérieur, Casablanca</div>
+
+        <div class="detail-feat-grid">
+          <div class="detail-feat"><div class="val">300 m²</div><div class="lbl">Surface</div></div>
+          <div class="detail-feat"><div class="val">5</div><div class="lbl">Chambres</div></div>
+          <div class="detail-feat"><div class="val">3</div><div class="lbl">Salles de bain</div></div>
+          <div class="detail-feat"><div class="val">RDC+1</div><div class="lbl">Étages</div></div>
+        </div>
+
+        <div class="detail-desc">
+          Magnifique villa contemporaine nichée dans le quartier prisé d'Anfa Supérieur. Triple séjour baigné de lumière grâce à de grandes baies vitrées donnant sur le jardin paysager. Cuisine équipée haut de gamme, suite parentale avec dressing...
+          <span class="more"> Voir plus</span>
+        </div>
+
+        <!-- Caractéristiques -->
+        <div style="font-size:.88rem;font-weight:600;margin:1.5rem 0 .8rem">Caractéristiques</div>
+        <div class="chars-grid">
+          <div class="char-row"><span class="char-label">Surface habitable</span><span class="char-val">300 m²</span></div>
+          <div class="char-row"><span class="char-label">Terrain</span><span class="char-val">500 m²</span></div>
+          <div class="char-row"><span class="char-label">Chambres</span><span class="char-val">5</span></div>
+          <div class="char-row"><span class="char-label">Salles de bain</span><span class="char-val">3</span></div>
+          <div class="char-row"><span class="char-label">Piscine</span><span class="char-val">Oui — chauffée</span></div>
+          <div class="char-row"><span class="char-label">Parking</span><span class="char-val">2 places</span></div>
+          <div class="char-row"><span class="char-label">Climatisation</span><span class="char-val">Centralisée</span></div>
+          <div class="char-row"><span class="char-label">Année construction</span><span class="char-val">2021</span></div>
+        </div>
+
+        <!-- DPE -->
+        <div class="dpe">
+          <div class="dpe-title">Performance énergétique</div>
+          <div class="dpe-bar">
+            <div class="dpe-seg" style="background:#00B050;color:white">A</div>
+            <div class="dpe-seg" style="background:#50C878;color:white">B</div>
+            <div class="dpe-seg active" style="background:#A0D468;color:#1a1a1a;font-weight:700;font-size:.75rem">C</div>
+            <div class="dpe-seg" style="background:#FFD700;color:#1a1a1a">D</div>
+            <div class="dpe-seg" style="background:#FFA500;color:white">E</div>
+            <div class="dpe-seg" style="background:#FF6347;color:white">F</div>
+            <div class="dpe-seg" style="background:#DC143C;color:white">G</div>
+          </div>
+          <div class="dpe-info">Classe C · 150 kWh/m²/an · Estimation facture : 8 000 — 12 000 MAD/an</div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="detail-sidebar">
+        <div class="contact-box">
+          <div class="contact-agency">
+            <div class="contact-logo">PI</div>
+            <div>
+              <div class="contact-name">Premium Immo</div>
+              <div class="contact-rating">★★★★☆ 4.2 (48 avis)</div>
+            </div>
+          </div>
+          <div class="contact-btns">
+            <button class="btn-contact btn-primary">📞 Appeler l'agence</button>
+            <button class="btn-contact btn-dark">✉️ Envoyer un message</button>
+            <button class="btn-contact btn-outline">🏢 Voir l'agence</button>
+          </div>
+        </div>
+
+        <div class="mortgage-box">
+          <div class="mortgage-label">Mensualité estimée</div>
+          <div class="mortgage-amount">~27 400 MAD/mois</div>
+          <div class="mortgage-detail">Apport 20% · 20 ans · Taux 4.5%<br>
+          <span style="color:var(--coral);cursor:pointer;font-weight:500">Modifier la simulation →</span></div>
+        </div>
+
+        <div class="price-compare">
+          <div class="price-compare-title">Prix du quartier</div>
+          <div class="price-bar-wrap">
+            <span style="font-size:.65rem;color:var(--text-tertiary)">15K</span>
+            <div class="price-bar">
+              <div class="price-bar-fill" style="width:72%"></div>
+              <div class="price-bar-marker" style="left:62%"></div>
+            </div>
+            <span style="font-size:.65rem;color:var(--text-tertiary)">30K</span>
+          </div>
+          <div class="price-labels">
+            <span style="color:var(--text-tertiary)">Moy. quartier : <strong style="color:var(--text-secondary)">23 500 MAD/m²</strong></span>
+            <span class="price-diff good">-7.8% ↓</span>
+          </div>
+        </div>
+
+        <div style="margin-top:1rem;padding:1rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg)">
+          <div style="font-size:.78rem;font-weight:600;margin-bottom:.5rem">Coût total estimé</div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.3rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-tertiary)">Prix du bien</span><span>6 500 000 MAD</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.3rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-tertiary)">Frais de notaire</span><span>~260 000 MAD</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.3rem 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-tertiary)">Frais d'agence</span><span>Inclus</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:.85rem;padding:.5rem 0;font-weight:700"><span>Total</span><span style="color:var(--coral)">~6 760 000 MAD</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ========== CITIES ========== -->
+<div class="container"><div class="divider"></div></div>
+<div class="container">
+<section>
+  <div class="section-header">
+    <div><div class="section-label">Explorer</div><div class="section-title">Villes populaires</div></div>
+  </div>
+  <div class="cities-grid">
+    <div class="city-card"><div class="city-name">Casablanca</div><div class="city-count">4 230 biens</div><div class="city-trend">14 500 MAD/m² · ↑ 3.2%</div></div>
+    <div class="city-card"><div class="city-name">Rabat</div><div class="city-count">2 180 biens</div><div class="city-trend">18 200 MAD/m² · ↑ 1.8%</div></div>
+    <div class="city-card"><div class="city-name">Marrakech</div><div class="city-count">1 890 biens</div><div class="city-trend">12 800 MAD/m² · ↑ 5.1%</div></div>
+    <div class="city-card"><div class="city-name">Tanger</div><div class="city-count">1 540 biens</div><div class="city-trend">11 400 MAD/m² · ↑ 4.3%</div></div>
+    <div class="city-card"><div class="city-name">Agadir</div><div class="city-count">980 biens</div><div class="city-trend">9 800 MAD/m² · ↑ 2.7%</div></div>
+    <div class="city-card"><div class="city-name">Fès</div><div class="city-count">760 biens</div><div class="city-trend down">7 500 MAD/m² · ↓ 0.4%</div></div>
+  </div>
+</section>
+</div>
+
+<!-- ========== CTA BANNER ========== -->
+<div class="container">
+<section>
+  <div class="cta-banner">
+    <div>
+      <h2>Vous vendez un bien ?</h2>
+      <p>Estimez gratuitement votre bien et publiez votre annonce en quelques clics. Touchez des milliers d'acheteurs qualifiés.</p>
+    </div>
+    <div class="cta-banner-btns">
+      <button class="btn-contact btn-primary" style="padding:.8rem 1.8rem">Estimer mon bien</button>
+      <button class="btn-contact btn-outline" style="padding:.8rem 1.8rem;color:white;border-color:rgba(255,255,255,.2)">Déposer une annonce</button>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<div class="container">
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Aqar<span>.</span></div>
+      <div class="footer-desc">L'immobilier autrement au Maroc. Recherche intelligente, données marché, alertes et outils professionnels pour agences.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Rechercher</div>
+      <a href="#" class="footer-link">Acheter</a>
+      <a href="#" class="footer-link">Louer</a>
+      <a href="#" class="footer-link">Neuf</a>
+      <a href="#" class="footer-link">Prix au m²</a>
+      <a href="#" class="footer-link">Estimation</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Services</div>
+      <a href="#" class="footer-link">Déposer une annonce</a>
+      <a href="#" class="footer-link">AqarVision Pro</a>
+      <a href="#" class="footer-link">Mini-sites agences</a>
+      <a href="#" class="footer-link">Simulateur crédit</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Société</div>
+      <a href="#" class="footer-link">À propos</a>
+      <a href="#" class="footer-link">Contact</a>
+      <a href="#" class="footer-link">Presse</a>
+      <a href="#" class="footer-link">CGU</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 Aqar · Tous droits réservés</div>
+    <div>Fait avec soin au Maroc</div>
+  </div>
+</footer>
+</div>
+
+</body>
+</html>

@@ -30,13 +30,13 @@ export default async function AppearancePage({
   // 3. Fetch current plan
   const { data: subscription } = await supabase
     .from("subscriptions")
-    .select("plan_id, plans(code)")
+    .select("plan_id, plans(slug)")
     .eq("agency_id", auth.agencyId)
-    .eq("status", "active")
+    .in("status", ["active", "trialing", "past_due"])
     .maybeSingle();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const planCode: string = (subscription?.plans as any)?.code ?? "starter";
+  const planCode: string = (subscription?.plans as any)?.slug ?? "starter";
 
   return (
     <div>

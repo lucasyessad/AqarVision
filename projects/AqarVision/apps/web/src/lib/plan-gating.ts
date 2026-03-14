@@ -46,46 +46,48 @@ export function isPlanAtLeast(required: string, current: string): boolean {
 // ── Theme registry & gating ───────────────────────────────────────────────────
 
 /**
- * Map of all available themes and the minimum plan required to use them.
- *
- * - `null` means available to all plans (including free / no subscription).
- * - A plan code means that plan or higher is required.
- *
- * Add new themes here as they are introduced.
- */
-export const THEME_PLAN_REQUIREMENTS: Record<string, PlanCode | null> = {
-  // Available to everyone
-  default: null,
-  minimal: null,
-
-  // Pro-tier themes
-  modern: "pro",
-  luxury: "pro",
-  corporate: "pro",
-  coastal: "pro",
-
-  // Enterprise-tier themes
-  premium: "enterprise",
-  bespoke: "enterprise",
-  flagship: "enterprise",
-} as const;
-
-/**
  * Returns `true` if `themeId` is accessible on the given `plan`.
  *
- * Unknown theme IDs are treated as unavailable (fail-safe).
+ * The source of truth for plan requirements is THEME_REGISTRY (registry.ts).
+ * Themes with `plan: null` are free for everyone.
+ * Themes with `plan: "pro"` require Pro or higher.
+ * Themes with `plan: "enterprise"` require Enterprise.
+ * Unknown theme IDs return false (fail-safe).
  *
  * @example
- * isThemeAvailable("modern", "pro")        // true
- * isThemeAvailable("modern", "starter")    // false
- * isThemeAvailable("default", "starter")   // true  — no plan required
- * isThemeAvailable("unknown", "enterprise") // false — not in registry
+ * isThemeAvailable("mediterranee", "pro")       // true
+ * isThemeAvailable("luxe-noir", "pro")          // false — needs enterprise
+ * isThemeAvailable("minimal", "starter")        // true  — no plan required
+ * isThemeAvailable("unknown", "enterprise")     // false — not in registry
  */
 export function isThemeAvailable(themeId: string, plan: string): boolean {
-  if (!(themeId in THEME_PLAN_REQUIREMENTS)) {
+  // Inline the registry plan map to keep this module free of import cycles.
+  // Keep in sync with src/lib/themes/registry.ts.
+  const THEME_PLAN_MAP: Record<string, PlanCode | null> = {
+    // Free (starter)
+    minimal: null,
+    "corporate-navy": null,
+    "swiss-minimal": null,
+    modern: null,
+    // Pro
+    mediterranee: "pro",
+    "marocain-contemporain": "pro",
+    "pastel-doux": "pro",
+    "organique-eco": "pro",
+    professional: "pro",
+    // Enterprise
+    "luxe-noir": "enterprise",
+    "editorial-07": "enterprise",
+    "art-deco": "enterprise",
+    "neo-brutalist": "enterprise",
+    luxury: "enterprise",
+    bold: "enterprise",
+  };
+
+  if (!(themeId in THEME_PLAN_MAP)) {
     return false;
   }
-  const required = THEME_PLAN_REQUIREMENTS[themeId];
+  const required = THEME_PLAN_MAP[themeId];
   if (required == null) {
     return true;
   }
@@ -95,15 +97,13 @@ export function isThemeAvailable(themeId: string, plan: string): boolean {
 /**
  * Returns all theme IDs that are available for the given plan.
  *
- * Themes are returned in insertion order of `THEME_PLAN_REQUIREMENTS`.
- *
  * @example
- * getAvailableThemes("starter")     // ["default", "minimal"]
- * getAvailableThemes("pro")         // ["default", "minimal", "modern", "luxury", ...]
+ * getAvailableThemes("starter")     // ["minimal", "corporate-navy", ...]
  * getAvailableThemes("enterprise")  // all themes
  */
 export function getAvailableThemes(plan: string): string[] {
-  return Object.keys(THEME_PLAN_REQUIREMENTS).filter((themeId) =>
-    isThemeAvailable(themeId, plan)
-  );
+  // Import THEME_REGISTRY lazily to avoid top-level circular deps in tests.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { THEME_REGISTRY } = require("@/lib/themes/registry") as { THEME_REGISTRY: Array<{ id: string }> };
+  return THEME_REGISTRY.map((t) => t.id).filter((id) => isThemeAvailable(id, plan));
 }

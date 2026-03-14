@@ -111,6 +111,11 @@ export interface AgencyPublicDto {
   created_at: string;
   branches: AgencyBranchPublicDto[];
   listing_count: number;
+  /** Theme & branding (from agencies table) */
+  theme: string;
+  primary_color: string | null;
+  accent_color: string | null;
+  secondary_color: string | null;
 }
 
 export interface AgencyBranchPublicDto {

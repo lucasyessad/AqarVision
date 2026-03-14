@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { signOutAction } from "@/features/auth/actions/auth.action";
 
 interface DashboardSidebarProps {
   agencySlug: string | null;
@@ -105,12 +106,20 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
   }
 
   return (
-    <aside className="flex w-64 flex-col border-e border-white/10 bg-[#1a365d] text-white">
+    <aside
+      className="flex w-64 flex-col border-e"
+      style={{ background: "var(--bg-secondary)", borderColor: "var(--border-light)" }}
+    >
       {/* Logo */}
       <div className="flex items-center gap-2 px-6 py-5">
-        <span className="text-lg font-bold text-white">
-          Aqar<span className="text-[#d4af37]">Pro</span>
+        <span className="text-lg font-extrabold tracking-tight" style={{ color: "var(--text-primary)" }}>
+          Aqar
         </span>
+        <span
+          className="aqar-pulse inline-block h-2 w-2 rounded-full"
+          style={{ background: "var(--cyan)" }}
+        />
+        <span className="text-lg font-extrabold" style={{ color: "var(--cyan)" }}>Pro</span>
       </div>
 
       {/* Nav */}
@@ -121,13 +130,14 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
             <Link
               key={item.key}
               href={item.href as `/${string}`}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                active
-                  ? "bg-white/15 text-white"
-                  : "text-white/65 hover:bg-white/10 hover:text-white"
-              }`}
+              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
+              style={{
+                background: active ? "var(--bg-tertiary)" : "transparent",
+                color: active ? "var(--cyan)" : "var(--text-muted, var(--text-secondary))",
+                borderLeft: active ? `2px solid var(--cyan)` : "2px solid transparent",
+              }}
             >
-              <span className={active ? "text-white" : "text-white/50"}>{item.icon}</span>
+              <span style={{ color: active ? "var(--cyan)" : "var(--text-tertiary)" }}>{item.icon}</span>
               {t(`nav.${item.key}` as Parameters<typeof t>[0])}
             </Link>
           );
@@ -135,7 +145,10 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
 
         {/* Settings group */}
         <div className="pt-3">
-          <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-white/35">
+          <p
+            className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest"
+            style={{ color: "var(--text-tertiary)" }}
+          >
             Paramètres
           </p>
           {SETTINGS_ITEMS.map((item) => {
@@ -144,11 +157,12 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
               <Link
                 key={item.key}
                 href={item.href as `/${string}`}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
-                  active
-                    ? "bg-white/15 font-medium text-white"
-                    : "text-white/55 hover:bg-white/10 hover:text-white"
-                }`}
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all"
+                style={{
+                  background: active ? "var(--bg-tertiary)" : "transparent",
+                  color: active ? "var(--cyan)" : "var(--text-secondary)",
+                  fontWeight: active ? 500 : 400,
+                }}
               >
                 {item.label}
               </Link>
@@ -164,7 +178,11 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
             href={`/fr/a/${agencySlug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#d4af37]/50 px-3 py-2 text-xs font-medium text-[#d4af37] transition-colors hover:bg-[#d4af37]/10"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors"
+            style={{
+              borderColor: "rgba(0,229,191,0.3)",
+              color: "var(--cyan)",
+            }}
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -175,15 +193,34 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
       )}
 
       {/* User footer */}
-      <div className="border-t border-white/10 px-4 py-3">
+      <div className="border-t px-4 py-3" style={{ borderColor: "var(--border-light)" }}>
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/20 text-xs font-bold text-white">
+          <div
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
+            style={{ background: "var(--bg-surface)", color: "var(--cyan)" }}
+          >
             {(fullName ?? userEmail).charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            {fullName && <p className="truncate text-xs font-medium text-white">{fullName}</p>}
-            <p className="truncate text-xs text-white/50">{userEmail}</p>
+            {fullName && (
+              <p className="truncate text-xs font-medium" style={{ color: "var(--text-primary)" }}>
+                {fullName}
+              </p>
+            )}
+            <p className="truncate text-xs" style={{ color: "var(--text-tertiary)" }}>{userEmail}</p>
           </div>
+          <form action={signOutAction}>
+            <button
+              type="submit"
+              title="Se déconnecter"
+              className="flex-shrink-0 rounded-md p-1.5 transition-colors"
+              style={{ color: "var(--text-tertiary)" }}
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+              </svg>
+            </button>
+          </form>
         </div>
       </div>
     </aside>

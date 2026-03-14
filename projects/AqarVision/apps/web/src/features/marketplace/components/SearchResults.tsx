@@ -23,17 +23,33 @@ interface SearchResultCardProps {
 
 function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
   const tListings = useTranslations("listings");
-  const t = useTranslations("search");
 
   return (
     <Link
       href={`/l/${listing.slug}`}
-      className="group block rounded-xl bg-[#f7fafc] shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+      className="group block overflow-hidden rounded-xl border transition-all"
+      style={{
+        background: "var(--bg-card)",
+        borderColor: "var(--border-light)",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.borderColor = "var(--border-hover)";
+        (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 48px rgba(0,0,0,0.35)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.borderColor = "var(--border-light)";
+        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "none";
+      }}
     >
       {/* Cover image */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-xl bg-gray-200">
+      <div className="relative aspect-[16/10] w-full overflow-hidden" style={{ background: "var(--bg-tertiary)" }}>
         {isViewed && (
-          <span className="absolute start-2 top-2 z-10 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-medium text-gray-500 shadow-sm backdrop-blur-sm">
+          <span
+            className="absolute start-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-medium backdrop-blur-sm"
+            style={{ background: "var(--bg-surface)", color: "var(--text-tertiary)" }}
+          >
             Déjà consulté
           </span>
         )}
@@ -41,81 +57,86 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
           <img
             src={listing.cover_url}
             alt={listing.title}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-gray-400">
-            <svg
-              className="h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-              />
+          <div className="flex h-full w-full items-center justify-center" style={{ color: "var(--text-tertiary)" }}>
+            <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
             </svg>
           </div>
         )}
+
+        {/* Gradient overlay */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
+          style={{ background: "linear-gradient(transparent, var(--bg-card))" }}
+        />
       </div>
 
       {/* Content */}
       <div className="p-4">
-        {/* Badges row: property type + trust score */}
-        <div className="mb-1 flex flex-wrap items-center gap-1.5">
-          <span className="inline-block rounded bg-[#d4af37]/15 px-2 py-0.5 text-xs font-medium text-[#d4af37]">
+        {/* Badges */}
+        <div className="mb-2 flex flex-wrap items-center gap-1.5">
+          <span
+            className="inline-block rounded px-2 py-0.5 text-xs font-medium uppercase tracking-wide"
+            style={{ background: "var(--amber-glow)", color: "var(--amber)" }}
+          >
             {tListings(listing.property_type)}
           </span>
           <TrustBadge
             listing={{
               has_photos: listing.cover_url !== null,
-              // description is not available in search results DTO — assume partial
               description: "",
               price: listing.current_price,
               agency: {
-                // is_verified is not in SearchResultDto — default false until DTO is extended
                 is_verified: (listing as SearchResultDto & { agency_is_verified?: boolean }).agency_is_verified ?? false,
               },
             }}
           />
         </div>
 
-        <h3 className="mb-1 truncate text-sm font-semibold text-[#2d3748]">
+        {/* Location */}
+        <p className="mb-1 text-xs font-medium uppercase tracking-wider" style={{ color: "var(--cyan)" }}>
+          {listing.wilaya_name}
+          {listing.commune_name ? ` · ${listing.commune_name}` : ""}
+        </p>
+
+        {/* Title */}
+        <h3 className="mb-2 truncate text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>
           {listing.title}
         </h3>
 
         {/* Price */}
-        <p className="mb-2 text-lg font-bold text-[#1a365d]">
+        <p className="mb-3 text-xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
           {formatPrice(listing.current_price, listing.currency)}
-        </p>
-
-        {/* Details row */}
-        <div className="flex items-center gap-3 text-xs text-[#a0aec0]">
-          {listing.rooms !== null && (
-            <span>{listing.rooms} {tListings("rooms")}</span>
-          )}
-          {listing.surface_m2 !== null && (
-            <span>{listing.surface_m2} m&sup2;</span>
-          )}
           {listing.surface_m2 !== null && listing.surface_m2 > 0 && (
-            <span className="font-medium text-[#2d3748]/60">
+            <span className="ms-2 font-mono text-xs font-normal" style={{ color: "var(--text-tertiary)" }}>
               {Math.round(listing.current_price / listing.surface_m2).toLocaleString("fr-DZ")} {listing.currency}/m²
             </span>
           )}
-          <span className="ms-auto">
-            {listing.wilaya_name}
-          </span>
+        </p>
+
+        {/* Meta pills */}
+        <div className="flex flex-wrap gap-1.5">
+          {listing.rooms !== null && (
+            <span className="rounded px-2 py-0.5 text-xs" style={{ background: "var(--bg-tertiary)", color: "var(--text-secondary)" }}>
+              {listing.rooms} {tListings("rooms")}
+            </span>
+          )}
+          {listing.surface_m2 !== null && (
+            <span className="rounded px-2 py-0.5 text-xs" style={{ background: "var(--bg-tertiary)", color: "var(--text-secondary)" }}>
+              {listing.surface_m2} m²
+            </span>
+          )}
         </div>
 
-        {/* Agency + Référence */}
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <p className="truncate text-xs text-[#a0aec0]">
+        {/* Footer */}
+        <div className="mt-3 flex items-center justify-between border-t pt-3" style={{ borderColor: "var(--border-light)" }}>
+          <p className="truncate text-xs" style={{ color: "var(--text-tertiary)" }}>
             {listing.agency_name}
           </p>
-          <span className="shrink-0 font-mono text-xs text-gray-400">
+          <span className="shrink-0 font-mono text-xs" style={{ color: "var(--text-tertiary)" }}>
             {formatListingRef(listing.reference_number)}
           </span>
         </div>
@@ -162,7 +183,7 @@ export function SearchResults({
   if (results.length === 0) {
     return (
       <div className="py-12 text-center">
-        <p className="text-gray-500">{t("no_results")}</p>
+        <p style={{ color: "var(--text-secondary)" }}>{t("no_results")}</p>
       </div>
     );
   }
@@ -171,13 +192,20 @@ export function SearchResults({
     <div>
       {/* Header: count + sort */}
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-[#2d3748]">
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>{totalCount}</strong>{" "}
           {t("results_count", { count: totalCount })}
         </p>
         <select
           value={searchParams.get("sort") ?? "newest"}
           onChange={(e) => handleSortChange(e.target.value)}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+          className="rounded-lg border px-3 py-1.5 text-sm outline-none"
+          style={{
+            background: "var(--bg-secondary)",
+            borderColor: "var(--border)",
+            color: "var(--text-secondary)",
+            fontFamily: "inherit",
+          }}
         >
           <option value="newest">{t("newest")}</option>
           <option value="oldest">{t("oldest")}</option>
@@ -205,18 +233,20 @@ export function SearchResults({
             type="button"
             onClick={() => navigateToPage(page - 1)}
             disabled={page <= 1}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-[#2d3748] transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+            style={{ borderColor: "var(--border)", color: "var(--text-secondary)", background: "transparent" }}
           >
             {t("previous")}
           </button>
-          <span className="text-sm text-[#a0aec0]">
+          <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
             {t("page_of", { current: page, total: totalPages })}
           </span>
           <button
             type="button"
             onClick={() => navigateToPage(page + 1)}
             disabled={page >= totalPages}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-[#2d3748] transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+            style={{ borderColor: "var(--border)", color: "var(--text-secondary)", background: "transparent" }}
           >
             {t("next")}
           </button>

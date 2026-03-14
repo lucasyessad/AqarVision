@@ -1,13 +1,21 @@
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { routing } from "@/lib/i18n/routing";
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500"],
+  variable: "--font-mono",
 });
 
 export function generateStaticParams() {
@@ -33,8 +41,12 @@ export default async function LocaleLayout({
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir} className={inter.variable}>
-      <body className="min-h-screen bg-off-white font-sans" suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={dir}
+      className={`${plusJakartaSans.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="min-h-screen font-sans" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

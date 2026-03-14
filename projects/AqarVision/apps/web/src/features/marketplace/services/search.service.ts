@@ -288,7 +288,7 @@ export async function getAgencyPublic(
   const { data: agency, error } = await supabase
     .from("agencies")
     .select(
-      "id, name, slug, description, logo_url, cover_url, phone, email, is_verified, created_at"
+      "id, name, slug, description, logo_url, cover_url, phone, email, is_verified, created_at, theme, primary_color, accent_color, secondary_color"
     )
     .eq("slug", slug)
     .is("deleted_at", null)
@@ -335,5 +335,9 @@ export async function getAgencyPublic(
       })
     ),
     listing_count: count ?? 0,
+    theme: (agency.theme as string) ?? "minimal",
+    primary_color: (agency.primary_color as string) ?? null,
+    accent_color: (agency.accent_color as string) ?? null,
+    secondary_color: (agency.secondary_color as string) ?? null,
   };
 }

@@ -32,49 +32,53 @@ export function SearchPageClient({
   const t = useTranslations("search");
   const [showFilters, setShowFilters] = useState(false);
   const [showFiltersSidebar, setShowFiltersSidebar] = useState(true);
-  // "list" | "map" view mode
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
 
-  // Build map listings from search results (only those with PostGIS location data)
-  // SearchResultDto does not expose lat/lng directly (PostGIS geometry).
-  // When the backend returns coordinates, they should be added to SearchResultDto.
-  // For now we cast safely — listings without coordinates are filtered out.
   const mapListings: MapListing[] = results.flatMap((r) => {
     const rAny = r as SearchResultDto & { lat?: number; lng?: number };
     if (typeof rAny.lat === "number" && typeof rAny.lng === "number") {
-      return [
-        {
-          id: r.id,
-          lat: rAny.lat,
-          lng: rAny.lng,
-          price: r.current_price,
-          currency: r.currency,
-          title: r.title,
-          slug: r.slug,
-        },
-      ];
+      return [{
+        id: r.id,
+        lat: rAny.lat,
+        lng: rAny.lng,
+        price: r.current_price,
+        currency: r.currency,
+        title: r.title,
+        slug: r.slug,
+      }];
     }
     return [];
   });
 
   const handleBoundsChange = useCallback((bounds: MapBounds) => {
-    // Bounds are handled via URL search params update on the parent page.
-    // Here we could trigger a client-side re-fetch or navigate.
-    // For now, log bounds — full integration with router will be done
-    // once the server action supports client-side invocation.
-    void bounds; // suppress unused warning — intentional placeholder
+    void bounds;
   }, []);
 
+  const toggleFilters = () => {
+    setShowFilters((p) => !p);
+    setShowFiltersSidebar((p) => !p);
+  };
+
   return (
-    <main className="min-h-screen bg-[#f7fafc]">
-      {/* Top navigation bar: logo + language switcher */}
-      <nav className="bg-[#1a365d] border-b border-white/10 px-4 py-2">
-        <div className="mx-auto max-w-7xl flex items-center justify-between">
+    <main className="min-h-screen" style={{ background: "var(--bg-deep)" }}>
+
+      {/* ── Top navigation ─────────────────────────────────────── */}
+      <nav
+        className="sticky top-0 z-40 border-b"
+        style={{
+          background: "rgba(6, 11, 24, 0.85)",
+          backdropFilter: "blur(20px)",
+          borderColor: "var(--border-light)",
+        }}
+      >
+        <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between px-4">
           {/* Logo */}
-          <Link href="/" locale={locale} className="flex items-center gap-2">
-            <span className="font-bold text-white">
-              Aqar<span className="text-[#d4af37]">Search</span>
-            </span>
+          <Link href="/" locale={locale} className="flex items-center gap-1.5 text-lg font-extrabold tracking-tight">
+            <span style={{ color: "var(--text-primary)" }}>Aqar</span>
+            <span
+              className="aqar-pulse inline-block h-2 w-2 rounded-full"
+              style={{ background: "var(--cyan)" }}
+            />
           </Link>
 
           {/* Language switcher */}
@@ -82,110 +86,128 @@ export function SearchPageClient({
         </div>
       </nav>
 
-      {/* Hero search bar */}
-      <div className="bg-[#1a365d] px-4 py-8 text-white">
-        <div className="mx-auto max-w-4xl">
-          <h1 className="mb-4 text-2xl font-bold md:text-3xl">{t("title")}</h1>
+      {/* ── Hero search ─────────────────────────────────────────── */}
+      <div
+        className="relative overflow-hidden px-4 pb-10 pt-12 text-center"
+        style={{ background: "var(--bg-primary)" }}
+      >
+        {/* Radial glow */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2"
+          style={{
+            width: "700px",
+            height: "700px",
+            background: "radial-gradient(circle, rgba(0,229,191,0.07) 0%, transparent 70%)",
+          }}
+        />
+
+        {/* Badge */}
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-medium"
+          style={{
+            background: "var(--cyan-ghost)",
+            borderColor: "rgba(0,229,191,0.15)",
+            color: "var(--cyan)",
+          }}
+        >
+          <span className="aqar-pulse inline-block h-1.5 w-1.5 rounded-full" style={{ background: "var(--cyan)" }} />
+          {t("title")}
+        </div>
+
+        <h1 className="aqar-fade-up relative mx-auto mb-3 max-w-2xl text-3xl font-extrabold tracking-tight md:text-4xl"
+          style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}
+        >
+          {t("title")}
+        </h1>
+        <p className="relative mx-auto mb-8 max-w-md text-sm" style={{ color: "var(--text-secondary)" }}>
+          {t("subtitle")}
+        </p>
+
+        <div className="relative">
           <SearchBar />
         </div>
       </div>
 
-      {/* Content */}
-      <div className="mx-auto max-w-7xl px-4 py-6">
-        {/* Toolbar: filters toggle + List/Map toggle + alert */}
+      {/* ── Content ─────────────────────────────────────────────── */}
+      <div className="mx-auto max-w-[1320px] px-4 py-6">
+
+        {/* Toolbar */}
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          {/* Toggle sidebar filters — visible on all screen sizes */}
+          {/* Filters toggle */}
           <button
             type="button"
-            onClick={() => {
-              // On mobile: use showFilters (inline block display)
-              // On desktop: use showFiltersSidebar
-              setShowFilters((prev) => !prev);
-              setShowFiltersSidebar((prev) => !prev);
+            onClick={toggleFilters}
+            className="flex items-center gap-1.5 rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
+            style={{
+              borderColor: "var(--border)",
+              color: "var(--text-secondary)",
+              background: "transparent",
             }}
-            title={showFiltersSidebar ? t("hide_filters") : t("show_filters")}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-[#2d3748] transition-colors hover:bg-gray-100"
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--border-hover)";
+              (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
+              (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+            }}
           >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
-              />
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
             </svg>
             <span className="hidden sm:inline">
               {showFiltersSidebar ? t("hide_filters") : t("show_filters")}
             </span>
           </button>
 
-          {/* List / Map view toggle */}
-          <div className="flex rounded-lg border border-gray-300 bg-white overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setViewMode("list")}
-              className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors ${
-                viewMode === "list"
-                  ? "bg-[#1a365d] text-white"
-                  : "text-[#2d3748] hover:bg-gray-50"
-              }`}
-              aria-pressed={viewMode === "list"}
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
-              Liste
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode("map")}
-              className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors border-s border-gray-300 ${
-                viewMode === "map"
-                  ? "bg-[#1a365d] text-white"
-                  : "text-[#2d3748] hover:bg-gray-50"
-              }`}
-              aria-pressed={viewMode === "map"}
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
-              </svg>
-              Carte
-            </button>
+          {/* List / Map toggle */}
+          <div className="flex overflow-hidden rounded-lg border" style={{ borderColor: "var(--border)" }}>
+            {(["list", "map"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setViewMode(mode)}
+                className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors"
+                style={{
+                  background: viewMode === mode ? "var(--bg-tertiary)" : "transparent",
+                  color: viewMode === mode ? "var(--text-primary)" : "var(--text-secondary)",
+                  borderLeft: mode === "map" ? `1px solid var(--border)` : undefined,
+                }}
+                aria-pressed={viewMode === mode}
+              >
+                {mode === "list" ? (
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  </svg>
+                ) : (
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
+                  </svg>
+                )}
+                {mode === "list" ? "Liste" : "Carte"}
+              </button>
+            ))}
           </div>
 
-          {/* Search alert button */}
+          {/* Alert button */}
           <div className="ms-auto">
             <SearchAlertButton />
           </div>
         </div>
 
         <div className="flex gap-6">
-          {/* Sidebar filters — controlled by showFiltersSidebar on desktop, showFilters on mobile */}
+          {/* Sidebar filters */}
           <SearchFilters
             isOpen={showFilters}
             isDesktopVisible={showFiltersSidebar}
-            onToggle={() => {
-              setShowFilters((prev) => !prev);
-              setShowFiltersSidebar((prev) => !prev);
-            }}
+            onToggle={toggleFilters}
             wilayas={wilayas}
           />
 
           {/* Main content */}
           <div className="min-w-0 flex-1">
             {viewMode === "map" ? (
-              /* Full-height map view */
               <div className="mb-6">
-                <SearchMap
-                  listings={mapListings}
-                  onBoundsChange={handleBoundsChange}
-                />
-                {/* Show results below map in map mode */}
+                <SearchMap listings={mapListings} onBoundsChange={handleBoundsChange} />
                 <div className="mt-4">
                   <SearchResults
                     results={results}
@@ -197,7 +219,6 @@ export function SearchPageClient({
                 </div>
               </div>
             ) : (
-              /* List-only view — map hidden */
               <SearchResults
                 results={results}
                 totalCount={totalCount}

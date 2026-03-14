@@ -32,16 +32,12 @@ export async function generateMetadata({ params }: ListingPageProps) {
   return {
     title: listing.title,
     description: listing.description?.slice(0, 160) ?? "",
-    alternates: {
-      languages: alternateLanguages,
-    },
+    alternates: { languages: alternateLanguages },
     openGraph: {
       title: listing.title,
       description: listing.description?.slice(0, 160) ?? "",
       type: "website",
-      images: listing.media
-        .filter((m) => m.is_cover)
-        .map((m) => ({ url: m.storage_path })),
+      images: listing.media.filter((m) => m.is_cover).map((m) => ({ url: m.storage_path })),
     },
   };
 }
@@ -69,10 +65,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
     notFound();
   }
 
-  // Record view in history (fire without blocking render)
   void recordView(listing.id);
-
-  // Fetch user's private note for this listing (null if not logged in)
   const existingNote = await getListingNote(listing.id);
 
   const jsonLd = generateListingJsonLd({
@@ -89,123 +82,132 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
   });
 
   return (
-    <main className="min-h-screen bg-[#f7fafc]">
+    <main className="min-h-screen" style={{ background: "var(--bg-deep)" }}>
       {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Image gallery with lightbox */}
-      <div className="bg-gray-100">
-        <div className="mx-auto max-w-7xl">
+      {/* Photo gallery */}
+      <div style={{ background: "var(--bg-secondary)" }}>
+        <div className="mx-auto max-w-[1320px]">
           <PhotoGallery media={listing.media} title={listing.title} />
         </div>
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-7xl px-4 py-8">
+      <div className="mx-auto max-w-[1320px] px-4 py-8">
         <div className="flex flex-col gap-8 lg:flex-row">
-          {/* Main content */}
+
+          {/* ── Main content ────────────────────────────────────── */}
           <div className="flex-1">
-            {/* Title & badges */}
-            <div className="mb-4">
-              {/* Type badges */}
-              <div className="mb-2 flex flex-wrap gap-2">
-                <span className="rounded bg-[#d4af37]/15 px-2 py-0.5 text-xs font-medium text-[#d4af37]">
-                  {tListings(listing.listing_type)}
-                </span>
-                <span className="rounded bg-[#1a365d]/10 px-2 py-0.5 text-xs font-medium text-[#1a365d]">
-                  {tListings(listing.property_type)}
-                </span>
-              </div>
-
-              {/* Agency + Reference — ligne d'identité du bien */}
-              <div className="mb-3 flex items-center gap-3 text-sm">
-                <Link
-                  href={`/a/${listing.agency_slug}`}
-                  className="flex items-center gap-1.5 font-medium text-[#1a365d] hover:underline"
-                >
-                  {listing.agency_logo_url ? (
-                    <img
-                      src={listing.agency_logo_url}
-                      alt={listing.agency_name}
-                      className="h-5 w-5 rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1a365d]/10 text-[9px] font-bold text-[#1a365d]">
-                      {listing.agency_name.charAt(0).toUpperCase()}
-                    </span>
-                  )}
-                  {listing.agency_name}
-                </Link>
-                <span className="text-gray-300">·</span>
-                <span className="font-mono text-xs text-gray-400">
-                  {formatListingRef(listing.reference_number)}
-                </span>
-              </div>
-
-              <h1 className="text-2xl font-bold text-[#2d3748] md:text-3xl">
-                {listing.title}
-              </h1>
+            {/* Type badges */}
+            <div className="mb-3 flex flex-wrap gap-2">
+              <span
+                className="rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wide"
+                style={{ background: "var(--amber-glow)", color: "var(--amber)" }}
+              >
+                {tListings(listing.listing_type)}
+              </span>
+              <span
+                className="rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wide"
+                style={{ background: "var(--cyan-ghost)", color: "var(--cyan)" }}
+              >
+                {tListings(listing.property_type)}
+              </span>
             </div>
 
+            {/* Agency + Reference */}
+            <div className="mb-3 flex items-center gap-3 text-sm">
+              <Link
+                href={`/a/${listing.agency_slug}`}
+                className="flex items-center gap-1.5 font-medium transition-colors"
+                style={{ color: "var(--cyan)" }}
+              >
+                {listing.agency_logo_url ? (
+                  <img
+                    src={listing.agency_logo_url}
+                    alt={listing.agency_name}
+                    className="h-5 w-5 rounded-full object-cover"
+                  />
+                ) : (
+                  <span
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold"
+                    style={{ background: "var(--bg-surface)", color: "var(--cyan)" }}
+                  >
+                    {listing.agency_name.charAt(0).toUpperCase()}
+                  </span>
+                )}
+                {listing.agency_name}
+              </Link>
+              <span style={{ color: "var(--border-hover)" }}>·</span>
+              <span className="font-mono text-xs" style={{ color: "var(--text-tertiary)" }}>
+                {formatListingRef(listing.reference_number)}
+              </span>
+            </div>
+
+            <h1 className="mb-4 text-2xl font-extrabold tracking-tight md:text-3xl" style={{ color: "var(--text-primary)" }}>
+              {listing.title}
+            </h1>
+
             {/* Price */}
-            <p className="mb-6 text-3xl font-bold text-[#1a365d]">
-              {formatPrice(listing.current_price, listing.currency)}
-            </p>
+            <div className="mb-6">
+              <p className="text-3xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
+                {formatPrice(listing.current_price, listing.currency)}
+              </p>
+              {listing.surface_m2 !== null && listing.surface_m2 > 0 && listing.current_price > 0 && (
+                <p className="mt-1 font-mono text-sm" style={{ color: "var(--text-tertiary)" }}>
+                  {formatPrice(Math.round(listing.current_price / listing.surface_m2), listing.currency)} / m²
+                </p>
+              )}
+            </div>
 
             {/* Property details grid */}
-            <div className="mb-6 grid grid-cols-2 gap-4 rounded-xl bg-white p-4 shadow-sm sm:grid-cols-4">
+            <div
+              className="mb-6 grid grid-cols-2 gap-4 rounded-xl border p-4 sm:grid-cols-4"
+              style={{ background: "var(--bg-card)", borderColor: "var(--border-light)" }}
+            >
               {listing.surface_m2 !== null && (
                 <div>
-                  <p className="text-xs text-[#a0aec0]">{tListings("surface")}</p>
-                  <p className="text-sm font-semibold text-[#2d3748]">
-                    {listing.surface_m2} m&sup2;
-                  </p>
-                </div>
-              )}
-              {listing.surface_m2 !== null && listing.surface_m2 > 0 && listing.current_price > 0 && (
-                <div>
-                  <p className="text-xs text-[#a0aec0]">Prix / m²</p>
-                  <p className="text-sm font-semibold text-[#2d3748]">
-                    {formatPrice(
-                      Math.round(listing.current_price / listing.surface_m2),
-                      listing.currency
-                    )}
+                  <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>{tListings("surface")}</p>
+                  <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                    {listing.surface_m2} m²
                   </p>
                 </div>
               )}
               {listing.rooms !== null && (
                 <div>
-                  <p className="text-xs text-[#a0aec0]">{tListings("rooms")}</p>
-                  <p className="text-sm font-semibold text-[#2d3748]">
+                  <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>{tListings("rooms")}</p>
+                  <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
                     {listing.rooms}
                   </p>
                 </div>
               )}
               {listing.bathrooms !== null && (
                 <div>
-                  <p className="text-xs text-[#a0aec0]">{tListings("bathrooms")}</p>
-                  <p className="text-sm font-semibold text-[#2d3748]">
+                  <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>{tListings("bathrooms")}</p>
+                  <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
                     {listing.bathrooms}
                   </p>
                 </div>
               )}
               <div>
-                <p className="text-xs text-[#a0aec0]">{tListings("wilaya")}</p>
-                <p className="text-sm font-semibold text-[#2d3748]">
-                  {listing.commune_name ? `${listing.commune_name}, ${listing.wilaya_name}` : listing.wilaya_name}
+                <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>{tListings("wilaya")}</p>
+                <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                  {listing.commune_name
+                    ? `${listing.commune_name}, ${listing.wilaya_name}`
+                    : listing.wilaya_name}
                 </p>
               </div>
             </div>
 
             {/* Description */}
             <div className="mb-6">
-              <h2 className="mb-2 text-lg font-semibold text-[#2d3748]">
+              <h2 className="mb-3 text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
                 {tListings("description_field")}
               </h2>
-              <div className="whitespace-pre-wrap text-sm leading-relaxed text-[#2d3748]">
+              <div className="whitespace-pre-wrap text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                 {listing.description}
               </div>
             </div>
@@ -213,20 +215,21 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
             {/* Details JSON */}
             {Object.keys(listing.details).length > 0 && (
               <div className="mb-6">
-                <h2 className="mb-2 text-lg font-semibold text-[#2d3748]">
+                <h2 className="mb-3 text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
                   {tListings("details")}
                 </h2>
-                <div className="grid grid-cols-2 gap-2 rounded-xl bg-white p-4 shadow-sm sm:grid-cols-3">
+                <div
+                  className="grid grid-cols-2 gap-3 rounded-xl border p-4 sm:grid-cols-3"
+                  style={{ background: "var(--bg-card)", borderColor: "var(--border-light)" }}
+                >
                   {Object.entries(listing.details).map(([key, value]) => (
                     <div key={key}>
-                      <p className="text-xs capitalize text-[#a0aec0]">
+                      <p className="text-xs capitalize" style={{ color: "var(--text-tertiary)" }}>
                         {key.replace(/_/g, " ")}
                       </p>
-                      <p className="text-sm font-medium text-[#2d3748]">
+                      <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
                         {typeof value === "boolean"
-                          ? value
-                            ? "Oui"
-                            : "Non"
+                          ? value ? "Oui" : "Non"
                           : String(value)}
                       </p>
                     </div>
@@ -236,64 +239,73 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
             )}
           </div>
 
-          {/* Sidebar */}
+          {/* ── Sidebar ─────────────────────────────────────────── */}
           <div className="w-full shrink-0 lg:w-80">
             <div className="sticky top-4 space-y-4">
-            <div className="rounded-xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                {listing.agency_logo_url ? (
-                  <img
-                    src={listing.agency_logo_url}
-                    alt={listing.agency_name}
-                    className="h-12 w-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1a365d] text-lg font-bold text-white">
-                    {listing.agency_name.charAt(0).toUpperCase()}
+
+              {/* Agency contact card */}
+              <div
+                className="rounded-xl border p-6"
+                style={{ background: "var(--bg-card)", borderColor: "var(--border-light)" }}
+              >
+                <div className="mb-5 flex items-center gap-3">
+                  {listing.agency_logo_url ? (
+                    <img
+                      src={listing.agency_logo_url}
+                      alt={listing.agency_name}
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold"
+                      style={{ background: "var(--bg-surface)", color: "var(--cyan)" }}
+                    >
+                      {listing.agency_name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="font-semibold" style={{ color: "var(--text-primary)" }}>
+                      {listing.agency_name}
+                    </h3>
+                    <Link
+                      href={`/a/${listing.agency_slug}`}
+                      className="text-xs transition-colors"
+                      style={{ color: "var(--cyan)" }}
+                    >
+                      {t("view_details")}
+                    </Link>
                   </div>
-                )}
-                <div>
-                  <h3 className="font-semibold text-[#2d3748]">
-                    {listing.agency_name}
-                  </h3>
+                </div>
+
+                {listing.agency_phone ? (
+                  <a
+                    href={`tel:${listing.agency_phone}`}
+                    className="mb-3 block w-full rounded-lg px-4 py-3 text-center text-sm font-semibold transition-opacity hover:opacity-90"
+                    style={{ background: "var(--cyan)", color: "var(--text-inverse)" }}
+                  >
+                    {t("contact_agency")}
+                  </a>
+                ) : (
                   <Link
                     href={`/a/${listing.agency_slug}`}
-                    className="text-xs text-[#d4af37] hover:underline"
+                    className="mb-3 block w-full rounded-lg px-4 py-3 text-center text-sm font-semibold transition-opacity hover:opacity-90"
+                    style={{ background: "var(--cyan)", color: "var(--text-inverse)" }}
                   >
-                    {t("view_details")}
+                    {t("contact_agency")}
                   </Link>
-                </div>
+                )}
               </div>
 
-              {listing.agency_phone && (
-                <a
-                  href={`tel:${listing.agency_phone}`}
-                  className="mb-3 block w-full rounded-lg bg-[#1a365d] px-4 py-3 text-center font-medium text-white transition-colors hover:bg-[#1a365d]/90"
-                >
-                  {t("contact_agency")}
-                </a>
+              {/* Private note */}
+              <ListingNoteWidget
+                listingId={listing.id}
+                initialContent={existingNote?.content ?? ""}
+              />
+
+              {/* Mortgage calculator */}
+              {listing.current_price > 0 && (
+                <MortgageCalculator defaultPrice={listing.current_price} />
               )}
-
-              {!listing.agency_phone && (
-                <Link
-                  href={`/a/${listing.agency_slug}`}
-                  className="mb-3 block w-full rounded-lg bg-[#1a365d] px-4 py-3 text-center font-medium text-white transition-colors hover:bg-[#1a365d]/90"
-                >
-                  {t("contact_agency")}
-                </Link>
-              )}
-            </div>
-
-            {/* Note privée */}
-            <ListingNoteWidget
-              listingId={listing.id}
-              initialContent={existingNote?.content ?? ""}
-            />
-
-            {/* Calculateur hypothécaire */}
-            {listing.current_price > 0 && (
-              <MortgageCalculator defaultPrice={listing.current_price} />
-            )}
             </div>
           </div>
         </div>
