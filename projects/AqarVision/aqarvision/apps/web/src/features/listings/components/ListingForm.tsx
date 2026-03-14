@@ -121,7 +121,7 @@ export function ListingForm({ listing, initialTab = "details" }: ListingFormProp
             >
               {PROPERTY_TYPES.map((type) => (
                 <option key={type} value={type}>
-                  {t(`property_${type}`)}
+                  {t(type)}
                 </option>
               ))}
             </select>

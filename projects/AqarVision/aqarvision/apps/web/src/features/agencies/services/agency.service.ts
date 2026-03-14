@@ -66,34 +66,31 @@ function mapInvite(row: Record<string, unknown>): InviteDto {
 
 export async function createAgency(
   supabase: SupabaseClient,
-  userId: string,
+  _userId: string,
   data: CreateAgencyInput
 ): Promise<AgencyDto> {
-  const { data: agency, error: agencyError } = await supabase
-    .from("agencies")
-    .insert({
-      name: data.name,
-      slug: data.slug,
-      description: data.description ?? null,
-      phone: data.phone ?? null,
-      email: data.email || null,
-    })
-    .select(AGENCY_SELECT)
-    .single();
-
-  if (agencyError || !agency) {
-    throw new Error(agencyError?.message ?? "Failed to create agency");
-  }
-
-  const { error: memberError } = await supabase.from("agency_memberships").insert({
-    agency_id: agency.id,
-    user_id: userId,
-    role: "owner",
-    is_active: true,
+  // Use RPC to create agency + owner membership atomically (security definer bypasses RLS)
+  const { data: agencyId, error: rpcError } = await supabase.rpc("create_agency_with_owner", {
+    p_name: data.name,
+    p_slug: data.slug,
+    p_description: data.description ?? null,
+    p_phone: data.phone ?? null,
+    p_email: data.email || null,
   });
 
-  if (memberError) {
-    throw new Error(memberError.message);
+  if (rpcError || !agencyId) {
+    throw new Error(rpcError?.message ?? "Failed to create agency");
+  }
+
+  // Fetch the created agency
+  const { data: agency, error: fetchError } = await supabase
+    .from("agencies")
+    .select(AGENCY_SELECT)
+    .eq("id", agencyId)
+    .single();
+
+  if (fetchError || !agency) {
+    throw new Error(fetchError?.message ?? "Failed to fetch created agency");
   }
 
   return mapAgency(agency);

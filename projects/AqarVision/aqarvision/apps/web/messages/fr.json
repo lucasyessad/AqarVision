@@ -189,6 +189,7 @@
     "create_title": "Creer une agence",
     "name": "Nom de l'agence",
     "slug": "Identifiant URL",
+    "slug_hint": "Utilise dans l'URL de votre agence (ex: mon-agence)",
     "description": "Description",
     "phone": "Telephone",
     "email": "Email",

@@ -2,11 +2,26 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { signUpAction, type AuthFormState } from "../actions/auth.action";
+import { signUpAction, type SignUpFormState } from "../actions/auth.action";
 
 export function SignUpForm() {
   const t = useTranslations("auth");
-  const [state, formAction, isPending] = useActionState<AuthFormState, FormData>(signUpAction, null);
+  const [state, formAction, isPending] = useActionState<SignUpFormState, FormData>(signUpAction, null);
+
+  // Show confirmation message after successful signup
+  if (state?.success && state.emailConfirmation) {
+    return (
+      <div className="rounded-lg bg-green-50 p-6 text-center">
+        <div className="mb-2 text-2xl">&#9993;</div>
+        <h3 className="mb-2 text-lg font-semibold text-green-800">
+          Vérifiez votre email
+        </h3>
+        <p className="text-sm text-green-700">
+          Un email de confirmation a été envoyé. Cliquez sur le lien pour activer votre compte.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form action={formAction} className="space-y-4">

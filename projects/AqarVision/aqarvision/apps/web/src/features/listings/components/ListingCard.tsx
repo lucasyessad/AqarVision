@@ -66,7 +66,7 @@ export function ListingCard({ listing }: ListingCardProps) {
       <div className="p-4">
         {/* Property type badge */}
         <span className="mb-1 inline-block rounded bg-[#d4af37]/15 px-2 py-0.5 text-xs font-medium text-[#d4af37]">
-          {t(`property_${listing.property_type}`)}
+          {t(listing.property_type)}
         </span>
 
         <h3 className="mb-1 truncate text-sm font-semibold text-[#2d3748]">

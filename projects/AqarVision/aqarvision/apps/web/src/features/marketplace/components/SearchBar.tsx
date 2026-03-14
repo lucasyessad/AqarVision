@@ -150,7 +150,7 @@ export function SearchBar() {
           <option value="">{t("property_type_filter")}</option>
           {PROPERTY_TYPES.map((type) => (
             <option key={type} value={type}>
-              {tListings(`property_${type}`)}
+              {tListings(type)}
             </option>
           ))}
         </select>

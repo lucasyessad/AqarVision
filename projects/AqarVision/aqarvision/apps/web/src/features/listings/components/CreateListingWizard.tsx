@@ -160,7 +160,7 @@ export function CreateListingWizard({ agencyId }: CreateListingWizardProps) {
                         : "border-gray-300 text-gray-700 hover:border-[#1a365d]"
                     }`}
                   >
-                    {t(`property_${type}`)}
+                    {t(type)}
                   </button>
                 ))}
               </div>
@@ -281,7 +281,7 @@ export function CreateListingWizard({ agencyId }: CreateListingWizardProps) {
               <div className="flex justify-between py-2">
                 <dt className="text-sm text-[#a0aec0]">{t("property_type")}</dt>
                 <dd className="text-sm font-medium text-[#2d3748]">
-                  {t(`property_${data.property_type}`)}
+                  {t(data.property_type)}
                 </dd>
               </div>
               <div className="flex justify-between py-2">

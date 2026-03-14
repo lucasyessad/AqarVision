@@ -189,6 +189,7 @@
     "create_title": "Create an agency",
     "name": "Agency name",
     "slug": "URL identifier",
+    "slug_hint": "Used in your agency URL (e.g. my-agency)",
     "description": "Description",
     "phone": "Phone",
     "email": "Email",

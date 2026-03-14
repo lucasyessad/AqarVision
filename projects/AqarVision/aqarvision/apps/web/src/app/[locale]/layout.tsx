@@ -34,7 +34,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir} className={inter.variable}>
-      <body className="min-h-screen bg-off-white font-sans">
+      <body className="min-h-screen bg-off-white font-sans" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

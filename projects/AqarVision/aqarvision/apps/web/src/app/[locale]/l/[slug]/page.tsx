@@ -144,7 +144,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                   {tListings(listing.listing_type)}
                 </span>
                 <span className="rounded bg-[#1a365d]/10 px-2 py-0.5 text-xs font-medium text-[#1a365d]">
-                  {tListings(`property_${listing.property_type}`)}
+                  {tListings(listing.property_type)}
                 </span>
               </div>
               <h1 className="text-2xl font-bold text-[#2d3748] md:text-3xl">

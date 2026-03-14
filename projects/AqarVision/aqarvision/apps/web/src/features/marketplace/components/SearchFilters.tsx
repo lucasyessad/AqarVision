@@ -168,7 +168,7 @@ export function SearchFilters({ isOpen, onToggle }: SearchFiltersProps) {
                   onChange={() => togglePropertyType(type)}
                   className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
                 />
-                {tListings(`property_${type}`)}
+                {tListings(type)}
               </label>
             ))}
           </div>

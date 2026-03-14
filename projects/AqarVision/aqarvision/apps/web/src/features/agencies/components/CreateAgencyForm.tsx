@@ -2,7 +2,7 @@
 
 import { useActionState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { createAgencyAction } from "../actions/create-agency.action";
 import type { ActionResult, AgencyDto } from "../types/agency.types";
 
@@ -18,6 +18,7 @@ function slugify(text: string): string {
 
 export function CreateAgencyForm() {
   const t = useTranslations("agencies");
+  const locale = useLocale();
   const router = useRouter();
   const slugRef = useRef<HTMLInputElement>(null);
 
@@ -28,9 +29,9 @@ export function CreateAgencyForm() {
 
   useEffect(() => {
     if (state?.success && state.data) {
-      router.push("/dashboard");
+      router.push(`/${locale}/dashboard`);
     }
-  }, [state, router]);
+  }, [state, router, locale]);
 
   const handleNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

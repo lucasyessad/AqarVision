@@ -164,7 +164,7 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                     </div>
                     <div className="p-4">
                       <span className="mb-1 inline-block rounded bg-[#d4af37]/15 px-2 py-0.5 text-xs font-medium text-[#d4af37]">
-                        {tListings(`property_${listing.property_type}`)}
+                        {tListings(listing.property_type)}
                       </span>
                       <h3 className="mb-1 truncate text-sm font-semibold text-[#2d3748]">
                         {listing.title}
