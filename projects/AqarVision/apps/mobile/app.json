@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "AqarVision",
+    "slug": "aqarvision",
+    "scheme": "aqarvision",
+    "version": "0.1.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F1B2D"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aqarvision.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F1B2D"
+      },
+      "package": "com.aqarvision.mobile"
+    },
+    "plugins": ["expo-router", "expo-secure-store"]
+  }
+}

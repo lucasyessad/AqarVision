@@ -1,0 +1,1718 @@
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<p class="p1"><span class="s1">Parfait.</span></p>
+<p class="p1"><span class="s1">Je te donne une version </span><span class="s2">très détaillée et exploitable</span><span class="s1"> des modules </span><span class="s2">M00 à M12</span><span class="s1">, pensée comme une base de travail pour un CTO, un lead dev ou Claude Code.</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">Je garde une structure constante pour chaque module :</span></p>
+<p class="p3"><span class="s3"><ul><li>
+<p class="p1"><span class="s1">objectif</span></p>
+</li><li>
+<p class="p1"><span class="s1">périmètre</span></p>
+</li><li>
+<p class="p1"><span class="s1">données</span></p>
+</li><li>
+<p class="p1"><span class="s1">logique métier</span></p>
+</li><li>
+<p class="p1"><span class="s1">API / actions</span></p>
+</li><li>
+<p class="p1"><span class="s1">UI</span></p>
+</li><li>
+<p class="p1"><span class="s1">sécurité</span></p>
+</li><li>
+<p class="p1"><span class="s1">critères d’acceptation</span></p>
+</li><li>
+<p class="p1"><span class="s1">tests</span></p>
+</li><li>
+<p class="p1"><span class="s1">dépendances</span></p>
+</li><li>
+<p class="p1"><span class="s1">risques</span></p>
+</li></ul></span></p>
+<p class="p3"><span class="s3"><hr></span></p>
+<p class="p3"><span class="s3"><h1><span class="s1">M00 — Foundations</span></h1></span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p3"><span class="s3"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">Poser les fondations techniques, structurelles et organisationnelles du produit pour éviter toute dette d’architecture dès le départ.</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p3"><span class="s3"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">Ce module ne crée pas de valeur fonctionnelle directe pour l’utilisateur final. Il structure le produit pour permettre le développement rapide, cohérent et maintenable de tous les modules suivants.</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">Il couvre :</span></p>
+<p class="p3"><span class="s3"><ul><li>
+<p class="p1"><span class="s1">monorepo</span></p>
+</li><li>
+<p class="p1"><span class="s1">conventions de code</span></p>
+</li><li>
+<p class="p1"><span class="s1">stratégie i18n</span></p>
+</li><li>
+<p class="p1"><span class="s1">design system</span></p>
+</li><li>
+<p class="p1"><span class="s1">feature flags</span></p>
+</li><li>
+<p class="p1"><span class="s1">observabilité de base</span></p>
+</li><li>
+<p class="p1"><span class="s1">stratégie environnements</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p3"><span class="s3"><h2><span class="s1">Structure cible</span></h2></span></p>
+
+
+<pre><code>apps/
+  web/
+  mobile/
+packages/
+  domain/
+  database/
+  ui-web/
+  ui-mobile/
+  security/
+  analytics/
+  feature-flags/
+  config/</code></pre>
+
+
+<p class="p1"><span class="s1"><h2><span class="s1">Décisions structurantes</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Le projet est un </span><span class="s3">modular monolith</span><span class="s2">.</span></p>
+<p class="p3"><span class="s2">Cela signifie :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">une seule application métier cohérente</span></p>
+</li><li>
+<p class="p1"><span class="s1">séparation claire des domaines</span></p>
+</li><li>
+<p class="p1"><span class="s1">base centralisée</span></p>
+</li><li>
+<p class="p1"><span class="s1">pas de microservices au départ</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Pourquoi :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">coût opérationnel plus faible</span></p>
+</li><li>
+<p class="p1"><span class="s1">vitesse d’exécution plus élevée</span></p>
+</li><li>
+<p class="p1"><span class="s1">moins de couplage réseau</span></p>
+</li><li>
+<p class="p1"><span class="s1">meilleure cohérence métier</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">i18n</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Les langues sont actives dès le départ :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">fr</span></p>
+</li><li>
+<p class="p1"><span class="s1">ar</span></p>
+</li><li>
+<p class="p1"><span class="s1">en</span></p>
+</li><li>
+<p class="p1"><span class="s1">es</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Contraintes :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">toutes les routes sont préfixées par locale</span></p>
+</li><li>
+<p class="p1"><span class="s1">l’arabe active automatiquement le RTL</span></p>
+</li><li>
+<p class="p1"><span class="s1">les composants ne doivent jamais coder des marges gauche/droite en dur</span></p>
+</li><li>
+<p class="p1"><span class="s1">tous les textes statiques passent par un système de traduction</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Feature flags</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Un registre central permet d’activer ou désactiver :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">billing</span></p>
+</li><li>
+<p class="p1"><span class="s1">IA premium</span></p>
+</li><li>
+<p class="p1"><span class="s1">analytics premium</span></p>
+</li><li>
+<p class="p1"><span class="s1">maps premium</span></p>
+</li><li>
+<p class="p1"><span class="s1">push premium</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Observabilité de base</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Dès M00 :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">logs structurés</span></p>
+</li><li>
+<p class="p1"><span class="s1">corrélation des requêtes</span></p>
+</li><li>
+<p class="p1"><span class="s1">suivi erreurs runtime</span></p>
+</li><li>
+<p class="p1"><span class="s1">health checks</span></p>
+</li><li>
+<p class="p1"><span class="s1">environment validation au démarrage</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Livrables</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">structure repo figée</span></p>
+</li><li>
+<p class="p1"><span class="s1">conventions de dossiers</span></p>
+</li><li>
+<p class="p1"><span class="s1">stratégie noms de fichiers</span></p>
+</li><li>
+<p class="p1"><span class="s1">conventions TypeScript</span></p>
+</li><li>
+<p class="p1"><span class="s1">conventions Zod</span></p>
+</li><li>
+<p class="p1"><span class="s1">tokens design</span></p>
+</li><li>
+<p class="p1"><span class="s1">config i18n</span></p>
+</li><li>
+<p class="p1"><span class="s1">registre feature flags</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">la structure du repo est figée</span></p>
+</li><li>
+<p class="p1"><span class="s1">aucune feature future ne doit nécessiter de refonte du socle</span></p>
+</li><li>
+<p class="p1"><span class="s1">les 4 langues sont supportées</span></p>
+</li><li>
+<p class="p1"><span class="s1">le support RTL est validé</span></p>
+</li><li>
+<p class="p1"><span class="s1">le système de flags fonctionne</span></p>
+</li><li>
+<p class="p1"><span class="s1">les environnements sont clairement séparés</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">validation chargement locale</span></p>
+</li><li>
+<p class="p1"><span class="s1">test RTL visuel</span></p>
+</li><li>
+<p class="p1"><span class="s1">test fallback de traduction</span></p>
+</li><li>
+<p class="p1"><span class="s1">test lecture flags</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Aucune.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">sous-estimer l’impact du RTL</span></p>
+</li><li>
+<p class="p1"><span class="s1">multiplier les conventions contradictoires</span></p>
+</li><li>
+<p class="p1"><span class="s1">ne pas figer le monorepo assez tôt</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M01 — Auth &amp; Identity</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Fournir un système d’identité robuste pour :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">utilisateurs finaux</span></p>
+</li><li>
+<p class="p1"><span class="s1">agents</span></p>
+</li><li>
+<p class="p1"><span class="s1">administrateurs d’agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">super admins plateforme</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">authentification web</span></p>
+</li><li>
+<p class="p1"><span class="s1">authentification mobile</span></p>
+</li><li>
+<p class="p1"><span class="s1">profils utilisateurs</span></p>
+</li><li>
+<p class="p1"><span class="s1">rôles globaux</span></p>
+</li><li>
+<p class="p1"><span class="s1">préférences utilisateur</span></p>
+</li><li>
+<p class="p1"><span class="s1">gestion appareils mobiles</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Tables principales :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">users</span></p>
+</li><li>
+<p class="p1"><span class="s1">mobile_devices</span></p>
+</li><li>
+<p class="p1"><span class="s1">push_tokens</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Modèle d’identité</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Deux niveaux d’identité :</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h3><span class="s1">Identité globale</span></h3></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Qui est l’utilisateur dans la plateforme ?</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">id</span></p>
+</li><li>
+<p class="p1"><span class="s1">full_name</span></p>
+</li><li>
+<p class="p1"><span class="s1">phone</span></p>
+</li><li>
+<p class="p1"><span class="s1">avatar</span></p>
+</li><li>
+<p class="p1"><span class="s1">role global</span></p>
+</li><li>
+<p class="p1"><span class="s1">preferred_locale</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h3><span class="s1">Identité contextuelle</span></h3></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Quel rôle a-t-il dans une agence donnée ?</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Cette partie est gérée dans </span><span class="s4">agency_memberships</span><span class="s2">, pas dans </span><span class="s4">users</span><span class="s2">.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Logique métier</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Un utilisateur peut :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">être simple utilisateur marketplace</span></p>
+</li><li>
+<p class="p1"><span class="s1">être membre d’une ou plusieurs agences</span></p>
+</li><li>
+<p class="p1"><span class="s1">être propriétaire d’une agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">être super admin système</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Auth web</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">auth SSR</span></p>
+</li><li>
+<p class="p1"><span class="s1">cookie sécurisé</span></p>
+</li><li>
+<p class="p1"><span class="s1">session côté serveur</span></p>
+</li><li>
+<p class="p1"><span class="s1">middleware d’accès par rôle</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Auth mobile</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">PKCE</span></p>
+</li><li>
+<p class="p1"><span class="s1">stockage sécurisé des tokens</span></p>
+</li><li>
+<p class="p1"><span class="s1">rafraîchissement transparent</span></p>
+</li><li>
+<p class="p1"><span class="s1">association device/session</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">signUp</span></p>
+</li><li>
+<p class="p1"><span class="s1">signIn</span></p>
+</li><li>
+<p class="p1"><span class="s1">signOut</span></p>
+</li><li>
+<p class="p1"><span class="s1">updateProfile</span></p>
+</li><li>
+<p class="p1"><span class="s1">updatePreferredLocale</span></p>
+</li><li>
+<p class="p1"><span class="s1">registerMobileDevice</span></p>
+</li><li>
+<p class="p1"><span class="s1">revokePushToken</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">page login</span></p>
+</li><li>
+<p class="p1"><span class="s1">page sign up</span></p>
+</li><li>
+<p class="p1"><span class="s1">page profil</span></p>
+</li><li>
+<p class="p1"><span class="s1">page préférences</span></p>
+</li><li>
+<p class="p1"><span class="s1">gestion langue utilisateur</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">aucune donnée sensible exposée au client</span></p>
+</li><li>
+<p class="p1"><span class="s1">contrôle d’accès côté serveur</span></p>
+</li><li>
+<p class="p1"><span class="s1">pas de logique de rôle uniquement côté frontend</span></p>
+</li><li>
+<p class="p1"><span class="s1">protection brute force à prévoir</span></p>
+</li><li>
+<p class="p1"><span class="s1">logs auth à ajouter en prod</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">un utilisateur peut se connecter sur web et mobile</span></p>
+</li><li>
+<p class="p1"><span class="s1">la locale préférée est conservée</span></p>
+</li><li>
+<p class="p1"><span class="s1">les rôles globaux sont interprétés correctement</span></p>
+</li><li>
+<p class="p1"><span class="s1">un token mobile peut être révoqué</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">signup</span></p>
+</li><li>
+<p class="p1"><span class="s1">login/logout</span></p>
+</li><li>
+<p class="p1"><span class="s1">récupération session</span></p>
+</li><li>
+<p class="p1"><span class="s1">changement locale</span></p>
+</li><li>
+<p class="p1"><span class="s1">comportement utilisateur non authentifié</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M00</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">confusion entre rôle global et rôle agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">dépendance trop forte à la session frontend</span></p>
+</li><li>
+<p class="p1"><span class="s1">mauvaise gestion des tokens mobile</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M02 — Agencies, Branches &amp; Team</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Modéliser l’organisation professionnelle.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">branches multi-villes</span></p>
+</li><li>
+<p class="p1"><span class="s1">équipe</span></p>
+</li><li>
+<p class="p1"><span class="s1">invitations</span></p>
+</li><li>
+<p class="p1"><span class="s1">rôles agence</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">agencies</span></p>
+</li><li>
+<p class="p1"><span class="s1">agency_branches</span></p>
+</li><li>
+<p class="p1"><span class="s1">agency_memberships</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Modèle métier</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Une agence peut :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">avoir plusieurs branches</span></p>
+</li><li>
+<p class="p1"><span class="s1">être présente dans plusieurs wilayas</span></p>
+</li><li>
+<p class="p1"><span class="s1">avoir plusieurs membres</span></p>
+</li><li>
+<p class="p1"><span class="s1">attribuer des rôles différents selon les utilisateurs</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Rôles</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">owner</span></p>
+</li><li>
+<p class="p1"><span class="s1">admin</span></p>
+</li><li>
+<p class="p1"><span class="s1">agent</span></p>
+</li><li>
+<p class="p1"><span class="s1">editor</span></p>
+</li><li>
+<p class="p1"><span class="s1">viewer</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Règles métier</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">une agence a au moins un owner</span></p>
+</li><li>
+<p class="p1"><span class="s1">une branche appartient à une seule agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">un utilisateur peut appartenir à plusieurs agences</span></p>
+</li><li>
+<p class="p1"><span class="s1">les permissions dépendent du couple </span><span class="s2">(user_id, agency_id)</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">createAgency</span></p>
+</li><li>
+<p class="p1"><span class="s1">updateAgency</span></p>
+</li><li>
+<p class="p1"><span class="s1">createBranch</span></p>
+</li><li>
+<p class="p1"><span class="s1">updateBranch</span></p>
+</li><li>
+<p class="p1"><span class="s1">inviteMember</span></p>
+</li><li>
+<p class="p1"><span class="s1">changeMembershipRole</span></p>
+</li><li>
+<p class="p1"><span class="s1">deactivateMembership</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">création agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">gestion branches</span></p>
+</li><li>
+<p class="p1"><span class="s1">liste des membres</span></p>
+</li><li>
+<p class="p1"><span class="s1">gestion rôles</span></p>
+</li><li>
+<p class="p1"><span class="s1">écran d’invitation</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">seule une personne autorisée peut modifier l’agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">un viewer ne peut pas éditer</span></p>
+</li><li>
+<p class="p1"><span class="s1">un admin ne peut pas usurper une autre agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">toute lecture/écriture doit être limitée au périmètre </span><span class="s2">agency_id</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">une agence peut avoir plusieurs branches</span></p>
+</li><li>
+<p class="p1"><span class="s1">les rôles sont effectifs</span></p>
+</li><li>
+<p class="p1"><span class="s1">l’isolation inter-agence est totale</span></p>
+</li><li>
+<p class="p1"><span class="s1">un owner peut administrer les membres</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">création agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">ajout branche</span></p>
+</li><li>
+<p class="p1"><span class="s1">rôle owner/admin/agent/viewer</span></p>
+</li><li>
+<p class="p1"><span class="s1">accès illégal interdit</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M00, M01</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">permissions ambiguës</span></p>
+</li><li>
+<p class="p1"><span class="s1">confusion entre branch-level et agency-level</span></p>
+</li><li>
+<p class="p1"><span class="s1">erreurs RLS sur memberships</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M03 — Listings Core</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Créer le cœur du produit : la gestion d’annonces.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">création annonce</span></p>
+</li><li>
+<p class="p1"><span class="s1">édition</span></p>
+</li><li>
+<p class="p1"><span class="s1">brouillon</span></p>
+</li><li>
+<p class="p1"><span class="s1">publication</span></p>
+</li><li>
+<p class="p1"><span class="s1">archivage</span></p>
+</li><li>
+<p class="p1"><span class="s1">documents métier</span></p>
+</li><li>
+<p class="p1"><span class="s1">traductions</span></p>
+</li><li>
+<p class="p1"><span class="s1">historisation</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">listings</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_translations</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_documents</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_price_versions</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_status_versions</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_revisions</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_publication_history</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Modèle métier</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s4">listings</span><span class="s2"> contient l’état courant.</span></p>
+<p class="p3"><span class="s2">L’historique détaillé est géré à côté.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">C’est fondamental :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">la table courante sert aux lectures rapides</span></p>
+</li><li>
+<p class="p1"><span class="s1">les tables historiques servent à l’analyse et à la traçabilité</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Champs clés</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p4"><span class="s2">Dans </span><span class="s4">listings</span><span class="s2"> :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">agency_id</span></p>
+</li><li>
+<p class="p1"><span class="s1">branch_id</span></p>
+</li><li>
+<p class="p1"><span class="s1">current_price</span></p>
+</li><li>
+<p class="p1"><span class="s1">current_status</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_type</span></p>
+</li><li>
+<p class="p1"><span class="s1">property_type</span></p>
+</li><li>
+<p class="p1"><span class="s1">surface_m2</span></p>
+</li><li>
+<p class="p1"><span class="s1">rooms</span></p>
+</li><li>
+<p class="p1"><span class="s1">bathrooms</span></p>
+</li><li>
+<p class="p1"><span class="s1">wilaya_code</span></p>
+</li><li>
+<p class="p1"><span class="s1">commune_id</span></p>
+</li><li>
+<p class="p1"><span class="s1">location</span></p>
+</li><li>
+<p class="p1"><span class="s1">details jsonb</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Traductions</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p4"><span class="s2">Dans </span><span class="s4">listing_translations</span><span class="s2"> :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">locale</span></p>
+</li><li>
+<p class="p1"><span class="s1">title</span></p>
+</li><li>
+<p class="p1"><span class="s1">description</span></p>
+</li><li>
+<p class="p1"><span class="s1">slug</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Contraintes :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">4 locales</span></p>
+</li><li>
+<p class="p1"><span class="s1">slug unique par locale</span></p>
+</li><li>
+<p class="p1"><span class="s1">une annonce n’est publiable que si les 4 versions existent</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Historisation hybride</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h3><span class="s1">SCD2</span></h3></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">prix</span></p>
+</li><li>
+<p class="p1"><span class="s1">statut</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h3><span class="s1">Révisions</span></h3></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">snapshots des changements métier importants</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h3><span class="s1">Event history</span></h3></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">publication / dépublication</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">createListing</span></p>
+</li><li>
+<p class="p1"><span class="s1">updateListingCore</span></p>
+</li><li>
+<p class="p1"><span class="s1">updateListingTranslation</span></p>
+</li><li>
+<p class="p1"><span class="s1">attachDocument</span></p>
+</li><li>
+<p class="p1"><span class="s1">publishListing</span></p>
+</li><li>
+<p class="p1"><span class="s1">pauseListing</span></p>
+</li><li>
+<p class="p1"><span class="s1">archiveListing</span></p>
+</li><li>
+<p class="p1"><span class="s1">changeListingPrice</span></p>
+</li><li>
+<p class="p1"><span class="s1">changeListingStatus</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Règles métier critiques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">impossible de publier sans contenu minimum</span></p>
+</li><li>
+<p class="p1"><span class="s1">impossible de publier sans cover média</span></p>
+</li><li>
+<p class="p1"><span class="s1">impossible de publier sans 4 traductions</span></p>
+</li><li>
+<p class="p1"><span class="s1">un changement de prix ferme la version courante et en ouvre une nouvelle</span></p>
+</li><li>
+<p class="p1"><span class="s1">un changement de statut fait la même chose</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">wizard création bien</span></p>
+</li><li>
+<p class="p1"><span class="s1">formulaire édition</span></p>
+</li><li>
+<p class="p1"><span class="s1">éditeur de traduction par langue</span></p>
+</li><li>
+<p class="p1"><span class="s1">prévisualisation annonce</span></p>
+</li><li>
+<p class="p1"><span class="s1">indicateurs de complétude</span></p>
+</li><li>
+<p class="p1"><span class="s1">actions publier / pause / archive</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">seules les personnes autorisées de l’agence peuvent modifier</span></p>
+</li><li>
+<p class="p1"><span class="s1">les documents juridiques restent privés</span></p>
+</li><li>
+<p class="p1"><span class="s1">aucune annonce non publiée n’est visible publiquement</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">création brouillon</span></p>
+</li><li>
+<p class="p1"><span class="s1">sauvegarde partielle</span></p>
+</li><li>
+<p class="p1"><span class="s1">publication conforme</span></p>
+</li><li>
+<p class="p1"><span class="s1">historique prix/statut fiable</span></p>
+</li><li>
+<p class="p1"><span class="s1">slugs cohérents par langue</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">création annonce</span></p>
+</li><li>
+<p class="p1"><span class="s1">édition partielle</span></p>
+</li><li>
+<p class="p1"><span class="s1">publication refusée si incomplet</span></p>
+</li><li>
+<p class="p1"><span class="s1">changement prix</span></p>
+</li><li>
+<p class="p1"><span class="s1">changement statut</span></p>
+</li><li>
+<p class="p1"><span class="s1">lecture publique seulement si published</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M00, M01, M02</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">trop de logique dans </span><span class="s2">details</span></p>
+</li><li>
+<p class="p1"><span class="s1">publication non atomique</span></p>
+</li><li>
+<p class="p1"><span class="s1">incohérence entre listing courant et historique</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M04 — Media &amp; Storage</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Gérer les médias d’annonce de manière performante et sécurisée.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">upload image</span></p>
+</li><li>
+<p class="p1"><span class="s1">cover</span></p>
+</li><li>
+<p class="p1"><span class="s1">ordre d’affichage</span></p>
+</li><li>
+<p class="p1"><span class="s1">suppression</span></p>
+</li><li>
+<p class="p1"><span class="s1">historique média</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">listing_media</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_media_history</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Logique métier</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Une annonce peut avoir plusieurs médias.</span></p>
+<p class="p3"><span class="s2">Un seul média est cover.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">getSignedUploadUrl</span></p>
+</li><li>
+<p class="p1"><span class="s1">finalizeMediaUpload</span></p>
+</li><li>
+<p class="p1"><span class="s1">reorderMedia</span></p>
+</li><li>
+<p class="p1"><span class="s1">setCoverMedia</span></p>
+</li><li>
+<p class="p1"><span class="s1">deleteMedia</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Règles métier</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">nombre max de médias configurable</span></p>
+</li><li>
+<p class="p1"><span class="s1">un seul cover</span></p>
+</li><li>
+<p class="p1"><span class="s1">suppression tracée dans l’historique</span></p>
+</li><li>
+<p class="p1"><span class="s1">ordre stable</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">drag &amp; drop</span></p>
+</li><li>
+<p class="p1"><span class="s1">upload multiple</span></p>
+</li><li>
+<p class="p1"><span class="s1">reordering</span></p>
+</li><li>
+<p class="p1"><span class="s1">cover picker</span></p>
+</li><li>
+<p class="p1"><span class="s1">preview</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">upload via URL signée uniquement</span></p>
+</li><li>
+<p class="p1"><span class="s1">validation type/taille</span></p>
+</li><li>
+<p class="p1"><span class="s1">bucket privé</span></p>
+</li><li>
+<p class="p1"><span class="s1">aucune URL publique permanente pour contenu sensible</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">upload contrôlé</span></p>
+</li><li>
+<p class="p1"><span class="s1">cover unique</span></p>
+</li><li>
+<p class="p1"><span class="s1">ordre persistant</span></p>
+</li><li>
+<p class="p1"><span class="s1">suppression tracée</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">upload succès/échec</span></p>
+</li><li>
+<p class="p1"><span class="s1">cover switch</span></p>
+</li><li>
+<p class="p1"><span class="s1">reorder</span></p>
+</li><li>
+<p class="p1"><span class="s1">suppression non autorisée refusée</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M03</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">fuites storage</span></p>
+</li><li>
+<p class="p1"><span class="s1">incohérence ordre/cover</span></p>
+</li><li>
+<p class="p1"><span class="s1">coûts de bande passante non contrôlés</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M05 — Marketplace Search &amp; SEO</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Créer le moteur public de découverte.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">recherche filtrée</span></p>
+</li><li>
+<p class="p1"><span class="s1">recherche géographique</span></p>
+</li><li>
+<p class="p1"><span class="s1">page annonce</span></p>
+</li><li>
+<p class="p1"><span class="s1">page agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">SEO multilingue</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">listings</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_translations</span></p>
+</li><li>
+<p class="p1"><span class="s1">favorites</span></p>
+</li><li>
+<p class="p1"><span class="s1">saved_searches</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_views</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Recherche</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Filtres :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">listing_type</span></p>
+</li><li>
+<p class="p1"><span class="s1">property_type</span></p>
+</li><li>
+<p class="p1"><span class="s1">wilaya</span></p>
+</li><li>
+<p class="p1"><span class="s1">commune</span></p>
+</li><li>
+<p class="p1"><span class="s1">quartier</span></p>
+</li><li>
+<p class="p1"><span class="s1">prix min/max</span></p>
+</li><li>
+<p class="p1"><span class="s1">surface min/max</span></p>
+</li><li>
+<p class="p1"><span class="s1">rooms</span></p>
+</li><li>
+<p class="p1"><span class="s1">détails métier</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Géospatial</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Recherche par :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">bounding box</span></p>
+</li><li>
+<p class="p1"><span class="s1">rayon</span></p>
+</li><li>
+<p class="p1"><span class="s1">proximité</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">SEO</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">pages ville/type/transaction</span></p>
+</li><li>
+<p class="p1"><span class="s1">pages commune/type/transaction</span></p>
+</li><li>
+<p class="p1"><span class="s1">pages annonces</span></p>
+</li><li>
+<p class="p1"><span class="s1">pages agences</span></p>
+</li><li>
+<p class="p1"><span class="s1">hreflang</span></p>
+</li><li>
+<p class="p1"><span class="s1">canonical</span></p>
+</li><li>
+<p class="p1"><span class="s1">sitemap</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">searchListings</span></p>
+</li><li>
+<p class="p1"><span class="s1">getListingBySlug</span></p>
+</li><li>
+<p class="p1"><span class="s1">getAgencyPublicProfile</span></p>
+</li><li>
+<p class="p1"><span class="s1">saveSearch</span></p>
+</li><li>
+<p class="p1"><span class="s1">addFavorite</span></p>
+</li><li>
+<p class="p1"><span class="s1">removeFavorite</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">grille résultats</span></p>
+</li><li>
+<p class="p1"><span class="s1">vue carte</span></p>
+</li><li>
+<p class="p1"><span class="s1">filtres sticky</span></p>
+</li><li>
+<p class="p1"><span class="s1">cards localisées</span></p>
+</li><li>
+<p class="p1"><span class="s1">page détail riche</span></p>
+</li><li>
+<p class="p1"><span class="s1">page agence</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">seules les annonces published sont publiques</span></p>
+</li><li>
+<p class="p1"><span class="s1">coordonnées exactes peuvent être limitées selon stratégie</span></p>
+</li><li>
+<p class="p1"><span class="s1">protection anti-scraping à prévoir</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">recherche rapide</span></p>
+</li><li>
+<p class="p1"><span class="s1">SEO propre</span></p>
+</li><li>
+<p class="p1"><span class="s1">pages localisées</span></p>
+</li><li>
+<p class="p1"><span class="s1">affichage cohérent multilingue</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">filtres cumulés</span></p>
+</li><li>
+<p class="p1"><span class="s1">pagination</span></p>
+</li><li>
+<p class="p1"><span class="s1">slug par langue</span></p>
+</li><li>
+<p class="p1"><span class="s1">hreflang</span></p>
+</li><li>
+<p class="p1"><span class="s1">visibilité publique limitée aux annonces publiées</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M03, M04</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">explosion SEO mal contrôlée</span></p>
+</li><li>
+<p class="p1"><span class="s1">requêtes PostGIS coûteuses</span></p>
+</li><li>
+<p class="p1"><span class="s1">duplication de pages entre langues</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M06 — Leads &amp; Messaging</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Transformer l’intérêt en contact exploitable.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">génération de leads</span></p>
+</li><li>
+<p class="p1"><span class="s1">conversations</span></p>
+</li><li>
+<p class="p1"><span class="s1">messages</span></p>
+</li><li>
+<p class="p1"><span class="s1">notifications</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">leads</span></p>
+</li><li>
+<p class="p1"><span class="s1">conversations</span></p>
+</li><li>
+<p class="p1"><span class="s1">messages</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Logique métier</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Un lead est créé depuis une annonce.</span></p>
+<p class="p3"><span class="s2">Une conversation est ouverte autour du lead.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">createLead</span></p>
+</li><li>
+<p class="p1"><span class="s1">openConversationFromLead</span></p>
+</li><li>
+<p class="p1"><span class="s1">sendMessage</span></p>
+</li><li>
+<p class="p1"><span class="s1">listThreads</span></p>
+</li><li>
+<p class="p1"><span class="s1">listMessages</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">CTA contact</span></p>
+</li><li>
+<p class="p1"><span class="s1">formulaire lead</span></p>
+</li><li>
+<p class="p1"><span class="s1">messagerie agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">messagerie utilisateur</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">accès uniquement aux participants</span></p>
+</li><li>
+<p class="p1"><span class="s1">isolation agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">protection anti-spam à prévoir</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">lead créé</span></p>
+</li><li>
+<p class="p1"><span class="s1">conversation liée</span></p>
+</li><li>
+<p class="p1"><span class="s1">messages lisibles et persistants</span></p>
+</li><li>
+<p class="p1"><span class="s1">accès interdit hors participants</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">lead &gt; conversation</span></p>
+</li><li>
+<p class="p1"><span class="s1">envoi message</span></p>
+</li><li>
+<p class="p1"><span class="s1">refus accès non autorisé</span></p>
+</li><li>
+<p class="p1"><span class="s1">thread list correcte</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M01, M03, M05</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">duplication leads</span></p>
+</li><li>
+<p class="p1"><span class="s1">permissions conversation mal gérées</span></p>
+</li><li>
+<p class="p1"><span class="s1">spam</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M07 — User Favorites &amp; Alerts</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Améliorer la rétention et le retour utilisateur.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">favoris</span></p>
+</li><li>
+<p class="p1"><span class="s1">notes privées</span></p>
+</li><li>
+<p class="p1"><span class="s1">recherches sauvegardées</span></p>
+</li><li>
+<p class="p1"><span class="s1">alertes futures</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">favorites</span></p>
+</li><li>
+<p class="p1"><span class="s1">notes</span></p>
+</li><li>
+<p class="p1"><span class="s1">saved_searches</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">toggleFavorite</span></p>
+</li><li>
+<p class="p1"><span class="s1">createNote</span></p>
+</li><li>
+<p class="p1"><span class="s1">updateNote</span></p>
+</li><li>
+<p class="p1"><span class="s1">saveSearch</span></p>
+</li><li>
+<p class="p1"><span class="s1">deleteSavedSearch</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">cœur favoris</span></p>
+</li><li>
+<p class="p1"><span class="s1">notes perso sur fiche</span></p>
+</li><li>
+<p class="p1"><span class="s1">sauvegarde recherche</span></p>
+</li><li>
+<p class="p1"><span class="s1">écran “mes favoris”</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">données strictement personnelles</span></p>
+</li><li>
+<p class="p1"><span class="s1">aucune visibilité croisée</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">un utilisateur retrouve ses favoris</span></p>
+</li><li>
+<p class="p1"><span class="s1">notes privées non exposées</span></p>
+</li><li>
+<p class="p1"><span class="s1">recherches sauvegardées persistantes</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">CRUD favoris</span></p>
+</li><li>
+<p class="p1"><span class="s1">CRUD notes</span></p>
+</li><li>
+<p class="p1"><span class="s1">CRUD saved searches</span></p>
+</li><li>
+<p class="p1"><span class="s1">isolation user stricte</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M01, M05</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">confusion entre données privées et publiques</span></p>
+</li><li>
+<p class="p1"><span class="s1">complexité alertes future</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M08 — Billing &amp; Stripe</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Monétiser proprement sans polluer l’architecture métier.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">plans</span></p>
+</li><li>
+<p class="p1"><span class="s1">abonnements</span></p>
+</li><li>
+<p class="p1"><span class="s1">quotas</span></p>
+</li><li>
+<p class="p1"><span class="s1">entitlements</span></p>
+</li><li>
+<p class="p1"><span class="s1">portail billing</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">plans</span></p>
+</li><li>
+<p class="p1"><span class="s1">subscriptions</span></p>
+</li><li>
+<p class="p1"><span class="s1">feature_flags</span></p>
+</li><li>
+<p class="p1"><span class="s1">agency_feature_entitlements</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Logique métier</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Le billing détermine :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">nombre max d’annonces</span></p>
+</li><li>
+<p class="p1"><span class="s1">quotas IA</span></p>
+</li><li>
+<p class="p1"><span class="s1">accès thèmes premium</span></p>
+</li><li>
+<p class="p1"><span class="s1">accès fonctionnalités avancées</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">startCheckout</span></p>
+</li><li>
+<p class="p1"><span class="s1">handleWebhook</span></p>
+</li><li>
+<p class="p1"><span class="s1">openBillingPortal</span></p>
+</li><li>
+<p class="p1"><span class="s1">syncSubscriptionState</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">page pricing</span></p>
+</li><li>
+<p class="p1"><span class="s1">page abonnement agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">usage/quota</span></p>
+</li><li>
+<p class="p1"><span class="s1">upgrade CTA</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">vérification signature webhook</span></p>
+</li><li>
+<p class="p1"><span class="s1">aucune logique de paiement côté client</span></p>
+</li><li>
+<p class="p1"><span class="s1">état final basé sur webhook validé</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">upgrade/downgrade cohérents</span></p>
+</li><li>
+<p class="p1"><span class="s1">quotas appliqués</span></p>
+</li><li>
+<p class="p1"><span class="s1">activation entitlement correcte</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">webhook idempotent</span></p>
+</li><li>
+<p class="p1"><span class="s1">upgrade plan</span></p>
+</li><li>
+<p class="p1"><span class="s1">dépassement quota</span></p>
+</li><li>
+<p class="p1"><span class="s1">plan expiré</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M02, M03</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">incohérence entre état Stripe et état interne</span></p>
+</li><li>
+<p class="p1"><span class="s1">erreurs webhooks</span></p>
+</li><li>
+<p class="p1"><span class="s1">règles quota mal appliquées</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M09 — AI Assistant</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Rendre la production d’annonces plus rapide et plus qualitative.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">génération description</span></p>
+</li><li>
+<p class="p1"><span class="s1">traduction</span></p>
+</li><li>
+<p class="p1"><span class="s1">enrichissement</span></p>
+</li><li>
+<p class="p1"><span class="s1">classification</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">ai_prompts</span></p>
+</li><li>
+<p class="p1"><span class="s1">ai_jobs</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Cas d’usage</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">générer description pro à partir de points clés</span></p>
+</li><li>
+<p class="p1"><span class="s1">traduire FR → AR/EN/ES</span></p>
+</li><li>
+<p class="p1"><span class="s1">enrichir le texte</span></p>
+</li><li>
+<p class="p1"><span class="s1">harmoniser ton commercial</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">generateListingDescription</span></p>
+</li><li>
+<p class="p1"><span class="s1">translateListing</span></p>
+</li><li>
+<p class="p1"><span class="s1">enrichListingText</span></p>
+</li><li>
+<p class="p1"><span class="s1">classifyListingContent</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">pas de contexte cross-tenant</span></p>
+</li><li>
+<p class="p1"><span class="s1">prompts versionnés</span></p>
+</li><li>
+<p class="p1"><span class="s1">sorties validées</span></p>
+</li><li>
+<p class="p1"><span class="s1">quotas par agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">coût journalisé</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">bouton générer</span></p>
+</li><li>
+<p class="p1"><span class="s1">aperçu diff</span></p>
+</li><li>
+<p class="p1"><span class="s1">accept / reject</span></p>
+</li><li>
+<p class="p1"><span class="s1">régénération</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">contenu généré exploitable</span></p>
+</li><li>
+<p class="p1"><span class="s1">coûts traçables</span></p>
+</li><li>
+<p class="p1"><span class="s1">quotas appliqués</span></p>
+</li><li>
+<p class="p1"><span class="s1">validation humaine possible</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">job création</span></p>
+</li><li>
+<p class="p1"><span class="s1">output validation</span></p>
+</li><li>
+<p class="p1"><span class="s1">quota usage</span></p>
+</li><li>
+<p class="p1"><span class="s1">traduction 4 langues</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M03</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">coût non maîtrisé</span></p>
+</li><li>
+<p class="p1"><span class="s1">qualité incohérente</span></p>
+</li><li>
+<p class="p1"><span class="s1">hallucinations</span></p>
+</li><li>
+<p class="p1"><span class="s1">dépendance fournisseur</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M10 — Moderation &amp; Admin</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Assurer la confiance plateforme.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">signalements</span></p>
+</li><li>
+<p class="p1"><span class="s1">modération</span></p>
+</li><li>
+<p class="p1"><span class="s1">supervision</span></p>
+</li><li>
+<p class="p1"><span class="s1">audit admin</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">reports</span></p>
+</li><li>
+<p class="p1"><span class="s1">moderation_actions</span></p>
+</li><li>
+<p class="p1"><span class="s1">audit_logs</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Logique métier</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Toute action de modération doit être traçable.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">reportListing</span></p>
+</li><li>
+<p class="p1"><span class="s1">listReports</span></p>
+</li><li>
+<p class="p1"><span class="s1">moderateReport</span></p>
+</li><li>
+<p class="p1"><span class="s1">hideListing</span></p>
+</li><li>
+<p class="p1"><span class="s1">restoreListing</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">bouton signaler</span></p>
+</li><li>
+<p class="p1"><span class="s1">inbox modération</span></p>
+</li><li>
+<p class="p1"><span class="s1">historique actions admin</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">accès réservé admin</span></p>
+</li><li>
+<p class="p1"><span class="s1">audit obligatoire</span></p>
+</li><li>
+<p class="p1"><span class="s1">restauration contrôlée</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">signalement exploitable</span></p>
+</li><li>
+<p class="p1"><span class="s1">action admin tracée</span></p>
+</li><li>
+<p class="p1"><span class="s1">annonce masquée correctement</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">report workflow</span></p>
+</li><li>
+<p class="p1"><span class="s1">hide/restore</span></p>
+</li><li>
+<p class="p1"><span class="s1">audit trail</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M03, M05</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">modération non traçable</span></p>
+</li><li>
+<p class="p1"><span class="s1">actions admin irréversibles</span></p>
+</li><li>
+<p class="p1"><span class="s1">abus de masquage</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M11 — Analytics &amp; Events</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Préparer l’intelligence produit et la data company.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">vues</span></p>
+</li><li>
+<p class="p1"><span class="s1">taxonomie événements</span></p>
+</li><li>
+<p class="p1"><span class="s1">outbox</span></p>
+</li><li>
+<p class="p1"><span class="s1">agrégations futures</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Données</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">listing_views</span></p>
+</li><li>
+<p class="p1"><span class="s1">domain_events</span></p>
+</li><li>
+<p class="p1"><span class="s1">audit_logs</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Logique métier</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Chaque événement utile doit être modélisé :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">listing_created</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_published</span></p>
+</li><li>
+<p class="p1"><span class="s1">price_changed</span></p>
+</li><li>
+<p class="p1"><span class="s1">listing_viewed</span></p>
+</li><li>
+<p class="p1"><span class="s1">favorite_added</span></p>
+</li><li>
+<p class="p1"><span class="s1">lead_received</span></p>
+</li><li>
+<p class="p1"><span class="s1">message_sent</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">API / actions</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Pas forcément exposées directement.</span></p>
+<p class="p3"><span class="s2">Souvent alimentées par triggers ou services internes.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">UI</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">dashboard simple agence</span></p>
+</li><li>
+<p class="p1"><span class="s1">vues annonce</span></p>
+</li><li>
+<p class="p1"><span class="s1">leads générés</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">analytics par agence cloisonnées</span></p>
+</li><li>
+<p class="p1"><span class="s1">événements sensibles non exposés publiquement</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">événements cohérents</span></p>
+</li><li>
+<p class="p1"><span class="s1">payloads stables</span></p>
+</li><li>
+<p class="p1"><span class="s1">base future warehouse prête</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">émission sur action critique</span></p>
+</li><li>
+<p class="p1"><span class="s1">cohérence noms/payloads</span></p>
+</li><li>
+<p class="p1"><span class="s1">non duplication excessive</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">M03, M05, M06</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">événements non standardisés</span></p>
+</li><li>
+<p class="p1"><span class="s1">bruit analytique</span></p>
+</li><li>
+<p class="p1"><span class="s1">absence de versioning taxonomie</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p1"><span class="s1"><h1><span class="s1">M12 — Deployment &amp; Operations</span></h1></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Objectif</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Industrialiser la mise en production.</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Périmètre</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">CI/CD</span></p>
+</li><li>
+<p class="p1"><span class="s1">monitoring</span></p>
+</li><li>
+<p class="p1"><span class="s1">backup</span></p>
+</li><li>
+<p class="p1"><span class="s1">checklists</span></p>
+</li><li>
+<p class="p1"><span class="s1">release readiness</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Livrables</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">pipeline build/test</span></p>
+</li><li>
+<p class="p1"><span class="s1">stratégie environnements</span></p>
+</li><li>
+<p class="p1"><span class="s1">backup/restore</span></p>
+</li><li>
+<p class="p1"><span class="s1">checklists pré-prod</span></p>
+</li><li>
+<p class="p1"><span class="s1">release checklist</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Sécurité</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">secrets hors repo</span></p>
+</li><li>
+<p class="p1"><span class="s1">séparation staging/prod</span></p>
+</li><li>
+<p class="p1"><span class="s1">restauration testée</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Critères d’acceptation</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">pipeline fonctionnel</span></p>
+</li><li>
+<p class="p1"><span class="s1">release reproductible</span></p>
+</li><li>
+<p class="p1"><span class="s1">rollback documenté</span></p>
+</li><li>
+<p class="p1"><span class="s1">backup vérifié</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Tests</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">pipeline vert</span></p>
+</li><li>
+<p class="p1"><span class="s1">test restauration</span></p>
+</li><li>
+<p class="p1"><span class="s1">test smoke prod</span></p>
+</li><li>
+<p class="p1"><span class="s1">revue checklist pré-lancement</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Dépendances</span></h2></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Tous les modules précédents</span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p1"><span class="s1"><h2><span class="s1">Risques</span></h2></span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">absence de rollback</span></p>
+</li><li>
+<p class="p1"><span class="s1">secrets mal gérés</span></p>
+</li><li>
+<p class="p1"><span class="s1">pas de test restauration</span></p>
+</li></ul></span></p>
+<p class="p1"><span class="s1"><hr></span></p>
+<p class="p3"><span class="s2">Si tu veux, l’étape logique maintenant est de passer aux </span><span class="s3">flows métier détaillés un par un</span><span class="s2">, avec niveau d’exécution très fin pour :</span></p>
+<p class="p1"><span class="s1"><ul><li>
+<p class="p1"><span class="s1">Create Listing</span></p>
+</li><li>
+<p class="p1"><span class="s1">Publish Listing</span></p>
+</li><li>
+<p class="p1"><span class="s1">Lead to Conversation</span></p>
+</li><li>
+<p class="p1"><span class="s1">Price Change History</span></p>
+</li></ul></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2">Et ensuite on pourra faire la même chose pour les </span><span class="s3">API contracts et le SQL exhaustif</span><span class="s2">.</span></p>
+
+</body>
+</html>

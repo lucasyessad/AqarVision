@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-blue-night: #1a365d;
+  --color-gold: #d4af37;
+  --color-off-white: #f7fafc;
+  --color-gray-700: #2d3748;
+  --color-gray-400: #a0aec0;
+
+  --font-sans: "Inter", "Noto Sans Arabic", sans-serif;
+  --font-arabic: "Noto Sans Arabic", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-off-white text-gray-700 antialiased;
+  }
+}
