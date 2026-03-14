@@ -823,7 +823,7 @@ create or replace function public.is_agency_member(p_agency_id uuid, p_user_id u
 as $$
   select exists (
     select 1
-    from public.agency_members am
+    from public.agency_memberships am
     where am.agency_id = p_agency_id
       and am.user_id   = p_user_id
       and am.is_active  = true
@@ -846,7 +846,7 @@ create or replace function public.is_agency_admin(p_agency_id uuid, p_user_id uu
 as $$
   select exists (
     select 1
-    from public.agency_members am
+    from public.agency_memberships am
     where am.agency_id = p_agency_id
       and am.user_id   = p_user_id
       and am.role in ('owner', 'admin')
