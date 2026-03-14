@@ -1,6 +1,22 @@
 import type { ListingType, PropertyType } from "@/features/listings/schemas/listing.schema";
 import type { ListingStatus } from "@/features/listings/types/listing.types";
 
+export interface WilayaDto {
+  code: string;
+  name: string;
+}
+
+export interface CommuneDto {
+  id: number;
+  wilaya_code: string;
+  name_fr: string;
+  name_ar: string | null;
+  name_en: string | null;
+  postal_code: string | null;
+  daira_name_fr: string | null;
+  daira_name_ar: string | null;
+}
+
 export interface SearchResultDto {
   id: string;
   agency_id: string;
@@ -12,7 +28,9 @@ export interface SearchResultDto {
   surface_m2: number | null;
   rooms: number | null;
   bathrooms: number | null;
-  wilaya_code: number;
+  wilaya_code: string;
+  wilaya_name: string;
+  commune_name: string | null;
   commune_id: number | null;
   published_at: string | null;
   created_at: string;
@@ -21,6 +39,11 @@ export interface SearchResultDto {
   cover_url: string | null;
   agency_name: string;
   relevance_score: number | null;
+  reference_number: number;
+}
+
+export function formatListingRef(referenceNumber: number): string {
+  return `AV-${String(referenceNumber).padStart(5, '0')}`;
 }
 
 export interface SearchResponse {
@@ -41,11 +64,14 @@ export interface ListingDetailPublicDto {
   surface_m2: number | null;
   rooms: number | null;
   bathrooms: number | null;
-  wilaya_code: number;
+  wilaya_code: string;
+  wilaya_name: string;
+  commune_name: string | null;
   commune_id: number | null;
   published_at: string | null;
   created_at: string;
   details: Record<string, unknown>;
+  reference_number: number;
   title: string;
   description: string;
   slug: string;

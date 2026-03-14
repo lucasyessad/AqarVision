@@ -5,16 +5,15 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import { LISTING_TYPES, PROPERTY_TYPES } from "@/features/listings/schemas/listing.schema";
 
-// Algeria has 58 wilayas
-const WILAYA_OPTIONS = Array.from({ length: 58 }, (_, i) => i + 1);
-
 interface SearchFiltersProps {
   isOpen: boolean;
+  isDesktopVisible?: boolean;
   onToggle: () => void;
   onSaveSearch?: () => void;
+  wilayas: { code: string; name: string }[];
 }
 
-export function SearchFilters({ isOpen, onToggle, onSaveSearch }: SearchFiltersProps) {
+export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSaveSearch, wilayas }: SearchFiltersProps) {
   const t = useTranslations("search");
   const tListings = useTranslations("listings");
   const router = useRouter();
@@ -29,14 +28,13 @@ export function SearchFilters({ isOpen, onToggle, onSaveSearch }: SearchFiltersP
     searchParams.get("property_type")?.split(",").filter(Boolean) ?? []
   );
   // Multi-select wilayas (comma-separated in URL)
-  const [wilayaCodes, setWilayaCodes] = useState<number[]>(
+  const [wilayaCodes, setWilayaCodes] = useState<string[]>(
     searchParams
       .get("wilaya_codes")
       ?.split(",")
-      .map(Number)
-      .filter((n) => !isNaN(n)) ??
+      .filter(Boolean) ??
       (searchParams.get("wilaya_code")
-        ? [Number(searchParams.get("wilaya_code"))]
+        ? [searchParams.get("wilaya_code")!]
         : [])
   );
   const [priceMin, setPriceMin] = useState(
@@ -83,7 +81,7 @@ export function SearchFilters({ isOpen, onToggle, onSaveSearch }: SearchFiltersP
   // Wilaya dropdown open state
   const [wilayaOpen, setWilayaOpen] = useState(false);
 
-  const toggleWilaya = (code: number) => {
+  const toggleWilaya = (code: string) => {
     setWilayaCodes((prev) =>
       prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
     );
@@ -195,7 +193,7 @@ export function SearchFilters({ isOpen, onToggle, onSaveSearch }: SearchFiltersP
     <aside
       className={`${
         isOpen ? "block" : "hidden"
-      } w-full shrink-0 lg:block lg:w-64`}
+      } w-full shrink-0 ${isDesktopVisible ? "lg:block" : "lg:hidden"} lg:w-64`}
     >
       <div className="rounded-xl bg-white p-4 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
@@ -267,12 +265,15 @@ export function SearchFilters({ isOpen, onToggle, onSaveSearch }: SearchFiltersP
             {wilayaCodes.length === 0
               ? "Sélectionner wilayas..."
               : wilayaCodes.length === 1
-              ? `Wilaya ${wilayaCodes[0]}`
+              ? (() => {
+                  const w = wilayas.find((o) => o.code === wilayaCodes[0]);
+                  return w ? `${w.code} - ${w.name}` : `Wilaya ${wilayaCodes[0]}`;
+                })()
               : `${wilayaCodes.length} wilayas sélectionnées`}
           </button>
           {wilayaOpen && (
             <div className="mt-1 max-h-40 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-md">
-              {WILAYA_OPTIONS.map((code) => (
+              {wilayas.map(({ code, name }) => (
                 <label
                   key={code}
                   className="flex cursor-pointer items-center gap-2 px-3 py-1.5 text-sm text-[#2d3748] hover:bg-gray-50"
@@ -283,7 +284,7 @@ export function SearchFilters({ isOpen, onToggle, onSaveSearch }: SearchFiltersP
                     onChange={() => toggleWilaya(code)}
                     className="rounded border-gray-300 text-[#1a365d] focus:ring-[#d4af37]"
                   />
-                  Wilaya {code}
+                  {code} - {name}
                 </label>
               ))}
             </div>

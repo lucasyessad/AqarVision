@@ -17,6 +17,10 @@ const PUBLIC_PATTERNS = [
   /^\/[a-z]{2}\/search(\/|$)/, // /[locale]/search/*
   /^\/[a-z]{2}\/l(\/|$)/, // /[locale]/l/*
   /^\/[a-z]{2}\/a(\/|$)/, // /[locale]/a/*
+  /^\/[a-z]{2}\/pricing(\/|$)/, // /[locale]/pricing
+  /^\/[a-z]{2}\/pro(\/|$)/, // /[locale]/pro
+  /^\/[a-z]{2}\/estimer(\/|$)/, // /[locale]/estimer
+  /^\/[a-z]{2}\/comparer(\/|$)/, // /[locale]/comparer
   /^\/$/, // bare root
 ];
 

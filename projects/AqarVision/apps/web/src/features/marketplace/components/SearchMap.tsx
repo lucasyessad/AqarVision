@@ -73,6 +73,7 @@ export function SearchMap({ listings, onBoundsChange }: SearchMapProps) {
     import("maplibre-gl").then((maplibre) => {
       if (!containerRef.current) return;
 
+      try {
       mapInstance = new maplibre.Map({
         container: containerRef.current,
         style: {
@@ -117,6 +118,14 @@ export function SearchMap({ listings, onBoundsChange }: SearchMapProps) {
       mapInstance.on("load", () => {
         handleBoundsChange(mapInstance);
       });
+      } catch (err) {
+        // WebGL unavailable (sandboxed env, old browser) — map won't render
+        console.warn("MapLibre: WebGL context creation failed", err);
+        if (containerRef.current) {
+          containerRef.current.innerHTML =
+            '<div class="flex h-full items-center justify-center text-gray-400 text-sm">Carte non disponible dans cet environnement</div>';
+        }
+      }
     });
 
     return () => {

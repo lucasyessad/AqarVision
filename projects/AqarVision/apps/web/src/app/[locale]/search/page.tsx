@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { searchListingsAction } from "@/features/marketplace/actions/search.action";
+import { getWilayas } from "@/features/marketplace/services/search.service";
+import { createClient } from "@/lib/supabase/server";
 import { SearchPageClient } from "./SearchPageClient";
 
 interface SearchPageProps {
@@ -48,14 +50,18 @@ export default async function SearchPage({
   if (sp.q) filters.q = String(sp.q);
   if (sp.listing_type) filters.listing_type = String(sp.listing_type);
   if (sp.property_type) filters.property_type = String(sp.property_type);
-  if (sp.wilaya_code) filters.wilaya_code = Number(sp.wilaya_code);
+  if (sp.wilaya_code) filters.wilaya_code = String(sp.wilaya_code);
   if (sp.commune_id) filters.commune_id = Number(sp.commune_id);
   if (sp.price_min) filters.price_min = Number(sp.price_min);
   if (sp.price_max) filters.price_max = Number(sp.price_max);
   if (sp.rooms_min) filters.rooms_min = Number(sp.rooms_min);
   if (sp.surface_min) filters.surface_min = Number(sp.surface_min);
 
-  const result = await searchListingsAction(filters);
+  const supabase = await createClient();
+  const [result, wilayas] = await Promise.all([
+    searchListingsAction(filters),
+    getWilayas(supabase),
+  ]);
 
   const data = result.success
     ? result.data
@@ -67,6 +73,8 @@ export default async function SearchPage({
       totalCount={data.total_count}
       page={data.page}
       pageSize={data.page_size}
+      locale={locale}
+      wilayas={wilayas}
     />
   );
 }

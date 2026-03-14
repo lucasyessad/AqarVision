@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getListingBySlug } from "@/features/marketplace/services/search.service";
+import { formatListingRef } from "@/features/marketplace/types/search.types";
 import { generateListingJsonLd } from "@/lib/seo/json-ld";
 import { Link } from "@/lib/i18n/navigation";
 import { recordView } from "@/features/marketplace/actions/view-history.action";
@@ -149,6 +150,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
           <div className="flex-1">
             {/* Title & badges */}
             <div className="mb-4">
+              {/* Type badges */}
               <div className="mb-2 flex flex-wrap gap-2">
                 <span className="rounded bg-[#d4af37]/15 px-2 py-0.5 text-xs font-medium text-[#d4af37]">
                   {tListings(listing.listing_type)}
@@ -157,6 +159,32 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                   {tListings(listing.property_type)}
                 </span>
               </div>
+
+              {/* Agency + Reference — ligne d'identité du bien */}
+              <div className="mb-3 flex items-center gap-3 text-sm">
+                <Link
+                  href={`/a/${listing.agency_slug}`}
+                  className="flex items-center gap-1.5 font-medium text-[#1a365d] hover:underline"
+                >
+                  {listing.agency_logo_url ? (
+                    <img
+                      src={listing.agency_logo_url}
+                      alt={listing.agency_name}
+                      className="h-5 w-5 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1a365d]/10 text-[9px] font-bold text-[#1a365d]">
+                      {listing.agency_name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  {listing.agency_name}
+                </Link>
+                <span className="text-gray-300">·</span>
+                <span className="font-mono text-xs text-gray-400">
+                  {formatListingRef(listing.reference_number)}
+                </span>
+              </div>
+
               <h1 className="text-2xl font-bold text-[#2d3748] md:text-3xl">
                 {listing.title}
               </h1>
@@ -196,7 +224,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
               <div>
                 <p className="text-xs text-[#a0aec0]">{tListings("wilaya")}</p>
                 <p className="text-sm font-semibold text-[#2d3748]">
-                  {listing.wilaya_code}
+                  {listing.commune_name ? `${listing.commune_name}, ${listing.wilaya_name}` : listing.wilaya_name}
                 </p>
               </div>
             </div>

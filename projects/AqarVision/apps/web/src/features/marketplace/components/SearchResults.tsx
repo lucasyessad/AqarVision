@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
 import type { SearchResultDto } from "../types/search.types";
+import { formatListingRef } from "../types/search.types";
 import { TrustBadge } from "./TrustBadge";
 
 function formatPrice(price: number, currency: string): string {
@@ -94,14 +95,19 @@ function SearchResultCard({ listing }: SearchResultCardProps) {
             <span>{listing.surface_m2} m&sup2;</span>
           )}
           <span className="ms-auto">
-            {tListings("wilaya")} {listing.wilaya_code}
+            {listing.wilaya_name}
           </span>
         </div>
 
-        {/* Agency */}
-        <p className="mt-2 truncate text-xs text-[#a0aec0]">
-          {listing.agency_name}
-        </p>
+        {/* Agency + Référence */}
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <p className="truncate text-xs text-[#a0aec0]">
+            {listing.agency_name}
+          </p>
+          <span className="shrink-0 font-mono text-xs text-gray-400">
+            {formatListingRef(listing.reference_number)}
+          </span>
+        </div>
       </div>
     </Link>
   );
@@ -161,8 +167,10 @@ export function SearchResults({
           className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
         >
           <option value="newest">{t("newest")}</option>
+          <option value="oldest">{t("oldest")}</option>
           <option value="price_asc">{t("price_asc")}</option>
           <option value="price_desc">{t("price_desc")}</option>
+          <option value="surface_asc">{t("surface_asc")}</option>
         </select>
       </div>
 

@@ -15,7 +15,7 @@ export const SearchFiltersSchema = z.object({
   q: z.string().optional(),
   listing_type: z.enum(LISTING_TYPES).optional(),
   property_type: z.enum(PROPERTY_TYPES).optional(),
-  wilaya_code: z.coerce.number().optional(),
+  wilaya_code: z.string().optional(),
   commune_id: z.coerce.number().optional(),
   price_min: z.coerce.number().nonnegative().optional(),
   price_max: z.coerce.number().nonnegative().optional(),

@@ -1,11 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { getPlans } from "@/features/billing/services/billing.service";
 import { PricingTable } from "@/features/billing/components";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 export default async function PricingPage() {
   const supabase = await createClient();
-  const t = useTranslations("billing");
+  const t = await getTranslations("billing");
   const plans = await getPlans(supabase);
 
   return (

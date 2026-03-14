@@ -8,6 +8,7 @@ import type {
   ListingTranslationPublicDto,
   AgencyPublicDto,
   AgencyBranchPublicDto,
+  WilayaDto,
 } from "../types/search.types";
 
 /* ------------------------------------------------------------------ */
@@ -28,10 +29,12 @@ export async function searchListings(
       `
       id, agency_id, current_status, current_price, currency,
       listing_type, property_type, surface_m2, rooms, bathrooms,
-      wilaya_code, commune_id, published_at, created_at,
+      wilaya_code, commune_id, published_at, created_at, reference_number,
       listing_translations!inner(title, slug, search_vector),
       listing_media(storage_path),
-      agencies!inner(name)
+      agencies!inner(name),
+      wilayas(name_fr),
+      communes(name_fr)
     `,
       { count: "exact" }
     )
@@ -104,6 +107,8 @@ export async function searchListings(
     const mediaRows = (row.listing_media as unknown as Record<string, unknown>[]) ?? [];
     const coverMedia = mediaRows[0];
     const agency = row.agencies as unknown as Record<string, unknown>;
+    const wilayaRow = row.wilayas as unknown as Record<string, unknown> | null;
+    const communeRow = row.communes as unknown as Record<string, unknown> | null;
 
     return {
       id: row.id as string,
@@ -116,7 +121,9 @@ export async function searchListings(
       surface_m2: (row.surface_m2 as number) ?? null,
       rooms: (row.rooms as number) ?? null,
       bathrooms: (row.bathrooms as number) ?? null,
-      wilaya_code: row.wilaya_code as number,
+      wilaya_code: row.wilaya_code as string,
+      wilaya_name: (wilayaRow?.name_fr as string) ?? `Wilaya ${row.wilaya_code}`,
+      commune_name: (communeRow?.name_fr as string) ?? null,
       commune_id: (row.commune_id as number) ?? null,
       published_at: (row.published_at as string) ?? null,
       created_at: row.created_at as string,
@@ -125,6 +132,7 @@ export async function searchListings(
       cover_url: (coverMedia?.storage_path as string) ?? null,
       agency_name: (agency?.name as string) ?? "",
       relevance_score: null,
+      reference_number: row.reference_number as number,
     };
   });
 
@@ -166,8 +174,10 @@ export async function getListingBySlug(
       `
       id, agency_id, current_status, current_price, currency,
       listing_type, property_type, surface_m2, rooms, bathrooms,
-      wilaya_code, commune_id, published_at, created_at, details,
-      agencies(name, slug, logo_url, phone)
+      wilaya_code, commune_id, published_at, created_at, details, reference_number,
+      agencies(name, slug, logo_url, phone),
+      wilayas(name_fr),
+      communes(name_fr)
     `
     )
     .eq("id", listingId)
@@ -193,6 +203,8 @@ export async function getListingBySlug(
     .order("sort_order", { ascending: true });
 
   const agency = listing.agencies as unknown as Record<string, unknown> | null;
+  const wilayaRowDetail = listing.wilayas as unknown as Record<string, unknown> | null;
+  const communeRowDetail = listing.communes as unknown as Record<string, unknown> | null;
   const currentTranslation = (
     (allTranslations ?? []) as Record<string, unknown>[]
   ).find((t) => t.locale === locale);
@@ -216,11 +228,14 @@ export async function getListingBySlug(
     surface_m2: (listing.surface_m2 as number) ?? null,
     rooms: (listing.rooms as number) ?? null,
     bathrooms: (listing.bathrooms as number) ?? null,
-    wilaya_code: listing.wilaya_code as number,
+    wilaya_code: listing.wilaya_code as string,
+    wilaya_name: (wilayaRowDetail?.name_fr as string) ?? `Wilaya ${listing.wilaya_code}`,
+    commune_name: (communeRowDetail?.name_fr as string) ?? null,
     commune_id: (listing.commune_id as number) ?? null,
     published_at: (listing.published_at as string) ?? null,
     created_at: listing.created_at as string,
     details: (listing.details as Record<string, unknown>) ?? {},
+    reference_number: listing.reference_number as number,
     title: (currentTranslation?.title as string) ?? "",
     description: (currentTranslation?.description as string) ?? "",
     slug: (currentTranslation?.slug as string) ?? slug,
@@ -246,6 +261,20 @@ export async function getListingBySlug(
       })
     ),
   };
+}
+
+/* ------------------------------------------------------------------ */
+/*  getWilayas                                                         */
+/* ------------------------------------------------------------------ */
+
+export async function getWilayas(
+  supabase: SupabaseClient
+): Promise<WilayaDto[]> {
+  const { data } = await supabase
+    .from("wilayas")
+    .select("code, name_fr")
+    .order("code");
+  return (data ?? []).map((w) => ({ code: w.code as string, name: w.name_fr as string }));
 }
 
 /* ------------------------------------------------------------------ */

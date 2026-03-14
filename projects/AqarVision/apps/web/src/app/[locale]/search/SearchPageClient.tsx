@@ -2,8 +2,10 @@
 
 import { useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/lib/i18n/navigation";
 import { SearchBar, SearchResults, SearchFilters, SearchMap } from "@/features/marketplace/components";
 import { SearchAlertButton } from "@/features/marketplace/components/SearchAlertButton";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import type { SearchResultDto } from "@/features/marketplace/types/search.types";
 import type { MapBounds } from "@/features/marketplace/schemas/search.schema";
 import type { MapListing } from "@/features/marketplace/components/SearchMap";
@@ -13,6 +15,8 @@ interface SearchPageClientProps {
   totalCount: number;
   page: number;
   pageSize: number;
+  locale: string;
+  wilayas: { code: string; name: string }[];
 }
 
 export function SearchPageClient({
@@ -20,9 +24,12 @@ export function SearchPageClient({
   totalCount,
   page,
   pageSize,
+  locale,
+  wilayas,
 }: SearchPageClientProps) {
   const t = useTranslations("search");
   const [showFilters, setShowFilters] = useState(false);
+  const [showFiltersSidebar, setShowFiltersSidebar] = useState(true);
   // "list" | "map" view mode
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
 
@@ -58,6 +65,21 @@ export function SearchPageClient({
 
   return (
     <main className="min-h-screen bg-[#f7fafc]">
+      {/* Top navigation bar: logo + language switcher */}
+      <nav className="bg-[#1a365d] border-b border-white/10 px-4 py-2">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" locale={locale} className="flex items-center gap-2">
+            <span className="font-bold text-white">
+              Aqar<span className="text-[#d4af37]">Search</span>
+            </span>
+          </Link>
+
+          {/* Language switcher */}
+          <LanguageSwitcher currentLocale={locale} />
+        </div>
+      </nav>
+
       {/* Hero search bar */}
       <div className="bg-[#1a365d] px-4 py-8 text-white">
         <div className="mx-auto max-w-4xl">
@@ -70,13 +92,34 @@ export function SearchPageClient({
       <div className="mx-auto max-w-7xl px-4 py-6">
         {/* Toolbar: filters toggle + List/Map toggle + alert */}
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          {/* Mobile: show/hide filters */}
+          {/* Toggle sidebar filters — visible on all screen sizes */}
           <button
             type="button"
-            onClick={() => setShowFilters(!showFilters)}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-[#2d3748] transition-colors hover:bg-gray-100 lg:hidden"
+            onClick={() => {
+              // On mobile: use showFilters (inline block display)
+              // On desktop: use showFiltersSidebar
+              setShowFilters((prev) => !prev);
+              setShowFiltersSidebar((prev) => !prev);
+            }}
+            title={showFiltersSidebar ? t("hide_filters") : t("show_filters")}
+            className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-[#2d3748] transition-colors hover:bg-gray-100"
           >
-            {showFilters ? t("hide_filters") : t("show_filters")}
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+              />
+            </svg>
+            <span className="hidden sm:inline">
+              {showFiltersSidebar ? t("hide_filters") : t("show_filters")}
+            </span>
           </button>
 
           {/* List / Map view toggle */}
@@ -120,10 +163,15 @@ export function SearchPageClient({
         </div>
 
         <div className="flex gap-6">
-          {/* Sidebar filters */}
+          {/* Sidebar filters — controlled by showFiltersSidebar on desktop, showFilters on mobile */}
           <SearchFilters
             isOpen={showFilters}
-            onToggle={() => setShowFilters(!showFilters)}
+            isDesktopVisible={showFiltersSidebar}
+            onToggle={() => {
+              setShowFilters((prev) => !prev);
+              setShowFiltersSidebar((prev) => !prev);
+            }}
+            wilayas={wilayas}
           />
 
           {/* Main content */}
