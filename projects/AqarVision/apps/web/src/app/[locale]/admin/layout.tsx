@@ -29,7 +29,7 @@ export default async function AdminLayout({
 
   if (rpcError || !isSuperAdmin) {
     // Not a super_admin → redirect to regular dashboard
-    redirect(`/${locale}/dashboard`);
+    redirect(`/${locale}/AqarPro/dashboard`);
   }
 
   return (

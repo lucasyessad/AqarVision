@@ -21,7 +21,7 @@ interface ListingRow {
   id: string;
   listing_type: string;
   property_type: string;
-  status: ListingStatus;
+  current_status: ListingStatus;
   current_price: number;
   wilaya_code: number;
   surface_m2: number | null;
@@ -71,13 +71,13 @@ export default async function ListingsPage({
   let query = supabase
     .from("listings")
     .select(
-      "id, listing_type, property_type, status, current_price, wilaya_code, surface_m2, rooms, created_at, listing_translations(locale, title, slug)"
+      "id, listing_type, property_type, current_status, current_price, wilaya_code, surface_m2, rooms, created_at, listing_translations(locale, title, slug)"
     )
     .eq("agency_id", membership.agency_id)
     .order("created_at", { ascending: false });
 
   if (activeFilter !== "all") {
-    query = query.eq("status", activeFilter);
+    query = query.eq("current_status", activeFilter);
   }
 
   const { data: listings } = await query;
@@ -119,7 +119,7 @@ export default async function ListingsPage({
           return (
             <Link
               key={filter}
-              href={filter === "all" ? "/dashboard/listings" : `/dashboard/listings?status=${filter}`}
+              href={filter === "all" ? "/AqarPro/dashboard/listings" : `/AqarPro/dashboard/listings?status=${filter}`}
               className="border-b-2 px-4 py-2.5 text-sm font-medium transition-colors"
               style={{
                 borderBottomColor: isActive ? "var(--coral)" : "transparent",
@@ -176,7 +176,7 @@ export default async function ListingsPage({
                   listing.listing_translations.find((tr) => tr.locale === locale) ??
                   listing.listing_translations[0];
                 const title = translation?.title ?? listing.property_type;
-                const style = STATUS_STYLE[listing.status] ?? STATUS_STYLE.draft;
+                const style = STATUS_STYLE[listing.current_status] ?? STATUS_STYLE.draft;
 
                 return (
                   <tr
@@ -204,7 +204,7 @@ export default async function ListingsPage({
                         className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
                         style={{ background: style.bg, color: style.color }}
                       >
-                        {t(`status_${listing.status}` as Parameters<typeof t>[0])}
+                        {t(`status_${listing.current_status}` as Parameters<typeof t>[0])}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-xs" style={{ color: "var(--charcoal-400)" }}>
@@ -212,7 +212,7 @@ export default async function ListingsPage({
                     </td>
                     <td className="px-6 py-4 text-end">
                       <Link
-                        href={`/dashboard/listings/${listing.id}`}
+                        href={`/AqarPro/dashboard/listings/${listing.id}`}
                         className="text-xs font-medium transition-colors"
                         style={{ color: "var(--coral)" }}
                       >

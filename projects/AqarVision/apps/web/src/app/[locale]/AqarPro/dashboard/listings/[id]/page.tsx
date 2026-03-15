@@ -5,6 +5,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { MediaGallery } from "@/features/media/components/MediaGallery";
 import { MediaUploader } from "@/features/media/components/MediaUploader";
 import type { MediaDto } from "@/features/media/types/media.types";
+import { submitForReviewAction } from "@/features/listings/actions/publish.action";
 
 const TABS = ["details", "translations", "media", "preview"] as const;
 type Tab = (typeof TABS)[number];
@@ -54,7 +55,7 @@ export default async function ListingDetailPage({
   const { data: listing } = await supabase
     .from("listings")
     .select(
-      "id, agency_id, listing_type, property_type, status, current_price, wilaya_code, commune_id, surface_m2, rooms, bathrooms, details, version, created_at, updated_at, listing_translations(locale, title, description, slug)"
+      "id, agency_id, listing_type, property_type, current_status, current_price, wilaya_code, commune_id, surface_m2, rooms, bathrooms, details, version, created_at, updated_at, listing_translations(locale, title, description, slug)"
     )
     .eq("id", id)
     .single();
@@ -96,7 +97,7 @@ export default async function ListingDetailPage({
     { label: t("price_set"), met: listing.current_price > 0 },
   ];
 
-  const statusStyle = STATUS_STYLE[listing.status as string] ?? STATUS_STYLE.draft;
+  const statusStyle = STATUS_STYLE[listing.current_status as string] ?? STATUS_STYLE.draft;
   const allMet = checklist.every((c) => c.met);
 
   return (
@@ -122,16 +123,26 @@ export default async function ListingDetailPage({
               className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
               style={{ background: statusStyle.bg, color: statusStyle.color }}
             >
-              {t(`status_${listing.status}` as Parameters<typeof t>[0])}
+              {t(`status_${listing.current_status}` as Parameters<typeof t>[0])}
             </span>
           </div>
-          {listing.status === "draft" && (
-            <button
-              className="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
-              style={{ background: "var(--coral)" }}
+          {listing.current_status === "draft" && (
+            <form
+              action={async () => {
+                "use server";
+                const formData = new FormData();
+                formData.set("listing_id", id);
+                await submitForReviewAction(null, formData);
+              }}
             >
-              {t("submit_review")}
-            </button>
+              <button
+                type="submit"
+                className="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
+                style={{ background: "var(--coral)" }}
+              >
+                {t("submit_review")}
+              </button>
+            </form>
           )}
         </div>
       </div>
@@ -143,7 +154,7 @@ export default async function ListingDetailPage({
           return (
             <Link
               key={tab}
-              href={`/dashboard/listings/${id}?tab=${tab}`}
+              href={`/AqarPro/dashboard/listings/${id}?tab=${tab}`}
               className="border-b-2 px-4 py-2.5 text-sm font-medium transition-colors"
               style={{
                 borderBottomColor: isActive ? "var(--coral)" : "transparent",

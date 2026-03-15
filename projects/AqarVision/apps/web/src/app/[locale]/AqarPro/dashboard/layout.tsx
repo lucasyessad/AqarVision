@@ -36,9 +36,12 @@ export default async function DashboardLayout({
       .maybeSingle(),
   ]);
 
-  const agencySlug = membership
-    ? ((membership.agencies as unknown as { slug: string } | null)?.slug ?? null)
-    : null;
+  // Individual users (no agency membership) must use AqarChaab
+  if (!membership) {
+    redirect(`/${locale}/AqarChaab/espace`);
+  }
+
+  const agencySlug = (membership.agencies as unknown as { slug: string } | null)?.slug ?? null;
 
   // Onboarding banner: show if agency has 0 listings
   let showOnboardingBanner = false;

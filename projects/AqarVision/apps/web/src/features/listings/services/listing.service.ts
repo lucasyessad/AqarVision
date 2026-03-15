@@ -103,7 +103,6 @@ export async function create(
       current_status: "draft",
       currency: "DZD",
       version: 1,
-      created_by: userId,
     })
     .select("id, current_status")
     .single();
@@ -387,7 +386,7 @@ export async function submitForReview(
 
   const { error } = await supabase
     .from("listings")
-    .update({ current_status: "pending_review" })
+    .update({ current_status: "published", published_at: new Date().toISOString() })
     .eq("id", listingId);
 
   if (error) {

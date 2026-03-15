@@ -24,6 +24,19 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
     redirect(`/${locale}/AqarChaab/auth/login`);
   }
 
+  // Pro users (agency members) must use AqarPro dashboard
+  const { data: membership } = await supabase
+    .from("agency_memberships")
+    .select("agency_id")
+    .eq("user_id", user.id)
+    .eq("is_active", true)
+    .limit(1)
+    .maybeSingle();
+
+  if (membership) {
+    redirect(`/${locale}/AqarPro/dashboard`);
+  }
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("full_name")

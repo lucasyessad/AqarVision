@@ -43,7 +43,7 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
   };
 
   return (
-    <div className="w-full max-w-3xl overflow-hidden rounded-sm bg-white/95 shadow-2xl backdrop-blur-2xl">
+    <div className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-xl">
       <div className="flex flex-col sm:flex-row">
         {/* Wilaya */}
         <div className="flex flex-1 items-center gap-2 border-zinc-100 px-4 py-4 sm:border-e">
@@ -111,7 +111,7 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
         <button
           type="button"
           onClick={handleSearch}
-          className="flex min-w-[140px] items-center justify-center gap-2 whitespace-nowrap bg-zinc-950 px-7 py-4 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90"
+          className="flex min-w-[140px] items-center justify-center gap-2 whitespace-nowrap rounded-e-2xl bg-amber-500 px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
