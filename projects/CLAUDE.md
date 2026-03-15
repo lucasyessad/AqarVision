@@ -4,9 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Identity
 
-**AqarVision** is an Algerian proptech ecosystem with three surfaces:
+**AqarVision** is an Algerian proptech ecosystem with four surfaces:
 - **AqarSearch** — Public real estate marketplace (search, map, SEO, alerts, favorites)
 - **AqarPro** — Agency CRM (listing publication, leads, messaging, analytics, AI)
+- **AqarChaab** — Individual user space (deposit listings, favorites, messaging, projects)
 - **Data Layer** — Price history, domain events, analytics, future estimation
 
 Multi-tenant (RLS-isolated per agency), hybrid SaaS + marketplace, multilingual (FR/AR/EN/ES with RTL for Arabic), targeting Algeria (58 wilayas, 1541 communes). Monetization via Stripe subscriptions (Starter/Pro/Enterprise).
@@ -55,14 +56,20 @@ aqarvision/
 │   │   │   ├── (marketing)/    # Landing, pricing, legal
 │   │   │   ├── [locale]/auth/  # Login, signup, reset
 │   │   │   ├── [locale]/AqarPro/dashboard/  # Agency CRM (gated)
-│   │   │   ├── [locale]/AqarChaab/         # Consumer space
-│   │   │   ├── [locale]/search/            # AqarSearch marketplace
+│   │   │   ├── [locale]/AqarChaab/
+│   │   │   │   ├── espace/     # Individual user space (mes-annonces, favoris, messages, profil)
+│   │   │   │   └── deposer/    # 4-step wizard to post a listing
+│   │   │   ├── [locale]/search/            # AqarSearch marketplace (split map/list)
 │   │   │   ├── [locale]/l/[slug]/          # Listing detail
-│   │   │   ├── [locale]/a/[slug]/          # Agency profile vitrine
-│   │   │   ├── [locale]/admin/             # Admin interface
+│   │   │   ├── [locale]/a/[slug]/          # Agency vitrine
+│   │   │   ├── [locale]/admin/             # Super admin (agencies, verifications, platform settings)
 │   │   │   └── api/webhooks/stripe/        # Stripe callback
 │   │   ├── src/features/       # Feature modules (see pattern below)
 │   │   ├── src/lib/supabase/   # client.ts, server.ts, middleware.ts
+│   │   ├── src/lib/auth/       # with-agency-auth.ts, with-super-admin-auth.ts
+│   │   ├── src/lib/logger/     # Pino structured logger
+│   │   ├── src/lib/sanitize/   # sanitizeInput utility
+│   │   ├── src/types/          # action-result.ts (ActionResult<T>, ok(), fail())
 │   │   ├── src/lib/i18n/       # i18n config
 │   │   └── messages/           # i18n JSON (fr.json, ar.json, en.json, es.json)
 │   └── mobile/                 # React Native / Expo
@@ -75,7 +82,7 @@ aqarvision/
 │   ├── feature-flags/          # Flag registry + resolution
 │   └── config/                 # Env validation, constants
 └── supabase/
-    ├── migrations/             # Numbered SQL migrations (00000–00135)
+    ├── migrations/             # Numbered SQL migrations (00000–00182)
     ├── functions/              # Edge Functions (stripe-webhook)
     └── config.toml
 ```
@@ -104,14 +111,77 @@ feature-name/
 ## Server Action Pattern
 
 Every server action must follow this exact flow:
-1. Validate input via Zod
-2. Resolve current actor (auth)
-3. Check permissions (policy)
+1. Validate input via Zod (apply `.transform(sanitizeInput)` on free-text fields)
+2. Resolve current actor (auth) via `withAgencyAuth` or `withSuperAdminAuth`
+3. Check permissions (handled by the auth guard)
 4. Call domain service
 5. Return sanitized output
 6. Trigger revalidation if needed
 
 Return type: `ActionResult<T> = { success: true; data: T } | { success: false; error: { code: string; message: string } }`
+
+Use `ok(data)` and `fail("CODE", "message")` helpers from `@/types/action-result`.
+
+## Auth Guards
+
+Always use these guards — never perform manual membership checks.
+
+```typescript
+// src/lib/auth/with-agency-auth.ts
+// Verifies: active session + is_agency_member(agencyId) + RBAC permission
+withAgencyAuth(agencyId, resource, permission, async (ctx) => {
+  // ctx.agencyId, ctx.userId, ctx.role available
+  return data; // wrapped in ActionOk automatically
+});
+
+// src/lib/auth/with-super-admin-auth.ts
+// Verifies: active session + is_super_admin() RPC
+withSuperAdminAuth(async (ctx) => {
+  // ctx.userId available
+  return data;
+});
+```
+
+Both return `ActionOk<T> | ActionError` — propagate directly from the server action.
+
+## Shared Utilities
+
+```typescript
+// Structured logger (Pino)
+import { logger } from "@/lib/logger";
+logger.error({ err, listingId }, "changePrice RPC failed");
+logger.warn({ userId }, "Access denied");
+
+// Input sanitization — apply in Zod schemas on text fields
+import { sanitizeInput } from "@/lib/sanitize";
+// Performs: HTML escape, null-byte removal, Unicode normalize, trim
+// Usage in schema: z.string().min(1).transform(sanitizeInput)
+
+// ActionResult helpers
+import { ok, fail } from "@/types/action-result";
+ok({ listing_id })          // → { success: true, data: { listing_id } }
+fail("NOT_FOUND", "msg")    // → { success: false, error: { code, message } }
+```
+
+## Individual Listings Pattern
+
+Individuals (non-agency) can post listings via `/AqarChaab/deposer`.
+
+```typescript
+// DB: owner_type enum = 'agency' | 'individual'
+// Schema: src/features/listings/schemas/individual-listing.schema.ts
+// Action:  src/features/listings/actions/create-individual-listing.action.ts
+
+// Key differences from agency listings:
+//   agency_id: null
+//   individual_owner_id: auth.uid()
+//   owner_type: 'individual'
+//   current_status: 'published'  ← live immediately, no moderation
+
+// DB constraint (enforced via CHECK):
+// (owner_type = 'agency' AND agency_id IS NOT NULL) OR
+// (owner_type = 'individual' AND individual_owner_id IS NOT NULL AND agency_id IS NULL)
+```
 
 ## Key Architectural Decisions
 
@@ -125,6 +195,8 @@ Return type: `ActionResult<T> = { success: true; data: T } | { success: false; e
 - **Feature flags** in DB for premium gating
 - **SCD2 pattern** for price and status versioning (temporal ranges with `btree_gist` exclusion constraints)
 - **Domain events** table for audit trail and analytics aggregation
+- **withAgencyAuth / withSuperAdminAuth** — all server-side authorization goes through these guards
+- **Stripe event ordering** — `customer.subscription.created` always follows `checkout.session.completed`; period dates must never be hardcoded, let the subscription event fill them
 
 ## Strict Rules
 
@@ -133,7 +205,11 @@ Return type: `ActionResult<T> = { success: true; data: T } | { success: false; e
 - **NEVER** use localStorage for session (cookies only via Supabase SSR)
 - **NEVER** enforce roles only on frontend — always verify server-side
 - **NEVER** hardcode left/right margins — use CSS logical properties for RTL (`margin-inline-start`)
-- All inputs validated via Zod before processing
+- **NEVER** use manual membership checks in actions — always use `withAgencyAuth`
+- **NEVER** use manual super-admin checks in actions — always use `withSuperAdminAuth`
+- **NEVER** hardcode Stripe period dates — let `customer.subscription.created` fill them
+- **NEVER** use `defaultProps` with hardcoded UI text in `ErrorBoundary` — pass via `useTranslations()` from the parent
+- All inputs validated via Zod before processing; free-text fields use `.transform(sanitizeInput)`
 - All outputs typed with explicit DTOs — never expose internal columns to client
 
 ## RTL Support
@@ -145,15 +221,13 @@ Return type: `ActionResult<T> = { success: true; data: T } | { success: false; e
 
 ## Design System
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| blue-night | `#1a365d` | Navigation, headers, premium surfaces, dashboard |
-| gold | `#d4af37` | Accents, premium badges, secondary CTAs |
-| off-white | `#f7fafc` | Main backgrounds, cards |
-| gray-700 | `#2d3748` | Primary text |
-| gray-400 | `#a0aec0` | Secondary text |
+Design system: **"Zinc"** — see `projects/SKILL.md` for the complete token system and component library.
 
-Typography: Inter (FR/EN/ES), Noto Sans Arabic (AR). AqarSearch = spacious layout; AqarPro = moderate density. Mobile-first everywhere.
+- **Palette:** Zinc (neutral gray) + Amber (warm accent). Dark mode via Tailwind `dark:` prefix.
+- **Font:** Geist (FR/EN/ES), IBM Plex Sans Arabic (AR) — loaded via `next/font`.
+- **Tokens:** CSS custom properties in `globals.css`, mapped in `tailwind.config.ts`.
+- **Rule:** NEVER hardcode hex values or inline styles. Tailwind classes only.
+- **Surfaces:** AqarSearch = spacious layout; AqarPro = dense, keyboard-first; AqarChaab = warm, personal. See `references/` in SKILL.md for per-surface specs.
 
 ## i18n & SEO
 
@@ -167,9 +241,9 @@ Typography: Inter (FR/EN/ES), Noto Sans Arabic (AR). AqarSearch = spacious layou
 
 ## Database Schema Overview
 
-Migrations in `supabase/migrations/` (execute in order):
+Migrations in `supabase/migrations/` (execute in order, 00000–00182):
 - `00000` Extensions (PostGIS, btree_gist)
-- `00001` Enums (user_role, agency_role, listing_status, listing_type, property_type, etc.)
+- `00001` Enums (user_role, agency_role, listing_status, listing_type, property_type, listing_owner_type, etc.)
 - `00010` Identities (users, profiles, mobile_devices, push_tokens)
 - `00020` Organizations (agencies, branches, memberships, invites)
 - `00030` Listings (listings, translations, media, documents)
@@ -181,6 +255,9 @@ Migrations in `supabase/migrations/` (execute in order):
 - `00080` RLS policies
 - `00090` Triggers (updated_at, auth user bootstrap)
 - `00100` Geography (wilayas, communes + seed data)
+- `00111` Individual listings (owner_type enum, individual_owner_id, RLS for individuals)
+- `00120+` Billing (Stripe plans, individual subscriptions, webhooks)
+- `00150+` AqarChaab (espace features, projects, collections)
 
 ## Module Build Order
 
