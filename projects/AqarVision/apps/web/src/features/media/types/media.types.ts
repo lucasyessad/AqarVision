@@ -15,6 +15,7 @@ export interface MediaDto {
 export interface UploadUrlResult {
   signed_url: string;
   storage_path: string;
+  token: string;
 }
 
 export type ActionResult<T> =

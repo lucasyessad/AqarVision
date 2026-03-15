@@ -49,6 +49,7 @@ export async function getSignedUploadUrl(
   return {
     signed_url: data.signedUrl,
     storage_path: storagePath,
+    token: data.token,
   };
 }
 
