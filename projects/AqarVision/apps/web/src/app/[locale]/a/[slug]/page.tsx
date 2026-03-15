@@ -79,8 +79,15 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
   const beforeSections = manifest.sections
     .filter((s) => s.id !== "listings" && s.order < listingsOrder)
     .sort((a, b) => a.order - b.order);
+  // CTA sections are excluded: AgencyFooter (from layout) already acts as the CTA.
+  // Only keep non-CTA sections like stats-strip after listings.
   const afterSections = manifest.sections
-    .filter((s) => s.id !== "listings" && s.order > listingsOrder)
+    .filter(
+      (s) =>
+        s.id !== "listings" &&
+        s.order > listingsOrder &&
+        !s.variant.startsWith("cta-")
+    )
     .sort((a, b) => a.order - b.order);
 
   const isDark = manifest.style.themeMode === "dark";

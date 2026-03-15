@@ -4,7 +4,7 @@ import {
   getAgencyForCurrentUser,
   isAuthError,
 } from "@/lib/actions/auth";
-import { ThemePicker } from "@/features/agency-settings/components/ThemePicker";
+import { ThemeStudio } from "@/features/agency-settings/components/ThemeStudio";
 
 export default async function AppearancePage({
   params,
@@ -13,21 +13,21 @@ export default async function AppearancePage({
 }) {
   const { locale } = await params;
 
-  // 1. Resolve agency context
   const auth = await getAgencyForCurrentUser();
   if (isAuthError(auth)) {
     redirect(`/${locale}/AqarPro/auth/login`);
   }
 
-  // 2. Fetch agency theme data
   const supabase = await createClient();
+
+  // Fetch agency branding + theme data
   const { data: agency } = await supabase
     .from("agencies")
-    .select("theme, primary_color, accent_color, secondary_color")
+    .select("theme, primary_color, accent_color, secondary_color, logo_url, cover_url, description, slug")
     .eq("id", auth.agencyId)
     .single();
 
-  // 3. Fetch current plan
+  // Fetch current plan
   const { data: subscription } = await supabase
     .from("subscriptions")
     .select("plan_id, plans(slug)")
@@ -39,20 +39,27 @@ export default async function AppearancePage({
   const planCode: string = (subscription?.plans as any)?.slug ?? "enterprise";
 
   return (
-    <div className="space-y-4">
-      <div className="mb-2">
-        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>Apparence</h1>
+    <div className="space-y-1">
+      <div className="mb-4">
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          Apparence
+        </h1>
         <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
-          Personnalisez le thème et les couleurs de votre vitrine publique.
+          Choisissez le thème, les couleurs et le branding de votre vitrine publique.
         </p>
       </div>
 
-      <ThemePicker
+      <ThemeStudio
         currentTheme={agency?.theme ?? "modern"}
         currentPrimaryColor={agency?.primary_color ?? null}
         currentAccentColor={agency?.accent_color ?? null}
         currentSecondaryColor={agency?.secondary_color ?? null}
+        currentLogoUrl={agency?.logo_url ?? null}
+        currentCoverUrl={agency?.cover_url ?? null}
         agencyPlan={planCode}
+        agencyName={auth.agencyName}
+        agencySlug={agency?.slug ?? auth.agencySlug}
+        agencyDescription={agency?.description ?? null}
       />
     </div>
   );

@@ -118,35 +118,77 @@ function HeroMedium({ agency }: { agency: AgencyPublicDto }) {
 }
 
 function HeroFullscreen({ agency }: { agency: AgencyPublicDto }) {
+  const hasCover = Boolean(agency.cover_url)
   return (
     <section
-      className="relative flex min-h-screen items-center justify-center"
-      style={{ background: 'var(--agency-primary, #0d0d0d)' }}
+      className="relative flex items-center justify-center overflow-hidden"
+      style={{
+        background: 'var(--agency-primary, #0d0d0d)',
+        minHeight: hasCover ? '70vh' : '50vh',
+      }}
     >
-      {agency.cover_url && (
-        <div className="absolute inset-0 overflow-hidden">
+      {/* Cover image */}
+      {hasCover && (
+        <div className="absolute inset-0">
           <img
-            src={agency.cover_url}
+            src={agency.cover_url!}
             alt=""
             aria-hidden
-            className="h-full w-full object-cover opacity-30"
+            className="h-full w-full object-cover"
+            style={{ opacity: 0.45 }}
+          />
+          {/* Gradient overlay for readability */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.7) 100%)',
+            }}
           />
         </div>
       )}
-      <div className="relative mx-auto max-w-3xl px-6 text-center">
+
+      <div className="relative mx-auto max-w-3xl px-6 py-16 text-center">
+        {/* Logo */}
+        {agency.logo_url && (
+          <img
+            src={agency.logo_url}
+            alt={agency.name}
+            className="mx-auto mb-6 h-20 w-20 rounded-full object-cover ring-2 ring-white/20 shadow-2xl"
+          />
+        )}
+
+        {/* Agency name */}
         <h1
-          className="text-6xl font-bold tracking-tight text-white"
+          className="text-5xl font-bold tracking-tight text-white drop-shadow-lg"
           style={{ fontFamily: 'var(--font-agency, serif)' }}
         >
           {agency.name}
         </h1>
-        {agency.description && (
-          <p className="mt-6 text-lg text-white/70">{agency.description}</p>
-        )}
+
+        {/* Gold divider */}
         <div
-          className="mx-auto mt-8 h-0.5 w-24"
+          className="mx-auto my-5 h-0.5 w-16"
           style={{ background: 'var(--agency-accent, #c9a227)' }}
         />
+
+        {agency.description && (
+          <p className="max-w-lg mx-auto text-base text-white/75 leading-relaxed drop-shadow">
+            {agency.description}
+          </p>
+        )}
+
+        {/* Listing count badge */}
+        <p
+          className="mt-4 inline-block rounded-full px-4 py-1 text-xs font-medium"
+          style={{
+            background: 'rgba(255,255,255,0.12)',
+            color: 'var(--agency-accent, #c9a227)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          {agency.listing_count} {agency.listing_count === 1 ? 'bien' : 'biens'} disponibles
+        </p>
       </div>
     </section>
   )
