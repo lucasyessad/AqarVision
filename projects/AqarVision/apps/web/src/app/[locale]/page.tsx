@@ -22,12 +22,12 @@ function formatPrice(price: number, currency: string): string {
 }
 
 const POPULAR_WILAYAS = [
-  { code: "16", name: "Alger",       sub: "Capitale",     count: "4 200+" },
-  { code: "31", name: "Oran",        sub: "Perle de l'Ouest", count: "1 800+" },
-  { code: "25", name: "Constantine", sub: "Ville des ponts",  count: "950+"  },
-  { code: "23", name: "Annaba",      sub: "Côte Est",     count: "620+"  },
-  { code: "15", name: "Tizi-Ouzou", sub: "Grande Kabylie", count: "480+"  },
-  { code: "19", name: "Sétif",       sub: "Hauts Plateaux", count: "390+"  },
+  { code: "16", name: "Alger",       sub: "Capitale",          count: "4 200+" },
+  { code: "31", name: "Oran",        sub: "Perle de l'Ouest",  count: "1 800+" },
+  { code: "25", name: "Constantine", sub: "Ville des ponts",   count: "950+"   },
+  { code: "23", name: "Annaba",      sub: "Côte Est",          count: "620+"   },
+  { code: "15", name: "Tizi-Ouzou", sub: "Grande Kabylie",    count: "480+"   },
+  { code: "19", name: "Sétif",       sub: "Hauts Plateaux",    count: "390+"   },
 ];
 
 const TICKER_ITEMS = [
@@ -42,10 +42,10 @@ const TICKER_ITEMS = [
 ];
 
 const STATS = [
-  { value: "12 000+", label: "Annonces actives",   mono: true },
-  { value: "320+",    label: "Agences partenaires", mono: true },
-  { value: "58",      label: "Wilayas couvertes",  mono: true },
-  { value: "< 48h",   label: "Mise en ligne",      mono: true },
+  { value: "12 000+", label: "Annonces actives",    mono: true },
+  { value: "320+",    label: "Agences partenaires",  mono: true },
+  { value: "58",      label: "Wilayas couvertes",   mono: true },
+  { value: "< 48h",  label: "Mise en ligne",        mono: true },
 ];
 
 export async function generateMetadata({
@@ -93,18 +93,14 @@ export default async function HomePage({
 
       <main>
         {/* ─────────────────────────────────────────── HERO ─── */}
-        <section
-          className="relative -mt-16 flex min-h-screen flex-col items-center justify-center overflow-hidden"
-          style={{ background: "var(--onyx)" }}
-        >
-          {/* Background photo — set NEXT_PUBLIC_HERO_BG_URL env var or drop hero-bg.jpg in /public/images/ */}
+        <section className="relative -mt-16 flex min-h-screen flex-col items-center justify-center overflow-hidden bg-zinc-950">
+          {/* Background photo */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={process.env.NEXT_PUBLIC_HERO_BG_URL ?? "/images/hero-bg.jpg"}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-            style={{ opacity: 0.38 }}
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.38]"
           />
 
           {/* Ambient gradient */}
@@ -124,53 +120,41 @@ export default async function HomePage({
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 opacity-[0.03]"
             style={{
-              backgroundImage: "linear-gradient(var(--ivoire-border) 1px, transparent 1px), linear-gradient(90deg, var(--ivoire-border) 1px, transparent 1px)",
+              backgroundImage: "linear-gradient(#D4D4D8 1px, transparent 1px), linear-gradient(90deg, #D4D4D8 1px, transparent 1px)",
               backgroundSize: "60px 60px",
             }}
           />
 
-          {/* Content — centered */}
-          <div className="relative mx-auto w-full max-w-[1320px] px-4 pt-24 pb-12 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+          {/* Content */}
+          <div className="relative mx-auto flex w-full max-w-[1320px] flex-col items-center px-4 pb-12 pt-24 text-center sm:px-6 lg:px-8">
             {/* Eyebrow */}
             <div className="mb-6 flex items-center gap-3">
-              <span className="inline-block h-px w-8" style={{ background: "var(--or)" }} />
-              <p
-                className="text-xs font-semibold uppercase tracking-[0.25em]"
-                style={{ color: "var(--or)" }}
-              >
+              <span className="inline-block h-px w-8 bg-amber-500" />
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
                 Portail Immobilier · Algérie
               </p>
-              <span className="inline-block h-px w-8" style={{ background: "var(--or)" }} />
+              <span className="inline-block h-px w-8 bg-amber-500" />
             </div>
 
             {/* Headline */}
             <h1
-              className="mb-10"
+              className="mb-10 font-display font-light tracking-[-0.02em] text-zinc-50"
               style={{
-                fontFamily: "var(--font-display)",
-                color: "var(--ivoire)",
                 fontSize: "clamp(2.8rem, 6vw, 6rem)",
                 lineHeight: 1.05,
-                fontWeight: 300,
-                letterSpacing: "-0.02em",
                 maxWidth: "900px",
               }}
             >
-              <span style={{ fontStyle: "italic" }}>L&apos;art de trouver</span>
+              <span className="italic">L&apos;art de trouver</span>
               <br />
-              <span style={{ fontWeight: 600, fontStyle: "normal" }}>
-                votre bien idéal
-              </span>
+              <span className="font-semibold not-italic">votre bien idéal</span>
             </h1>
 
-            {/* Search bar — full width, centered */}
+            {/* Search bar */}
             <HomeSearchBar locale={locale} wilayas={wilayas} />
 
-            {/* Subtitle — below the search bar */}
-            <p
-              className="mt-6 max-w-xl text-sm leading-relaxed"
-              style={{ color: "rgba(253,251,247,0.45)" }}
-            >
+            {/* Subtitle */}
+            <p className="mt-6 max-w-xl text-sm leading-relaxed text-zinc-50/45">
               Appartements, villas, terrains — explorez l&apos;immobilier des 58
               wilayas d&apos;Algérie en temps réel.
             </p>
@@ -188,11 +172,7 @@ export default async function HomePage({
                   key={label}
                   href={href}
                   locale={locale}
-                  className="rounded-full border px-3 py-1 text-xs transition-all hover:border-or hover:text-ivoire"
-                  style={{
-                    borderColor: "rgba(253,251,247,0.15)",
-                    color: "rgba(253,251,247,0.45)",
-                  }}
+                  className="rounded-full border border-zinc-50/15 px-3 py-1 text-xs text-zinc-50/45 transition-all hover:border-amber-500 hover:text-zinc-50"
                 >
                   {label}
                 </Link>
@@ -201,11 +181,8 @@ export default async function HomePage({
           </div>
 
           {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5">
-            <span
-              className="text-[10px] font-semibold uppercase tracking-[0.2em]"
-              style={{ color: "rgba(253,251,247,0.25)" }}
-            >
+          <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-50/25">
               Défiler
             </span>
             <div
@@ -216,29 +193,15 @@ export default async function HomePage({
         </section>
 
         {/* ──────────────────────────────────────── TICKER ─── */}
-        <div
-          className="overflow-hidden border-y py-3"
-          style={{
-            background: "var(--onyx-light)",
-            borderColor: "var(--onyx-mid)",
-          }}
-        >
+        <div className="overflow-hidden border-y border-zinc-800 bg-zinc-900 py-3">
           <div
-            className="flex gap-10 whitespace-nowrap"
-            style={{
-              animation: "ticker 30s linear infinite",
-              width: "max-content",
-            }}
+            className="flex w-max gap-10 whitespace-nowrap"
+            style={{ animation: "ticker 30s linear infinite" }}
           >
             {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
               <span key={i} className="flex items-center gap-3">
-                <span
-                  className="text-xs font-medium"
-                  style={{ fontFamily: "var(--font-mono)", color: "rgba(253,251,247,0.45)" }}
-                >
-                  {item}
-                </span>
-                <span style={{ color: "var(--or)", opacity: 0.4 }}>·</span>
+                <span className="font-mono text-xs font-medium text-zinc-50/45">{item}</span>
+                <span className="text-amber-500/40">·</span>
               </span>
             ))}
           </div>
@@ -249,33 +212,22 @@ export default async function HomePage({
 
         {/* ──────────────────────────────── FEATURED GRID ─── */}
         {(featured || secondary) && (
-          <section className="py-20" style={{ background: "var(--ivoire)" }}>
+          <section className="bg-zinc-50 py-20">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               {/* Section header */}
               <div className="mb-10 flex items-end justify-between">
                 <div>
-                  <p
-                    className="mb-1 text-xs font-semibold uppercase tracking-[0.2em]"
-                    style={{ color: "var(--or)" }}
-                  >
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
                     Sélection
                   </p>
-                  <h2
-                    className="text-3xl font-light sm:text-4xl"
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      color: "var(--text-dark)",
-                      fontStyle: "italic",
-                    }}
-                  >
+                  <h2 className="font-display text-3xl font-light italic text-zinc-950 sm:text-4xl">
                     À la une
                   </h2>
                 </div>
                 <Link
                   href="/search"
                   locale={locale}
-                  className="hidden text-sm font-medium transition-colors hover:opacity-70 sm:inline-flex items-center gap-1.5"
-                  style={{ color: "var(--text-body)" }}
+                  className="hidden items-center gap-1.5 text-sm font-medium text-zinc-500 transition-colors hover:opacity-70 sm:inline-flex"
                 >
                   Voir toutes les annonces
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -284,20 +236,16 @@ export default async function HomePage({
                 </Link>
               </div>
 
-              {/* Editorial grid: 1 big + 1 smaller */}
+              {/* Editorial grid */}
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
                 {/* Big card */}
                 {featured && (
                   <Link
                     href={`/l/${featured.slug}`}
                     locale={locale}
-                    className="group relative overflow-hidden"
-                    style={{ borderRadius: "2px" }}
+                    className="group relative overflow-hidden rounded-sm"
                   >
-                    <div
-                      className="relative aspect-[16/10] overflow-hidden"
-                      style={{ background: "var(--onyx-light)" }}
-                    >
+                    <div className="relative aspect-[16/10] overflow-hidden bg-zinc-900">
                       {featured.cover_url ? (
                         <img
                           src={featured.cover_url}
@@ -305,34 +253,24 @@ export default async function HomePage({
                           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                       ) : (
-                        <div
-                          className="h-full w-full flex items-center justify-center"
-                          style={{ background: "var(--onyx-mid)" }}
-                        >
+                        <div className="flex h-full w-full items-center justify-center bg-zinc-800">
                           <svg className="h-16 w-16 opacity-20" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={0.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                           </svg>
                         </div>
                       )}
-                      {/* Overlay */}
                       <div
                         className="absolute inset-0"
-                        style={{
-                          background: "linear-gradient(to top, rgba(13,13,13,0.75) 0%, transparent 50%)",
-                        }}
+                        style={{ background: "linear-gradient(to top, rgba(13,13,13,0.75) 0%, transparent 50%)" }}
                       />
-                      {/* Price tag */}
-                      <div className="absolute bottom-5 start-5 end-5">
-                        <p
-                          className="text-2xl font-semibold"
-                          style={{ fontFamily: "var(--font-display)", color: "var(--ivoire)" }}
-                        >
+                      <div className="absolute inset-x-5 bottom-5">
+                        <p className="font-display text-2xl font-semibold text-zinc-50">
                           {formatPrice(featured.current_price, featured.currency)}
                         </p>
-                        <p className="mt-1 text-sm line-clamp-1" style={{ color: "rgba(253,251,247,0.7)" }}>
+                        <p className="mt-1 line-clamp-1 text-sm text-zinc-50/70">
                           {featured.title}
                         </p>
-                        <p className="text-xs mt-0.5" style={{ color: "var(--or)" }}>
+                        <p className="mt-0.5 text-xs text-amber-500">
                           {featured.wilaya_name}{featured.commune_name ? ` · ${featured.commune_name}` : ""}
                         </p>
                       </div>
@@ -345,25 +283,17 @@ export default async function HomePage({
                   <Link
                     href={`/l/${secondary.slug}`}
                     locale={locale}
-                    className="group relative overflow-hidden"
-                    style={{ borderRadius: "2px" }}
+                    className="group relative overflow-hidden rounded-sm"
                   >
-                    <div
-                      className="relative h-full overflow-hidden"
-                      style={{ background: "var(--onyx-light)", minHeight: "280px" }}
-                    >
+                    <div className="relative h-full min-h-[280px] overflow-hidden bg-zinc-900">
                       {secondary.cover_url ? (
                         <img
                           src={secondary.cover_url}
                           alt={secondary.title}
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          style={{ position: "absolute", inset: 0 }}
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                       ) : (
-                        <div
-                          className="absolute inset-0 flex items-center justify-center"
-                          style={{ background: "var(--onyx-soft)" }}
-                        >
+                        <div className="absolute inset-0 flex items-center justify-center bg-zinc-700">
                           <svg className="h-12 w-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={0.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
                           </svg>
@@ -371,21 +301,16 @@ export default async function HomePage({
                       )}
                       <div
                         className="absolute inset-0"
-                        style={{
-                          background: "linear-gradient(to top, rgba(13,13,13,0.75) 0%, transparent 55%)",
-                        }}
+                        style={{ background: "linear-gradient(to top, rgba(13,13,13,0.75) 0%, transparent 55%)" }}
                       />
-                      <div className="absolute bottom-5 start-5 end-5">
-                        <p
-                          className="text-xl font-semibold"
-                          style={{ fontFamily: "var(--font-display)", color: "var(--ivoire)" }}
-                        >
+                      <div className="absolute inset-x-5 bottom-5">
+                        <p className="font-display text-xl font-semibold text-zinc-50">
                           {formatPrice(secondary.current_price, secondary.currency)}
                         </p>
-                        <p className="mt-0.5 text-sm line-clamp-1" style={{ color: "rgba(253,251,247,0.7)" }}>
+                        <p className="mt-0.5 line-clamp-1 text-sm text-zinc-50/70">
                           {secondary.title}
                         </p>
-                        <p className="text-xs mt-0.5" style={{ color: "var(--or)" }}>
+                        <p className="mt-0.5 text-xs text-amber-500">
                           {secondary.wilaya_name}
                         </p>
                       </div>
@@ -397,38 +322,28 @@ export default async function HomePage({
           </section>
         )}
 
-        {/* ──────────────────────────────────── TENDANCE ─── */}
+        {/* ──────────────────────────────────────── TENDANCE ─── */}
         {trending.length > 0 && (
-          <section
-            className="py-20 border-t"
-            style={{ background: "var(--ivoire)", borderColor: "var(--ivoire-border)" }}
-          >
+          <section className="border-t border-zinc-200 bg-zinc-50 py-20">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="flex gap-10 lg:gap-20">
                 {/* Left description */}
-                <div className="hidden lg:flex shrink-0 flex-col justify-between" style={{ width: "220px" }}>
+                <div className="hidden w-[220px] shrink-0 flex-col justify-between lg:flex">
                   <div>
-                    <p
-                      className="mb-2 text-xs font-semibold uppercase tracking-[0.2em]"
-                      style={{ color: "var(--or)" }}
-                    >
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
                       Marché
                     </p>
-                    <h2
-                      className="mb-4 text-4xl font-light leading-tight"
-                      style={{ fontFamily: "var(--font-display)", color: "var(--text-dark)" }}
-                    >
+                    <h2 className="mb-4 font-display text-4xl font-light leading-tight text-zinc-950">
                       Tendance
                     </h2>
-                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                    <p className="text-sm leading-relaxed text-zinc-400">
                       Les biens qui retiennent l&apos;attention sur le marché algérien en ce moment.
                     </p>
                   </div>
                   <Link
                     href="/search"
                     locale={locale}
-                    className="inline-flex w-fit items-center gap-1.5 border-b pb-0.5 text-xs font-semibold transition-opacity hover:opacity-60"
-                    style={{ borderColor: "var(--onyx)", color: "var(--text-dark)" }}
+                    className="inline-flex w-fit items-center gap-1.5 border-b border-zinc-950 pb-0.5 text-xs font-semibold text-zinc-950 transition-opacity hover:opacity-60"
                   >
                     Voir tout
                     <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -438,15 +353,12 @@ export default async function HomePage({
                 </div>
 
                 {/* Right: 2-row grid */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="mb-6 flex items-center justify-between lg:hidden">
-                    <h2
-                      className="text-2xl font-light"
-                      style={{ fontFamily: "var(--font-display)", color: "var(--text-dark)" }}
-                    >
+                    <h2 className="font-display text-2xl font-light text-zinc-950">
                       Tendance
                     </h2>
-                    <Link href="/search" locale={locale} className="text-xs" style={{ color: "var(--or)" }}>
+                    <Link href="/search" locale={locale} className="text-xs text-amber-500">
                       Voir tout →
                     </Link>
                   </div>
@@ -459,10 +371,7 @@ export default async function HomePage({
                         locale={locale}
                         className="group"
                       >
-                        <div
-                          className="relative mb-3 aspect-[4/3] overflow-hidden"
-                          style={{ background: "var(--ivoire-deep)", borderRadius: "2px" }}
-                        >
+                        <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-sm bg-zinc-200">
                           {listing.cover_url ? (
                             <img
                               src={listing.cover_url}
@@ -470,34 +379,21 @@ export default async function HomePage({
                               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                           ) : (
-                            <div
-                              className="h-full w-full flex items-center justify-center"
-                              style={{ color: "var(--ivoire-border)" }}
-                            >
+                            <div className="flex h-full w-full items-center justify-center text-zinc-300">
                               <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12" />
                               </svg>
                             </div>
                           )}
                         </div>
-                        <p
-                          className="text-sm font-semibold"
-                          style={{
-                            fontFamily: "var(--font-display)",
-                            color: "var(--text-dark)",
-                          }}
-                        >
+                        <p className="font-display text-sm font-semibold text-zinc-950">
                           {formatPrice(listing.current_price, listing.currency)}
                         </p>
-                        <p
-                          className="mt-0.5 text-xs line-clamp-1"
-                          style={{ color: "var(--text-body)" }}
-                        >
+                        <p className="mt-0.5 line-clamp-1 text-xs text-zinc-500">
                           {listing.title}
                         </p>
-                        <p className="text-xs" style={{ color: "var(--text-faint)" }}>
-                          {listing.wilaya_name}
-                          {listing.commune_name ? `, ${listing.commune_name}` : ""}
+                        <p className="text-xs text-zinc-300">
+                          {listing.wilaya_name}{listing.commune_name ? `, ${listing.commune_name}` : ""}
                         </p>
                       </Link>
                     ))}
@@ -510,50 +406,36 @@ export default async function HomePage({
 
         {/* ─────────────────────────── NOUVELLES ANNONCES ─── */}
         {newest.length > 0 && (
-          <section
-            className="py-20 border-t"
-            style={{ background: "var(--ivoire-warm)", borderColor: "var(--ivoire-border)" }}
-          >
+          <section className="border-t border-zinc-200 bg-zinc-100 py-20">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="mb-8 flex items-end justify-between">
                 <div>
-                  <p
-                    className="mb-1 text-xs font-semibold uppercase tracking-[0.2em]"
-                    style={{ color: "var(--or)" }}
-                  >
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
                     Location
                   </p>
-                  <h2
-                    className="text-3xl font-light"
-                    style={{ fontFamily: "var(--font-display)", color: "var(--text-dark)" }}
-                  >
+                  <h2 className="font-display text-3xl font-light text-zinc-950">
                     Nouvelles annonces
                   </h2>
                 </div>
                 <Link
                   href="/search?listing_type=rent&sort=newest"
                   locale={locale}
-                  className="text-xs font-medium"
-                  style={{ color: "var(--or)" }}
+                  className="text-xs font-medium text-amber-500"
                 >
                   Voir tout →
                 </Link>
               </div>
 
               {/* Horizontal scroll */}
-              <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+              <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-2">
                 {newest.map((listing) => (
                   <Link
                     key={listing.id}
                     href={`/l/${listing.slug}`}
                     locale={locale}
-                    className="group shrink-0"
-                    style={{ width: "260px" }}
+                    className="group w-[260px] shrink-0"
                   >
-                    <div
-                      className="relative mb-3 aspect-[4/3] overflow-hidden"
-                      style={{ background: "var(--ivoire-deep)", borderRadius: "2px" }}
-                    >
+                    <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-sm bg-zinc-200">
                       {listing.cover_url ? (
                         <img
                           src={listing.cover_url}
@@ -561,32 +443,23 @@ export default async function HomePage({
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
-                        <div
-                          className="h-full w-full flex items-center justify-center"
-                          style={{ color: "var(--ivoire-border)" }}
-                        >
+                        <div className="flex h-full w-full items-center justify-center text-zinc-300">
                           <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12" />
                           </svg>
                         </div>
                       )}
-                      <span
-                        className="absolute start-2 top-2 px-2 py-0.5 text-[10px] font-semibold"
-                        style={{ background: "var(--or)", color: "var(--onyx)", borderRadius: "2px" }}
-                      >
+                      <span className="absolute start-2 top-2 rounded-sm bg-amber-500 px-2 py-0.5 text-[10px] font-semibold text-zinc-950">
                         Nouveau
                       </span>
                     </div>
-                    <p
-                      className="text-base font-semibold"
-                      style={{ fontFamily: "var(--font-display)", color: "var(--text-dark)" }}
-                    >
+                    <p className="font-display text-base font-semibold text-zinc-950">
                       {formatPrice(listing.current_price, listing.currency)}
                     </p>
-                    <p className="mt-0.5 text-xs line-clamp-2 leading-snug" style={{ color: "var(--text-body)" }}>
+                    <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-zinc-500">
                       {listing.title}
                     </p>
-                    <p className="mt-0.5 text-xs" style={{ color: "var(--text-faint)" }}>
+                    <p className="mt-0.5 text-xs text-zinc-300">
                       {listing.wilaya_name}
                     </p>
                   </Link>
@@ -597,68 +470,40 @@ export default async function HomePage({
         )}
 
         {/* ──────────────────────────────── STATS ONYX ─── */}
-        <section style={{ background: "var(--onyx)" }}>
+        <section className="bg-zinc-950">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
             {/* Stats row */}
-            <div
-              className="grid grid-cols-2 gap-px lg:grid-cols-4"
-              style={{ borderBottom: "1px solid var(--onyx-mid)" }}
-            >
+            <div className="grid grid-cols-2 gap-px border-b border-zinc-800 lg:grid-cols-4">
               {STATS.map((stat, i) => (
                 <div
                   key={stat.label}
                   className="flex flex-col justify-center px-8 py-12"
-                  style={{
-                    borderRight: i < 3 ? "1px solid var(--onyx-mid)" : undefined,
-                  }}
+                  style={{ borderRight: i < 3 ? "1px solid #27272A" : undefined }}
                 >
-                  <p
-                    className="text-4xl font-light sm:text-5xl"
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      color: "var(--ivoire)",
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
+                  <p className="font-mono text-4xl font-light tracking-[-0.02em] text-zinc-50 sm:text-5xl">
                     {stat.value}
                   </p>
-                  <p
-                    className="mt-2 text-xs font-semibold uppercase tracking-[0.15em]"
-                    style={{ color: "var(--or)" }}
-                  >
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.15em] text-amber-500">
                     {stat.label}
                   </p>
                 </div>
               ))}
             </div>
 
-            {/* CTA text + button */}
+            {/* CTA */}
             <div className="flex flex-col items-start gap-8 py-16 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-xl">
-                <p
-                  className="text-xs font-semibold uppercase tracking-[0.2em]"
-                  style={{ color: "var(--or)" }}
-                >
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
                   Pour les professionnels
                 </p>
-                <h2
-                  className="mt-3 text-3xl font-light leading-snug sm:text-4xl"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    color: "var(--ivoire)",
-                    fontStyle: "italic",
-                  }}
-                >
+                <h2 className="mt-3 font-display text-3xl font-light italic leading-snug text-zinc-50 sm:text-4xl">
                   Le portail des agences
                   <br />
-                  <span style={{ fontWeight: 600, fontStyle: "normal" }}>
+                  <span className="font-semibold not-italic">
                     immobilières d&apos;Algérie
                   </span>
                 </h2>
-                <p
-                  className="mt-4 text-sm leading-relaxed"
-                  style={{ color: "rgba(253,251,247,0.45)" }}
-                >
+                <p className="mt-4 text-sm leading-relaxed text-zinc-50/45">
                   Publiez vos annonces, gérez vos leads et analysez votre marché
                   avec les outils AqarPro.
                 </p>
@@ -667,12 +512,7 @@ export default async function HomePage({
                 <Link
                   href="/AqarPro/dashboard"
                   locale={locale}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-semibold transition-opacity hover:opacity-85"
-                  style={{
-                    background: "var(--ivoire)",
-                    color: "var(--onyx)",
-                    borderRadius: "2px",
-                  }}
+                  className="inline-flex items-center gap-2 rounded-sm bg-zinc-50 px-8 py-3.5 text-sm font-semibold text-zinc-950 transition-opacity hover:opacity-85"
                 >
                   Accéder à l&apos;espace pro
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -682,12 +522,7 @@ export default async function HomePage({
                 <Link
                   href="/pricing"
                   locale={locale}
-                  className="inline-flex items-center gap-2 border px-8 py-3.5 text-sm font-medium transition-opacity hover:opacity-70"
-                  style={{
-                    borderColor: "rgba(253,251,247,0.2)",
-                    color: "rgba(253,251,247,0.7)",
-                    borderRadius: "2px",
-                  }}
+                  className="inline-flex items-center gap-2 rounded-sm border border-zinc-50/20 px-8 py-3.5 text-sm font-medium text-zinc-50/70 transition-opacity hover:opacity-70"
                 >
                   Voir les tarifs
                 </Link>
@@ -697,28 +532,21 @@ export default async function HomePage({
         </section>
 
         {/* ─────────────────────── MARCHÉS POPULAIRES ─── */}
-        <section className="py-20" style={{ background: "var(--ivoire)" }}>
+        <section className="bg-zinc-50 py-20">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
             <div className="mb-10 flex items-end justify-between">
               <div>
-                <p
-                  className="mb-1 text-xs font-semibold uppercase tracking-[0.2em]"
-                  style={{ color: "var(--or)" }}
-                >
+                <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
                   Géographie
                 </p>
-                <h2
-                  className="text-3xl font-light sm:text-4xl"
-                  style={{ fontFamily: "var(--font-display)", color: "var(--text-dark)" }}
-                >
+                <h2 className="font-display text-3xl font-light text-zinc-950 sm:text-4xl">
                   Marchés actifs
                 </h2>
               </div>
               <Link
                 href="/search"
                 locale={locale}
-                className="hidden text-xs font-medium sm:inline"
-                style={{ color: "var(--or)" }}
+                className="hidden text-xs font-medium text-amber-500 sm:inline"
               >
                 Toutes les wilayas →
               </Link>
@@ -730,29 +558,13 @@ export default async function HomePage({
                   key={city.code}
                   href={`/search?wilaya_code=${city.code}`}
                   locale={locale}
-                  className="group flex flex-col gap-3 border p-5 transition-all hover:-translate-y-0.5 hover:border-or hover:shadow-md"
-                  style={{
-                    background: "var(--bg-card)",
-                    borderColor: "var(--ivoire-border)",
-                    boxShadow: "var(--shadow-card)",
-                    borderRadius: "2px",
-                  }}
+                  className="group flex flex-col gap-3 rounded-sm border border-zinc-200 bg-white p-5 shadow-card transition-all hover:-translate-y-0.5 hover:border-amber-500 hover:shadow-md"
                 >
                   <div>
-                    <p
-                      className="text-sm font-semibold"
-                      style={{ color: "var(--text-dark)" }}
-                    >
-                      {city.name}
-                    </p>
-                    <p className="text-xs mt-0.5" style={{ color: "var(--text-faint)" }}>
-                      {city.sub}
-                    </p>
+                    <p className="text-sm font-semibold text-zinc-950">{city.name}</p>
+                    <p className="mt-0.5 text-xs text-zinc-300">{city.sub}</p>
                   </div>
-                  <p
-                    className="text-xs font-semibold"
-                    style={{ fontFamily: "var(--font-mono)", color: "var(--or)" }}
-                  >
+                  <p className="font-mono text-xs font-semibold text-amber-500">
                     {city.count}
                   </p>
                 </Link>
