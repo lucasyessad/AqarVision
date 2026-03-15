@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
+import { logger } from "@/lib/logger";
 import type { AiJobDto, AiJobStatus, AiJobType } from "../types/ai.types";
 
 // Module-level singleton — avoids re-instantiating the client on every call
@@ -211,6 +212,7 @@ Write a professional description of 150-250 words.`;
     return { text, job_id: job.id };
   } catch (err) {
     const message = err instanceof Error ? err.message : "AI generation failed";
+    logger.error({ err, agencyId, listingId, jobId: job.id }, "AI description generation failed");
     await failJob(supabase, job.id, message);
     throw err;
   }
@@ -297,6 +299,7 @@ Output format: {"title": "...", "description": "..."}`;
     return { translation, job_id: job.id };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Translation failed";
+    logger.error({ err, agencyId, listingId, jobId: job.id, sourceLocale, targetLocale }, "AI translation failed");
     await failJob(supabase, job.id, message);
     throw err;
   }

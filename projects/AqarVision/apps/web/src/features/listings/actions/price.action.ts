@@ -1,17 +1,15 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { ChangePriceSchema } from "../schemas/listing.schema";
 import { changePrice } from "../services/listing.service";
-
-type PriceResult =
-  | { success: true; data: { updated: true } }
-  | { success: false; error: { code: string; message: string } };
+import type { ActionResult } from "@/types/action-result";
 
 export async function changePriceAction(
-  _prevState: PriceResult | null,
+  _prevState: ActionResult<{ updated: true }> | null,
   formData: FormData
-): Promise<PriceResult> {
+): Promise<ActionResult<{ updated: true }>> {
   const parsed = ChangePriceSchema.safeParse({
     listing_id: formData.get("listing_id"),
     new_price: Number(formData.get("new_price")),
@@ -29,44 +27,28 @@ export async function changePriceAction(
     };
   }
 
+  // Resolve agency from listing for RBAC
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: listing } = await supabase
+    .from("listings")
+    .select("agency_id")
+    .eq("id", parsed.data.listing_id)
+    .single();
 
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
+  if (!listing?.agency_id) {
+    return { success: false, error: { code: "NOT_FOUND", message: "Listing not found" } };
   }
 
-  try {
+  return withAgencyAuth(listing.agency_id as string, "listing", "update", async (ctx) => {
+    const supabaseAuth = await createClient();
     await changePrice(
-      supabase,
-      user.id,
+      supabaseAuth,
+      ctx.userId,
       parsed.data.listing_id,
       parsed.data.new_price,
       parsed.data.expected_version,
       parsed.data.reason
     );
-    return { success: true, data: { updated: true } };
-  } catch (err) {
-    if (err instanceof Error && err.name === "OPTIMISTIC_LOCK_CONFLICT") {
-      return {
-        success: false,
-        error: {
-          code: "OPTIMISTIC_LOCK_CONFLICT",
-          message: err.message,
-        },
-      };
-    }
-    return {
-      success: false,
-      error: {
-        code: "PRICE_CHANGE_FAILED",
-        message: err instanceof Error ? err.message : "Failed to change price",
-      },
-    };
-  }
+    return { updated: true as const };
+  });
 }

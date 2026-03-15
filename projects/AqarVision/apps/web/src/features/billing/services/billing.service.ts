@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
+import { logger } from "@/lib/logger";
 import type { PlanDto, SubscriptionDto, CheckoutResult, PortalResult } from "../types/billing.types";
 
 function getStripe() {
@@ -153,7 +154,10 @@ export async function startCheckout(
     metadata: { agency_id: agencyId, plan_id: plan.id },
   });
 
-  if (!session.url) throw new Error("Failed to create checkout session");
+  if (!session.url) {
+    logger.error({ agencyId, planCode }, "Stripe checkout session has no URL");
+    throw new Error("Failed to create checkout session");
+  }
 
   return { checkout_url: session.url };
 }

@@ -5,8 +5,11 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
+  /** Titre affiché en cas d'erreur — doit être traduit par le parent via useTranslations() */
   title?: string;
+  /** Message de secours si l'erreur n'a pas de message — doit être traduit par le parent */
   message?: string;
+  /** Label du bouton "réessayer" — doit être traduit par le parent */
   retryLabel?: string;
 }
 
@@ -19,11 +22,6 @@ export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {
-  static defaultProps = {
-    title: "Une erreur est survenue",
-    message: "Erreur inattendue",
-    retryLabel: "Réessayer",
-  };
 
   constructor(props: ErrorBoundaryProps) {
     super(props);
@@ -47,9 +45,11 @@ export class ErrorBoundary extends Component<
       return (
         <div className="flex min-h-[400px] flex-col items-center justify-center px-4">
           <div className="text-center">
-            <h2 className="mb-2 text-xl font-semibold text-blue-night">
-              {this.props.title}
-            </h2>
+            {this.props.title && (
+              <h2 className="mb-2 text-xl font-semibold text-blue-night">
+                {this.props.title}
+              </h2>
+            )}
             <p className="mb-4 text-gray-500">
               {this.state.error?.message ?? this.props.message}
             </p>

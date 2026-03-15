@@ -15,7 +15,7 @@ const LOCALE_OPTIONS = [
 interface AiTranslateButtonProps {
   listingId: string;
   sourceLocale: string;
-  onAccept?: (text: string, targetLocale: string) => void;
+  onAccept?: (translation: { title: string; description: string }, targetLocale: string) => void;
 }
 
 export function AiTranslateButton({
@@ -28,7 +28,7 @@ export function AiTranslateButton({
   const [showResult, setShowResult] = useState(false);
 
   const [state, formAction, isPending] = useActionState<
-    ActionResult<{ text: string; job_id: string }> | null,
+    ActionResult<{ translation: { title: string; description: string }; job_id: string }> | null,
     FormData
   >(translateListingAction, null);
 
@@ -38,7 +38,7 @@ export function AiTranslateButton({
 
   function handleAccept() {
     if (state?.success && onAccept && targetLocale) {
-      onAccept(state.data.text, targetLocale);
+      onAccept(state.data.translation, targetLocale);
     }
     setShowResult(false);
   }
@@ -140,12 +140,15 @@ export function AiTranslateButton({
 
       {showResult && state?.success && (
         <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-          <div className="mb-4">
+          <div className="mb-4 space-y-2">
             <p className="mb-1 text-xs font-semibold uppercase text-gray-400">
               {t("generated_text")}
             </p>
+            <div className="rounded-lg bg-green-50 p-3 text-sm font-medium text-gray-800">
+              {state.data.translation.title}
+            </div>
             <div className="rounded-lg bg-green-50 p-3 text-sm text-gray-700 whitespace-pre-wrap">
-              {state.data.text}
+              {state.data.translation.description}
             </div>
           </div>
           <div className="flex gap-2">

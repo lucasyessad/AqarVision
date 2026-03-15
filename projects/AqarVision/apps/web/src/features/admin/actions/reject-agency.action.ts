@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { withSuperAdminAuth } from "@/lib/auth/with-super-admin-auth";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
 import { RejectAgencySchema } from "../schemas/admin.schema";
 
@@ -10,13 +11,10 @@ export interface RejectAgencyDto {
   verification_status: "rejected";
 }
 
-// ── Action ────────────────────────────────────────────────────────────────────
-
 export async function rejectAgencyAction(
   agencyId: string,
   comment?: string
 ): Promise<ActionResult<RejectAgencyDto>> {
-  // 1. Validate input
   const parsed = RejectAgencySchema.safeParse({ agencyId, comment });
   if (!parsed.success) {
     return {
@@ -28,53 +26,23 @@ export async function rejectAgencyAction(
     };
   }
 
-  const supabase = await createClient();
+  return withSuperAdminAuth(async () => {
+    const supabase = await createClient();
+    const { error: updateError } = await supabase
+      .from("agencies")
+      .update({ verification_status: "rejected" })
+      .eq("id", parsed.data.agencyId);
 
-  // 2. Verify caller is super_admin
-  const {
-    data: { user },
-    error: sessionError,
-  } = await supabase.auth.getUser();
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
 
-  if (sessionError || !user) {
+    revalidatePath("/admin/agencies");
+    revalidatePath("/admin/verifications");
+
     return {
-      success: false,
-      error: { code: "UNAUTHENTICATED", message: "Session invalide. Veuillez vous reconnecter." },
-    };
-  }
-
-  const { data: isSuperAdmin, error: rpcError } = await supabase.rpc("is_super_admin", {
-    p_user_id: user.id,
-  });
-
-  if (rpcError || !isSuperAdmin) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Accès réservé aux super administrateurs." },
-    };
-  }
-
-  // 3. Mark as rejected
-  const { error: updateError } = await supabase
-    .from("agencies")
-    .update({ verification_status: "rejected" })
-    .eq("id", parsed.data.agencyId);
-
-  if (updateError) {
-    return {
-      success: false,
-      error: { code: "DB_ERROR", message: updateError.message },
-    };
-  }
-
-  revalidatePath("/admin/agencies");
-  revalidatePath("/admin/verifications");
-
-  return {
-    success: true,
-    data: {
       agencyId: parsed.data.agencyId,
-      verification_status: "rejected",
-    },
-  };
+      verification_status: "rejected" as const,
+    };
+  });
 }

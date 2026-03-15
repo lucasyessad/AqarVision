@@ -1,12 +1,14 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { PublishListingSchema } from "../schemas/listing.schema";
 import { canPublish, submitForReview } from "../services/listing.service";
+import type { ActionResult } from "@/types/action-result";
 
-type PublishResult =
-  | { success: true; data: { submitted: true } }
-  | { success: false; error: { code: string; message: string; missing?: string[] } };
+type PublishResult = ActionResult<{ submitted: true }> & {
+  error?: { code: string; message: string; missing?: string[] };
+};
 
 export async function submitForReviewAction(
   _prevState: PublishResult | null,
@@ -26,19 +28,19 @@ export async function submitForReviewAction(
     };
   }
 
+  // Resolve agency from listing for RBAC
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: listing } = await supabase
+    .from("listings")
+    .select("agency_id")
+    .eq("id", parsed.data.listing_id)
+    .single();
 
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
+  if (!listing?.agency_id) {
+    return { success: false, error: { code: "NOT_FOUND", message: "Listing not found" } };
   }
 
-  // Pre-check requirements
+  // Pre-check publication requirements before auth (no DB write, read-only)
   const check = await canPublish(supabase, parsed.data.listing_id);
   if (!check.canPublish) {
     return {
@@ -51,16 +53,9 @@ export async function submitForReviewAction(
     };
   }
 
-  try {
-    await submitForReview(supabase, user.id, parsed.data.listing_id);
-    return { success: true, data: { submitted: true } };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "SUBMIT_FAILED",
-        message: err instanceof Error ? err.message : "Failed to submit for review",
-      },
-    };
-  }
+  return withAgencyAuth(listing.agency_id as string, "listing", "update", async (ctx) => {
+    const supabaseAuth = await createClient();
+    await submitForReview(supabaseAuth, ctx.userId, parsed.data.listing_id);
+    return { submitted: true as const };
+  });
 }

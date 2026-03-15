@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 import type {
   ListingDto,
   ListingDetailDto,
@@ -418,10 +419,12 @@ export async function changePrice(
 
   if (error) {
     if (error.message.includes("version") || error.message.includes("conflict")) {
+      logger.warn({ listingId, userId, expectedVersion }, "Optimistic lock conflict on price change");
       const err = new Error("Price was changed by another user");
       err.name = "OPTIMISTIC_LOCK_CONFLICT";
       throw err;
     }
+    logger.error({ err: error, listingId, userId }, "changePrice RPC failed");
     throw new Error(error.message);
   }
 }

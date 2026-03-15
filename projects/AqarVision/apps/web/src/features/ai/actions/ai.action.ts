@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { GenerateDescriptionSchema, TranslateListingSchema } from "../schemas/ai.schema";
 import {
   generateDescription,
@@ -8,16 +9,24 @@ import {
 } from "../services/ai.service";
 import type { ActionResult } from "../types/ai.types";
 
+async function getListingAgencyId(listingId: string): Promise<string | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("listings")
+    .select("agency_id")
+    .eq("id", listingId)
+    .single();
+  return data?.agency_id as string | null;
+}
+
 export async function generateDescriptionAction(
   _prevState: ActionResult<{ text: string; job_id: string }> | null,
   formData: FormData
 ): Promise<ActionResult<{ text: string; job_id: string }>> {
-  const raw = {
+  const parsed = GenerateDescriptionSchema.safeParse({
     listing_id: formData.get("listing_id"),
     source_locale: formData.get("source_locale"),
-  };
-
-  const parsed = GenerateDescriptionSchema.safeParse(raw);
+  });
 
   if (!parsed.success) {
     return {
@@ -29,79 +38,32 @@ export async function generateDescriptionAction(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
+  const agencyId = await getListingAgencyId(parsed.data.listing_id);
+  if (!agencyId) {
+    return { success: false, error: { code: "NOT_FOUND", message: "Listing not found" } };
   }
 
-  // Get listing to find agency_id
-  const { data: listing } = await supabase
-    .from("listings")
-    .select("agency_id")
-    .eq("id", parsed.data.listing_id)
-    .single();
-
-  if (!listing) {
-    return {
-      success: false,
-      error: { code: "NOT_FOUND", message: "Listing not found" },
-    };
-  }
-
-  const agencyId = listing.agency_id as string;
-
-  // Check membership
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("id")
-    .eq("agency_id", agencyId)
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .single();
-
-  if (!membership) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Not a member of this agency" },
-    };
-  }
-
-  try {
+  return withAgencyAuth(agencyId, "ai_job", "create", async (ctx) => {
+    const supabase = await createClient();
     const result = await generateDescription(
       supabase,
-      agencyId,
+      ctx.agencyId,
       parsed.data.listing_id,
       parsed.data.source_locale
     );
-    return { success: true, data: result };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Generation failed";
-    const code = message === "QUOTA_EXCEEDED" ? "QUOTA_EXCEEDED" : "AI_ERROR";
-    return {
-      success: false,
-      error: { code, message },
-    };
-  }
+    return result;
+  });
 }
 
 export async function translateListingAction(
-  _prevState: ActionResult<{ text: string; job_id: string }> | null,
+  _prevState: ActionResult<{ translation: { title: string; description: string }; job_id: string }> | null,
   formData: FormData
-): Promise<ActionResult<{ text: string; job_id: string }>> {
-  const raw = {
+): Promise<ActionResult<{ translation: { title: string; description: string }; job_id: string }>> {
+  const parsed = TranslateListingSchema.safeParse({
     listing_id: formData.get("listing_id"),
     source_locale: formData.get("source_locale"),
     target_locale: formData.get("target_locale"),
-  };
-
-  const parsed = TranslateListingSchema.safeParse(raw);
+  });
 
   if (!parsed.success) {
     return {
@@ -113,65 +75,20 @@ export async function translateListingAction(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
+  const agencyId = await getListingAgencyId(parsed.data.listing_id);
+  if (!agencyId) {
+    return { success: false, error: { code: "NOT_FOUND", message: "Listing not found" } };
   }
 
-  // Get listing to find agency_id
-  const { data: listing } = await supabase
-    .from("listings")
-    .select("agency_id")
-    .eq("id", parsed.data.listing_id)
-    .single();
-
-  if (!listing) {
-    return {
-      success: false,
-      error: { code: "NOT_FOUND", message: "Listing not found" },
-    };
-  }
-
-  const agencyId = listing.agency_id as string;
-
-  // Check membership
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("id")
-    .eq("agency_id", agencyId)
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .single();
-
-  if (!membership) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Not a member of this agency" },
-    };
-  }
-
-  try {
+  return withAgencyAuth(agencyId, "ai_job", "create", async (ctx) => {
+    const supabase = await createClient();
     const result = await translateListing(
       supabase,
-      agencyId,
+      ctx.agencyId,
       parsed.data.listing_id,
       parsed.data.source_locale,
       parsed.data.target_locale
     );
-    return { success: true, data: result };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Translation failed";
-    const code = message === "QUOTA_EXCEEDED" ? "QUOTA_EXCEEDED" : "AI_ERROR";
-    return {
-      success: false,
-      error: { code, message },
-    };
-  }
+    return result;
+  });
 }

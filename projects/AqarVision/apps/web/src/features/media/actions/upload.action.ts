@@ -2,6 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import {
   GetSignedUploadUrlSchema,
   FinalizeMediaUploadSchema,
@@ -12,6 +13,16 @@ import {
 } from "../services/media.service";
 import type { ActionResult } from "../types/media.types";
 import type { UploadUrlResult, MediaDto } from "../types/media.types";
+
+async function getListingAgencyId(listingId: string): Promise<string | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("listings")
+    .select("agency_id")
+    .eq("id", listingId)
+    .single();
+  return data?.agency_id as string | null;
+}
 
 export async function getSignedUploadUrlAction(
   input: unknown
@@ -28,67 +39,22 @@ export async function getSignedUploadUrlAction(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
+  const agencyId = await getListingAgencyId(parsed.data.listing_id);
+  if (!agencyId) {
+    return { success: false, error: { code: "NOT_FOUND", message: "Listing not found" } };
   }
 
-  // Get listing to find agency_id and check membership
-  const { data: listing } = await supabase
-    .from("listings")
-    .select("agency_id")
-    .eq("id", parsed.data.listing_id)
-    .single();
-
-  if (!listing) {
-    return {
-      success: false,
-      error: { code: "NOT_FOUND", message: "Listing not found" },
-    };
-  }
-
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("id")
-    .eq("agency_id", listing.agency_id as string)
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .single();
-
-  if (!membership) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Not a member of this agency" },
-    };
-  }
-
-  try {
-    const result = await getSignedUploadUrl(
+  return withAgencyAuth(agencyId, "media", "create", async (ctx) => {
+    const supabase = await createClient();
+    return getSignedUploadUrl(
       supabase,
-      listing.agency_id as string,
+      ctx.agencyId,
       parsed.data.listing_id,
       parsed.data.file_name,
       parsed.data.content_type,
       parsed.data.file_size_bytes
     );
-    return { success: true, data: result };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "UPLOAD_URL_FAILED",
-        message:
-          err instanceof Error ? err.message : "Failed to get upload URL",
-      },
-    };
-  }
+  });
 }
 
 export async function finalizeMediaUploadAction(
@@ -106,48 +72,13 @@ export async function finalizeMediaUploadAction(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
+  const agencyId = await getListingAgencyId(parsed.data.listing_id);
+  if (!agencyId) {
+    return { success: false, error: { code: "NOT_FOUND", message: "Listing not found" } };
   }
 
-  // Check listing ownership via agency membership
-  const { data: listing } = await supabase
-    .from("listings")
-    .select("agency_id")
-    .eq("id", parsed.data.listing_id)
-    .single();
-
-  if (!listing) {
-    return {
-      success: false,
-      error: { code: "NOT_FOUND", message: "Listing not found" },
-    };
-  }
-
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("id")
-    .eq("agency_id", listing.agency_id as string)
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .single();
-
-  if (!membership) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Not a member of this agency" },
-    };
-  }
-
-  try {
+  return withAgencyAuth(agencyId, "media", "create", async () => {
+    const supabase = await createClient();
     const result = await finalizeUpload(
       supabase,
       parsed.data.listing_id,
@@ -155,18 +86,7 @@ export async function finalizeMediaUploadAction(
       parsed.data.content_type,
       parsed.data.file_size_bytes
     );
-
     revalidateTag(`listing-media-${parsed.data.listing_id}`);
-
-    return { success: true, data: result };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "FINALIZE_FAILED",
-        message:
-          err instanceof Error ? err.message : "Failed to finalize upload",
-      },
-    };
-  }
+    return result;
+  });
 }

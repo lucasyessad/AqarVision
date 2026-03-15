@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { withSuperAdminAuth } from "@/lib/auth/with-super-admin-auth";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
 import { SuspendAgencySchema } from "../schemas/admin.schema";
 
@@ -10,12 +11,9 @@ export interface SuspendAgencyDto {
   suspended_at: string;
 }
 
-// ── Action ────────────────────────────────────────────────────────────────────
-
 export async function suspendAgencyAction(
   agencyId: string
 ): Promise<ActionResult<SuspendAgencyDto>> {
-  // 1. Validate input
   const parsed = SuspendAgencySchema.safeParse({ agencyId });
   if (!parsed.success) {
     return {
@@ -27,54 +25,21 @@ export async function suspendAgencyAction(
     };
   }
 
-  const supabase = await createClient();
+  return withSuperAdminAuth(async () => {
+    const supabase = await createClient();
+    const now = new Date().toISOString();
 
-  // 2. Verify caller is super_admin
-  const {
-    data: { user },
-    error: sessionError,
-  } = await supabase.auth.getUser();
+    const { error: updateError } = await supabase
+      .from("agencies")
+      .update({ deleted_at: now })
+      .eq("id", parsed.data.agencyId);
 
-  if (sessionError || !user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHENTICATED", message: "Session invalide. Veuillez vous reconnecter." },
-    };
-  }
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
 
-  const { data: isSuperAdmin, error: rpcError } = await supabase.rpc("is_super_admin", {
-    p_user_id: user.id,
+    revalidatePath("/admin/agencies");
+
+    return { agencyId: parsed.data.agencyId, suspended_at: now };
   });
-
-  if (rpcError || !isSuperAdmin) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Accès réservé aux super administrateurs." },
-    };
-  }
-
-  // 3. Soft-delete (suspend) the agency
-  const now = new Date().toISOString();
-
-  const { error: updateError } = await supabase
-    .from("agencies")
-    .update({ deleted_at: now })
-    .eq("id", parsed.data.agencyId);
-
-  if (updateError) {
-    return {
-      success: false,
-      error: { code: "DB_ERROR", message: updateError.message },
-    };
-  }
-
-  revalidatePath("/admin/agencies");
-
-  return {
-    success: true,
-    data: {
-      agencyId: parsed.data.agencyId,
-      suspended_at: now,
-    },
-  };
 }

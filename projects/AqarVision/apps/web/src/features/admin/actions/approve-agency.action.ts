@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { withSuperAdminAuth } from "@/lib/auth/with-super-admin-auth";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
 import { ApproveAgencySchema } from "../schemas/admin.schema";
 
@@ -11,12 +12,9 @@ export interface ApproveAgencyDto {
   is_verified: true;
 }
 
-// ── Action ────────────────────────────────────────────────────────────────────
-
 export async function approveAgencyAction(
   agencyId: string
 ): Promise<ActionResult<ApproveAgencyDto>> {
-  // 1. Validate input
   const parsed = ApproveAgencySchema.safeParse({ agencyId });
   if (!parsed.success) {
     return {
@@ -28,57 +26,24 @@ export async function approveAgencyAction(
     };
   }
 
-  const supabase = await createClient();
+  return withSuperAdminAuth(async () => {
+    const supabase = await createClient();
+    const { error: updateError } = await supabase
+      .from("agencies")
+      .update({ is_verified: true, verification_status: "verified" })
+      .eq("id", parsed.data.agencyId);
 
-  // 2. Verify caller is super_admin
-  const {
-    data: { user },
-    error: sessionError,
-  } = await supabase.auth.getUser();
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
 
-  if (sessionError || !user) {
+    revalidatePath("/admin/agencies");
+    revalidatePath("/admin/verifications");
+
     return {
-      success: false,
-      error: { code: "UNAUTHENTICATED", message: "Session invalide. Veuillez vous reconnecter." },
-    };
-  }
-
-  const { data: isSuperAdmin, error: rpcError } = await supabase.rpc("is_super_admin", {
-    p_user_id: user.id,
-  });
-
-  if (rpcError || !isSuperAdmin) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Accès réservé aux super administrateurs." },
-    };
-  }
-
-  // 3. Apply verification
-  const { error: updateError } = await supabase
-    .from("agencies")
-    .update({
-      is_verified: true,
-      verification_status: "verified",
-    })
-    .eq("id", parsed.data.agencyId);
-
-  if (updateError) {
-    return {
-      success: false,
-      error: { code: "DB_ERROR", message: updateError.message },
-    };
-  }
-
-  revalidatePath("/admin/agencies");
-  revalidatePath("/admin/verifications");
-
-  return {
-    success: true,
-    data: {
       agencyId: parsed.data.agencyId,
-      verification_status: "verified",
-      is_verified: true,
-    },
-  };
+      verification_status: "verified" as const,
+      is_verified: true as const,
+    };
+  });
 }

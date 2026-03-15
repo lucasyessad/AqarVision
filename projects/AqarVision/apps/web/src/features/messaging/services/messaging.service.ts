@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 import type { ConversationDto, MessageDto } from "../types/messaging.types";
 
 /**
@@ -36,6 +37,7 @@ export async function createLead(
     .single();
 
   if (leadError || !lead) {
+    logger.error({ err: leadError, userId, listingId }, "Failed to create lead");
     throw new Error(leadError?.message ?? "Failed to create lead");
   }
 

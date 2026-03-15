@@ -143,8 +143,9 @@ async function handleCheckoutCompleted(
       stripe_customer_id: session.customer as string | null,
       status: "active",
       max_listings: maxListings,
-      current_period_start: new Date().toISOString(),
-      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      // Dates de période intentionnellement absentes : customer.subscription.created
+      // (qui suit toujours checkout.session.completed) les remplira avec les vraies
+      // valeurs Stripe via handleIndividualSubscriptionUpdated.
       payment_provider: "stripe",
     });
     return;
@@ -171,10 +172,9 @@ async function handleCheckoutCompleted(
     plan_id: planId,
     stripe_subscription_id: stripeSubscriptionId,
     status: "active",
-    current_period_start: new Date().toISOString(),
-    current_period_end: new Date(
-      Date.now() + 30 * 24 * 60 * 60 * 1000
-    ).toISOString(),
+    // Dates de période intentionnellement absentes : customer.subscription.created
+    // (qui suit toujours checkout.session.completed) les remplira avec les vraies
+    // valeurs Stripe via handleSubscriptionUpdated.
   });
 
   // Sync entitlements

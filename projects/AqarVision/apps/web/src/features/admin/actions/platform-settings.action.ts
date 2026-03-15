@@ -1,7 +1,9 @@
 "use server";
 
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { withSuperAdminAuth } from "@/lib/auth/with-super-admin-auth";
 
 export type SettingRow = {
   key: string;
@@ -9,6 +11,14 @@ export type SettingRow = {
   description: string | null;
   category: string;
 };
+
+const UpdateSettingSchema = z.object({
+  key: z.string().min(1),
+  value: z.string(),
+});
+
+const PackIdSchema = z.string().uuid();
+const SubIdSchema = z.string().uuid();
 
 /** Fetch all platform settings grouped by category */
 export async function getPlatformSettings(): Promise<Record<string, SettingRow[]>> {
@@ -35,34 +45,32 @@ export async function updatePlatformSettingAction(
   _prev: { success: boolean; error?: string } | null,
   formData: FormData
 ): Promise<{ success: boolean; error?: string }> {
-  const key = formData.get("key") as string;
-  const rawValue = formData.get("value") as string;
+  const parsed = UpdateSettingSchema.safeParse({
+    key: formData.get("key"),
+    value: formData.get("value"),
+  });
+  if (!parsed.success) return { success: false, error: "Données invalides" };
 
-  if (!key) return { success: false, error: "Clé manquante" };
+  const result = await withSuperAdminAuth(async ({ userId }) => {
+    const supabase = await createClient();
 
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Non authentifié" };
+    let parsedValue: unknown;
+    try {
+      parsedValue = JSON.parse(parsed.data.value);
+    } catch {
+      parsedValue = parsed.data.value;
+    }
 
-  const { data: isAdmin } = await supabase.rpc("is_super_admin", { p_user_id: user.id });
-  if (!isAdmin) return { success: false, error: "Accès refusé" };
+    const { error } = await supabase
+      .from("platform_settings")
+      .update({ value: parsedValue, updated_by: userId })
+      .eq("key", parsed.data.key);
 
-  // Parse value: try JSON, fall back to string
-  let parsedValue: unknown;
-  try {
-    parsedValue = JSON.parse(rawValue);
-  } catch {
-    parsedValue = rawValue;
-  }
+    if (error) throw new Error(error.message);
+    revalidatePath("/admin/settings");
+  });
 
-  const { error } = await supabase
-    .from("platform_settings")
-    .update({ value: parsedValue, updated_by: user.id })
-    .eq("key", key);
-
-  if (error) return { success: false, error: error.message };
-
-  revalidatePath("/admin/settings");
+  if (!result.success) return { success: false, error: result.error.message };
   return { success: true };
 }
 
@@ -70,20 +78,21 @@ export async function updatePlatformSettingAction(
 export async function confirmPackPaymentAction(
   packId: string
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Non authentifié" };
+  const parsed = PackIdSchema.safeParse(packId);
+  if (!parsed.success) return { success: false, error: "ID invalide" };
 
-  const { data: isAdmin } = await supabase.rpc("is_super_admin", { p_user_id: user.id });
-  if (!isAdmin) return { success: false, error: "Accès refusé" };
+  const result = await withSuperAdminAuth(async () => {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("individual_listing_packs")
+      .update({ payment_status: "confirmed" })
+      .eq("id", parsed.data);
 
-  const { error } = await supabase
-    .from("individual_listing_packs")
-    .update({ payment_status: "confirmed" })
-    .eq("id", packId);
+    if (error) throw new Error(error.message);
+    revalidatePath("/admin/payments");
+  });
 
-  if (error) return { success: false, error: error.message };
-  revalidatePath("/admin/payments");
+  if (!result.success) return { success: false, error: result.error.message };
   return { success: true };
 }
 
@@ -91,19 +100,20 @@ export async function confirmPackPaymentAction(
 export async function confirmSubscriptionPaymentAction(
   subId: string
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Non authentifié" };
+  const parsed = SubIdSchema.safeParse(subId);
+  if (!parsed.success) return { success: false, error: "ID invalide" };
 
-  const { data: isAdmin } = await supabase.rpc("is_super_admin", { p_user_id: user.id });
-  if (!isAdmin) return { success: false, error: "Accès refusé" };
+  const result = await withSuperAdminAuth(async () => {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("individual_subscriptions")
+      .update({ status: "active" })
+      .eq("id", parsed.data);
 
-  const { error } = await supabase
-    .from("individual_subscriptions")
-    .update({ status: "active" })
-    .eq("id", subId);
+    if (error) throw new Error(error.message);
+    revalidatePath("/admin/payments");
+  });
 
-  if (error) return { success: false, error: error.message };
-  revalidatePath("/admin/payments");
+  if (!result.success) return { success: false, error: result.error.message };
   return { success: true };
 }
