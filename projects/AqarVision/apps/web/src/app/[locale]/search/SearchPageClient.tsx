@@ -9,10 +9,13 @@ import type { SearchResultDto } from "@/features/marketplace/types/search.types"
 import type { MapBounds } from "@/features/marketplace/schemas/search.schema";
 import type { MapListing } from "@/features/marketplace/components/SearchMap";
 
-const SearchMap = dynamic(() => import("@/features/marketplace/components/SearchMap"), {
-  ssr: false,
-  loading: () => <div className="h-full bg-gray-100 animate-pulse" />,
-});
+const SearchMap = dynamic(
+  () => import("@/features/marketplace/components/SearchMap").then((m) => m.SearchMap),
+  {
+    ssr: false,
+    loading: () => <div className="h-full bg-gray-100 animate-pulse" />,
+  }
+);
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
