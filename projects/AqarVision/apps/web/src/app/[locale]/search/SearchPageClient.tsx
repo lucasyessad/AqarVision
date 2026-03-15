@@ -2,12 +2,17 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import { SearchResults } from "@/features/marketplace/components/SearchResults";
-import { SearchMap } from "@/features/marketplace/components/SearchMap";
 import { SearchAlertButton } from "@/features/marketplace/components/SearchAlertButton";
 import type { SearchResultDto } from "@/features/marketplace/types/search.types";
 import type { MapBounds } from "@/features/marketplace/schemas/search.schema";
 import type { MapListing } from "@/features/marketplace/components/SearchMap";
+
+const SearchMap = dynamic(() => import("@/features/marketplace/components/SearchMap"), {
+  ssr: false,
+  loading: () => <div className="h-full bg-gray-100 animate-pulse" />,
+});
 
 // ── Constants ────────────────────────────────────────────────────────────────
 

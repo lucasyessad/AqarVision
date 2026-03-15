@@ -75,6 +75,9 @@ export async function searchListings(
   if (filters.surface_min !== undefined) {
     query = query.gte("surface_m2", filters.surface_min);
   }
+  if (filters.agency_id) {
+    query = query.eq("agency_id", filters.agency_id);
+  }
 
   // PostGIS map bounds filter via RPC would be ideal, but we use a
   // bounding-box approach with the geography column.

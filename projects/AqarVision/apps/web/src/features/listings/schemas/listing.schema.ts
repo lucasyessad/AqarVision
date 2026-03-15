@@ -1,4 +1,9 @@
 import { z } from "zod";
+import { sanitizeInput } from "@/lib/sanitize";
+import { LOCALES, type Locale } from "@aqarvision/config";
+
+export type { Locale };
+export { LOCALES };
 
 export const LISTING_TYPES = ["sale", "rent", "vacation"] as const;
 export type ListingType = (typeof LISTING_TYPES)[number];
@@ -14,9 +19,6 @@ export const PROPERTY_TYPES = [
   "warehouse",
 ] as const;
 export type PropertyType = (typeof PROPERTY_TYPES)[number];
-
-export const LOCALES = ["fr", "ar", "en", "es"] as const;
-export type Locale = (typeof LOCALES)[number];
 
 export const CreateListingSchema = z.object({
   agency_id: z.string().uuid(),
@@ -54,8 +56,8 @@ export type UpdateListingInput = z.infer<typeof UpdateListingSchema>;
 export const UpsertTranslationSchema = z.object({
   listing_id: z.string().uuid(),
   locale: z.enum(LOCALES),
-  title: z.string().min(3),
-  description: z.string().min(10),
+  title: z.string().min(3).transform(sanitizeInput),
+  description: z.string().min(10).transform(sanitizeInput),
   slug: z
     .string()
     .min(3)

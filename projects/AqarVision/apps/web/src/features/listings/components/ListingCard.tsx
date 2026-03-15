@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Link } from "@/lib/i18n/navigation";
 import { ListingStatusBadge } from "./ListingStatusBadge";
 import type { ListingDto } from "../types/listing.types";
 
@@ -20,24 +21,24 @@ interface ListingCardProps {
 
 export function ListingCard({ listing }: ListingCardProps) {
   const t = useTranslations("listings");
-  const router = useRouter();
 
   const title =
     listing.translations[0]?.title ?? t("untitled");
 
   return (
-    <button
-      type="button"
-      onClick={() => router.push(`/AqarPro/dashboard/listings/${listing.id}/edit`)}
-      className="group w-full rounded-xl bg-[#f7fafc] text-start shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+    <Link
+      href={`/AqarPro/dashboard/listings/${listing.id}/edit`}
+      className="group block w-full rounded-xl bg-[#f7fafc] text-start shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
     >
       {/* Cover image */}
       <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-xl bg-gray-200">
         {listing.cover_url ? (
-          <img
+          <Image
             src={listing.cover_url}
             alt={title}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            fill
+            className="object-cover transition-transform group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-gray-400">
@@ -91,6 +92,6 @@ export function ListingCard({ listing }: ListingCardProps) {
           </span>
         </div>
       </div>
-    </button>
+    </Link>
   );
 }

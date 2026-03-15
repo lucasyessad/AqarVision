@@ -222,6 +222,7 @@ export async function forgotPasswordAction(
   formData: FormData
 ): Promise<ForgotPasswordFormState> {
   const email = formData.get("email") as string;
+  const locale = (formData.get("locale") as string) || "fr";
 
   const parsed = ResetPasswordSchema.safeParse({ email });
 
@@ -235,7 +236,7 @@ export async function forgotPasswordAction(
 
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL ? "" : "http://localhost:3000"}/fr/auth/reset-password`,
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/${locale}/auth/reset-password`,
   });
 
   if (error) {

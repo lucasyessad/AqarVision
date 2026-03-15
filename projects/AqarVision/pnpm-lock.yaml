@@ -66,6 +66,15 @@ importers:
       '@anthropic-ai/sdk':
         specifier: ^0.39.0
         version: 0.39.0
+      '@aqarvision/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@aqarvision/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+      '@aqarvision/security':
+        specifier: workspace:*
+        version: link:../../packages/security
       '@sentry/core':
         specifier: ^10.43.0
         version: 10.43.0

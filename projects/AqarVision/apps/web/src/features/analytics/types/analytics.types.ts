@@ -27,6 +27,4 @@ export interface DashboardStats {
   trend_conversion: number;
 }
 
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: { code: string; message: string } };
+export type { ActionResult } from "@/types/action-result";

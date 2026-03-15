@@ -1,11 +1,10 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { ChangeMemberRoleSchema } from "../schemas/agency.schema";
-import { changeMemberRole, deactivateMember, getUserMembership } from "../services/agency.service";
+import { changeMemberRole, deactivateMember } from "../services/agency.service";
 import type { ActionResult } from "../types/agency.types";
-
-const TEAM_MANAGE_ROLES = ["owner", "admin"] as const;
 
 export async function changeMemberRoleAction(
   _prevState: ActionResult<{ updated: boolean }> | null,
@@ -27,44 +26,16 @@ export async function changeMemberRoleAction(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
-  }
-
-  const membership = await getUserMembership(supabase, parsed.data.agency_id, user.id);
-
-  if (!membership || !TEAM_MANAGE_ROLES.includes(membership.role as "owner" | "admin")) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Insufficient permissions to manage team" },
-    };
-  }
-
-  try {
+  return withAgencyAuth(parsed.data.agency_id, "team_member", "update", async () => {
+    const supabase = await createClient();
     await changeMemberRole(
       supabase,
       parsed.data.agency_id,
       parsed.data.user_id,
       parsed.data.new_role
     );
-    return { success: true, data: { updated: true } };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "ROLE_CHANGE_FAILED",
-        message: err instanceof Error ? err.message : "Failed to change member role",
-      },
-    };
-  }
+    return { updated: true };
+  });
 }
 
 export async function deactivateMemberAction(
@@ -81,37 +52,9 @@ export async function deactivateMemberAction(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
-  }
-
-  const membership = await getUserMembership(supabase, agencyId, user.id);
-
-  if (!membership || !TEAM_MANAGE_ROLES.includes(membership.role as "owner" | "admin")) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Insufficient permissions to deactivate members" },
-    };
-  }
-
-  try {
+  return withAgencyAuth(agencyId, "team_member", "update", async () => {
+    const supabase = await createClient();
     await deactivateMember(supabase, agencyId, targetUserId);
-    return { success: true, data: { deactivated: true } };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "DEACTIVATE_FAILED",
-        message: err instanceof Error ? err.message : "Failed to deactivate member",
-      },
-    };
-  }
+    return { deactivated: true };
+  });
 }

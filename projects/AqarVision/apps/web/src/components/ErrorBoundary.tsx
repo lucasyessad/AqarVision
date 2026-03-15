@@ -5,6 +5,9 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
+  title?: string;
+  message?: string;
+  retryLabel?: string;
 }
 
 interface ErrorBoundaryState {
@@ -16,6 +19,12 @@ export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {
+  static defaultProps = {
+    title: "Une erreur est survenue",
+    message: "Erreur inattendue",
+    retryLabel: "Réessayer",
+  };
+
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -39,17 +48,17 @@ export class ErrorBoundary extends Component<
         <div className="flex min-h-[400px] flex-col items-center justify-center px-4">
           <div className="text-center">
             <h2 className="mb-2 text-xl font-semibold text-blue-night">
-              Une erreur est survenue
+              {this.props.title}
             </h2>
             <p className="mb-4 text-gray-500">
-              {this.state.error?.message ?? "Erreur inattendue"}
+              {this.state.error?.message ?? this.props.message}
             </p>
             <button
               type="button"
               onClick={() => this.setState({ hasError: false, error: null })}
               className="rounded-lg bg-blue-night px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-night/90"
             >
-              Réessayer
+              {this.props.retryLabel}
             </button>
           </div>
         </div>

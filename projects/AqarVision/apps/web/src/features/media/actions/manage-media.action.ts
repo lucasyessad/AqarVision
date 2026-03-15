@@ -2,6 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import {
   ReorderMediaSchema,
   SetCoverSchema,
@@ -29,19 +30,8 @@ export async function reorderMediaAction(
     };
   }
 
+  // Fetch listing's agency_id to guard with withAgencyAuth
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
-  }
-
-  // Check listing ownership via agency membership
   const { data: listing } = await supabase
     .from("listings")
     .select("agency_id")
@@ -55,33 +45,11 @@ export async function reorderMediaAction(
     };
   }
 
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("id")
-    .eq("agency_id", listing.agency_id as string)
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .single();
-
-  if (!membership) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Not a member of this agency" },
-    };
-  }
-
-  try {
-    await reorderMedia(supabase, parsed.data.listing_id, parsed.data.ordered_media_ids);
-    return { success: true, data: undefined };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "REORDER_FAILED",
-        message: err instanceof Error ? err.message : "Failed to reorder media",
-      },
-    };
-  }
+  return withAgencyAuth(listing.agency_id as string, "media", "update", async () => {
+    const sb = await createClient();
+    await reorderMedia(sb, parsed.data.listing_id, parsed.data.ordered_media_ids);
+    return undefined;
+  });
 }
 
 export async function setCoverAction(
@@ -99,18 +67,8 @@ export async function setCoverAction(
     };
   }
 
+  // Fetch listing's agency_id to guard with withAgencyAuth
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
-  }
-
   const { data: listing } = await supabase
     .from("listings")
     .select("agency_id")
@@ -124,33 +82,11 @@ export async function setCoverAction(
     };
   }
 
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("id")
-    .eq("agency_id", listing.agency_id as string)
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .single();
-
-  if (!membership) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Not a member of this agency" },
-    };
-  }
-
-  try {
-    await setCover(supabase, parsed.data.listing_id, parsed.data.media_id);
-    return { success: true, data: undefined };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "SET_COVER_FAILED",
-        message: err instanceof Error ? err.message : "Failed to set cover",
-      },
-    };
-  }
+  return withAgencyAuth(listing.agency_id as string, "media", "update", async () => {
+    const sb = await createClient();
+    await setCover(sb, parsed.data.listing_id, parsed.data.media_id);
+    return undefined;
+  });
 }
 
 export async function deleteMediaAction(
@@ -168,19 +104,8 @@ export async function deleteMediaAction(
     };
   }
 
+  // Fetch media to get listing_id, then listing to get agency_id
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
-  }
-
-  // Fetch media to get listing_id, then check membership
   const { data: media } = await supabase
     .from("listing_media")
     .select("listing_id")
@@ -207,34 +132,12 @@ export async function deleteMediaAction(
     };
   }
 
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("id")
-    .eq("agency_id", listing.agency_id as string)
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .single();
+  const listingId = media.listing_id as string;
 
-  if (!membership) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Not a member of this agency" },
-    };
-  }
-
-  try {
-    await deleteMedia(supabase, parsed.data.media_id);
-
-    revalidateTag(`listing-media-${media.listing_id}`);
-
-    return { success: true, data: undefined };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "DELETE_FAILED",
-        message: err instanceof Error ? err.message : "Failed to delete media",
-      },
-    };
-  }
+  return withAgencyAuth(listing.agency_id as string, "media", "delete", async () => {
+    const sb = await createClient();
+    await deleteMedia(sb, parsed.data.media_id);
+    revalidateTag(`listing-media-${listingId}`);
+    return undefined;
+  });
 }

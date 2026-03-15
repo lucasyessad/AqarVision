@@ -3,6 +3,7 @@ import createIntlMiddleware from "next-intl/middleware";
 import { createServerClient } from "@supabase/ssr";
 import { updateSession } from "@/lib/supabase/middleware";
 import { routing } from "@/lib/i18n/routing";
+import { LOCALES as SUPPORTED_LOCALES, DEFAULT_LOCALE, type Locale as SupportedLocale } from "@aqarvision/config";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
@@ -34,10 +35,7 @@ const CSRF_EXEMPT_PREFIXES = ["/api/webhooks/stripe", "/api/whatsapp/webhook"];
 // Mutative HTTP methods that require CSRF validation
 const CSRF_METHODS = new Set(["POST", "PUT", "DELETE", "PATCH"]);
 
-// Supported locales and default (kept in sync with routing.ts)
-const SUPPORTED_LOCALES = ["fr", "ar", "en", "es"] as const;
-type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
-const DEFAULT_LOCALE: SupportedLocale = "fr";
+// Supported locales and default — sourced from @aqarvision/config (see top-level import)
 
 // Static asset extensions — security headers are skipped for these
 const STATIC_ASSET_PATTERN =
@@ -79,7 +77,7 @@ function isStaticAsset(pathname: string): boolean {
 }
 
 /**
- * TÂCHE #37 — Détecte la locale depuis l'en-tête Accept-Language.
+ * Détecte la locale depuis l'en-tête Accept-Language.
  * Retourne la première locale supportée trouvée, ou DEFAULT_LOCALE.
  */
 function detectLocaleFromAcceptLanguage(
@@ -106,19 +104,11 @@ function detectLocaleFromAcceptLanguage(
 }
 
 /**
- * TÂCHE #37 — Vérifie si le pathname est une route vitrine sans locale préfixée.
+ * Vérifie si le pathname est une route vitrine sans locale préfixée.
  * Patterns concernés: /a/[slug] et /l/[slug]
  */
 function isUnprefixedVitrineRoute(pathname: string): boolean {
   return /^\/(?:a|l)(\/|$)/.test(pathname);
-}
-
-/**
- * TÂCHE #37 — Vérifie si le pathname est une route vitrine avec locale déjà présente.
- * Patterns concernés: /[locale]/a/[slug] et /[locale]/l/[slug]
- */
-function isVitrineRoute(pathname: string): boolean {
-  return /^\/[a-z]{2}\/(?:a|l)(\/|$)/.test(pathname);
 }
 
 /**
@@ -139,7 +129,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   // ------------------------------------------------------------------
-  // TÂCHE #35 — Protection CSRF
+  // Protection CSRF
   // Vérifier avant toute autre logique pour court-circuiter tôt.
   // ------------------------------------------------------------------
   const method = request.method;
@@ -165,7 +155,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // ------------------------------------------------------------------
-  // TÂCHE #37 — Détection de locale pour routes vitrines sans préfixe
+  // Détection de locale pour routes vitrines sans préfixe
   // Ex: /a/agence-xyz → /fr/a/agence-xyz
   // ------------------------------------------------------------------
   if (isUnprefixedVitrineRoute(pathname)) {
@@ -201,7 +191,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   });
 
   // ------------------------------------------------------------------
-  // TÂCHE #37 — Pour les routes vitrines avec locale, s'assurer que la
+  // Pour les routes vitrines avec locale, s'assurer que la
   // locale dans l'URL correspond bien à une locale supportée. Si un
   // visiteur arrive sur /xx/a/slug avec xx non supporté, next-intl
   // gérera la redirection — on laisse passer.
@@ -248,7 +238,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // ------------------------------------------------------------------
-  // TÂCHE #36 — Security Headers
+  // Security Headers
   // Appliqués sur toutes les réponses sauf les assets statiques.
   // ------------------------------------------------------------------
   if (!isStaticAsset(pathname)) {

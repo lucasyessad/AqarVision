@@ -1,5 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
+
+export const revalidate = 3600;
 import { Suspense } from "react";
 import { MarketingHeaderWrapper } from "@/components/marketing/MarketingHeaderWrapper";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";

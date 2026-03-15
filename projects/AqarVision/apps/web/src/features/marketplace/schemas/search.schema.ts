@@ -21,6 +21,7 @@ export const SearchFiltersSchema = z.object({
   price_max: z.coerce.number().nonnegative().optional(),
   rooms_min: z.coerce.number().nonnegative().int().optional(),
   surface_min: z.coerce.number().nonnegative().optional(),
+  agency_id: z.string().uuid().optional(),
   map_bounds: MapBoundsSchema.optional(),
   page: z.coerce.number().int().positive().default(1),
   page_size: z.coerce.number().int().positive().max(100).default(20),

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getAgencyForCurrentUser, isAuthError } from "@/lib/actions/auth";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
 
 const BUCKET = "agency-media";
@@ -40,59 +41,64 @@ export async function uploadBrandingAction(
     return { success: false, error: { code: "TOO_LARGE", message: `Fichier trop volumineux. Maximum : ${label}.` } };
   }
 
-  // Auth check
+  // Resolve agency context to obtain agencyId and agencySlug
   const auth = await getAgencyForCurrentUser();
   if (isAuthError(auth)) {
     return { success: false, error: { code: auth.code, message: auth.message } };
   }
 
-  const supabase = await createClient();
+  const agencyId = auth.agencyId;
+  const agencySlug = auth.agencySlug;
 
-  // Build storage path: agencies/{agencyId}/logo.webp (overwrite each time)
-  const ext = file.type.split("/")[1].replace("jpeg", "jpg");
-  const storagePath = `agencies/${auth.agencyId}/${type}.${ext}`;
-
-  // Upload (upsert=true overwrites existing file)
+  // Read file buffer before entering the handler (File is not serializable across async boundaries)
   const arrayBuffer = await file.arrayBuffer();
-  const { error: uploadError } = await supabase.storage
-    .from(BUCKET)
-    .upload(storagePath, arrayBuffer, {
-      contentType: file.type,
-      upsert: true,
-    });
+  const ext = (file.type.split("/")[1] ?? "jpg").replace("jpeg", "jpg");
+  const storagePath = `agencies/${agencyId}/${type}.${ext}`;
 
-  if (uploadError) {
-    // Bucket might not exist yet
-    if (uploadError.message.includes("Bucket not found") || uploadError.message.includes("not found")) {
-      return {
-        success: false,
-        error: {
-          code: "BUCKET_NOT_FOUND",
-          message: `Le bucket "${BUCKET}" n'existe pas encore dans Supabase Storage. Créez-le dans le dashboard Supabase.`,
-        },
-      };
+  return withAgencyAuth(agencyId, "settings", "update", async () => {
+    const supabase = await createClient();
+
+    // Upload (upsert=true overwrites existing file)
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET)
+      .upload(storagePath, arrayBuffer, {
+        contentType: file.type,
+        upsert: true,
+      });
+
+    if (uploadError) {
+      // Bucket might not exist yet
+      if (uploadError.message.includes("Bucket not found") || uploadError.message.includes("not found")) {
+        const err = new Error(`Le bucket "${BUCKET}" n'existe pas encore dans Supabase Storage. Créez-le dans le dashboard Supabase.`);
+        err.name = "BUCKET_NOT_FOUND";
+        throw err;
+      }
+      const err = new Error(uploadError.message);
+      err.name = "UPLOAD_ERROR";
+      throw err;
     }
-    return { success: false, error: { code: "UPLOAD_ERROR", message: uploadError.message } };
-  }
 
-  // Get public URL
-  const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(storagePath);
-  const publicUrl = urlData.publicUrl;
+    // Get public URL
+    const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(storagePath);
+    const publicUrl = urlData.publicUrl;
 
-  // Update agency record
-  const column = type === "logo" ? "logo_url" : "cover_url";
-  const { error: updateError } = await supabase
-    .from("agencies")
-    .update({ [column]: publicUrl })
-    .eq("id", auth.agencyId);
+    // Update agency record
+    const column = type === "logo" ? "logo_url" : "cover_url";
+    const { error: updateError } = await supabase
+      .from("agencies")
+      .update({ [column]: publicUrl })
+      .eq("id", agencyId);
 
-  if (updateError) {
-    return { success: false, error: { code: "DB_ERROR", message: updateError.message } };
-  }
+    if (updateError) {
+      const err = new Error(updateError.message);
+      err.name = "DB_ERROR";
+      throw err;
+    }
 
-  // Revalidate branding page + storefront
-  revalidatePath("/AqarPro/dashboard/settings/branding");
-  revalidatePath(`/a/${auth.agencySlug}`);
+    // Revalidate branding page + storefront
+    revalidatePath("/AqarPro/dashboard/settings/branding");
+    revalidatePath(`/a/${agencySlug}`);
 
-  return { success: true, data: { url: publicUrl, type } };
+    return { url: publicUrl, type };
+  });
 }

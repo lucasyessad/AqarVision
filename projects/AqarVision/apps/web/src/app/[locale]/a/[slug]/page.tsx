@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -9,14 +10,18 @@ import { resolveManifest, resolveThemeColors } from "@/lib/themes";
 import { SectionRenderer } from "@/components/agency/ThemeRenderer";
 import { Link } from "@/lib/i18n/navigation";
 
+const getCachedAgency = cache(async (slug: string) => {
+  const supabase = await createClient();
+  return getAgencyPublic(supabase, slug);
+});
+
 interface AgencyPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: AgencyPageProps) {
   const { locale, slug } = await params;
-  const supabase = await createClient();
-  const agency = await getAgencyPublic(supabase, slug);
+  const agency = await getCachedAgency(slug);
 
   if (!agency) return { title: "Not found" };
 
@@ -51,9 +56,10 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
   const tListings = await getTranslations({ locale, namespace: "listings" });
   const tAgencies = await getTranslations({ locale, namespace: "agencies" });
 
-  const supabase = await createClient();
-  const agency = await getAgencyPublic(supabase, slug);
+  const agency = await getCachedAgency(slug);
   if (!agency) notFound();
+
+  const supabase = await createClient();
 
   // Resolve manifest & colors
   const manifest = resolveManifest(agency.theme);
@@ -63,15 +69,14 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
     secondary_color: agency.secondary_color,
   });
 
-  // Fetch agency listings
+  // Fetch agency listings (filtered server-side by agency_id)
   const listingsResult = await searchListings(supabase, {
     locale: locale as "fr" | "ar" | "en" | "es",
+    agency_id: agency.id,
     page: 1,
     page_size: 12,
   });
-  const agencyListings = listingsResult.results.filter(
-    (l) => l.agency_id === agency.id
-  );
+  const agencyListings = listingsResult.results;
 
   // Split manifest sections around the listings section
   const listingsSection = manifest.sections.find((s) => s.id === "listings");

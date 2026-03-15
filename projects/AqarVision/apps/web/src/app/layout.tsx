@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, JetBrains_Mono, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 
 const cormorantGaramond = Cormorant_Garamond({
@@ -24,6 +24,13 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+const notoSansArabic = Noto_Sans_Arabic({
+  subsets: ["arabic"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-arabic",
+});
+
 export const metadata: Metadata = {
   title: {
     default: "AqarVision",
@@ -40,7 +47,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      className={`${cormorantGaramond.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
+      className={`${cormorantGaramond.variable} ${dmSans.variable} ${jetbrainsMono.variable} ${notoSansArabic.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-screen font-sans" suppressHydrationWarning>

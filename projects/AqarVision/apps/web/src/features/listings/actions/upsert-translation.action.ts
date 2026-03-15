@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { upsertTranslation } from "../services/listing.service";
 import type { ActionResult } from "../types/listing.types";
 import type { TranslationDto } from "../types/listing.types";
@@ -19,18 +20,8 @@ export async function upsertTranslationAction(input: {
     };
   }
 
+  // Fetch listing's agency_id to guard with withAgencyAuth
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
-  }
-
   const { data: listing } = await supabase
     .from("listings")
     .select("agency_id")
@@ -44,36 +35,13 @@ export async function upsertTranslationAction(input: {
     };
   }
 
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("id")
-    .eq("agency_id", listing.agency_id as string)
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .single();
-
-  if (!membership) {
-    return {
-      success: false,
-      error: { code: "FORBIDDEN", message: "Accès refusé" },
-    };
-  }
-
-  try {
-    const result = await upsertTranslation(supabase, input.listing_id, {
+  return withAgencyAuth(listing.agency_id as string, "listing", "update", async () => {
+    const sb = await createClient();
+    return upsertTranslation(sb, input.listing_id, {
       locale: input.locale as "fr" | "ar" | "en" | "es",
       title: input.title,
       description: input.description,
       slug: input.slug,
     });
-    return { success: true, data: result };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "UPSERT_FAILED",
-        message: err instanceof Error ? err.message : "Erreur lors de la sauvegarde",
-      },
-    };
-  }
+  });
 }

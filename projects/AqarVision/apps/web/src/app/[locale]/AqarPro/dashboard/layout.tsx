@@ -24,21 +24,17 @@ export default async function DashboardLayout({
     redirect(`/${locale}/AqarPro/auth/login`);
   }
 
-  // Fetch profile for display name
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("user_id", user.id)
-    .single();
-
-  // Fetch membership + agency slug
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("agency_id, agencies(slug)")
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .limit(1)
-    .maybeSingle();
+  // Fetch profile and membership in parallel
+  const [{ data: profile }, { data: membership }] = await Promise.all([
+    supabase.from("profiles").select("full_name").eq("user_id", user.id).single(),
+    supabase
+      .from("agency_memberships")
+      .select("agency_id, agencies(slug)")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle(),
+  ]);
 
   const agencySlug = membership
     ? ((membership.agencies as unknown as { slug: string } | null)?.slug ?? null)

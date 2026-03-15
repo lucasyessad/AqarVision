@@ -121,12 +121,17 @@ export async function markRead(
 /**
  * Lists all conversations for a user (as sender or agency member)
  * with last message and unread count.
+ *
+ * Uses a single join query to load all nested data, then computes
+ * derived fields (last_message, unread_count, other_party_name) in memory
+ * to avoid N+1 queries.
  */
 export async function listConversations(
   supabase: SupabaseClient,
   userId: string
 ): Promise<ConversationDto[]> {
-  // Get conversations where the user is a participant
+  // Single join query — loads conversations + leads + listing translations +
+  // messages + agencies + sender profiles in one round-trip.
   const { data: conversations, error } = await supabase
     .from("conversations")
     .select(`
@@ -145,7 +150,17 @@ export async function listConversations(
             title,
             locale
           )
+        ),
+        agencies!inner (
+          name
         )
+      ),
+      messages (
+        id,
+        body,
+        sender_user_id,
+        read_at,
+        created_at
       )
     `)
     .order("updated_at", { ascending: false });
@@ -154,12 +169,24 @@ export async function listConversations(
     throw new Error(error?.message ?? "Failed to list conversations");
   }
 
-  // Get user profile for display names
-  const { data: currentProfile } = await supabase
+  // Collect unique sender user IDs across all leads so we can batch-fetch profiles.
+  const senderIds = [
+    ...new Set(
+      conversations.map(
+        (c) => (c.leads as unknown as Record<string, unknown>).sender_user_id as string
+      )
+    ),
+  ];
+
+  // Fetch all relevant profiles in one query.
+  const { data: profiles } = await supabase
     .from("profiles")
     .select("user_id, full_name")
-    .eq("user_id", userId)
-    .single();
+    .in("user_id", senderIds);
+
+  const profileMap = new Map(
+    (profiles ?? []).map((p) => [p.user_id, p.full_name ?? "—"])
+  );
 
   const result: ConversationDto[] = [];
 
@@ -170,51 +197,40 @@ export async function listConversations(
       title: string;
       locale: string;
     }>;
+    const agency = lead.agencies as unknown as { name: string } | null;
+    const messages = conv.messages as unknown as Array<{
+      id: string;
+      body: string;
+      sender_user_id: string;
+      read_at: string | null;
+      created_at: string;
+    }>;
 
     // Pick the best translation (fr first, then any)
     const translation =
       translations?.find((t) => t.locale === "fr") ?? translations?.[0];
     const listingTitle = translation?.title ?? "—";
 
-    // Get last message
-    const { data: lastMsg } = await supabase
-      .from("messages")
-      .select("body, created_at, sender_user_id")
-      .eq("conversation_id", conv.id)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
+    // Derive last message from already-loaded messages (sorted descending by created_at)
+    const sortedMessages = (messages ?? []).slice().sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    const lastMsg = sortedMessages[0] ?? null;
 
-    // Get unread count (messages not sent by user and not read)
-    const { count: unreadCount } = await supabase
-      .from("messages")
-      .select("id", { count: "exact", head: true })
-      .eq("conversation_id", conv.id)
-      .neq("sender_user_id", userId)
-      .is("read_at", null);
+    // Derive unread count in memory
+    const unreadCount = (messages ?? []).filter(
+      (m) => m.sender_user_id !== userId && m.read_at === null
+    ).length;
 
-    // Get the other party's name
+    // Resolve the other party's display name
     const senderUserId = lead.sender_user_id as string;
     const isCurrentUserSender = senderUserId === userId;
 
     let otherPartyName = "—";
     if (isCurrentUserSender) {
-      // Other party is the agency — get agency name
-      const { data: agency } = await supabase
-        .from("agencies")
-        .select("name")
-        .eq("id", lead.agency_id as string)
-        .single();
       otherPartyName = agency?.name ?? "—";
     } else {
-      // Other party is the sender
-      const { data: senderProfile } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("user_id", senderUserId)
-        .single();
-      otherPartyName =
-        senderProfile?.full_name ?? currentProfile?.full_name ?? "—";
+      otherPartyName = profileMap.get(senderUserId) ?? "—";
     }
 
     result.push({
@@ -224,7 +240,7 @@ export async function listConversations(
       other_party_name: otherPartyName,
       last_message: lastMsg?.body ?? null,
       last_message_at: lastMsg?.created_at ?? null,
-      unread_count: unreadCount ?? 0,
+      unread_count: unreadCount,
     });
   }
 

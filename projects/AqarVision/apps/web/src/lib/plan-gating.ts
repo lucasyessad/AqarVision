@@ -45,6 +45,13 @@ export function isPlanAtLeast(required: string, current: string): boolean {
 
 // ── Theme registry & gating ───────────────────────────────────────────────────
 
+import { THEME_REGISTRY } from "@/lib/themes/registry";
+
+/** Derived once at module load — single source of truth from THEME_REGISTRY. */
+const THEME_PLAN_MAP: ReadonlyMap<string, PlanCode | null> = new Map(
+  THEME_REGISTRY.map((t) => [t.id, t.plan as PlanCode | null])
+);
+
 /**
  * Returns `true` if `themeId` is accessible on the given `plan`.
  *
@@ -61,33 +68,10 @@ export function isPlanAtLeast(required: string, current: string): boolean {
  * isThemeAvailable("unknown", "enterprise")     // false — not in registry
  */
 export function isThemeAvailable(themeId: string, plan: string): boolean {
-  // Inline the registry plan map to keep this module free of import cycles.
-  // Keep in sync with src/lib/themes/registry.ts.
-  const THEME_PLAN_MAP: Record<string, PlanCode | null> = {
-    // Free (starter)
-    minimal: null,
-    "corporate-navy": null,
-    "swiss-minimal": null,
-    modern: null,
-    // Pro
-    mediterranee: "pro",
-    "marocain-contemporain": "pro",
-    "pastel-doux": "pro",
-    "organique-eco": "pro",
-    professional: "pro",
-    // Enterprise
-    "luxe-noir": "enterprise",
-    "editorial-07": "enterprise",
-    "art-deco": "enterprise",
-    "neo-brutalist": "enterprise",
-    luxury: "enterprise",
-    bold: "enterprise",
-  };
-
-  if (!(themeId in THEME_PLAN_MAP)) {
+  if (!THEME_PLAN_MAP.has(themeId)) {
     return false;
   }
-  const required = THEME_PLAN_MAP[themeId];
+  const required = THEME_PLAN_MAP.get(themeId)!;
   if (required == null) {
     return true;
   }
@@ -102,10 +86,5 @@ export function isThemeAvailable(themeId: string, plan: string): boolean {
  * getAvailableThemes("enterprise")  // all themes
  */
 export function getAvailableThemes(plan: string): string[] {
-  const ALL_THEME_IDS = [
-    "minimal", "corporate-navy", "swiss-minimal", "modern",
-    "mediterranee", "marocain-contemporain", "pastel-doux", "organique-eco", "professional",
-    "luxe-noir", "editorial-07", "art-deco", "neo-brutalist", "luxury", "bold",
-  ];
-  return ALL_THEME_IDS.filter((id) => isThemeAvailable(id, plan));
+  return [...THEME_PLAN_MAP.keys()].filter((id) => isThemeAvailable(id, plan));
 }

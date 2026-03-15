@@ -1,5 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+export const revalidate = 60;
+
 import { searchListingsAction } from "@/features/marketplace/actions/search.action";
 import { getWilayas } from "@/features/marketplace/services/search.service";
 import { getViewedListingIds } from "@/features/marketplace/actions/view-history.action";
@@ -87,28 +89,5 @@ export default async function SearchPage({
       />
       <MarketingFooter locale={locale} />
     </>
-  );
-}
-
-function SearchPageSkeleton() {
-  return (
-    <main className="min-h-screen bg-[#f7fafc]">
-      <div className="bg-[#1a365d] px-4 py-12">
-        <div className="mx-auto max-w-4xl">
-          <div className="h-10 w-64 animate-pulse rounded bg-white/20" />
-          <div className="mt-4 h-12 animate-pulse rounded-lg bg-white/10" />
-        </div>
-      </div>
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-64 animate-pulse rounded-xl bg-gray-200"
-            />
-          ))}
-        </div>
-      </div>
-    </main>
   );
 }

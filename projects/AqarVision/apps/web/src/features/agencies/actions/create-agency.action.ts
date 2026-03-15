@@ -40,7 +40,7 @@ export async function createAgencyAction(
   }
 
   try {
-    const agency = await createAgency(supabase, user.id, parsed.data);
+    const agency = await createAgency(supabase, parsed.data);
     return { success: true, data: agency };
   } catch (err) {
     return {

@@ -1,7 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { getListingBySlug } from "@/features/marketplace/services/search.service";
+
+export const revalidate = 3600;
 import { formatListingRef } from "@/features/marketplace/types/search.types";
 import { generateListingJsonLd } from "@/lib/seo/json-ld";
 import { Link } from "@/lib/i18n/navigation";
@@ -15,14 +18,18 @@ import { MarketingHeaderWrapper } from "@/components/marketing/MarketingHeaderWr
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
+const getCachedListing = cache(async (locale: string, slug: string) => {
+  const supabase = await createClient();
+  return getListingBySlug(supabase, locale, slug);
+});
+
 interface ListingPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: ListingPageProps) {
   const { locale, slug } = await params;
-  const supabase = await createClient();
-  const listing = await getListingBySlug(supabase, locale, slug);
+  const listing = await getCachedListing(locale, slug);
 
   if (!listing) {
     return { title: "Not found" };
@@ -62,8 +69,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
   const t = await getTranslations({ locale, namespace: "search" });
   const tListings = await getTranslations({ locale, namespace: "listings" });
 
-  const supabase = await createClient();
-  const listing = await getListingBySlug(supabase, locale, slug);
+  const listing = await getCachedListing(locale, slug);
 
   if (!listing) {
     notFound();

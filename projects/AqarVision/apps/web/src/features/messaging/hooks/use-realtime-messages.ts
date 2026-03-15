@@ -16,6 +16,8 @@ export function useRealtimeMessages(
   const callbackRef = useRef(onNewMessage);
   callbackRef.current = onNewMessage;
 
+  const profileCache = useRef<Map<string, string>>(new Map());
+
   useEffect(() => {
     if (!conversationId) return;
 
@@ -41,18 +43,26 @@ export function useRealtimeMessages(
             created_at: string;
           };
 
-          // Fetch sender name
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("full_name")
-            .eq("user_id", newRow.sender_user_id)
-            .single();
+          // Fetch sender name — use cache to avoid N+1 profile queries
+          const senderId = newRow.sender_user_id;
+          let senderName: string;
+          if (profileCache.current.has(senderId)) {
+            senderName = profileCache.current.get(senderId)!;
+          } else {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("full_name")
+              .eq("user_id", senderId)
+              .single();
+            senderName = profile?.full_name ?? "—";
+            profileCache.current.set(senderId, senderName);
+          }
 
           const message: MessageDto = {
             id: newRow.id,
             conversation_id: newRow.conversation_id,
             sender_user_id: newRow.sender_user_id,
-            sender_name: profile?.full_name ?? "—",
+            sender_name: senderName,
             body: newRow.body,
             read_at: newRow.read_at,
             created_at: newRow.created_at,

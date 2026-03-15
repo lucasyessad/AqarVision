@@ -25,6 +25,4 @@ export interface PortalResult {
   portal_url: string;
 }
 
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: { code: string; message: string } };
+export type { ActionResult } from "@/types/action-result";

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
@@ -61,10 +62,12 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
       {/* ── Image area ─────────────────────────────────────────── */}
       <Link href={`/l/${listing.slug}`} className="relative block aspect-[16/10] overflow-hidden">
         {listing.cover_url ? (
-          <img
+          <Image
             src={listing.cover_url}
             alt={listing.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             style={{ background: "var(--ivoire-warm)" }}
           />
         ) : (
@@ -122,10 +125,10 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
         {/* Bottom-left: agency logo */}
         {agencyLogo && (
           <div
-            className="absolute bottom-2 start-2 h-8 w-8 overflow-hidden rounded-full border-2 border-white"
+            className="absolute bottom-2 start-2 h-8 w-8 overflow-hidden rounded-full border-2 border-white relative"
             style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.2)" }}
           >
-            <img src={agencyLogo} alt={listing.agency_name} className="h-full w-full object-cover" />
+            <Image src={agencyLogo} alt={listing.agency_name} fill className="object-cover" sizes="32px" />
           </div>
         )}
       </Link>
@@ -221,7 +224,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
         >
           <div className="flex items-center gap-2 min-w-0">
             {agencyLogo ? (
-              <img src={agencyLogo} alt={listing.agency_name} className="h-5 w-5 rounded-full object-cover shrink-0" />
+              <Image src={agencyLogo} alt={listing.agency_name} width={20} height={20} className="rounded-full object-cover shrink-0" />
             ) : (
               <span
                 className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-bold"

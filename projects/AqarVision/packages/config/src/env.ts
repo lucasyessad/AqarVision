@@ -58,8 +58,36 @@ function createPublicEnv(): PublicEnv {
   return parsed.data;
 }
 
-/** Validated environment (all vars, server-side only) */
-export const env: Env = createEnv();
+/** Lazy singleton — defers validation until first access (safe for Edge Runtime & tests) */
+let _env: Env | undefined;
+
+export function getEnv(): Env {
+  if (!_env) {
+    _env = createEnv();
+  }
+  return _env;
+}
+
+/**
+ * Validated environment (all vars, server-side only).
+ * Proxy-based so `env.SOME_VAR` reads are lazy — `createEnv()` is not called at module load time.
+ */
+export const env = new Proxy({} as Env, {
+  get(_target, prop) {
+    return getEnv()[prop as keyof Env];
+  },
+  has(_target, prop) {
+    return prop in getEnv();
+  },
+  ownKeys() {
+    return Object.keys(getEnv());
+  },
+  getOwnPropertyDescriptor(_target, prop) {
+    const value = getEnv()[prop as keyof Env];
+    if (value === undefined) return undefined;
+    return { value, writable: false, enumerable: true, configurable: true };
+  },
+});
 
 /** Validated public environment (safe for client-side) */
 export const publicEnv: PublicEnv = createPublicEnv();

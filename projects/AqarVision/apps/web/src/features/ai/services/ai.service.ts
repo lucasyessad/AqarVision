@@ -2,6 +2,9 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import type { AiJobDto, AiJobStatus, AiJobType } from "../types/ai.types";
 
+// Module-level singleton — avoids re-instantiating the client on every call
+const anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
+
 /* ------------------------------------------------------------------ */
 /*  Mappers                                                            */
 /* ------------------------------------------------------------------ */
@@ -135,9 +138,7 @@ async function callClaude(
   systemPrompt: string,
   userPrompt: string
 ): Promise<string> {
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
-
-  const response = await client.messages.create({
+  const response = await anthropicClient.messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 4096,
     system: systemPrompt,
@@ -225,7 +226,7 @@ export async function translateListing(
   listingId: string,
   sourceLocale: string,
   targetLocale: string
-): Promise<{ text: string; job_id: string }> {
+): Promise<{ translation: { title: string; description: string }; job_id: string }> {
   // Check quota
   const quota = await checkQuota(supabase, agencyId);
   if (!quota.allowed) {
@@ -270,15 +271,30 @@ Description: ${sourceTranslation.description}
 
 Output format: {"title": "...", "description": "..."}`;
 
-    const text = await callClaude(systemPrompt, userPrompt);
+    const raw = await callClaude(systemPrompt, userPrompt);
+    let translation: { title: string; description: string };
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      if (
+        typeof parsed !== "object" ||
+        parsed === null ||
+        typeof (parsed as Record<string, unknown>).title !== "string" ||
+        typeof (parsed as Record<string, unknown>).description !== "string"
+      ) {
+        throw new Error("Unexpected translation shape from Claude");
+      }
+      translation = parsed as { title: string; description: string };
+    } catch {
+      throw new Error(`Claude returned invalid JSON for translation: ${raw.slice(0, 200)}`);
+    }
 
     await completeJob(supabase, job.id, {
-      text,
+      translation,
       source_locale: sourceLocale,
       target_locale: targetLocale,
     });
 
-    return { text, job_id: job.id };
+    return { translation, job_id: job.id };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Translation failed";
     await failJob(supabase, job.id, message);

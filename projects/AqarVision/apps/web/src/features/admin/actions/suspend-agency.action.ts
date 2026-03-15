@@ -1,15 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
-
-// ── Schema ────────────────────────────────────────────────────────────────────
-
-const SuspendAgencySchema = z.object({
-  agencyId: z.string().uuid("ID agence invalide"),
-});
+import { SuspendAgencySchema } from "../schemas/admin.schema";
 
 export interface SuspendAgencyDto {
   agencyId: string;

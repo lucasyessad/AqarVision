@@ -8,6 +8,7 @@ import {
   getAgencyForCurrentUser,
   isAuthError,
 } from "@/lib/actions/auth";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
 
 // ── Schema ────────────────────────────────────────────────────────────────────
@@ -51,7 +52,7 @@ export async function updateAgencyThemeAction(
     };
   }
 
-  // 2. Resolve agency + auth
+  // 2. Resolve agency context to obtain agencyId and agencySlug
   const auth = await getAgencyForCurrentUser();
   if (isAuthError(auth)) {
     return {
@@ -60,50 +61,51 @@ export async function updateAgencyThemeAction(
     };
   }
 
-  // 3. Fetch current plan from subscription
-  const supabase = await createClient();
-  const { data: subscription } = await supabase
-    .from("subscriptions")
-    .select("plan_id, plans(code)")
-    .eq("agency_id", auth.agencyId)
-    .eq("status", "active")
-    .maybeSingle();
+  const agencyId = auth.agencyId;
+  const agencySlug = auth.agencySlug;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const planCode: string = (subscription?.plans as any)?.code ?? "enterprise";
+  return withAgencyAuth(agencyId, "settings", "update", async () => {
+    const supabase = await createClient();
 
-  // 4. Check plan gating
-  if (!isThemeAvailable(parsed.data.theme, planCode)) {
-    return {
-      success: false,
-      error: {
-        code: "PLAN_INSUFFICIENT",
-        message: `Le thème "${parsed.data.theme}" n'est pas disponible pour votre plan actuel.`,
-      },
-    };
-  }
+    // 3. Fetch current plan from subscription
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select("plan_id, plans(code)")
+      .eq("agency_id", agencyId)
+      .eq("status", "active")
+      .maybeSingle();
 
-  // 5. Update agencies table
-  const { error: updateError } = await supabase
-    .from("agencies")
-    .update({
-      theme: parsed.data.theme,
-      primary_color: parsed.data.primary_color ?? null,
-      accent_color: parsed.data.accent_color ?? null,
-      secondary_color: parsed.data.secondary_color ?? null,
-    })
-    .eq("id", auth.agencyId);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const planCode: string = (subscription?.plans as any)?.code ?? "enterprise";
 
-  if (updateError) {
-    return {
-      success: false,
-      error: { code: "DB_ERROR", message: updateError.message },
-    };
-  }
+    // 4. Check plan gating
+    if (!isThemeAvailable(parsed.data.theme, planCode)) {
+      const err = new Error(`Le thème "${parsed.data.theme}" n'est pas disponible pour votre plan actuel.`);
+      err.name = "PLAN_INSUFFICIENT";
+      throw err;
+    }
 
-  // 6. Revalidate appearance page + storefront
-  revalidatePath("/AqarPro/dashboard/settings/appearance");
-  revalidatePath(`/a/${auth.agencySlug}`);
+    // 5. Update agencies table
+    const { error: updateError } = await supabase
+      .from("agencies")
+      .update({
+        theme: parsed.data.theme,
+        primary_color: parsed.data.primary_color ?? null,
+        accent_color: parsed.data.accent_color ?? null,
+        secondary_color: parsed.data.secondary_color ?? null,
+      })
+      .eq("id", agencyId);
 
-  return { success: true, data: { theme: parsed.data.theme } };
+    if (updateError) {
+      const err = new Error(updateError.message);
+      err.name = "DB_ERROR";
+      throw err;
+    }
+
+    // 6. Revalidate appearance page + storefront
+    revalidatePath("/AqarPro/dashboard/settings/appearance");
+    revalidatePath(`/a/${agencySlug}`);
+
+    return { theme: parsed.data.theme };
+  });
 }

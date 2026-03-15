@@ -7,6 +7,7 @@ import {
   getAgencyForCurrentUser,
   isAuthError,
 } from "@/lib/actions/auth";
+import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
 
 // ── Schema ────────────────────────────────────────────────────────────────────
@@ -55,7 +56,7 @@ export async function submitVerificationAction(
     };
   }
 
-  // 2. Auth
+  // 2. Resolve agency context — only owner can submit verification
   const auth = await getAgencyForCurrentUser();
   if (isAuthError(auth)) {
     return {
@@ -64,7 +65,8 @@ export async function submitVerificationAction(
     };
   }
 
-  // Only owner can submit verification
+  // Only owner can submit verification (withAgencyAuth will also enforce RBAC,
+  // but we preserve this explicit message for a better UX)
   if (auth.role !== "owner") {
     return {
       success: false,
@@ -75,52 +77,47 @@ export async function submitVerificationAction(
     };
   }
 
-  const supabase = await createClient();
+  const agencyId = auth.agencyId;
 
-  // 3. Check current status — prevent re-submission if already pending/verified
-  const { data: agency } = await supabase
-    .from("agencies")
-    .select("verification_status")
-    .eq("id", auth.agencyId)
-    .single();
+  return withAgencyAuth(agencyId, "settings", "update", async () => {
+    const supabase = await createClient();
 
-  if (agency?.verification_status === "pending") {
-    return {
-      success: false,
-      error: {
-        code: "ALREADY_PENDING",
-        message: "Une demande de vérification est déjà en cours d'examen.",
-      },
-    };
-  }
+    // 3. Check current status — prevent re-submission if already pending/verified
+    const { data: agency } = await supabase
+      .from("agencies")
+      .select("verification_status")
+      .eq("id", agencyId)
+      .single();
 
-  if (agency?.verification_status === "verified") {
-    return {
-      success: false,
-      error: {
-        code: "ALREADY_VERIFIED",
-        message: "Votre agence est déjà vérifiée.",
-      },
-    };
-  }
+    if (agency?.verification_status === "pending") {
+      const err = new Error("Une demande de vérification est déjà en cours d'examen.");
+      err.name = "ALREADY_PENDING";
+      throw err;
+    }
 
-  // 4. Update to pending + store verification metadata
-  //    (legal_name / rc_number are stored in agency description or a separate
-  //     verification_requests table in a future migration — for now we store
-  //     them in the agency's description field as a JSON comment)
-  const { error: updateError } = await supabase
-    .from("agencies")
-    .update({ verification_status: "pending" })
-    .eq("id", auth.agencyId);
+    if (agency?.verification_status === "verified") {
+      const err = new Error("Votre agence est déjà vérifiée.");
+      err.name = "ALREADY_VERIFIED";
+      throw err;
+    }
 
-  if (updateError) {
-    return {
-      success: false,
-      error: { code: "DB_ERROR", message: updateError.message },
-    };
-  }
+    // 4. Update to pending + store verification metadata
+    //    (legal_name / rc_number are stored in agency description or a separate
+    //     verification_requests table in a future migration — for now we store
+    //     them in the agency's description field as a JSON comment)
+    const { error: updateError } = await supabase
+      .from("agencies")
+      .update({ verification_status: "pending" })
+      .eq("id", agencyId);
 
-  revalidatePath("/AqarPro/dashboard/settings/verification");
+    if (updateError) {
+      const err = new Error(updateError.message);
+      err.name = "DB_ERROR";
+      throw err;
+    }
 
-  return { success: true, data: { verification_status: "pending" } };
+    revalidatePath("/AqarPro/dashboard/settings/verification");
+
+    return { verification_status: "pending" };
+  });
 }

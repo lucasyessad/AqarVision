@@ -5,7 +5,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["maplibre-gl"],
+  transpilePackages: ["maplibre-gl", "@aqarvision/config", "@aqarvision/domain", "@aqarvision/security"],
   images: {
     remotePatterns: [
       {

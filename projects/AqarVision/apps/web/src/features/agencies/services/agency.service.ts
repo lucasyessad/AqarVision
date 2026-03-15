@@ -49,7 +49,7 @@ function mapMembership(row: Record<string, unknown>): MembershipDto {
     is_active: row.is_active as boolean,
     joined_at: row.joined_at as string,
     user_name: (profile?.full_name as string) ?? null,
-    user_email: (profile?.phone as string) ?? null,
+    user_email: null, // email not available via profiles — use auth.users if needed
   };
 }
 
@@ -66,7 +66,6 @@ function mapInvite(row: Record<string, unknown>): InviteDto {
 
 export async function createAgency(
   supabase: SupabaseClient,
-  _userId: string,
   data: CreateAgencyInput
 ): Promise<AgencyDto> {
   // Use RPC to create agency + owner membership atomically (security definer bypasses RLS)
@@ -171,7 +170,7 @@ export async function createBranch(
   data: CreateBranchInput
 ): Promise<BranchDto> {
   const { data: branch, error } = await supabase
-    .from("branches")
+    .from("agency_branches")
     .insert({
       agency_id: data.agency_id,
       name: data.name,
@@ -194,7 +193,7 @@ export async function getAgencyBranches(
   agencyId: string
 ): Promise<BranchDto[]> {
   const { data, error } = await supabase
-    .from("branches")
+    .from("agency_branches")
     .select(BRANCH_SELECT)
     .eq("agency_id", agencyId);
 

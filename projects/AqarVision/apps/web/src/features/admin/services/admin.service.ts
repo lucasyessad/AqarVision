@@ -103,27 +103,34 @@ export async function getAllAgencies(
 
   if (error) throw new Error(error.message);
 
-  // Fetch listing counts for each agency
-  const agencies = await Promise.all(
-    (data ?? []).map(async (agency) => {
-      const { count: listingsCount } = await supabase
-        .from("listings")
-        .select("id", { count: "exact", head: true })
-        .eq("agency_id", agency.id);
+  const rows = data ?? [];
 
-      return {
-        id: agency.id,
-        name: agency.name,
-        slug: agency.slug,
-        plan: plan ?? null,
-        is_verified: agency.is_verified,
-        verification_status: agency.verification_status,
-        created_at: agency.created_at,
-        deleted_at: agency.deleted_at,
-        listings_count: listingsCount ?? 0,
-      } satisfies AgencyRow;
-    })
-  );
+  // Batch-fetch listing counts in a single query instead of N individual requests
+  const agencyIds = rows.map((a) => a.id);
+  const countMap = new Map<string, number>();
+
+  if (agencyIds.length > 0) {
+    const { data: listingRows } = await supabase
+      .from("listings")
+      .select("agency_id")
+      .in("agency_id", agencyIds);
+
+    listingRows?.forEach((r) => {
+      countMap.set(r.agency_id, (countMap.get(r.agency_id) ?? 0) + 1);
+    });
+  }
+
+  const agencies: AgencyRow[] = rows.map((agency) => ({
+    id: agency.id,
+    name: agency.name,
+    slug: agency.slug,
+    plan: plan ?? null,
+    is_verified: agency.is_verified,
+    verification_status: agency.verification_status,
+    created_at: agency.created_at,
+    deleted_at: agency.deleted_at,
+    listings_count: countMap.get(agency.id) ?? 0,
+  }));
 
   return { agencies, total: count ?? 0 };
 }
