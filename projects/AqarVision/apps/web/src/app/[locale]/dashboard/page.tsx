@@ -4,16 +4,12 @@ import { createClient } from "@/lib/supabase/server";
 import { getDashboardStats } from "@/features/analytics/services/analytics.service";
 import type { DashboardStats } from "@/features/analytics/types/analytics.types";
 
-/* ------------------------------------------------------------------ */
-/*  Trend badge                                                         */
-/* ------------------------------------------------------------------ */
-
 function TrendBadge({ value }: { value: number }) {
   if (value === 0) return null;
   const isPositive = value > 0;
   return (
     <span
-      className={`mt-1 inline-flex items-center gap-0.5 text-xs font-medium ${
+      className={`inline-flex items-center gap-0.5 text-xs font-medium ${
         isPositive ? "text-green-600" : "text-red-500"
       }`}
     >
@@ -22,29 +18,25 @@ function TrendBadge({ value }: { value: number }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Stat card                                                           */
-/* ------------------------------------------------------------------ */
-
-interface StatCardProps {
-  label: string;
-  value: string;
-  trend?: number;
-}
-
-function StatCard({ label, value, trend }: StatCardProps) {
+function StatCard({ label, value, trend }: { label: string; value: string; trend?: number }) {
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
-      <p className="text-sm font-medium text-gray-500">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-blue-night">{value}</p>
-      {trend !== undefined && <TrendBadge value={trend} />}
+    <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+      <div className="px-6 py-5">
+        <p className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+          {label}
+        </p>
+        <p className="mt-2 text-3xl font-semibold tabular-nums" style={{ color: "var(--charcoal-950)" }}>
+          {value}
+        </p>
+        {trend !== undefined && (
+          <div className="mt-1">
+            <TrendBadge value={trend} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  Page                                                                */
-/* ------------------------------------------------------------------ */
 
 export default async function DashboardPage({
   params,
@@ -89,20 +81,26 @@ export default async function DashboardPage({
   try {
     stats = await getDashboardStats(supabase, membership.agency_id);
   } catch {
-    // En cas d'erreur, on affiche les zéros sans bloquer la page
+    // silently fall back to zeros
   }
 
   const conversionDisplay =
-    stats.conversion_rate > 0
-      ? `${stats.conversion_rate.toFixed(1)}%`
-      : "0%";
+    stats.conversion_rate > 0 ? `${stats.conversion_rate.toFixed(1)}%` : "0%";
 
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-bold text-blue-night">
-        {t("title")}
-      </h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="space-y-6">
+      {/* Page header */}
+      <div>
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          {t("title")}
+        </h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+          Vue d&apos;ensemble de votre activité sur les 30 derniers jours.
+        </p>
+      </div>
+
+      {/* Stat cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label={t("stats.activeListings")}
           value={String(stats.active_listings)}

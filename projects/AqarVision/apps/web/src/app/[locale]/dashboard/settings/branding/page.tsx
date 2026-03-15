@@ -26,21 +26,18 @@ export default async function BrandingPage({
     .single();
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-blue-night">Branding</h1>
-        <p className="mt-1 text-sm text-gray-500">
+    <div className="mx-auto max-w-3xl space-y-4">
+      <div>
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>Branding</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
           Téléchargez le logo et l&apos;image de couverture de{" "}
           <strong>{agency?.name ?? auth.agencyName}</strong>.
         </p>
       </div>
-
-      <div className="max-w-2xl">
-        <BrandingUpload
-          currentLogoUrl={agency?.logo_url ?? null}
-          currentCoverUrl={agency?.cover_url ?? null}
-        />
-      </div>
+      <BrandingUpload
+        currentLogoUrl={agency?.logo_url ?? null}
+        currentCoverUrl={agency?.cover_url ?? null}
+      />
     </div>
   );
 }

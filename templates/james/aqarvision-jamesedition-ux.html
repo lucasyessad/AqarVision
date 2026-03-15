@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AqarVision — L'immobilier d'exception au Maroc</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --charcoal-950:#1C1C1E;--charcoal-900:#2C2C2E;--charcoal-800:#3A3A3C;--charcoal-700:#48484A;
+  --charcoal-500:#8E8E93;--charcoal-400:#AEAEB2;--charcoal-300:#C7C7CC;--charcoal-100:#E5E5EA;
+  --warm-50:#FDFCFA;--warm-100:#F5F0EB;--warm-200:#EBE5DD;--warm-300:#DDD5CA;
+  --coral:#E8725C;--coral-hover:#D4624D;--coral-light:#F0998A;--coral-ghost:rgba(232,114,92,.07);
+  --success:#3B9B6D;--warning:#D4943A;--danger:#D14545;
+  --serif:'Libre Baskerville',Georgia,serif;--sans:'Figtree',system-ui,sans-serif;
+  --radius:8px;--radius-lg:12px;--radius-xl:16px;
+  --shadow:0 1px 4px rgba(0,0,0,.03);--shadow-hover:0 16px 48px rgba(0,0,0,.1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--warm-50);color:var(--charcoal-950);font-weight:400;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--coral);color:white}
+.container{max-width:1320px;margin:0 auto;padding:0 2rem}
+
+/* ── NAV (JamesEdition-style: slim, transparent on hero) ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:all .3s}
+.nav.transparent{background:transparent}
+.nav.solid{background:rgba(253,252,250,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--warm-200)}
+.nav-inner{max-width:1320px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{font-family:var(--serif);font-size:1.2rem;font-weight:700}
+.nav.transparent .nav-logo{color:white}
+.nav.solid .nav-logo{color:var(--charcoal-950)}
+.nav-logo span{color:var(--coral)}
+.nav-links{display:flex;gap:.3rem}
+.nav-link{padding:.4rem .8rem;font-size:.82rem;border-radius:var(--radius);transition:all .2s}
+.nav.transparent .nav-link{color:rgba(255,255,255,.7)}
+.nav.transparent .nav-link:hover{color:white;background:rgba(255,255,255,.1)}
+.nav.solid .nav-link{color:var(--charcoal-500)}
+.nav.solid .nav-link:hover{color:var(--charcoal-950);background:var(--warm-100)}
+.nav-link.active{color:var(--coral) !important}
+.nav-right{display:flex;align-items:center;gap:.6rem}
+.nav-icon{width:34px;height:34px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:.85rem;background:transparent;border:1px solid transparent}
+.nav.transparent .nav-icon{color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.15)}
+.nav.transparent .nav-icon:hover{background:rgba(255,255,255,.1);color:white}
+.nav.solid .nav-icon{color:var(--charcoal-500);border-color:var(--charcoal-100)}
+.nav.solid .nav-icon:hover{background:var(--warm-100)}
+.nav-cta{padding:.4rem 1.1rem;border-radius:var(--radius);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;border:none}
+.nav.transparent .nav-cta{background:rgba(255,255,255,.15);color:white;backdrop-filter:blur(10px)}
+.nav.transparent .nav-cta:hover{background:var(--coral)}
+.nav.solid .nav-cta{background:var(--charcoal-950);color:white}
+.nav.solid .nav-cta:hover{background:var(--coral)}
+
+/* ── HERO (JamesEdition-style: cinematic full-bleed) ── */
+.hero{height:100vh;min-height:700px;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1800&q=85') center/cover}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,28,30,.2) 0%,rgba(28,28,30,.1) 40%,rgba(28,28,30,.85) 100%)}
+.hero-content{position:relative;width:100%;max-width:1320px;margin:0 auto;padding:0 2rem 4rem}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);padding:.35rem 1rem;border-radius:999px;font-size:.72rem;color:rgba(255,255,255,.8);font-weight:500;margin-bottom:1.5rem}
+.hero-badge .dot{width:5px;height:5px;background:var(--coral);border-radius:50%}
+.hero h1{font-family:var(--serif);font-size:clamp(2.4rem,5vw,4rem);color:white;line-height:1.1;max-width:650px;margin-bottom:1rem}
+.hero h1 em{font-style:italic;color:var(--coral-light)}
+.hero-sub{color:rgba(255,255,255,.6);font-size:1rem;max-width:480px;margin-bottom:2.5rem;line-height:1.7}
+
+/* SEARCH (JamesEdition-style: floating over hero) */
+.hero-search{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-radius:var(--radius-lg);padding:6px;display:flex;align-items:center;gap:3px;max-width:820px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.hs-tab{padding:.6rem 1.1rem;border-radius:var(--radius);font-size:.82rem;font-weight:500;color:var(--charcoal-500);cursor:pointer;border:none;background:transparent;transition:all .2s;font-family:var(--sans)}
+.hs-tab:hover{color:var(--charcoal-950)}
+.hs-tab.active{background:var(--charcoal-950);color:white}
+.hs-sep{width:1px;height:24px;background:var(--charcoal-100)}
+.hs-input{flex:1;background:transparent;border:none;color:var(--charcoal-950);padding:.6rem .8rem;font-family:var(--sans);font-size:.88rem;outline:none;min-width:0}
+.hs-input::placeholder{color:var(--charcoal-400)}
+.hs-btn{background:var(--coral);color:white;padding:.65rem 1.5rem;border-radius:var(--radius);font-size:.82rem;font-weight:600;border:none;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:all .2s}
+.hs-btn:hover{background:var(--coral-hover)}
+
+/* LIFESTYLE FILTERS (JamesEdition-style: visual quick picks) */
+.lifestyle-filters{display:flex;gap:.6rem;margin-top:1.2rem;flex-wrap:wrap}
+.lf{padding:.4rem .9rem;border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:.75rem;color:rgba(255,255,255,.65);cursor:pointer;transition:all .2s;background:rgba(255,255,255,.05);backdrop-filter:blur(8px)}
+.lf:hover{border-color:var(--coral);color:white;background:rgba(232,114,92,.15)}
+
+/* ── CURATED SECTION (JamesEdition "Handpicked") ── */
+section{padding:5rem 0}
+.section-eyebrow{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:500}
+.section-title{font-family:var(--serif);font-size:clamp(1.5rem,2.5vw,2rem);margin-top:.3rem;line-height:1.2}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem}
+.section-link{font-size:.82rem;color:var(--coral);font-weight:500;display:flex;align-items:center;gap:.3rem;transition:all .2s}
+.section-link:hover{gap:.5rem}
+
+/* ── FEATURED CARD (editorial, large, JamesEdition hero card) ── */
+.featured-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+.featured-card{position:relative;border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;min-height:420px}
+.featured-card .card-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s}
+.featured-card:hover .card-bg{transform:scale(1.03)}
+.featured-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(28,28,30,.8))}
+.featured-card .card-content{position:absolute;bottom:0;left:0;right:0;padding:2rem;z-index:1;color:white}
+.featured-card .card-tag{display:inline-block;background:var(--coral);padding:.25rem .6rem;border-radius:4px;font-size:.65rem;font-weight:600;margin-bottom:.8rem;letter-spacing:.03em}
+.featured-card .card-price{font-family:var(--serif);font-size:1.6rem;margin-bottom:.3rem}
+.featured-card .card-name{font-family:var(--serif);font-size:1.1rem;font-style:italic;opacity:.85;margin-bottom:.5rem}
+.featured-card .card-loc{font-size:.75rem;opacity:.6;text-transform:uppercase;letter-spacing:.08em}
+.featured-card .card-meta{display:flex;gap:.8rem;margin-top:.6rem;font-size:.72rem;opacity:.5}
+/* CONTACT DIRECT on card (JamesEdition key pattern) */
+.card-contact-btn{position:absolute;top:1rem;right:1rem;z-index:2;display:flex;gap:.4rem}
+.ccb{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:.8rem;cursor:pointer;transition:all .2s;border:none;color:var(--charcoal-800)}
+.ccb:hover{background:var(--coral);color:white}
+.ccb-fav:hover{background:#D14545;color:white}
+
+/* SIDE FEATURED */
+.side-featured{display:flex;flex-direction:column;gap:1.2rem}
+.side-card{position:relative;border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;flex:1;min-height:200px}
+.side-card .card-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .5s}
+.side-card:hover .card-bg{transform:scale(1.04)}
+.side-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(28,28,30,.75))}
+.side-card .card-content{position:absolute;bottom:0;left:0;right:0;padding:1.2rem;z-index:1;color:white}
+.side-card .card-price{font-family:var(--serif);font-size:1.15rem}
+.side-card .card-name{font-size:.82rem;opacity:.7;margin-top:.2rem}
+.side-card .card-loc{font-size:.65rem;opacity:.5;text-transform:uppercase;letter-spacing:.06em;margin-top:.3rem}
+
+/* ── REGULAR LISTING CARDS (with in-card carousel + contact) ── */
+.listings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.listing-card{background:white;border:1px solid var(--warm-200);border-radius:var(--radius-lg);overflow:hidden;transition:all .25s;cursor:pointer;position:relative}
+.listing-card:hover{border-color:var(--charcoal-300);box-shadow:var(--shadow-hover);transform:translateY(-4px)}
+/* IN-CARD CAROUSEL (JamesEdition pattern) */
+.lc-carousel{height:220px;position:relative;overflow:hidden}
+.lc-carousel img,.lc-img{width:100%;height:100%;object-fit:cover;background-size:cover;background-position:center}
+.lc-nav{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.85);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:.65rem;cursor:pointer;border:none;color:var(--charcoal-800);opacity:0;transition:all .2s}
+.listing-card:hover .lc-nav{opacity:1}
+.lc-nav.prev{left:.6rem}
+.lc-nav.next{right:.6rem}
+.lc-dots{position:absolute;bottom:.6rem;left:50%;transform:translateX(-50%);display:flex;gap:4px}
+.lc-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)}
+.lc-dot.active{background:white;width:14px;border-radius:3px}
+.lc-counter{position:absolute;bottom:.6rem;right:.6rem;background:rgba(0,0,0,.5);padding:.15rem .5rem;border-radius:4px;font-size:.6rem;color:white}
+/* BADGE */
+.lc-badge{position:absolute;top:.7rem;left:.7rem;padding:.25rem .6rem;border-radius:4px;font-size:.62rem;font-weight:600;z-index:1;letter-spacing:.02em}
+.b-new{background:var(--charcoal-950);color:white}
+.b-exclu{background:var(--coral);color:white}
+.b-offer{background:var(--warning);color:white}
+.b-verified{background:var(--success);color:white}
+/* STATUS BADGE (JamesEdition) */
+.lc-status{position:absolute;top:.7rem;right:3rem;background:rgba(255,255,255,.9);backdrop-filter:blur(6px);padding:.2rem .5rem;border-radius:4px;font-size:.58rem;font-weight:500;color:var(--charcoal-700)}
+/* CONTACT DIRECT (JamesEdition key) */
+.lc-actions{position:absolute;top:.7rem;right:.7rem;display:flex;flex-direction:column;gap:.3rem;z-index:2}
+.lc-act{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.85);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;border:none;color:var(--charcoal-700);transition:all .2s}
+.lc-act:hover{background:var(--coral);color:white}
+
+.lc-body{padding:1.2rem}
+.lc-agency{display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem}
+.lc-agency-logo{width:18px;height:18px;border-radius:4px;background:var(--warm-100);display:flex;align-items:center;justify-content:center;font-size:.45rem;font-weight:700;color:var(--coral)}
+.lc-agency-name{font-size:.65rem;color:var(--charcoal-500)}
+.lc-price{font-family:var(--serif);font-size:1.2rem}
+.lc-price small{font-family:var(--sans);font-size:.68rem;color:var(--charcoal-500);font-weight:400;margin-left:.3rem}
+.lc-title{font-size:.85rem;color:var(--charcoal-700);margin:.3rem 0 .7rem;line-height:1.4}
+.lc-meta{display:flex;gap:.5rem;flex-wrap:wrap}
+.lc-pill{background:var(--warm-100);padding:.2rem .55rem;border-radius:var(--radius);font-size:.68rem;color:var(--charcoal-500)}
+.lc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:.8rem;padding-top:.7rem;border-top:1px solid var(--warm-200)}
+.lc-loc{font-size:.68rem;color:var(--coral);font-weight:500}
+.lc-time{font-size:.62rem;color:var(--charcoal-400)}
+
+/* ── MAGAZINE SECTION (JamesEdition Stories) ── */
+.magazine-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem}
+.mag-card{border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;position:relative}
+.mag-img{height:220px;background-size:cover;background-position:center;transition:transform .5s}
+.mag-card:hover .mag-img{transform:scale(1.04)}
+.mag-body{padding:1.2rem 0}
+.mag-cat{font-size:.65rem;color:var(--coral);text-transform:uppercase;letter-spacing:.08em;font-weight:500}
+.mag-title{font-family:var(--serif);font-size:1rem;margin-top:.3rem;line-height:1.35}
+.mag-desc{font-size:.8rem;color:var(--charcoal-500);margin-top:.4rem;line-height:1.5}
+.mag-date{font-size:.65rem;color:var(--charcoal-400);margin-top:.5rem}
+
+/* ── MARKET DATA (quick viz) ── */
+.market-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
+.market-card{background:white;border:1px solid var(--warm-200);border-radius:var(--radius-lg);padding:1.3rem;transition:all .2s;cursor:pointer}
+.market-card:hover{border-color:var(--coral)}
+.market-city{font-family:var(--serif);font-size:.95rem;font-weight:700}
+.market-price{font-size:.82rem;color:var(--charcoal-700);margin-top:.3rem}
+.market-trend{font-size:.72rem;font-weight:500;margin-top:.2rem}
+.market-trend.up{color:var(--success)}
+.market-trend.down{color:var(--danger)}
+.market-bar{height:4px;background:var(--warm-200);border-radius:2px;margin-top:.6rem;overflow:hidden}
+.market-bar-fill{height:100%;border-radius:2px}
+
+/* ── CTA BANNER ── */
+.cta-banner{background:var(--charcoal-950);border-radius:var(--radius-xl);padding:3.5rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;color:white;position:relative;overflow:hidden}
+.cta-banner::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border:1px solid rgba(255,255,255,.04);border-radius:50%}
+.cta-banner::after{content:'';position:absolute;bottom:-60px;left:-60px;width:250px;height:250px;border:1px solid rgba(255,255,255,.03);border-radius:50%}
+.cta-banner h2{font-family:var(--serif);font-size:1.8rem;line-height:1.2;position:relative;z-index:1}
+.cta-banner h2 em{color:var(--coral-light);font-style:italic}
+.cta-banner p{color:var(--charcoal-400);line-height:1.7;margin-top:.8rem;position:relative;z-index:1}
+.cta-btns{display:flex;gap:.8rem;position:relative;z-index:1;justify-content:flex-end}
+.btn{padding:.8rem 1.8rem;border-radius:var(--radius);font-family:var(--sans);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;text-align:center}
+.btn-coral{background:var(--coral);color:white}
+.btn-coral:hover{background:var(--coral-hover)}
+.btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.2);color:white}
+.btn-ghost:hover{border-color:var(--coral);color:var(--coral)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--warm-200);padding:3rem 0 2rem;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.footer-brand{font-family:var(--serif);font-size:1.1rem;font-weight:700;margin-bottom:.6rem}
+.footer-brand span{color:var(--coral)}
+.footer-desc{font-size:.78rem;color:var(--charcoal-500);line-height:1.7;max-width:300px}
+.footer-col-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--charcoal-400);margin-bottom:.8rem;font-weight:500}
+.footer-link{display:block;font-size:.82rem;color:var(--charcoal-500);padding:.15rem 0;transition:all .15s}
+.footer-link:hover{color:var(--coral)}
+.footer-bottom{display:flex;justify-content:space-between;padding-top:1.5rem;border-top:1px solid var(--warm-200);font-size:.7rem;color:var(--charcoal-400)}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--warm-200)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .featured-grid{grid-template-columns:1fr}
+  .listings-grid{grid-template-columns:repeat(2,1fr)}
+  .magazine-grid{grid-template-columns:1fr 1fr}
+  .market-grid{grid-template-columns:repeat(2,1fr)}
+  .cta-banner{grid-template-columns:1fr;text-align:center}
+  .cta-btns{justify-content:center}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hero h1{font-size:2.2rem}
+  .hero-search{flex-wrap:wrap}
+  .featured-grid{min-height:auto}
+  .featured-card{min-height:300px}
+  .listings-grid,.magazine-grid{grid-template-columns:1fr}
+  .market-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .cta-btns{flex-direction:column}
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+.hero-content>*{animation:fadeUp .7s ease both}
+.hero-content>:nth-child(2){animation-delay:.1s}
+.hero-content>:nth-child(3){animation-delay:.2s}
+.hero-content>:nth-child(4){animation-delay:.3s}
+.hero-content>:nth-child(5){animation-delay:.35s}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ NAV ══════════════════════ -->
+<nav class="nav transparent" id="mainNav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">AqarVision<span>.</span></a>
+    <div class="nav-links">
+      <a href="#" class="nav-link active">Acheter</a>
+      <a href="#" class="nav-link">Louer</a>
+      <a href="#" class="nav-link">Estimer</a>
+      <a href="#" class="nav-link">Magazine</a>
+      <a href="#" class="nav-link">Pros</a>
+    </div>
+    <div class="nav-right">
+      <button class="nav-icon" title="Favoris">♡</button>
+      <button class="nav-icon" title="Alertes">🔔</button>
+      <button class="nav-cta">Se connecter</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════ HERO (cinematic, JE-style) ══════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> Sélection AqarVision — Mars 2026</div>
+    <h1>Des adresses <em>d'exception</em> au Maroc</h1>
+    <p class="hero-sub">Villas, riads, penthouses — une sélection curée des plus beaux biens immobiliers, présentée par les meilleures agences du Royaume.</p>
+
+    <div class="hero-search">
+      <button class="hs-tab active">Acheter</button>
+      <button class="hs-tab">Louer</button>
+      <div class="hs-sep"></div>
+      <input class="hs-input" type="text" placeholder="Ville, quartier ou adresse...">
+      <div class="hs-sep"></div>
+      <input class="hs-input" type="text" placeholder="Type de bien" style="max-width:130px">
+      <div class="hs-sep"></div>
+      <input class="hs-input" type="text" placeholder="Budget" style="max-width:120px">
+      <button class="hs-btn">Rechercher</button>
+    </div>
+
+    <div class="lifestyle-filters">
+      <button class="lf">Vue mer</button>
+      <button class="lf">Piscine</button>
+      <button class="lf">Riad</button>
+      <button class="lf">Villa moderne</button>
+      <button class="lf">Penthouse</button>
+      <button class="lf">Vue montagne</button>
+      <button class="lf">Golf</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ CURATED / HANDPICKED ══════════════════════ -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Sélection AqarVision</div>
+      <div class="section-title">Biens d'exception curés par notre équipe</div>
+    </div>
+    <a href="#" class="section-link">Voir la collection →</a>
+  </div>
+
+  <div class="featured-grid">
+    <!-- HERO CARD -->
+    <div class="featured-card">
+      <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1000&q=85')"></div>
+      <div class="card-contact-btn">
+        <button class="ccb" title="Contacter">📞</button>
+        <button class="ccb" title="Message">✉️</button>
+        <button class="ccb ccb-fav" title="Sauvegarder">♡</button>
+      </div>
+      <div class="card-content">
+        <span class="card-tag">Sélection AqarVision</span>
+        <div class="card-price">8 500 000 MAD</div>
+        <div class="card-name">Villa d'architecte avec vue panoramique sur l'océan</div>
+        <div class="card-loc">Anfa Supérieur · Casablanca</div>
+        <div class="card-meta"><span>450 m²</span><span>5 chambres</span><span>Piscine infinity</span><span>Jardin 800 m²</span></div>
+      </div>
+    </div>
+
+    <!-- SIDE CARDS -->
+    <div class="side-featured">
+      <div class="side-card">
+        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80')"></div>
+        <div class="card-contact-btn"><button class="ccb">📞</button><button class="ccb ccb-fav">♡</button></div>
+        <div class="card-content">
+          <div class="card-price">12 000 000 MAD</div>
+          <div class="card-name">Riad palatial restauré avec patio et fontaine</div>
+          <div class="card-loc">Médina · Marrakech</div>
+        </div>
+      </div>
+      <div class="side-card">
+        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80')"></div>
+        <div class="card-contact-btn"><button class="ccb">📞</button><button class="ccb ccb-fav">♡</button></div>
+        <div class="card-content">
+          <div class="card-price">4 200 000 MAD</div>
+          <div class="card-name">Penthouse contemporain avec terrasse privée</div>
+          <div class="card-loc">Souissi · Rabat</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════ LISTINGS GRID ══════════════════════ -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Dernières annonces</div>
+      <div class="section-title">Ajoutés récemment</div>
+    </div>
+    <a href="#" class="section-link">Tout voir →</a>
+  </div>
+
+  <div class="listings-grid">
+    <!-- CARD 1 -->
+    <div class="listing-card">
+      <div class="lc-carousel">
+        <div class="lc-img" style="background-image:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80')"></div>
+        <span class="lc-badge b-exclu">Exclusivité</span>
+        <div class="lc-actions">
+          <button class="lc-act" title="Appeler">📞</button>
+          <button class="lc-act" title="Sauvegarder">♡</button>
+        </div>
+        <button class="lc-nav prev">‹</button>
+        <button class="lc-nav next">›</button>
+        <div class="lc-dots"><span class="lc-dot active"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
+        <div class="lc-counter">1/12</div>
+      </div>
+      <div class="lc-body">
+        <div class="lc-agency"><div class="lc-agency-logo">PI</div><span class="lc-agency-name">Premium Immo</span></div>
+        <div class="lc-price">6 500 000 MAD <small>21 667 MAD/m²</small></div>
+        <div class="lc-title">Villa contemporaine avec piscine et jardin paysager</div>
+        <div class="lc-meta"><span class="lc-pill">300 m²</span><span class="lc-pill">5 ch.</span><span class="lc-pill">Piscine</span><span class="lc-pill">Vue mer</span></div>
+        <div class="lc-footer"><span class="lc-loc">Anfa · Casablanca</span><span class="lc-time">Il y a 2h</span></div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="listing-card">
+      <div class="lc-carousel">
+        <div class="lc-img" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80')"></div>
+        <span class="lc-badge b-new">Nouveau</span>
+        <span class="lc-status">Disponible</span>
+        <div class="lc-actions"><button class="lc-act">📞</button><button class="lc-act">♡</button></div>
+        <button class="lc-nav prev">‹</button><button class="lc-nav next">›</button>
+        <div class="lc-counter">1/8</div>
+      </div>
+      <div class="lc-body">
+        <div class="lc-agency"><div class="lc-agency-logo">AR</div><span class="lc-agency-name">Atlas Realty</span></div>
+        <div class="lc-price">3 200 000 MAD <small>22 857 MAD/m²</small></div>
+        <div class="lc-title">Penthouse vue mer avec terrasse panoramique</div>
+        <div class="lc-meta"><span class="lc-pill">140 m²</span><span class="lc-pill">3 ch.</span><span class="lc-pill">Terrasse</span><span class="lc-pill">Asc.</span></div>
+        <div class="lc-footer"><span class="lc-loc">Corniche · Casablanca</span><span class="lc-time">Il y a 5h</span></div>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="listing-card">
+      <div class="lc-carousel">
+        <div class="lc-img" style="background-image:url('https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=600&q=80')"></div>
+        <span class="lc-badge b-verified">Vérifié</span>
+        <div class="lc-actions"><button class="lc-act">📞</button><button class="lc-act">♡</button></div>
+        <button class="lc-nav prev">‹</button><button class="lc-nav next">›</button>
+        <div class="lc-counter">1/15</div>
+      </div>
+      <div class="lc-body">
+        <div class="lc-agency"><div class="lc-agency-logo">MS</div><span class="lc-agency-name">Maroc Sotheby's</span></div>
+        <div class="lc-price">4 800 000 MAD <small>24 000 MAD/m²</small></div>
+        <div class="lc-title">Riad rénové avec piscine, hammam et terrasse</div>
+        <div class="lc-meta"><span class="lc-pill">200 m²</span><span class="lc-pill">4 ch.</span><span class="lc-pill">Piscine</span><span class="lc-pill">Patio</span></div>
+        <div class="lc-footer"><span class="lc-loc">Guéliz · Marrakech</span><span class="lc-time">Il y a 1j</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════ MARKET DATA ══════════════════════ -->
+<div class="container"><div class="divider"></div></div>
+<div class="container">
+<section>
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Données marché</div>
+      <div class="section-title">Tendances par ville</div>
+    </div>
+    <a href="#" class="section-link">Toutes les villes →</a>
+  </div>
+  <div class="market-grid">
+    <div class="market-card">
+      <div class="market-city">Casablanca</div>
+      <div class="market-price">14 500 MAD/m² · 4 230 biens</div>
+      <div class="market-trend up">↑ +3.2% sur 12 mois</div>
+      <div class="market-bar"><div class="market-bar-fill" style="width:78%;background:var(--success)"></div></div>
+    </div>
+    <div class="market-card">
+      <div class="market-city">Marrakech</div>
+      <div class="market-price">12 800 MAD/m² · 1 890 biens</div>
+      <div class="market-trend up">↑ +5.1% sur 12 mois</div>
+      <div class="market-bar"><div class="market-bar-fill" style="width:85%;background:var(--coral)"></div></div>
+    </div>
+    <div class="market-card">
+      <div class="market-city">Rabat</div>
+      <div class="market-price">18 200 MAD/m² · 2 180 biens</div>
+      <div class="market-trend up">↑ +1.8% sur 12 mois</div>
+      <div class="market-bar"><div class="market-bar-fill" style="width:55%;background:var(--success)"></div></div>
+    </div>
+    <div class="market-card">
+      <div class="market-city">Tanger</div>
+      <div class="market-price">11 400 MAD/m² · 1 540 biens</div>
+      <div class="market-trend up">↑ +4.3% sur 12 mois</div>
+      <div class="market-bar"><div class="market-bar-fill" style="width:72%;background:var(--warning)"></div></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════ MAGAZINE (JamesEdition Stories) ══════════════════════ -->
+<div class="container"><div class="divider"></div></div>
+<div class="container">
+<section>
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Magazine</div>
+      <div class="section-title">Tendances, guides & découvertes</div>
+    </div>
+    <a href="#" class="section-link">Lire le magazine →</a>
+  </div>
+  <div class="magazine-grid">
+    <div class="mag-card">
+      <div class="mag-img" style="background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80');border-radius:var(--radius-lg)"></div>
+      <div class="mag-body">
+        <div class="mag-cat">Tendances marché</div>
+        <div class="mag-title">Le marché immobilier de Casablanca en 2026 : ce que disent les données</div>
+        <div class="mag-desc">Analyse des prix, quartiers émergents et prévisions pour l'année à venir.</div>
+        <div class="mag-date">12 mars 2026 · 6 min de lecture</div>
+      </div>
+    </div>
+    <div class="mag-card">
+      <div class="mag-img" style="background-image:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80');border-radius:var(--radius-lg)"></div>
+      <div class="mag-body">
+        <div class="mag-cat">Guide quartier</div>
+        <div class="mag-title">Vivre à Guéliz : le quartier le plus convoité de Marrakech</div>
+        <div class="mag-desc">Art de vivre, prix, écoles, restaurants — tout ce qu'il faut savoir.</div>
+        <div class="mag-date">8 mars 2026 · 8 min de lecture</div>
+      </div>
+    </div>
+    <div class="mag-card">
+      <div class="mag-img" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80');border-radius:var(--radius-lg)"></div>
+      <div class="mag-body">
+        <div class="mag-cat">Sélection AqarVision</div>
+        <div class="mag-title">5 riads d'exception à moins de 5 millions MAD</div>
+        <div class="mag-desc">Notre sélection des plus beaux riads du moment, entre tradition et modernité.</div>
+        <div class="mag-date">3 mars 2026 · 5 min de lecture</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════ CTA ══════════════════════ -->
+<div class="container">
+<section>
+  <div class="cta-banner">
+    <div>
+      <h2>Vous êtes <em>professionnel</em> de l'immobilier ?</h2>
+      <p>Rejoignez AqarVision Pro — mini-site dédié, analytics avancés, leads qualifiés et visibilité nationale auprès d'acheteurs sérieux.</p>
+    </div>
+    <div class="cta-btns">
+      <button class="btn btn-coral">Découvrir AqarVision Pro</button>
+      <button class="btn btn-ghost">Nous contacter</button>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<div class="container">
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">AqarVision<span>.</span></div>
+      <div class="footer-desc">L'immobilier d'exception au Maroc. Une sélection curée, des données marché, un magazine lifestyle et des outils professionnels pour les meilleures agences.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Rechercher</div>
+      <a href="#" class="footer-link">Acheter</a>
+      <a href="#" class="footer-link">Louer</a>
+      <a href="#" class="footer-link">Neuf</a>
+      <a href="#" class="footer-link">Prix au m²</a>
+      <a href="#" class="footer-link">Estimation</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Services</div>
+      <a href="#" class="footer-link">AqarVision Pro</a>
+      <a href="#" class="footer-link">Mini-sites agences</a>
+      <a href="#" class="footer-link">Simulateur crédit</a>
+      <a href="#" class="footer-link">Magazine</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Société</div>
+      <a href="#" class="footer-link">À propos</a>
+      <a href="#" class="footer-link">Contact</a>
+      <a href="#" class="footer-link">Presse</a>
+      <a href="#" class="footer-link">CGU</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 AqarVision · Tous droits réservés</div>
+    <div>Fait avec soin au Maroc</div>
+  </div>
+</footer>
+</div>
+
+<script>
+// Nav: transparent → solid on scroll
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 80) {
+    nav.classList.remove('transparent');
+    nav.classList.add('solid');
+  } else {
+    nav.classList.remove('solid');
+    nav.classList.add('transparent');
+  }
+});
+</script>
+
+</body>
+</html>

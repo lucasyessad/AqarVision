@@ -27,12 +27,16 @@ interface ListingRow {
   surface_m2: number | null;
   rooms: number | null;
   created_at: string;
-  listing_translations: {
-    locale: string;
-    title: string;
-    slug: string;
-  }[];
+  listing_translations: { locale: string; title: string; slug: string }[];
 }
+
+const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
+  published:      { bg: "#F0FDF4", color: "#16A34A" },
+  draft:          { bg: "#F6F9FC", color: "var(--charcoal-500)" },
+  paused:         { bg: "#FFFBEB", color: "#D97706" },
+  pending_review: { bg: "#EFF6FF", color: "#2563EB" },
+  rejected:       { bg: "#FFF5F5", color: "#DC2626" },
+};
 
 export default async function ListingsPage({
   params,
@@ -50,11 +54,8 @@ export default async function ListingsPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect(`/${locale}/auth/login`);
-  }
+  if (!user) redirect(`/${locale}/auth/login`);
 
-  // Get user's active membership
   const { data: membership } = await supabase
     .from("agency_memberships")
     .select("agency_id, role")
@@ -63,11 +64,10 @@ export default async function ListingsPage({
     .limit(1)
     .single();
 
-  if (!membership) {
-    redirect(`/${locale}/agency/new`);
-  }
+  if (!membership) redirect(`/${locale}/agency/new`);
 
-  // Build query for listings with translations
+  const activeFilter = (statusFilter as StatusFilter) || "all";
+
   let query = supabase
     .from("listings")
     .select(
@@ -76,8 +76,6 @@ export default async function ListingsPage({
     .eq("agency_id", membership.agency_id)
     .order("created_at", { ascending: false });
 
-  // Apply status filter
-  const activeFilter = (statusFilter as StatusFilter) || "all";
   if (activeFilter !== "all") {
     query = query.eq("status", activeFilter);
   }
@@ -86,19 +84,32 @@ export default async function ListingsPage({
   const typedListings = (listings ?? []) as unknown as ListingRow[];
 
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-blue-night">{t("title")}</h1>
+    <div className="space-y-6">
+      {/* Page header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            {t("title")}
+          </h1>
+          <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+            {typedListings.length} annonce{typedListings.length !== 1 ? "s" : ""}
+            {activeFilter !== "all" ? ` · filtre : ${activeFilter}` : ""}
+          </p>
+        </div>
         <Link
           href="/dashboard/listings/new"
-          className="rounded-lg bg-gold px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gold/90"
+          className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
+          style={{ background: "var(--coral)" }}
         >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
           {t("new_listing")}
         </Link>
       </div>
 
       {/* Status filter tabs */}
-      <div className="mb-6 flex gap-2 border-b border-gray-200">
+      <div className="flex gap-0 border-b" style={{ borderColor: "#E3E8EF" }}>
         {STATUS_FILTERS.map((filter) => {
           const isActive = activeFilter === filter;
           const label =
@@ -108,16 +119,12 @@ export default async function ListingsPage({
           return (
             <Link
               key={filter}
-              href={
-                filter === "all"
-                  ? "/dashboard/listings"
-                  : `/dashboard/listings?status=${filter}`
-              }
-              className={`border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
-                isActive
-                  ? "border-blue-night text-blue-night"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              }`}
+              href={filter === "all" ? "/dashboard/listings" : `/dashboard/listings?status=${filter}`}
+              className="border-b-2 px-4 py-2.5 text-sm font-medium transition-colors"
+              style={{
+                borderBottomColor: isActive ? "var(--coral)" : "transparent",
+                color: isActive ? "var(--coral)" : "var(--charcoal-500)",
+              }}
             >
               {label}
             </Link>
@@ -125,74 +132,98 @@ export default async function ListingsPage({
         })}
       </div>
 
-      {/* Listings grid */}
+      {/* Content */}
       {typedListings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl bg-white py-16 shadow-sm">
-          <p className="text-gray-500">{t("no_listings")}</p>
+        <div className="flex flex-col items-center justify-center rounded-lg border bg-white py-16" style={{ borderColor: "#E3E8EF" }}>
+          <svg className="mb-3 h-10 w-10" style={{ color: "var(--charcoal-300)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+          <p className="text-sm" style={{ color: "var(--charcoal-500)" }}>{t("no_listings")}</p>
           <Link
             href="/dashboard/listings/new"
-            className="mt-4 rounded-lg bg-gold px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gold/90"
+            className="mt-4 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            style={{ background: "var(--coral)" }}
           >
             {t("new_listing")}
           </Link>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {typedListings.map((listing) => {
-            const translation = listing.listing_translations.find(
-              (tr) => tr.locale === locale
-            ) ?? listing.listing_translations[0];
-            const title = translation?.title ?? listing.property_type;
+        <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b" style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}>
+                <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+                  Annonce
+                </th>
+                <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+                  Type
+                </th>
+                <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+                  Prix
+                </th>
+                <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+                  Statut
+                </th>
+                <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+                  Date
+                </th>
+                <th className="px-6 py-3" />
+              </tr>
+            </thead>
+            <tbody>
+              {typedListings.map((listing, i) => {
+                const translation =
+                  listing.listing_translations.find((tr) => tr.locale === locale) ??
+                  listing.listing_translations[0];
+                const title = translation?.title ?? listing.property_type;
+                const style = STATUS_STYLE[listing.status] ?? STATUS_STYLE.draft;
 
-            return (
-              <Link
-                key={listing.id}
-                href={`/dashboard/listings/${listing.id}`}
-                className="group rounded-xl bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
-              >
-                <div className="mb-3 flex items-start justify-between">
-                  <h3 className="font-semibold text-blue-night group-hover:text-gold">
-                    {title}
-                  </h3>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                      listing.status === "published"
-                        ? "bg-green-100 text-green-700"
-                        : listing.status === "draft"
-                          ? "bg-gray-100 text-gray-600"
-                          : listing.status === "paused"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : listing.status === "pending_review"
-                              ? "bg-blue-100 text-blue-700"
-                              : "bg-gray-100 text-gray-600"
-                    }`}
+                return (
+                  <tr
+                    key={listing.id}
+                    className="border-b transition-colors hover:bg-[#F6F9FC]"
+                    style={{ borderColor: i === typedListings.length - 1 ? "transparent" : "#E3E8EF" }}
                   >
-                    {t(`status_${listing.status}` as Parameters<typeof t>[0])}
-                  </span>
-                </div>
-                <div className="space-y-1 text-sm text-gray-500">
-                  <p>
-                    {t(listing.listing_type as Parameters<typeof t>[0])} &middot;{" "}
-                    {t(listing.property_type as Parameters<typeof t>[0])}
-                  </p>
-                  <p className="font-medium text-blue-night">
-                    {new Intl.NumberFormat(locale, {
-                      style: "decimal",
-                    }).format(listing.current_price)}{" "}
-                    DZD
-                  </p>
-                  {listing.surface_m2 && (
-                    <p>
-                      {listing.surface_m2} m²
-                      {listing.rooms
-                        ? ` &middot; ${listing.rooms} ${t("rooms")}`
-                        : ""}
-                    </p>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
+                    <td className="px-6 py-4">
+                      <p className="font-medium" style={{ color: "var(--charcoal-950)" }}>{title}</p>
+                      {listing.surface_m2 && (
+                        <p className="text-xs" style={{ color: "var(--charcoal-400)" }}>
+                          {listing.surface_m2} m²
+                          {listing.rooms ? ` · ${listing.rooms} pièces` : ""}
+                        </p>
+                      )}
+                    </td>
+                    <td className="px-6 py-4" style={{ color: "var(--charcoal-600)" }}>
+                      {t(listing.listing_type as Parameters<typeof t>[0])} · {t(listing.property_type as Parameters<typeof t>[0])}
+                    </td>
+                    <td className="px-6 py-4 tabular-nums font-medium" style={{ color: "var(--charcoal-950)" }}>
+                      {new Intl.NumberFormat(locale).format(listing.current_price)} DZD
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                        style={{ background: style.bg, color: style.color }}
+                      >
+                        {t(`status_${listing.status}` as Parameters<typeof t>[0])}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-xs" style={{ color: "var(--charcoal-400)" }}>
+                      {new Date(listing.created_at).toLocaleDateString("fr-FR")}
+                    </td>
+                    <td className="px-6 py-4 text-end">
+                      <Link
+                        href={`/dashboard/listings/${listing.id}`}
+                        className="text-xs font-medium transition-colors"
+                        style={{ color: "var(--coral)" }}
+                      >
+                        Modifier →
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

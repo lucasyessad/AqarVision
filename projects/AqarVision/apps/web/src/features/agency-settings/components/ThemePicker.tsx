@@ -6,8 +6,6 @@ import { isThemeAvailable } from "@/lib/plan-gating";
 import { updateAgencyThemeAction } from "../actions/update-agency-theme.action";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
 interface ThemePickerProps {
   currentTheme: string;
   currentPrimaryColor: string | null;
@@ -16,43 +14,29 @@ interface ThemePickerProps {
   agencyPlan: string;
 }
 
-// ── Plan badge ────────────────────────────────────────────────────────────────
-
 function PlanBadge({ plan }: { plan: string | null }) {
   if (!plan) return null;
   const label = plan === "enterprise" ? "Enterprise" : "Pro";
-  const cls =
+  const style =
     plan === "enterprise"
-      ? "bg-purple-100 text-purple-700 border-purple-200"
-      : "bg-blue-100 text-blue-700 border-blue-200";
+      ? { background: "#F5F3FF", color: "#7C3AED", border: "1px solid #DDD6FE" }
+      : { background: "#EFF6FF", color: "#2563EB", border: "1px solid #BFDBFE" };
   return (
-    <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${cls}`}>
+    <span className="rounded-full px-2 py-0.5 text-xs font-semibold" style={style}>
       {label}
     </span>
   );
 }
 
-// ── Color swatch preview ──────────────────────────────────────────────────────
-
-function ColorSwatch({
-  primary,
-  accent,
-  secondary,
-}: {
-  primary: string;
-  accent: string;
-  secondary: string;
-}) {
+function ColorSwatch({ primary, accent, secondary }: { primary: string; accent: string; secondary: string }) {
   return (
-    <div className="mt-2 flex h-5 w-full overflow-hidden rounded">
+    <div className="mt-3 flex h-4 w-full overflow-hidden rounded">
       <div className="flex-1" style={{ backgroundColor: primary }} />
       <div className="flex-1" style={{ backgroundColor: accent }} />
       <div className="flex-1" style={{ backgroundColor: secondary }} />
     </div>
   );
 }
-
-// ── Main component ────────────────────────────────────────────────────────────
 
 export function ThemePicker({
   currentTheme,
@@ -62,200 +46,169 @@ export function ThemePicker({
   agencyPlan,
 }: ThemePickerProps) {
   const [selectedTheme, setSelectedTheme] = useState(currentTheme);
-  const [primaryColor, setPrimaryColor] = useState(
-    currentPrimaryColor ?? "#1a365d"
-  );
-  const [accentColor, setAccentColor] = useState(
-    currentAccentColor ?? "#d4af37"
-  );
-  const [secondaryColor, setSecondaryColor] = useState(
-    currentSecondaryColor ?? "#2d5a8e"
-  );
+  const [primaryColor, setPrimaryColor] = useState(currentPrimaryColor ?? "#1a365d");
+  const [accentColor, setAccentColor] = useState(currentAccentColor ?? "#d4af37");
+  const [secondaryColor, setSecondaryColor] = useState(currentSecondaryColor ?? "#2d5a8e");
 
   const [state, formAction, isPending] = useActionState<
     ActionResult<{ theme: string }> | null,
     FormData
   >(updateAgencyThemeAction, null);
 
-  // When theme changes, update color defaults from registry
   useEffect(() => {
     const manifest = THEME_REGISTRY.find((t) => t.id === selectedTheme);
-    if (manifest && !currentPrimaryColor) {
-      setPrimaryColor(manifest.defaultColors.primary);
-    }
-    if (manifest && !currentAccentColor) {
-      setAccentColor(manifest.defaultColors.accent);
-    }
-    if (manifest && !currentSecondaryColor) {
-      setSecondaryColor(manifest.defaultColors.secondary);
-    }
+    if (manifest && !currentPrimaryColor) setPrimaryColor(manifest.defaultColors.primary);
+    if (manifest && !currentAccentColor) setAccentColor(manifest.defaultColors.accent);
+    if (manifest && !currentSecondaryColor) setSecondaryColor(manifest.defaultColors.secondary);
   }, [selectedTheme, currentPrimaryColor, currentAccentColor, currentSecondaryColor]);
 
   return (
-    <div className="space-y-8">
-      {/* Status feedback */}
+    <div className="space-y-4">
+      {/* Feedback banners */}
       {state?.success === false && (
-        <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+        <div className="flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>
           {state.error.message}
         </div>
       )}
       {state?.success === true && (
-        <div className="rounded-lg bg-green-50 p-4 text-sm text-green-700">
+        <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
+          <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
           Thème appliqué avec succès.
         </div>
       )}
 
-      {/* ── Theme grid ─────────────────────────────────────────────── */}
-      <div>
-        <h3 className="mb-4 text-base font-semibold text-gray-800">
-          Choisir un thème
-        </h3>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {THEME_REGISTRY.map((theme) => {
-            const available = isThemeAvailable(theme.id, agencyPlan);
-            const isSelected = selectedTheme === theme.id;
+      {/* ── Theme selection card ─────────────────────────────────── */}
+      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            Thème de la vitrine
+          </h2>
+          <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+            Le thème définit l'apparence de votre page publique.
+          </p>
+        </div>
 
-            return (
-              <button
-                key={theme.id}
-                type="button"
-                disabled={!available}
-                onClick={() => available && setSelectedTheme(theme.id)}
-                className={[
-                  "relative rounded-xl border-2 p-4 text-start transition-all focus:outline-none",
-                  isSelected
-                    ? "border-gold bg-gold/5 shadow-md"
-                    : "border-gray-200 bg-white hover:border-gray-300",
-                  !available ? "cursor-not-allowed opacity-50 grayscale" : "cursor-pointer",
-                ].join(" ")}
-              >
-                {/* Selected checkmark */}
-                {isSelected && (
-                  <span className="absolute end-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-white">
-                    <svg
-                      className="h-3 w-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+        <div className="p-6">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {THEME_REGISTRY.map((theme) => {
+              const available = isThemeAvailable(theme.id, agencyPlan);
+              const isSelected = selectedTheme === theme.id;
+
+              return (
+                <button
+                  key={theme.id}
+                  type="button"
+                  disabled={!available}
+                  onClick={() => available && setSelectedTheme(theme.id)}
+                  className={[
+                    "relative rounded-lg border-2 p-4 text-start transition-all focus:outline-none",
+                    isSelected
+                      ? "shadow-sm"
+                      : "border-[#E3E8EF] bg-white hover:border-[var(--coral)]",
+                    !available ? "cursor-not-allowed opacity-40 grayscale" : "cursor-pointer",
+                  ].join(" ")}
+                  style={isSelected ? { borderColor: "var(--coral)", background: "rgba(232,114,92,0.04)" } : {}}
+                >
+                  {/* Selected indicator */}
+                  {isSelected && (
+                    <span
+                      className="absolute end-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full text-white"
+                      style={{ background: "var(--coral)" }}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={3}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </span>
-                )}
+                      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </span>
+                  )}
 
-                {/* Theme name + plan badge */}
-                <div className="flex items-start justify-between gap-2">
-                  <span className="text-sm font-semibold text-gray-800">
-                    {theme.name}
-                  </span>
-                  <PlanBadge plan={theme.plan} />
-                </div>
+                  {/* Locked indicator */}
+                  {!available && (
+                    <span className="absolute end-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-gray-500">
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                      </svg>
+                    </span>
+                  )}
 
-                {/* Meta info */}
-                <p className="mt-1 text-xs text-gray-500">
-                  {theme.style.themeMode === "dark" ? "Sombre" : "Clair"} &middot;{" "}
-                  {theme.style.fontFamily === "elegant"
-                    ? "Élégant"
-                    : theme.style.fontFamily === "classic"
-                      ? "Classique"
-                      : "Moderne"}
-                </p>
+                  <div className="flex items-start justify-between gap-1 pe-6">
+                    <span className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                      {theme.name}
+                    </span>
+                    <PlanBadge plan={theme.plan} />
+                  </div>
 
-                {/* Color swatch */}
-                <ColorSwatch
-                  primary={theme.defaultColors.primary}
-                  accent={theme.defaultColors.accent}
-                  secondary={theme.defaultColors.secondary}
-                />
-              </button>
-            );
-          })}
+                  <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+                    {theme.style.themeMode === "dark" ? "Sombre" : "Clair"} &middot;{" "}
+                    {theme.style.fontFamily === "elegant"
+                      ? "Élégant"
+                      : theme.style.fontFamily === "classic"
+                        ? "Classique"
+                        : "Moderne"}
+                  </p>
+
+                  <ColorSwatch
+                    primary={theme.defaultColors.primary}
+                    accent={theme.defaultColors.accent}
+                    secondary={theme.defaultColors.secondary}
+                  />
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* ── Custom colors ───────────────────────────────────────────── */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
-        <h3 className="mb-1 text-base font-semibold text-gray-800">
-          Couleurs personnalisées
-        </h3>
-        <p className="mb-4 text-sm text-gray-500">
-          Ces couleurs remplacent les valeurs par défaut du thème sélectionné.
-        </p>
-
-        <div className="grid gap-4 sm:grid-cols-3">
-          {/* Primary */}
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Couleur principale
-            </label>
-            <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-3 py-2">
-              <input
-                type="color"
-                value={primaryColor}
-                onChange={(e) => setPrimaryColor(e.target.value)}
-                className="h-8 w-8 cursor-pointer rounded border-0 bg-transparent p-0"
-              />
-              <span className="font-mono text-sm text-gray-600">
-                {primaryColor}
-              </span>
-            </div>
-          </div>
-
-          {/* Accent */}
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Couleur d&apos;accentuation
-            </label>
-            <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-3 py-2">
-              <input
-                type="color"
-                value={accentColor}
-                onChange={(e) => setAccentColor(e.target.value)}
-                className="h-8 w-8 cursor-pointer rounded border-0 bg-transparent p-0"
-              />
-              <span className="font-mono text-sm text-gray-600">
-                {accentColor}
-              </span>
-            </div>
-          </div>
-
-          {/* Secondary */}
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Couleur secondaire
-            </label>
-            <div className="flex items-center gap-3 rounded-lg border border-gray-300 px-3 py-2">
-              <input
-                type="color"
-                value={secondaryColor}
-                onChange={(e) => setSecondaryColor(e.target.value)}
-                className="h-8 w-8 cursor-pointer rounded border-0 bg-transparent p-0"
-              />
-              <span className="font-mono text-sm text-gray-600">
-                {secondaryColor}
-              </span>
-            </div>
-          </div>
+      {/* ── Custom colors card ───────────────────────────────────── */}
+      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            Couleurs personnalisées
+          </h2>
+          <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+            Ces couleurs remplacent les valeurs par défaut du thème sélectionné.
+          </p>
         </div>
 
-        {/* Live preview bar */}
-        <div className="mt-4">
-          <p className="mb-2 text-xs font-medium text-gray-500 uppercase tracking-wide">
+        {/* Color pickers row */}
+        <div className="grid grid-cols-1 gap-6 border-b p-6 sm:grid-cols-3" style={{ borderColor: "#E3E8EF" }}>
+          {[
+            { label: "Couleur principale", value: primaryColor, onChange: setPrimaryColor },
+            { label: "Couleur d'accentuation", value: accentColor, onChange: setAccentColor },
+            { label: "Couleur secondaire", value: secondaryColor, onChange: setSecondaryColor },
+          ].map(({ label, value, onChange }) => (
+            <div key={label}>
+              <label className="mb-1.5 block text-xs font-medium" style={{ color: "var(--charcoal-700)" }}>
+                {label}
+              </label>
+              <div
+                className="flex items-center gap-3 rounded-md border px-3 py-2"
+                style={{ borderColor: "#E3E8EF" }}
+              >
+                <input
+                  type="color"
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                  className="h-7 w-7 cursor-pointer rounded border-0 bg-transparent p-0"
+                />
+                <span className="font-mono text-sm" style={{ color: "var(--charcoal-700)" }}>
+                  {value}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Preview bar */}
+        <div className="px-6 py-4" style={{ background: "#F6F9FC" }}>
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-400)" }}>
             Aperçu
           </p>
-          <div
-            className="flex h-10 w-full overflow-hidden rounded-lg shadow-sm"
-            style={{
-              ["--preview-primary" as string]: primaryColor,
-              ["--preview-accent" as string]: accentColor,
-              ["--preview-secondary" as string]: secondaryColor,
-            }}
-          >
+          <div className="flex h-8 w-full overflow-hidden rounded-md shadow-sm">
             <div className="flex-1" style={{ backgroundColor: primaryColor }} />
             <div className="flex-[0.6]" style={{ backgroundColor: accentColor }} />
             <div className="flex-1" style={{ backgroundColor: secondaryColor }} />
@@ -263,19 +216,30 @@ export function ThemePicker({
         </div>
       </div>
 
-      {/* ── Submit form (hidden inputs + button) ────────────────────── */}
+      {/* ── Submit ───────────────────────────────────────────────── */}
       <form action={formAction}>
         <input type="hidden" name="theme" value={selectedTheme} />
         <input type="hidden" name="primary_color" value={primaryColor} />
         <input type="hidden" name="accent_color" value={accentColor} />
         <input type="hidden" name="secondary_color" value={secondaryColor} />
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-lg bg-blue-night px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-night/90 disabled:opacity-50"
-        >
-          {isPending ? "Application en cours…" : "Appliquer le thème"}
-        </button>
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            disabled={isPending}
+            className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
+            style={{ background: "var(--coral)" }}
+          >
+            {isPending ? (
+              <>
+                <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Application…
+              </>
+            ) : "Appliquer le thème"}
+          </button>
+        </div>
       </form>
     </div>
   );

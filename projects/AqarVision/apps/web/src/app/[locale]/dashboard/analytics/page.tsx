@@ -18,11 +18,8 @@ export default async function AnalyticsDashboardPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect(`/${locale}/auth/login`);
-  }
+  if (!user) redirect(`/${locale}/auth/login`);
 
-  // Get the user's active agency
   const { data: membership } = await supabase
     .from("agency_memberships")
     .select("agency_id")
@@ -33,15 +30,14 @@ export default async function AnalyticsDashboardPage({
 
   if (!membership) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-        <p className="text-sm text-gray-500">{t("no_data")}</p>
+      <div className="flex items-center justify-center rounded-lg border bg-white py-16" style={{ borderColor: "#E3E8EF" }}>
+        <p className="text-sm" style={{ color: "var(--charcoal-500)" }}>{t("no_data")}</p>
       </div>
     );
   }
 
   const agencyId = membership.agency_id as string;
 
-  // Last 30 days range
   const now = new Date();
   const thirtyDaysAgo = new Date(now);
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -54,26 +50,52 @@ export default async function AnalyticsDashboardPage({
   ]);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-blue-night">{t("title")}</h1>
+    <div className="space-y-4">
+      {/* Page header */}
+      <div>
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          {t("title")}
+        </h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+          Performances de votre agence sur les 30 derniers jours.
+        </p>
+      </div>
 
-      <section>
-        <h2 className="mb-4 text-lg font-semibold text-blue-night">
-          {t("overview")}
-        </h2>
-        <StatsOverview summary={summary} />
-      </section>
+      {/* Overview section */}
+      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            {t("overview")}
+          </h2>
+        </div>
+        <div className="p-6">
+          <StatsOverview summary={summary} />
+        </div>
+      </div>
 
-      <section>
-        <StatsChart stats={dailyStats} />
-      </section>
+      {/* Chart section */}
+      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            Évolution quotidienne
+          </h2>
+        </div>
+        <div className="p-6">
+          <StatsChart stats={dailyStats} />
+        </div>
+      </div>
 
-      <section>
-        <h2 className="mb-4 text-lg font-semibold text-blue-night">
-          Analyses avancées
-        </h2>
-        <AdvancedAnalytics data={advancedData} />
-      </section>
+      {/* Advanced analytics section */}
+      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            Analyses avancées
+          </h2>
+        </div>
+        <div className="p-6">
+          <AdvancedAnalytics data={advancedData} />
+        </div>
+      </div>
     </div>
   );
 }

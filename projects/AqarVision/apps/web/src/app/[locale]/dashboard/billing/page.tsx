@@ -65,8 +65,14 @@ export default async function BillingPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-blue-night">{t("billing_portal")}</h1>
+    <div className="mx-auto max-w-3xl space-y-4">
+      {/* Page header */}
+      <div className="mb-8">
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>{t("billing_portal")}</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+          Gérez votre abonnement, vos factures et vos options de paiement.
+        </p>
+      </div>
 
       {subscription && agencyId && (
         <SubscriptionCard

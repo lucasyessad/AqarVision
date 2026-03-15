@@ -21,11 +21,8 @@ export default async function LeadsPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect(`/${locale}/auth/login`);
-  }
+  if (!user) redirect(`/${locale}/auth/login`);
 
-  // Get membership for CRM view
   const { data: membership } = await supabase
     .from("agency_memberships")
     .select("agency_id, role")
@@ -34,7 +31,6 @@ export default async function LeadsPage({
     .limit(1)
     .single();
 
-  // Fetch data depending on active view
   let conversations: Awaited<ReturnType<typeof listConversations>> = [];
   let initialMessages: Awaited<ReturnType<typeof listMessages>> = [];
   let leadsByStatus: Awaited<ReturnType<typeof getLeadsByAgency>> | null = null;
@@ -49,31 +45,38 @@ export default async function LeadsPage({
   }
 
   return (
-    <div className="flex h-full flex-col">
-      {/* View toggle */}
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-700">Prospects & Messages</h1>
-        <div className="flex rounded-lg border border-gray-200 bg-white p-1 shadow-sm">
-          <a
-            href="/dashboard/leads?view=messages"
-            className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-              activeView === "messages"
-                ? "bg-blue-night text-white shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Messages
-          </a>
-          <a
-            href="/dashboard/leads?view=pipeline"
-            className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-              activeView === "pipeline"
-                ? "bg-blue-night text-white shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Pipeline CRM
-          </a>
+    <div className="flex h-full flex-col space-y-4">
+      {/* Header + toggle */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            Prospects &amp; Messages
+          </h1>
+          <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+            Gérez vos conversations et votre pipeline CRM.
+          </p>
+        </div>
+        <div
+          className="flex rounded-md border p-0.5"
+          style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}
+        >
+          {(["messages", "pipeline"] as const).map((v) => {
+            const isActive = activeView === v;
+            return (
+              <a
+                key={v}
+                href={`/dashboard/leads?view=${v}`}
+                className="rounded px-4 py-1.5 text-sm font-medium transition-all"
+                style={
+                  isActive
+                    ? { background: "var(--coral)", color: "white" }
+                    : { color: "var(--charcoal-600)" }
+                }
+              >
+                {v === "messages" ? "Messages" : "Pipeline CRM"}
+              </a>
+            );
+          })}
         </div>
       </div>
 
@@ -90,8 +93,8 @@ export default async function LeadsPage({
           agencyId={membership.agency_id as string}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl bg-white py-16 shadow-sm">
-          <p className="text-gray-500">
+        <div className="flex items-center justify-center rounded-lg border bg-white py-16" style={{ borderColor: "#E3E8EF" }}>
+          <p className="text-sm" style={{ color: "var(--charcoal-500)" }}>
             Vous devez appartenir à une agence pour accéder au pipeline CRM.
           </p>
         </div>

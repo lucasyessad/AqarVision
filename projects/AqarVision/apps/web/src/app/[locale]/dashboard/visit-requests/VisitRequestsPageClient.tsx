@@ -21,11 +21,11 @@ const STATUS_LABELS: Record<VisitRequestStatus, string> = {
   done: "Faite",
 };
 
-const STATUS_COLORS: Record<VisitRequestStatus, string> = {
-  pending: "bg-amber-100 text-amber-700",
-  confirmed: "bg-emerald-100 text-emerald-700",
-  cancelled: "bg-gray-100 text-gray-500",
-  done: "bg-blue-100 text-blue-700",
+const STATUS_STYLE: Record<VisitRequestStatus, { bg: string; color: string }> = {
+  pending:   { bg: "#FFFBEB", color: "#D97706" },
+  confirmed: { bg: "#F0FDF4", color: "#16A34A" },
+  cancelled: { bg: "#F6F9FC", color: "var(--charcoal-400)" },
+  done:      { bg: "#EFF6FF", color: "#2563EB" },
 };
 
 interface VisitRequestsPageClientProps {
@@ -44,73 +44,54 @@ export function VisitRequestsPageClient({
   const [error, setError] = useState<string | null>(null);
 
   const activeTab = statusFilter === "all" ? "all" : (statusFilter as VisitRequestStatus);
+  const filtered = activeTab === "all" ? requests : requests.filter((r) => r.status === activeTab);
 
-  const filtered =
-    activeTab === "all"
-      ? requests
-      : requests.filter((r) => r.status === activeTab);
-
-  const handleStatusChange = async (
-    requestId: string,
-    newStatus: VisitRequestStatus
-  ) => {
+  const handleStatusChange = async (requestId: string, newStatus: VisitRequestStatus) => {
     setLoadingId(requestId);
     setError(null);
-
-    // Optimistic update
     const prev = [...requests];
     setRequests((curr) =>
       curr.map((r) => (r.id === requestId ? { ...r, status: newStatus } : r))
     );
-
-    const result = await updateVisitRequestStatusAction({
-      requestId,
-      agencyId,
-      status: newStatus,
-    });
-
+    const result = await updateVisitRequestStatusAction({ requestId, agencyId, status: newStatus });
     if (!result.success) {
       setRequests(prev);
       setError(result.error.message);
     }
-
     setLoadingId(null);
   };
 
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-bold text-blue-night">
-        Demandes de visites
-      </h1>
+    <div className="space-y-4">
+      {/* Page header */}
+      <div>
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          Demandes de visites
+        </h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+          {requests.length} demande{requests.length !== 1 ? "s" : ""} au total.
+        </p>
+      </div>
 
       {/* Status tabs */}
-      <div className="mb-6 flex gap-2 border-b border-gray-200">
+      <div className="flex gap-0 border-b" style={{ borderColor: "#E3E8EF" }}>
         {STATUS_TABS.map((tab) => {
           const isActive = activeTab === tab.key;
-          const count =
-            tab.key === "all"
-              ? requests.length
-              : requests.filter((r) => r.status === tab.key).length;
-
+          const count = tab.key === "all" ? requests.length : requests.filter((r) => r.status === tab.key).length;
           return (
             <a
               key={tab.key}
-              href={
-                tab.key === "all"
-                  ? "/dashboard/visit-requests"
-                  : `/dashboard/visit-requests?status=${tab.key}`
-              }
-              className={`flex items-center gap-1.5 border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
-                isActive
-                  ? "border-blue-night text-blue-night"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              }`}
+              href={tab.key === "all" ? "/dashboard/visit-requests" : `/dashboard/visit-requests?status=${tab.key}`}
+              className="flex items-center gap-1.5 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors"
+              style={{
+                borderBottomColor: isActive ? "var(--coral)" : "transparent",
+                color: isActive ? "var(--coral)" : "var(--charcoal-500)",
+              }}
             >
               {tab.label}
               <span
-                className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-                  isActive ? "bg-blue-night text-white" : "bg-gray-100 text-gray-500"
-                }`}
+                className="rounded-full px-1.5 py-0.5 text-[10px] font-bold"
+                style={isActive ? { background: "var(--coral)", color: "white" } : { background: "#E3E8EF", color: "var(--charcoal-500)" }}
               >
                 {count}
               </span>
@@ -120,54 +101,55 @@ export function VisitRequestsPageClient({
       </div>
 
       {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      {/* Requests list */}
+      {/* List */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl bg-white py-16 shadow-sm">
-          <p className="text-gray-500">Aucune demande de visite</p>
+        <div className="flex items-center justify-center rounded-lg border bg-white py-16" style={{ borderColor: "#E3E8EF" }}>
+          <p className="text-sm" style={{ color: "var(--charcoal-500)" }}>Aucune demande de visite</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {filtered.map((req) => (
-            <div
-              key={req.id}
-              className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                {/* Left info */}
-                <div className="min-w-0 flex-1">
-                  <div className="mb-1 flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-800">
+        <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+          {filtered.map((req, i) => {
+            const style = STATUS_STYLE[req.status];
+            return (
+              <div
+                key={req.id}
+                className="grid grid-cols-1 gap-4 border-b p-6 md:grid-cols-[1fr_auto]"
+                style={{ borderColor: i === filtered.length - 1 ? "transparent" : "#E3E8EF" }}
+              >
+                {/* Info */}
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
                       {req.visitor_name}
-                    </h3>
+                    </p>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                        STATUS_COLORS[req.status]
-                      }`}
+                      className="rounded-full px-2 py-0.5 text-xs font-semibold"
+                      style={{ background: style.bg, color: style.color }}
                     >
                       {STATUS_LABELS[req.status]}
                     </span>
                   </div>
 
-                  <p className="mb-0.5 text-sm text-gray-500">
+                  <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
                     {req.visitor_phone}
                     {req.visitor_email && (
-                      <span className="ms-2 text-gray-400">
+                      <span className="ms-2" style={{ color: "var(--charcoal-400)" }}>
                         · {req.visitor_email}
                       </span>
                     )}
                   </p>
 
-                  <p className="truncate text-sm text-blue-night/80">
+                  <p className="mt-1 truncate text-sm" style={{ color: "var(--charcoal-700)" }}>
                     {req.listing_title}
                   </p>
 
                   {req.requested_date && (
-                    <p className="mt-1 text-xs text-gray-400">
+                    <p className="mt-1 text-xs" style={{ color: "var(--charcoal-400)" }}>
                       Visite souhaitée :{" "}
                       {new Date(req.requested_date).toLocaleDateString("fr-FR", {
                         weekday: "long",
@@ -179,33 +161,34 @@ export function VisitRequestsPageClient({
                   )}
 
                   {req.message && (
-                    <p className="mt-1 rounded bg-gray-50 px-2 py-1 text-xs text-gray-600 italic">
-                      "{req.message}"
+                    <p
+                      className="mt-2 rounded-md px-3 py-1.5 text-xs italic"
+                      style={{ background: "#F6F9FC", color: "var(--charcoal-600)" }}
+                    >
+                      &ldquo;{req.message}&rdquo;
                     </p>
                   )}
                 </div>
 
                 {/* Actions */}
-                <div className="flex shrink-0 flex-wrap gap-2">
+                <div className="flex shrink-0 flex-wrap items-start gap-2">
                   {req.status === "pending" && (
                     <>
                       <button
                         type="button"
                         disabled={loadingId === req.id}
-                        onClick={() =>
-                          handleStatusChange(req.id, "confirmed")
-                        }
-                        className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
+                        onClick={() => handleStatusChange(req.id, "confirmed")}
+                        className="rounded-md px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                        style={{ background: "#16A34A" }}
                       >
                         Confirmer
                       </button>
                       <button
                         type="button"
                         disabled={loadingId === req.id}
-                        onClick={() =>
-                          handleStatusChange(req.id, "cancelled")
-                        }
-                        className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                        onClick={() => handleStatusChange(req.id, "cancelled")}
+                        className="rounded-md border px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-gray-50 disabled:opacity-50"
+                        style={{ borderColor: "#E3E8EF", color: "var(--charcoal-600)" }}
                       >
                         Annuler
                       </button>
@@ -216,20 +199,21 @@ export function VisitRequestsPageClient({
                       type="button"
                       disabled={loadingId === req.id}
                       onClick={() => handleStatusChange(req.id, "done")}
-                      className="rounded-lg bg-blue-night px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-night/90 disabled:opacity-50"
+                      className="rounded-md px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                      style={{ background: "var(--coral)" }}
                     >
                       Marquer comme faite
                     </button>
                   )}
                   {(req.status === "cancelled" || req.status === "done") && (
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs" style={{ color: "var(--charcoal-400)" }}>
                       {req.status === "done" ? "Visite effectuée" : "Annulée"}
                     </span>
                   )}
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

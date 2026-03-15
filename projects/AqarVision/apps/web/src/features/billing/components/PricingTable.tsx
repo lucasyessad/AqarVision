@@ -13,6 +13,14 @@ interface PricingTableProps {
   agencyId?: string | null;
 }
 
+function CheckIcon() {
+  return (
+    <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
+  );
+}
+
 function PlanCard({
   plan,
   isCurrent,
@@ -31,71 +39,78 @@ function PlanCard({
     FormData
   >(startCheckoutAction, null);
 
-  // Redirect on success
   if (state?.success && state.data.checkout_url) {
     window.location.href = state.data.checkout_url;
   }
 
   const indicativeDzd = Math.round(plan.price_eur * EUR_TO_DZD_INDICATIVE);
 
+  const isEnterprise = plan.code === "enterprise";
+
   return (
     <div
-      className={`relative flex flex-col rounded-2xl border-2 bg-white p-6 shadow-sm transition-shadow hover:shadow-md ${
-        isCurrent
-          ? "border-gold"
-          : isPopular
-            ? "border-blue-night"
-            : "border-gray-200"
-      }`}
+      className="relative flex flex-col overflow-hidden rounded-lg border bg-white transition-shadow hover:shadow-md"
+      style={{
+        borderColor: isCurrent ? "var(--coral)" : isPopular ? "#1a365d" : "#E3E8EF",
+        borderWidth: isCurrent || isPopular ? 2 : 1,
+      }}
     >
-      {isPopular && (
-        <span className="absolute -top-3 inset-inline-start-1/2 -translate-x-1/2 rounded-full bg-blue-night px-4 py-1 text-xs font-semibold text-white">
-          Popular
-        </span>
+      {/* Popular / Current ribbon */}
+      {(isPopular || isCurrent) && (
+        <div
+          className="px-6 py-2 text-center text-xs font-semibold text-white"
+          style={{ background: isCurrent ? "var(--coral)" : "#1a365d" }}
+        >
+          {isCurrent ? t("current_plan") : "Recommandé"}
+        </div>
       )}
 
-      {isCurrent && (
-        <span className="absolute -top-3 inset-inline-start-1/2 -translate-x-1/2 rounded-full bg-gold px-4 py-1 text-xs font-semibold text-white">
-          {t("current_plan")}
-        </span>
-      )}
-
-      <h3 className="text-lg font-bold text-blue-night">{plan.name}</h3>
-
-      <div className="mt-4">
-        <span className="text-3xl font-bold text-blue-night">
-          {plan.price_eur}
-        </span>
-        <span className="text-sm text-gray-500">
-          {" "}
-          {t("eur")} / {t("per_month")}
-        </span>
+      {/* Plan header */}
+      <div className="border-b p-6" style={{ borderColor: "#E3E8EF" }}>
+        <h3 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>{plan.name}</h3>
+        <div className="mt-3 flex items-baseline gap-1">
+          <span className="text-3xl font-bold" style={{ color: "var(--charcoal-950)" }}>
+            {isEnterprise ? "—" : `${plan.price_eur} €`}
+          </span>
+          {!isEnterprise && (
+            <span className="text-xs" style={{ color: "var(--charcoal-500)" }}>/ {t("per_month")}</span>
+          )}
+        </div>
+        {!isEnterprise && (
+          <p className="mt-1 text-xs" style={{ color: "var(--charcoal-400)" }}>
+            ~{new Intl.NumberFormat("fr-FR").format(indicativeDzd)} DZD / {t("per_month")}
+          </p>
+        )}
+        {isEnterprise && (
+          <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
+            Tarif sur devis
+          </p>
+        )}
       </div>
 
-      <p className="mt-1 text-xs text-gray-400">
-        ~{new Intl.NumberFormat("fr-FR").format(indicativeDzd)} DZD ({t("per_month")})
-      </p>
-
-      <ul className="mt-6 flex-1 space-y-3">
-        <li className="flex items-center gap-2 text-sm text-gray-700">
-          <CheckIcon />
+      {/* Features */}
+      <div className="flex-1 space-y-3 p-6">
+        <div className="flex items-center gap-2.5 text-sm" style={{ color: "var(--charcoal-700)" }}>
+          <span style={{ color: "var(--coral)" }}><CheckIcon /></span>
           {plan.max_listings === -1
             ? t("unlimited")
             : `${plan.max_listings} ${t("max_listings")}`}
-        </li>
-        <li className="flex items-center gap-2 text-sm text-gray-700">
-          <CheckIcon />
+        </div>
+        <div className="flex items-center gap-2.5 text-sm" style={{ color: "var(--charcoal-700)" }}>
+          <span style={{ color: "var(--coral)" }}><CheckIcon /></span>
           {plan.max_ai_jobs === -1
             ? t("unlimited")
             : `${plan.max_ai_jobs} ${t("max_ai_jobs")}`}
-        </li>
-      </ul>
+        </div>
+      </div>
 
-      <div className="mt-6">
-        {plan.code === "enterprise" ? (
+      {/* CTA footer */}
+      <div className="border-t p-6" style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}>
+        {isEnterprise ? (
           <a
             href="mailto:contact@aqarvision.com"
-            className="block w-full rounded-lg border-2 border-blue-night px-4 py-2.5 text-center text-sm font-semibold text-blue-night transition-colors hover:bg-blue-night hover:text-white"
+            className="flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-white"
+            style={{ borderColor: "#E3E8EF", color: "var(--charcoal-700)" }}
           >
             {t("contact_sales")}
           </a>
@@ -103,7 +118,8 @@ function PlanCard({
           <button
             type="button"
             disabled
-            className="w-full rounded-lg bg-gray-100 px-4 py-2.5 text-sm font-semibold text-gray-400"
+            className="w-full rounded-md px-4 py-2 text-sm font-medium"
+            style={{ background: "#E3E8EF", color: "var(--charcoal-400)" }}
           >
             {t("current_plan")}
           </button>
@@ -114,15 +130,25 @@ function PlanCard({
             <button
               type="submit"
               disabled={isPending}
-              className="w-full rounded-lg bg-blue-night px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-opacity-90 disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
+              style={{ background: "var(--coral)" }}
             >
-              {isPending ? t("checkout_redirect") : t("subscribe")}
+              {isPending ? (
+                <>
+                  <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  {t("checkout_redirect")}
+                </>
+              ) : t("subscribe")}
             </button>
           </form>
         ) : (
           <a
             href="/auth/login"
-            className="block w-full rounded-lg bg-blue-night px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-opacity-90"
+            className="flex w-full items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
+            style={{ background: "var(--coral)" }}
           >
             {t("subscribe")}
           </a>
@@ -136,29 +162,23 @@ function PlanCard({
   );
 }
 
-function CheckIcon() {
-  return (
-    <svg
-      className="h-4 w-4 shrink-0 text-gold"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={3}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
-  );
-}
-
 export function PricingTable({ plans, currentPlanCode, agencyId }: PricingTableProps) {
   const t = useTranslations("billing");
 
   return (
-    <section>
-      <h2 className="mb-8 text-center text-2xl font-bold text-blue-night">
-        {t("pricing_title")}
-      </h2>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+      {/* Card header */}
+      <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+        <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          {t("pricing_title")}
+        </h2>
+        <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+          Choisissez le plan adapté à votre agence. Changez à tout moment.
+        </p>
+      </div>
+
+      {/* Plans grid */}
+      <div className="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">
         {plans.map((plan) => (
           <PlanCard
             key={plan.id}
@@ -170,6 +190,16 @@ export function PricingTable({ plans, currentPlanCode, agencyId }: PricingTableP
           />
         ))}
       </div>
-    </section>
+
+      {/* Footer note */}
+      <div className="flex items-center gap-3 border-t px-6 py-4" style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}>
+        <svg className="h-4 w-4 shrink-0" style={{ color: "var(--charcoal-400)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>
+        <p className="text-xs" style={{ color: "var(--charcoal-500)" }}>
+          Les prix en DZD sont indicatifs. La facturation s'effectue en EUR via Stripe.
+        </p>
+      </div>
+    </div>
   );
 }

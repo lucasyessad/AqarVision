@@ -9,6 +9,19 @@ import type { MediaDto } from "@/features/media/types/media.types";
 const TABS = ["details", "translations", "media", "preview"] as const;
 type Tab = (typeof TABS)[number];
 
+const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
+  published:      { bg: "#F0FDF4", color: "#16A34A" },
+  draft:          { bg: "#F6F9FC", color: "var(--charcoal-500)" },
+  paused:         { bg: "#FFFBEB", color: "#D97706" },
+  pending_review: { bg: "#EFF6FF", color: "#2563EB" },
+  rejected:       { bg: "#FFF5F5", color: "#DC2626" },
+};
+
+const inputCls = "w-full rounded-md border px-3 py-2 text-sm focus:outline-none";
+const inputStyle = { borderColor: "#E3E8EF", color: "var(--charcoal-950)" };
+const labelCls = "mb-1.5 block text-xs font-medium";
+const labelStyle = { color: "var(--charcoal-700)" };
+
 export default async function ListingDetailPage({
   params,
   searchParams,
@@ -26,11 +39,8 @@ export default async function ListingDetailPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect(`/${locale}/auth/login`);
-  }
+  if (!user) redirect(`/${locale}/auth/login`);
 
-  // Get user's active membership
   const { data: membership } = await supabase
     .from("agency_memberships")
     .select("agency_id, role")
@@ -39,11 +49,8 @@ export default async function ListingDetailPage({
     .limit(1)
     .single();
 
-  if (!membership) {
-    redirect(`/${locale}/agency/new`);
-  }
+  if (!membership) redirect(`/${locale}/agency/new`);
 
-  // Fetch listing with translations
   const { data: listing } = await supabase
     .from("listings")
     .select(
@@ -52,23 +59,15 @@ export default async function ListingDetailPage({
     .eq("id", id)
     .single();
 
-  if (!listing) {
-    notFound();
-  }
+  if (!listing) notFound();
+  if (listing.agency_id !== membership.agency_id) notFound();
 
-  // Check user has access to this listing's agency
-  if (listing.agency_id !== membership.agency_id) {
-    notFound();
-  }
-
-  // Fetch listing media
   const { data: listingMedia } = await supabase
     .from("listing_media")
     .select("id, storage_path, file_name, mime_type, size_bytes, width_px, height_px, position, is_cover, created_at")
     .eq("listing_id", id)
     .order("position", { ascending: true });
 
-  // Map query results to MediaDto shape
   const mediaItems: MediaDto[] = (listingMedia ?? []).map((m) => ({
     id: m.id as string,
     listing_id: id,
@@ -80,7 +79,7 @@ export default async function ListingDetailPage({
     is_cover: m.is_cover as boolean,
     sort_order: (m.position ?? 0) as number,
     created_at: m.created_at as string,
-    url: "", // URL will be resolved by the gallery or service layer
+    url: "",
   }));
 
   const frTranslation = listing.listing_translations?.find(
@@ -90,76 +89,66 @@ export default async function ListingDetailPage({
     (tr: { locale: string }) => tr.locale === "ar"
   );
 
-  // Publish checklist
   const checklist = [
-    {
-      label: t("translation_fr"),
-      met: !!frTranslation?.title && !!frTranslation?.description,
-    },
-    {
-      label: t("translation_ar"),
-      met: !!arTranslation?.title && !!arTranslation?.description,
-    },
-    {
-      label: t("cover_media"),
-      met: !!listingMedia?.some((m: { is_cover: boolean }) => m.is_cover),
-    },
-    {
-      label: t("price_set"),
-      met: listing.current_price > 0,
-    },
+    { label: t("translation_fr"), met: !!frTranslation?.title && !!frTranslation?.description },
+    { label: t("translation_ar"), met: !!arTranslation?.title && !!arTranslation?.description },
+    { label: t("cover_media"), met: !!listingMedia?.some((m: { is_cover: boolean }) => m.is_cover) },
+    { label: t("price_set"), met: listing.current_price > 0 },
   ];
 
+  const statusStyle = STATUS_STYLE[listing.status as string] ?? STATUS_STYLE.draft;
+  const allMet = checklist.every((c) => c.met);
+
   return (
-    <div>
-      <div className="mb-6 flex items-center gap-4">
+    <div className="space-y-4">
+      {/* Back + header */}
+      <div>
         <Link
           href="/dashboard/listings"
-          className="text-sm text-gray-500 transition-colors hover:text-blue-night"
+          className="inline-flex items-center gap-1 text-sm transition-colors"
+          style={{ color: "var(--charcoal-500)" }}
         >
-          &larr; {t("title")}
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+          {t("title")}
         </Link>
-      </div>
-
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-blue-night">
-            {t("edit_title")}
-          </h1>
-          <span
-            className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-              listing.status === "published"
-                ? "bg-green-100 text-green-700"
-                : listing.status === "draft"
-                  ? "bg-gray-100 text-gray-600"
-                  : listing.status === "paused"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "bg-gray-100 text-gray-600"
-            }`}
-          >
-            {t(`status_${listing.status}` as Parameters<typeof t>[0])}
-          </span>
+        <div className="mt-2 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+              {t("edit_title")}
+            </h1>
+            <span
+              className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+              style={{ background: statusStyle.bg, color: statusStyle.color }}
+            >
+              {t(`status_${listing.status}` as Parameters<typeof t>[0])}
+            </span>
+          </div>
+          {listing.status === "draft" && (
+            <button
+              className="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
+              style={{ background: "var(--coral)" }}
+            >
+              {t("submit_review")}
+            </button>
+          )}
         </div>
-        {listing.status === "draft" && (
-          <button className="rounded-lg bg-blue-night px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-night/90">
-            {t("submit_review")}
-          </button>
-        )}
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-2 border-b border-gray-200">
+      <div className="flex gap-0 border-b" style={{ borderColor: "#E3E8EF" }}>
         {TABS.map((tab) => {
           const isActive = currentTab === tab;
           return (
             <Link
               key={tab}
               href={`/dashboard/listings/${id}?tab=${tab}`}
-              className={`border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
-                isActive
-                  ? "border-blue-night text-blue-night"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              }`}
+              className="border-b-2 px-4 py-2.5 text-sm font-medium transition-colors"
+              style={{
+                borderBottomColor: isActive ? "var(--coral)" : "transparent",
+                color: isActive ? "var(--coral)" : "var(--charcoal-500)",
+              }}
             >
               {t(tab as Parameters<typeof t>[0])}
             </Link>
@@ -167,38 +156,31 @@ export default async function ListingDetailPage({
         })}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Main content area */}
-        <div className="lg:col-span-2">
+      {/* Content grid */}
+      <div className="grid gap-4 lg:grid-cols-3">
+        {/* Main area */}
+        <div className="space-y-4 lg:col-span-2">
           {currentTab === "details" && (
-            <div className="space-y-6">
-              {/* Listing form */}
-              <div className="rounded-xl bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-lg font-semibold text-blue-night">
-                  {t("listing_type")}
-                </h2>
-                <div className="grid gap-4 sm:grid-cols-2">
+            <>
+              {/* Type card */}
+              <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+                <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+                  <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                    {t("listing_type")}
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("listing_type")}
-                    </label>
-                    <select
-                      defaultValue={listing.listing_type}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    >
+                    <label className={labelCls} style={labelStyle}>{t("listing_type")}</label>
+                    <select defaultValue={listing.listing_type} className={inputCls} style={inputStyle}>
                       <option value="sale">{t("sale")}</option>
                       <option value="rent">{t("rent")}</option>
                       <option value="vacation">{t("vacation")}</option>
                     </select>
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("property_type")}
-                    </label>
-                    <select
-                      defaultValue={listing.property_type}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    >
+                    <label className={labelCls} style={labelStyle}>{t("property_type")}</label>
+                    <select defaultValue={listing.property_type} className={inputCls} style={inputStyle}>
                       <option value="apartment">{t("apartment")}</option>
                       <option value="villa">{t("villa")}</option>
                       <option value="terrain">{t("terrain")}</option>
@@ -212,223 +194,165 @@ export default async function ListingDetailPage({
                 </div>
               </div>
 
-              <div className="rounded-xl bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-lg font-semibold text-blue-night">
-                  {t("step_location")}
-                </h2>
-                <div className="grid gap-4 sm:grid-cols-2">
+              {/* Details card */}
+              <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+                <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+                  <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                    {t("step_location")}
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("price_dzd")}
-                    </label>
-                    <input
-                      type="number"
-                      defaultValue={listing.current_price}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("price_dzd")}</label>
+                    <input type="number" defaultValue={listing.current_price} className={inputCls} style={inputStyle} />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("surface")}
-                    </label>
-                    <input
-                      type="number"
-                      defaultValue={listing.surface_m2 ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("surface")}</label>
+                    <input type="number" defaultValue={listing.surface_m2 ?? ""} className={inputCls} style={inputStyle} />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("rooms")}
-                    </label>
-                    <input
-                      type="number"
-                      defaultValue={listing.rooms ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("rooms")}</label>
+                    <input type="number" defaultValue={listing.rooms ?? ""} className={inputCls} style={inputStyle} />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("bathrooms")}
-                    </label>
-                    <input
-                      type="number"
-                      defaultValue={listing.bathrooms ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("bathrooms")}</label>
+                    <input type="number" defaultValue={listing.bathrooms ?? ""} className={inputCls} style={inputStyle} />
                   </div>
                 </div>
+                <div className="flex justify-end px-6 py-4" style={{ background: "#F6F9FC" }}>
+                  <button
+                    className="rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
+                    style={{ background: "var(--coral)" }}
+                  >
+                    {t("save")}
+                  </button>
+                </div>
               </div>
-
-              <div className="flex justify-end">
-                <button className="rounded-lg bg-gold px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-gold/90">
-                  {t("save")}
-                </button>
-              </div>
-            </div>
+            </>
           )}
 
           {currentTab === "translations" && (
-            <div className="space-y-6">
-              {/* French translation */}
-              <div className="rounded-xl bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-lg font-semibold text-blue-night">
-                  {t("translation_fr")}
-                </h2>
-                <div className="space-y-4">
+            <>
+              {/* FR */}
+              <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+                <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+                  <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                    {t("translation_fr")}
+                  </h2>
+                </div>
+                <div className="space-y-4 p-6">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("title_field")}
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue={frTranslation?.title ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("title_field")}</label>
+                    <input type="text" defaultValue={frTranslation?.title ?? ""} className={inputCls} style={inputStyle} />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("description_field")}
-                    </label>
-                    <textarea
-                      rows={4}
-                      defaultValue={frTranslation?.description ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("description_field")}</label>
+                    <textarea rows={4} defaultValue={frTranslation?.description ?? ""} className={inputCls} style={inputStyle} />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("slug_field")}
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue={frTranslation?.slug ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("slug_field")}</label>
+                    <input type="text" defaultValue={frTranslation?.slug ?? ""} className={inputCls} style={inputStyle} />
                   </div>
                 </div>
               </div>
 
-              {/* Arabic translation */}
-              <div className="rounded-xl bg-white p-6 shadow-sm" dir="rtl">
-                <h2 className="mb-4 text-lg font-semibold text-blue-night">
-                  {t("translation_ar")}
-                </h2>
-                <div className="space-y-4">
+              {/* AR */}
+              <div className="overflow-hidden rounded-lg border bg-white" dir="rtl" style={{ borderColor: "#E3E8EF" }}>
+                <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+                  <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                    {t("translation_ar")}
+                  </h2>
+                </div>
+                <div className="space-y-4 p-6">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("title_field")}
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue={arTranslation?.title ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("title_field")}</label>
+                    <input type="text" defaultValue={arTranslation?.title ?? ""} className={inputCls} style={inputStyle} />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("description_field")}
-                    </label>
-                    <textarea
-                      rows={4}
-                      defaultValue={arTranslation?.description ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("description_field")}</label>
+                    <textarea rows={4} defaultValue={arTranslation?.description ?? ""} className={inputCls} style={inputStyle} />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      {t("slug_field")}
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue={arTranslation?.slug ?? ""}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                      dir="ltr"
-                    />
+                    <label className={labelCls} style={labelStyle}>{t("slug_field")}</label>
+                    <input type="text" defaultValue={arTranslation?.slug ?? ""} className={inputCls} style={inputStyle} dir="ltr" />
                   </div>
                 </div>
               </div>
 
               <div className="flex justify-end">
-                <button className="rounded-lg bg-gold px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-gold/90">
+                <button
+                  className="rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
+                  style={{ background: "var(--coral)" }}
+                >
                   {t("save")}
                 </button>
               </div>
-            </div>
+            </>
           )}
 
           {currentTab === "media" && (
-            <div className="space-y-6">
-              <div className="rounded-xl bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-lg font-semibold text-blue-night">
-                  {t("media" as Parameters<typeof t>[0])}
-                </h2>
-                <MediaUploader listingId={id} />
+            <>
+              <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+                <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+                  <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                    Ajouter des photos
+                  </h2>
+                </div>
+                <div className="p-6">
+                  <MediaUploader listingId={id} />
+                </div>
               </div>
-              <div className="rounded-xl bg-white p-6 shadow-sm">
-                <MediaGallery
-                  listingId={id}
-                  media={mediaItems}
-                />
+              <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+                <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+                  <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                    Galerie ({mediaItems.length} photo{mediaItems.length !== 1 ? "s" : ""})
+                  </h2>
+                </div>
+                <div className="p-6">
+                  <MediaGallery listingId={id} media={mediaItems} />
+                </div>
               </div>
-            </div>
+            </>
           )}
 
           {currentTab === "preview" && (
-            <div className="rounded-xl bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-semibold text-blue-night">
-                {t("preview")}
-              </h2>
-              <div className="space-y-3 text-sm text-gray-600">
+            <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+              <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+                <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                  {t("preview")}
+                </h2>
+              </div>
+              <div className="space-y-3 p-6 text-sm" style={{ color: "var(--charcoal-600)" }}>
                 <p>
-                  <span className="font-medium text-gray-900">
-                    {t("listing_type")}:
-                  </span>{" "}
+                  <span className="font-medium" style={{ color: "var(--charcoal-950)" }}>{t("listing_type")}:</span>{" "}
                   {t(listing.listing_type as Parameters<typeof t>[0])}
                 </p>
                 <p>
-                  <span className="font-medium text-gray-900">
-                    {t("property_type")}:
-                  </span>{" "}
+                  <span className="font-medium" style={{ color: "var(--charcoal-950)" }}>{t("property_type")}:</span>{" "}
                   {t(listing.property_type as Parameters<typeof t>[0])}
                 </p>
                 <p>
-                  <span className="font-medium text-gray-900">
-                    {t("price")}:
-                  </span>{" "}
-                  {new Intl.NumberFormat(locale, { style: "decimal" }).format(
-                    listing.current_price
-                  )}{" "}
-                  DZD
+                  <span className="font-medium" style={{ color: "var(--charcoal-950)" }}>{t("price")}:</span>{" "}
+                  {new Intl.NumberFormat(locale).format(listing.current_price)} DZD
                 </p>
                 {listing.surface_m2 && (
                   <p>
-                    <span className="font-medium text-gray-900">
-                      {t("surface")}:
-                    </span>{" "}
-                    {listing.surface_m2}
+                    <span className="font-medium" style={{ color: "var(--charcoal-950)" }}>{t("surface")}:</span>{" "}
+                    {listing.surface_m2} m²
                   </p>
                 )}
                 {frTranslation && (
-                  <div className="mt-4 border-t pt-4">
-                    <h3 className="font-medium text-gray-900">
-                      {t("translation_fr")}
-                    </h3>
-                    <p className="mt-1 font-semibold">{frTranslation.title}</p>
-                    <p className="mt-1 text-gray-500">
-                      {frTranslation.description}
-                    </p>
+                  <div className="border-t pt-4" style={{ borderColor: "#E3E8EF" }}>
+                    <p className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-400)" }}>{t("translation_fr")}</p>
+                    <p className="mt-1 font-semibold" style={{ color: "var(--charcoal-950)" }}>{frTranslation.title}</p>
+                    <p className="mt-1" style={{ color: "var(--charcoal-500)" }}>{frTranslation.description}</p>
                   </div>
                 )}
                 {arTranslation && (
-                  <div className="mt-4 border-t pt-4" dir="rtl">
-                    <h3 className="font-medium text-gray-900">
-                      {t("translation_ar")}
-                    </h3>
-                    <p className="mt-1 font-semibold">{arTranslation.title}</p>
-                    <p className="mt-1 text-gray-500">
-                      {arTranslation.description}
-                    </p>
+                  <div className="border-t pt-4" dir="rtl" style={{ borderColor: "#E3E8EF" }}>
+                    <p className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-400)" }}>{t("translation_ar")}</p>
+                    <p className="mt-1 font-semibold" style={{ color: "var(--charcoal-950)" }}>{arTranslation.title}</p>
+                    <p className="mt-1" style={{ color: "var(--charcoal-500)" }}>{arTranslation.description}</p>
                   </div>
                 )}
               </div>
@@ -438,35 +362,37 @@ export default async function ListingDetailPage({
 
         {/* Sidebar: Publish checklist */}
         <div className="lg:col-span-1">
-          <div className="sticky top-8 rounded-xl bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-blue-night">
-              {t("publish_checklist")}
-            </h2>
-            <ul className="space-y-3">
+          <div
+            className="sticky top-6 overflow-hidden rounded-lg border bg-white"
+            style={{ borderColor: "#E3E8EF" }}
+          >
+            <div className="border-b px-5 py-4" style={{ borderColor: "#E3E8EF" }}>
+              <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                {t("publish_checklist")}
+              </h2>
+            </div>
+            <ul className="divide-y p-2" style={{ borderColor: "#E3E8EF" }}>
               {checklist.map((item) => (
-                <li key={item.label} className="flex items-center gap-2 text-sm">
+                <li key={item.label} className="flex items-center gap-3 px-3 py-2.5">
                   <span
-                    className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-xs ${
-                      item.met
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-500"
-                    }`}
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                    style={item.met ? { background: "#F0FDF4", color: "#16A34A" } : { background: "#FFF5F5", color: "#DC2626" }}
                   >
-                    {item.met ? "\u2713" : "\u2717"}
+                    {item.met ? "✓" : "✗"}
                   </span>
-                  <span className={item.met ? "text-gray-700" : "text-gray-400"}>
+                  <span className="flex-1 text-xs" style={{ color: item.met ? "var(--charcoal-700)" : "var(--charcoal-400)" }}>
                     {item.label}
-                  </span>
-                  <span
-                    className={`ms-auto text-xs ${
-                      item.met ? "text-green-600" : "text-red-500"
-                    }`}
-                  >
-                    {item.met ? t("requirement_met") : t("requirement_missing")}
                   </span>
                 </li>
               ))}
             </ul>
+            {allMet && (
+              <div className="border-t px-5 py-4" style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}>
+                <p className="text-xs" style={{ color: "#16A34A" }}>
+                  ✓ Annonce prête à publier
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

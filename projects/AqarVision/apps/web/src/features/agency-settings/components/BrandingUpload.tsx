@@ -2,43 +2,18 @@
 
 import { useState } from "react";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
 interface UploadZoneProps {
   label: string;
-  description: string;
+  hint: string;
   aspectRatio: "square" | "panoramic";
   maxSizeLabel: string;
   currentUrl: string | null;
 }
 
-// ── Upload zone (UI only — Supabase Storage TODO) ─────────────────────────────
-
-function UploadZone({
-  label,
-  description,
-  aspectRatio,
-  maxSizeLabel,
-  currentUrl,
-}: UploadZoneProps) {
+function UploadZone({ label, hint, aspectRatio, maxSizeLabel, currentUrl }: UploadZoneProps) {
   const [preview, setPreview] = useState<string | null>(currentUrl);
   const [isDragging, setIsDragging] = useState(false);
 
-  /*
-   * TODO: implémenter l'upload réel via Supabase Storage signed URLs
-   *
-   * Flow recommandé :
-   *   1. Appeler GET /api/upload/agency-media?type=logo|cover
-   *      → Server Action ou Route Handler génère une signed upload URL
-   *        via supabase.storage.from("agency-media").createSignedUploadUrl(path)
-   *   2. Uploader le fichier directement depuis le browser avec fetch(signedUrl, { method: 'PUT', body: file })
-   *   3. Une fois uploadé, récupérer l'URL publique et mettre à jour
-   *      agencies.logo_url ou agencies.cover_url via updateAgencyAction
-   *
-   * Buckets recommandés :
-   *   - "agency-media" (public) — logos + covers
-   *   - path pattern : `{agencyId}/logo.{ext}` et `{agencyId}/cover.{ext}`
-   */
   function handleFileChange(file: File | null) {
     if (!file) return;
     const maxBytes = aspectRatio === "square" ? 500 * 1024 : 2 * 1024 * 1024;
@@ -51,122 +26,117 @@ function UploadZone({
     reader.readAsDataURL(file);
   }
 
-  const aspectClass =
-    aspectRatio === "square" ? "aspect-square max-w-xs" : "aspect-[16/5] w-full";
+  const previewClass = aspectRatio === "square"
+    ? "aspect-square w-24 rounded-full"
+    : "aspect-[4/1] w-full rounded-lg";
 
   return (
-    <div>
-      <label className="mb-2 block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-      <p className="mb-3 text-xs text-gray-500">{description}</p>
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr]">
+      {/* Left: label + hint */}
+      <div>
+        <h3 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          {label}
+        </h3>
+        <p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--charcoal-500)" }}>
+          {hint}
+        </p>
+        {preview && (
+          <div className={`mt-4 overflow-hidden border bg-gray-100 ${previewClass}`} style={{ borderColor: "#E3E8EF" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={preview} alt={label} className="h-full w-full object-cover" />
+          </div>
+        )}
+      </div>
 
-      {/* Preview */}
-      {preview && (
-        <div className={`mb-3 overflow-hidden rounded-lg border border-gray-200 bg-gray-100 ${aspectClass}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={preview}
-            alt={label}
-            className="h-full w-full object-cover"
-          />
-        </div>
-      )}
-
-      {/* Drop zone */}
-      <div
-        className={[
-          "flex flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-8 text-center transition-colors",
-          isDragging
-            ? "border-blue-night bg-blue-night/5"
-            : "border-gray-300 bg-gray-50 hover:border-gray-400",
-        ].join(" ")}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setIsDragging(true);
-        }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setIsDragging(false);
-          const file = e.dataTransfer.files[0] ?? null;
-          handleFileChange(file);
-        }}
-      >
-        <svg
-          className="mx-auto mb-2 h-8 w-8 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      {/* Right: upload zone */}
+      <div>
+        <label
+          className={[
+            "flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-10 text-center transition-all",
+            isDragging
+              ? "border-[var(--coral)] bg-[rgba(232,114,92,0.04)]"
+              : "border-[#E3E8EF] bg-[#F6F9FC] hover:border-[var(--coral)] hover:bg-[rgba(232,114,92,0.02)]",
+          ].join(" ")}
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setIsDragging(false);
+            handleFileChange(e.dataTransfer.files[0] ?? null);
+          }}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+          <svg className="mb-3 h-8 w-8" style={{ color: "var(--charcoal-400)" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+          <p className="text-sm" style={{ color: "var(--charcoal-700)" }}>
+            Glissez le fichier ici ou{" "}
+            <span style={{ color: "var(--coral)", fontWeight: 500 }}>choisissez</span>
+          </p>
+          <p className="mt-1 text-xs" style={{ color: "var(--charcoal-400)" }}>
+            PNG, JPEG, WebP — max {maxSizeLabel}
+          </p>
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="sr-only"
+            onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
           />
-        </svg>
-        <p className="text-sm text-gray-500">
-          Glissez votre {label.toLowerCase()} ici ou{" "}
-          <label className="cursor-pointer font-medium text-blue-night hover:underline">
-            choisissez un fichier
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              className="sr-only"
-              onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
-            />
-          </label>
-        </p>
-        <p className="mt-1 text-xs text-gray-400">
-          PNG, JPEG ou WebP — max {maxSizeLabel}
-        </p>
+        </label>
       </div>
     </div>
   );
 }
-
-// ── Main component ────────────────────────────────────────────────────────────
 
 interface BrandingUploadProps {
   currentLogoUrl: string | null;
   currentCoverUrl: string | null;
 }
 
-export function BrandingUpload({
-  currentLogoUrl,
-  currentCoverUrl,
-}: BrandingUploadProps) {
+export function BrandingUpload({ currentLogoUrl, currentCoverUrl }: BrandingUploadProps) {
   return (
-    <div className="space-y-8">
-      {/* Logo */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+    <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+      {/* Card header */}
+      <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+        <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          Identité visuelle
+        </h2>
+        <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+          Ces visuels apparaissent sur votre vitrine publique et dans les résultats de recherche.
+        </p>
+      </div>
+
+      {/* Logo section */}
+      <div className="border-b p-6" style={{ borderColor: "#E3E8EF" }}>
         <UploadZone
-          label="Logo"
-          description="Image carrée représentant votre agence. Recommandé : 400×400 px."
+          label="Logo de l'agence"
+          hint="Image carrée de votre agence. Recommandé : 400 × 400 px minimum."
           aspectRatio="square"
           maxSizeLabel="500 Ko"
           currentUrl={currentLogoUrl}
         />
       </div>
 
-      {/* Cover */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+      {/* Cover section */}
+      <div className="border-b p-6" style={{ borderColor: "#E3E8EF" }}>
         <UploadZone
           label="Image de couverture"
-          description="Bannière panoramique affichée en haut de votre profil public. Recommandé : 1200×400 px."
+          hint="Bannière panoramique affichée en haut de votre vitrine. Recommandé : 1200 × 400 px."
           aspectRatio="panoramic"
           maxSizeLabel="2 Mo"
           currentUrl={currentCoverUrl}
         />
       </div>
 
-      {/* Save note */}
-      <p className="text-sm text-gray-400">
-        L&apos;upload des fichiers sera disponible prochainement via Supabase
-        Storage. En attendant, vous pouvez renseigner les URLs directement dans
-        les paramètres de l&apos;agence.
-      </p>
+      {/* Footer note */}
+      <div className="flex items-center gap-3 px-6 py-4" style={{ background: "#F6F9FC" }}>
+        <svg className="h-4 w-4 shrink-0" style={{ color: "var(--charcoal-400)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>
+        <p className="text-xs" style={{ color: "var(--charcoal-500)" }}>
+          L&apos;upload vers Supabase Storage sera disponible prochainement. Les fichiers sont prévisualisés localement.
+        </p>
+      </div>
     </div>
   );
 }

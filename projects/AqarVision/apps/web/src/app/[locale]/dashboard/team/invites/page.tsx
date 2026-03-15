@@ -15,9 +15,7 @@ export default async function InvitesPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect(`/${locale}/auth/login`);
-  }
+  if (!user) redirect(`/${locale}/auth/login`);
 
   const { data: membership } = await supabase
     .from("agency_memberships")
@@ -27,9 +25,7 @@ export default async function InvitesPage({
     .limit(1)
     .single();
 
-  if (!membership) {
-    redirect(`/${locale}/agency/new`);
-  }
+  if (!membership) redirect(`/${locale}/agency/new`);
 
   const { data: invites } = await supabase
     .from("agency_invites")
@@ -37,61 +33,75 @@ export default async function InvitesPage({
     .eq("agency_id", membership.agency_id)
     .order("created_at", { ascending: false });
 
-  return (
-    <div>
-      <h1 className="mb-6 text-2xl font-bold text-blue-night">
-        {t("invite_pending")}
-      </h1>
+  const STATUS_MAP = {
+    accepted: { label: "Acceptée", bg: "#F0FDF4", color: "#16A34A" },
+    expired:  { label: "Expirée",  bg: "#F6F9FC", color: "var(--charcoal-400)" },
+    pending:  { label: "En attente", bg: "#FFFBEB", color: "#D97706" },
+  };
 
-      <div className="overflow-x-auto rounded-xl bg-white shadow-sm">
-        <table className="w-full text-start text-sm">
+  return (
+    <div className="space-y-4">
+      {/* Page header */}
+      <div>
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          {t("invite_pending")}
+        </h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+          Historique des invitations envoyées à votre agence.
+        </p>
+      </div>
+
+      {/* Table card */}
+      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100">
-              <th className="px-6 py-3 text-start text-xs font-medium uppercase text-gray-500">
+            <tr className="border-b" style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}>
+              <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
                 {t("member_email")}
               </th>
-              <th className="px-6 py-3 text-start text-xs font-medium uppercase text-gray-500">
+              <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
                 {t("member_role")}
               </th>
-              <th className="px-6 py-3 text-start text-xs font-medium uppercase text-gray-500">
+              <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
                 {t("member_status")}
               </th>
-              <th className="px-6 py-3 text-start text-xs font-medium uppercase text-gray-500">
-                Expires
+              <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+                Expire le
               </th>
             </tr>
           </thead>
           <tbody>
             {invites && invites.length > 0 ? (
-              invites.map((invite) => {
+              invites.map((invite, i) => {
                 const isExpired = new Date(invite.expires_at) < new Date();
-                const status = invite.accepted_at
-                  ? "accepted"
-                  : isExpired
-                    ? "expired"
-                    : "pending";
+                const statusKey = invite.accepted_at ? "accepted" : isExpired ? "expired" : "pending";
+                const status = STATUS_MAP[statusKey];
                 return (
-                  <tr key={invite.id} className="border-b border-gray-50">
-                    <td className="px-6 py-4 text-gray-700">{invite.email}</td>
+                  <tr
+                    key={invite.id}
+                    className="border-b"
+                    style={{ borderColor: i === invites.length - 1 ? "transparent" : "#E3E8EF" }}
+                  >
+                    <td className="px-6 py-4" style={{ color: "var(--charcoal-950)" }}>
+                      {invite.email}
+                    </td>
                     <td className="px-6 py-4">
-                      <span className="rounded-full bg-blue-night/10 px-2.5 py-0.5 text-xs font-medium text-blue-night">
+                      <span
+                        className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                        style={{ background: "#EFF6FF", color: "#2563EB" }}
+                      >
                         {invite.role}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          status === "pending"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : status === "accepted"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-500"
-                        }`}
+                        className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                        style={{ background: status.bg, color: status.color }}
                       >
-                        {status}
+                        {status.label}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-500">
+                    <td className="px-6 py-4 text-xs" style={{ color: "var(--charcoal-400)" }}>
                       {new Date(invite.expires_at).toLocaleDateString(locale)}
                     </td>
                   </tr>
@@ -99,11 +109,8 @@ export default async function InvitesPage({
               })
             ) : (
               <tr>
-                <td
-                  colSpan={4}
-                  className="px-6 py-8 text-center text-gray-400"
-                >
-                  No pending invites
+                <td colSpan={4} className="px-6 py-12 text-center text-sm" style={{ color: "var(--charcoal-400)" }}>
+                  Aucune invitation envoyée
                 </td>
               </tr>
             )}

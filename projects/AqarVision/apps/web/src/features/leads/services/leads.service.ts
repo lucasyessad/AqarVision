@@ -32,10 +32,6 @@ export async function getLeadsByAgency(
           title,
           locale
         )
-      ),
-      profiles:sender_user_id (
-        full_name,
-        phone
       )
     `)
     .eq("agency_id", agencyId)
@@ -43,6 +39,22 @@ export async function getLeadsByAgency(
 
   if (error || !data) {
     throw new Error(error?.message ?? "Failed to fetch leads");
+  }
+
+  // Fetch profiles separately (no direct FK from leads → profiles)
+  const senderIds = [...new Set(data.map((r) => r.sender_user_id).filter(Boolean))];
+  const profileMap = new Map<string, { full_name: string | null; phone: string | null }>();
+  if (senderIds.length > 0) {
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("user_id, full_name, phone")
+      .in("user_id", senderIds);
+    for (const p of profiles ?? []) {
+      profileMap.set(p.user_id as string, {
+        full_name: p.full_name as string | null,
+        phone: p.phone as string | null,
+      });
+    }
   }
 
   const grouped: LeadsByStatus = {
@@ -62,9 +74,9 @@ export async function getLeadsByAgency(
       translations?.find((t) => t.locale === "fr") ?? translations?.[0];
     const listingTitle = translation?.title ?? "—";
 
-    const profile = row.profiles as unknown as Record<string, unknown> | null;
-    const contactName = (profile?.full_name as string | null) ?? "—";
-    const contactPhone = (profile?.phone as string | null) ?? null;
+    const profile = profileMap.get(row.sender_user_id as string) ?? null;
+    const contactName = profile?.full_name ?? "—";
+    const contactPhone = profile?.phone ?? null;
 
     // Parse notes from JSONB
     const rawNotes = (row.notes as unknown as LeadNoteDto[] | null) ?? [];

@@ -148,8 +148,8 @@ export async function startCheckout(
     mode: "subscription",
     currency: "eur",
     line_items: [{ price: plan.stripe_price_id, quantity: 1 }],
-    success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/billing?checkout=success`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/billing?checkout=cancel`,
+    success_url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/dashboard/billing?checkout=success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/dashboard/billing?checkout=cancel`,
     metadata: { agency_id: agencyId, plan_id: plan.id },
   });
 
@@ -171,7 +171,7 @@ export async function openBillingPortal(
 
   const session = await getStripe().billingPortal.sessions.create({
     customer: customerId,
-    return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard/billing`,
+    return_url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/dashboard/billing`,
   });
 
   return { portal_url: session.url };

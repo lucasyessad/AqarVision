@@ -17,11 +17,8 @@ export default async function AiDashboardPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect(`/${locale}/auth/login`);
-  }
+  if (!user) redirect(`/${locale}/auth/login`);
 
-  // Get the user's active agency
   const { data: membership } = await supabase
     .from("agency_memberships")
     .select("agency_id")
@@ -32,53 +29,87 @@ export default async function AiDashboardPage({
 
   if (!membership) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-        <p className="text-sm text-gray-500">{t("no_jobs")}</p>
+      <div className="flex items-center justify-center rounded-lg border bg-white py-16" style={{ borderColor: "#E3E8EF" }}>
+        <p className="text-sm" style={{ color: "var(--charcoal-500)" }}>{t("no_jobs")}</p>
       </div>
     );
   }
 
   const agencyId = membership.agency_id as string;
-
   const [jobs, quota] = await Promise.all([
     getJobHistory(supabase, agencyId),
     checkQuota(supabase, agencyId),
   ]);
 
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-blue-night">{t("title")}</h1>
+  const pct = quota.max > 0 ? Math.min(100, (quota.used / quota.max) * 100) : 0;
+  const barColor = pct > 90 ? "#DC2626" : pct > 70 ? "#D97706" : "var(--coral)";
 
-      {/* Usage Stats */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500">
-            {t("jobs_used")}
+  return (
+    <div className="space-y-4">
+      {/* Page header */}
+      <div>
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          {t("title")}
+        </h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+          Génération automatique de titres, descriptions et traductions.
+        </p>
+      </div>
+
+      {/* Quota card */}
+      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            Quota mensuel
+          </h2>
+          <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+            Réinitialisé le 1er de chaque mois.
           </p>
-          <p className="mt-2 text-3xl font-bold text-blue-night">
-            {quota.used}{" "}
-            <span className="text-base font-normal text-gray-400">
-              / {quota.max}
-            </span>
-          </p>
-          {/* Usage bar */}
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-100">
-            <div
-              className="h-full rounded-full bg-gold transition-all"
-              style={{
-                width: `${quota.max > 0 ? Math.min(100, (quota.used / quota.max) * 100) : 0}%`,
-              }}
-            />
+        </div>
+        <div className="grid grid-cols-1 gap-6 border-b p-6 md:grid-cols-[240px_1fr]" style={{ borderColor: "#E3E8EF" }}>
+          <div>
+            <p className="text-sm font-medium" style={{ color: "var(--charcoal-950)" }}>
+              {t("jobs_used")}
+            </p>
+            <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
+              Tâches IA utilisées ce mois-ci.
+            </p>
           </div>
+          <div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-semibold tabular-nums" style={{ color: "var(--charcoal-950)" }}>
+                {quota.used}
+              </span>
+              <span className="text-sm" style={{ color: "var(--charcoal-400)" }}>/ {quota.max}</span>
+            </div>
+            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full" style={{ background: "#E3E8EF" }}>
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{ width: `${pct}%`, backgroundColor: barColor }}
+              />
+            </div>
+            <p className="mt-1 text-xs" style={{ color: "var(--charcoal-400)" }}>
+              {quota.max - quota.used} tâche{quota.max - quota.used !== 1 ? "s" : ""} restante{quota.max - quota.used !== 1 ? "s" : ""}
+            </p>
+          </div>
+        </div>
+        <div className="px-6 py-4" style={{ background: "#F6F9FC" }}>
+          <p className="text-xs" style={{ color: "var(--charcoal-500)" }}>
+            Augmentez votre quota en passant au plan Pro ou Enterprise.
+          </p>
         </div>
       </div>
 
-      {/* Job History */}
-      <div>
-        <h2 className="mb-4 text-lg font-semibold text-blue-night">
-          {t("job_history")}
-        </h2>
-        <AiJobHistory jobs={jobs} />
+      {/* Job history card */}
+      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
+          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            {t("job_history")}
+          </h2>
+        </div>
+        <div className="p-6">
+          <AiJobHistory jobs={jobs} />
+        </div>
       </div>
     </div>
   );

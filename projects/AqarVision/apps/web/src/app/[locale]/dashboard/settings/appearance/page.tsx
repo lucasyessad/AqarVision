@@ -39,10 +39,10 @@ export default async function AppearancePage({
   const planCode: string = (subscription?.plans as any)?.slug ?? "starter";
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-blue-night">Apparence</h1>
-        <p className="mt-1 text-sm text-gray-500">
+    <div className="space-y-4">
+      <div className="mb-2">
+        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>Apparence</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
           Personnalisez le thème et les couleurs de votre vitrine publique.
         </p>
       </div>
