@@ -49,40 +49,39 @@ function PlanCard({
 
   return (
     <div
-      className="relative flex flex-col overflow-hidden rounded-lg border bg-white transition-shadow hover:shadow-md"
-      style={{
-        borderColor: isCurrent ? "var(--coral)" : isPopular ? "#1a365d" : "#E3E8EF",
-        borderWidth: isCurrent || isPopular ? 2 : 1,
-      }}
+      className={`relative flex flex-col overflow-hidden rounded-lg border bg-white transition-shadow hover:shadow-md ${
+        isCurrent ? "border-rose-500 border-2" : isPopular ? "border-zinc-900 border-2" : "border-gray-200"
+      }`}
     >
       {/* Popular / Current ribbon */}
       {(isPopular || isCurrent) && (
         <div
-          className="px-6 py-2 text-center text-xs font-semibold text-white"
-          style={{ background: isCurrent ? "var(--coral)" : "#1a365d" }}
+          className={`px-6 py-2 text-center text-xs font-semibold text-white ${
+            isCurrent ? "bg-rose-500" : "bg-zinc-900"
+          }`}
         >
           {isCurrent ? t("current_plan") : "Recommandé"}
         </div>
       )}
 
       {/* Plan header */}
-      <div className="border-b p-6" style={{ borderColor: "#E3E8EF" }}>
-        <h3 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>{plan.name}</h3>
+      <div className="border-b border-gray-200 p-6">
+        <h3 className="text-sm font-semibold text-zinc-950">{plan.name}</h3>
         <div className="mt-3 flex items-baseline gap-1">
-          <span className="text-3xl font-bold" style={{ color: "var(--charcoal-950)" }}>
+          <span className="text-3xl font-bold text-zinc-950">
             {isEnterprise ? "—" : `${plan.price_eur} €`}
           </span>
           {!isEnterprise && (
-            <span className="text-xs" style={{ color: "var(--charcoal-500)" }}>/ {t("per_month")}</span>
+            <span className="text-xs text-zinc-500">/ {t("per_month")}</span>
           )}
         </div>
         {!isEnterprise && (
-          <p className="mt-1 text-xs" style={{ color: "var(--charcoal-400)" }}>
+          <p className="mt-1 text-xs text-zinc-400">
             ~{new Intl.NumberFormat("fr-FR").format(indicativeDzd)} DZD / {t("per_month")}
           </p>
         )}
         {isEnterprise && (
-          <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
+          <p className="mt-1 text-xs text-zinc-500">
             Tarif sur devis
           </p>
         )}
@@ -90,14 +89,14 @@ function PlanCard({
 
       {/* Features */}
       <div className="flex-1 space-y-3 p-6">
-        <div className="flex items-center gap-2.5 text-sm" style={{ color: "var(--charcoal-700)" }}>
-          <span style={{ color: "var(--coral)" }}><CheckIcon /></span>
+        <div className="flex items-center gap-2.5 text-sm text-zinc-700">
+          <span className="text-rose-500"><CheckIcon /></span>
           {plan.max_listings === -1
             ? t("unlimited")
             : `${plan.max_listings} ${t("max_listings")}`}
         </div>
-        <div className="flex items-center gap-2.5 text-sm" style={{ color: "var(--charcoal-700)" }}>
-          <span style={{ color: "var(--coral)" }}><CheckIcon /></span>
+        <div className="flex items-center gap-2.5 text-sm text-zinc-700">
+          <span className="text-rose-500"><CheckIcon /></span>
           {plan.max_ai_jobs === -1
             ? t("unlimited")
             : `${plan.max_ai_jobs} ${t("max_ai_jobs")}`}
@@ -105,12 +104,11 @@ function PlanCard({
       </div>
 
       {/* CTA footer */}
-      <div className="border-t p-6" style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}>
+      <div className="border-t border-gray-200 bg-zinc-50 p-6">
         {isEnterprise ? (
           <a
             href="mailto:contact@aqarvision.com"
-            className="flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-white"
-            style={{ borderColor: "#E3E8EF", color: "var(--charcoal-700)" }}
+            className="flex w-full items-center justify-center rounded-md border border-gray-200 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-white"
           >
             {t("contact_sales")}
           </a>
@@ -118,8 +116,7 @@ function PlanCard({
           <button
             type="button"
             disabled
-            className="w-full rounded-md px-4 py-2 text-sm font-medium"
-            style={{ background: "#E3E8EF", color: "var(--charcoal-400)" }}
+            className="w-full rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-zinc-400"
           >
             {t("current_plan")}
           </button>
@@ -130,8 +127,7 @@ function PlanCard({
             <button
               type="submit"
               disabled={isPending}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ background: "var(--coral)" }}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-rose-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {isPending ? (
                 <>
@@ -147,8 +143,7 @@ function PlanCard({
         ) : (
           <a
             href="/AqarChaab/auth/login"
-            className="flex w-full items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
-            style={{ background: "var(--coral)" }}
+            className="flex w-full items-center justify-center rounded-md bg-rose-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
           >
             {t("subscribe")}
           </a>
@@ -166,13 +161,13 @@ export function PricingTable({ plans, currentPlanCode, agencyId }: PricingTableP
   const t = useTranslations("billing");
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
       {/* Card header */}
-      <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-        <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+      <div className="border-b border-gray-200 px-6 py-4">
+        <h2 className="text-sm font-semibold text-zinc-950">
           {t("pricing_title")}
         </h2>
-        <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+        <p className="mt-0.5 text-xs text-zinc-500">
           Choisissez le plan adapté à votre agence. Changez à tout moment.
         </p>
       </div>
@@ -192,12 +187,12 @@ export function PricingTable({ plans, currentPlanCode, agencyId }: PricingTableP
       </div>
 
       {/* Footer note */}
-      <div className="flex items-center gap-3 border-t px-6 py-4" style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}>
-        <svg className="h-4 w-4 shrink-0" style={{ color: "var(--charcoal-400)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <div className="flex items-center gap-3 border-t border-gray-200 bg-zinc-50 px-6 py-4">
+        <svg className="h-4 w-4 shrink-0 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
         </svg>
-        <p className="text-xs" style={{ color: "var(--charcoal-500)" }}>
-          Les prix en DZD sont indicatifs. La facturation s'effectue en EUR via Stripe.
+        <p className="text-xs text-zinc-500">
+          Les prix en DZD sont indicatifs. La facturation s&apos;effectue en EUR via Stripe.
         </p>
       </div>
     </div>

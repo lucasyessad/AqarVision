@@ -64,18 +64,18 @@ export default async function ComparerPage({
 
   if (listingIds.length < 2) {
     return (
-      <main className="min-h-screen bg-[#f7fafc]">
+      <main className="min-h-screen bg-zinc-50">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mx-auto mb-4 h-12 w-12 text-[#a0aec0]">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mx-auto mb-4 h-12 w-12 text-zinc-400">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
           </svg>
-          <h1 className="text-xl font-bold text-[#1a365d]">Sélectionnez au moins 2 annonces</h1>
+          <h1 className="text-xl font-bold text-zinc-900">Sélectionnez au moins 2 annonces</h1>
           <p className="mt-2 text-sm text-gray-500">
             Utilisez le bouton &quot;Comparer&quot; sur les annonces pour les ajouter ici.
           </p>
           <Link
             href="/search"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#1a365d] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
           >
             Rechercher des annonces
           </Link>
@@ -190,19 +190,19 @@ export default async function ComparerPage({
   }
 
   return (
-    <main className="min-h-screen bg-[#f7fafc]">
+    <main className="min-h-screen bg-zinc-50">
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-[#1a365d]">Comparaison</h1>
+            <h1 className="text-2xl font-bold text-zinc-900">Comparaison</h1>
             <p className="mt-1 text-sm text-gray-500">
               {listings.length} annonce{listings.length !== 1 ? "s" : ""} comparées
             </p>
           </div>
           <Link
             href="/search"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-[#2d3748] shadow-sm transition-colors hover:bg-gray-50"
+            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-gray-50"
           >
             ← Retour à la recherche
           </Link>
@@ -213,7 +213,7 @@ export default async function ComparerPage({
           <table className="min-w-full">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="w-40 px-4 py-4 text-start text-xs font-semibold uppercase tracking-wider text-[#a0aec0]">
+                <th className="w-40 px-4 py-4 text-start text-xs font-semibold uppercase tracking-wider text-zinc-400">
                   Critère
                 </th>
                 {listings.map((listing) => (
@@ -237,11 +237,11 @@ export default async function ComparerPage({
                       </div>
                       <Link
                         href={`/l/${listing.slug}`}
-                        className="line-clamp-2 text-sm font-semibold text-[#1a365d] hover:underline"
+                        className="line-clamp-2 text-sm font-semibold text-zinc-900 hover:underline"
                       >
                         {listing.title}
                       </Link>
-                      <span className="text-xs text-[#a0aec0]">{listing.agency_name}</span>
+                      <span className="text-xs text-zinc-400">{listing.agency_name}</span>
                     </div>
                   </th>
                 ))}
@@ -253,7 +253,7 @@ export default async function ComparerPage({
                   key={row.key}
                   className={idx % 2 === 0 ? "bg-white" : "bg-gray-50/50"}
                 >
-                  <td className="px-4 py-3 text-xs font-medium text-[#a0aec0]">
+                  <td className="px-4 py-3 text-xs font-medium text-zinc-400">
                     {row.label}
                   </td>
                   {listings.map((listing) => {
@@ -272,7 +272,7 @@ export default async function ComparerPage({
                         className={`px-4 py-3 text-sm ${
                           isBestPrice || isBestSurface
                             ? "font-semibold text-emerald-600"
-                            : "text-[#2d3748]"
+                            : "text-zinc-800"
                         }`}
                       >
                         {value}
@@ -294,9 +294,9 @@ export default async function ComparerPage({
 
               {/* Equipements row */}
               <tr className="bg-white">
-                <td className="px-4 py-3 text-xs font-medium text-[#a0aec0]">Équipements</td>
+                <td className="px-4 py-3 text-xs font-medium text-zinc-400">Équipements</td>
                 {listings.map((listing) => (
-                  <td key={listing.id} className="px-4 py-3 text-sm text-[#2d3748]">
+                  <td key={listing.id} className="px-4 py-3 text-sm text-zinc-800">
                     {renderCell(listing, "equipments")}
                   </td>
                 ))}
@@ -309,7 +309,7 @@ export default async function ComparerPage({
                   <td key={listing.id} className="px-4 py-3">
                     <Link
                       href={`/l/${listing.slug}`}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#1a365d] px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-[#1a365d]/90"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-zinc-900/90"
                     >
                       Voir l&apos;annonce
                     </Link>

@@ -15,28 +15,22 @@ export default async function ChaabForgotPasswordPage({ params }: PageProps) {
   return (
     <div>
       <div className="mb-8">
-        <p
-          className="text-xs font-semibold uppercase tracking-[0.25em]"
-          style={{ color: "var(--or)" }}
-        >
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
           AqarChaab
         </p>
-        <h2
-          className="mt-2 text-2xl font-semibold"
-          style={{ color: "var(--ivoire)" }}
-        >
+        <h2 className="mt-2 text-2xl font-semibold text-zinc-50">
           Mot de passe oublié
         </h2>
       </div>
 
       <div
-        className="[&_p]:text-[rgba(253,251,247,0.4)] [&_label]:text-[rgba(253,251,247,0.4)] [&_input]:bg-[rgba(253,251,247,0.06)] [&_input]:border-[rgba(253,251,247,0.12)] [&_input]:text-white [&_button[type=submit]]:bg-[var(--ivoire)] [&_button[type=submit]]:text-[var(--onyx)]"
+        className="[&_p]:text-zinc-50/40 [&_label]:text-zinc-50/40 [&_input]:bg-zinc-50/[0.06] [&_input]:border-zinc-50/[0.12] [&_input]:text-white [&_button[type=submit]]:bg-zinc-50 [&_button[type=submit]]:text-zinc-950"
       >
         <ForgotPasswordForm />
       </div>
 
       <p className="mt-6 text-center text-xs">
-        <Link href="/AqarChaab/auth/login" className="hover:underline" style={{ color: "var(--or)" }}>
+        <Link href="/AqarChaab/auth/login" className="hover:underline text-amber-500">
           ← Retour à la connexion
         </Link>
       </p>

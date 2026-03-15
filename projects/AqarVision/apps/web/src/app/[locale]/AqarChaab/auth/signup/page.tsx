@@ -15,31 +15,24 @@ export default async function ChaabSignUpPage({ params }: PageProps) {
   return (
     <div>
       <div className="mb-8">
-        <p
-          className="text-xs font-semibold uppercase tracking-[0.25em]"
-          style={{ color: "var(--or)" }}
-        >
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
           AqarChaab
         </p>
-        <h2
-          className="mt-2 text-2xl font-semibold"
-          style={{ color: "var(--ivoire)" }}
-        >
+        <h2 className="mt-2 text-2xl font-semibold text-zinc-50">
           Créer un compte
         </h2>
-        <p className="mt-1 text-sm" style={{ color: "rgba(253,251,247,0.35)" }}>
+        <p className="mt-1 text-sm text-zinc-50/35">
           Gratuit, sans engagement.
         </p>
       </div>
 
       <ChaabSignUpForm locale={locale} />
 
-      <p className="mt-6 text-center text-xs" style={{ color: "rgba(253,251,247,0.2)" }}>
+      <p className="mt-6 text-center text-xs text-zinc-50/20">
         Déjà un compte ?{" "}
         <Link
           href="/AqarChaab/auth/login"
-          className="hover:underline"
-          style={{ color: "var(--or)" }}
+          className="hover:underline text-amber-500"
         >
           Se connecter
         </Link>

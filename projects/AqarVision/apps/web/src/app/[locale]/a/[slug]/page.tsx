@@ -96,10 +96,10 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
     .sort((a, b) => a.order - b.order);
 
   const isDark = manifest.style.themeMode === "dark";
-  const bgColor = isDark ? colors.primary : "#f7fafc";
+  const bgColor = isDark ? colors.primary : "#fafafa";
   const cardBg = isDark ? "rgba(255,255,255,0.06)" : "#ffffff";
   const textPrimary = isDark ? "#ffffff" : colors.primary;
-  const textSecondary = isDark ? "rgba(255,255,255,0.6)" : "#718096";
+  const textSecondary = isDark ? "rgba(255,255,255,0.6)" : "#71717a";
 
   return (
     <div style={{ background: bgColor }}>
@@ -152,7 +152,7 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                       </span>
                       <h3
                         className="mb-1 truncate text-sm font-semibold"
-                        style={{ color: isDark ? "rgba(255,255,255,0.9)" : "#2d3748" }}
+                        style={{ color: isDark ? "rgba(255,255,255,0.9)" : "#3f3f46" }}
                       >
                         {listing.title}
                       </h3>
@@ -217,9 +217,9 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                     <div
                       key={branch.id}
                       className="rounded-lg p-3"
-                      style={{ background: isDark ? "rgba(255,255,255,0.08)" : "#f7fafc" }}
+                      style={{ background: isDark ? "rgba(255,255,255,0.08)" : "#fafafa" }}
                     >
-                      <p className="text-sm font-medium" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "#2d3748" }}>
+                      <p className="text-sm font-medium" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "#3f3f46" }}>
                         {branch.name}
                       </p>
                       <p className="text-xs" style={{ color: textSecondary }}>

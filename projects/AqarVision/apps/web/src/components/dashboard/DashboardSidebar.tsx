@@ -63,13 +63,6 @@ const SETTINGS_ITEMS = [
   { key: "verification", href: "/AqarPro/dashboard/settings/verification", label: "Vérification" },
 ];
 
-const NAVY = "#1a365d";
-const NAVY_ACTIVE_BG = "rgba(26,54,93,0.12)";
-const GOLD = "#d4af37";
-const TEXT_DIM = "rgba(26,54,93,0.45)";
-const TEXT_LIGHT = "rgba(26,54,93,0.7)";
-const BORDER = "rgba(26,54,93,0.1)";
-
 export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardSidebarProps) {
   const t = useTranslations("dashboard");
   const pathname = usePathname();
@@ -83,20 +76,13 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
   const initial = (fullName ?? userEmail).charAt(0).toUpperCase();
 
   return (
-    <aside
-      className="flex w-60 shrink-0 flex-col"
-      style={{ background: "#f0f4f8", borderRight: `1px solid ${BORDER}` }}
-    >
+    <aside className="flex w-60 shrink-0 flex-col border-e border-zinc-200 bg-zinc-100">
       {/* Logo */}
-      <div
-        className="flex flex-col gap-2 px-5 py-5"
-        style={{ borderBottom: `1px solid ${BORDER}` }}
-      >
+      <div className="flex flex-col gap-2 border-b border-zinc-200 px-5 py-5">
         <AqarBrandLogo product="Pro" size="sm" onDark={false} />
         <Link
           href="/"
-          className="flex items-center gap-1.5 text-[10px] font-medium transition-opacity hover:opacity-70"
-          style={{ color: TEXT_DIM }}
+          className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-400 transition-opacity hover:opacity-70"
         >
           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -113,37 +99,27 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
             <Link
               key={item.key}
               href={item.href as `/${string}`}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
-              style={{
-                background: active ? NAVY_ACTIVE_BG : "transparent",
-                color: active ? NAVY : TEXT_LIGHT,
-                fontWeight: active ? 600 : 400,
-              }}
+              className={[
+                "flex items-center gap-3 rounded-lg border-s-2 px-3 py-2.5 text-sm font-medium transition-all",
+                active
+                  ? "border-amber-500 bg-amber-500/10 text-amber-700"
+                  : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900",
+              ].join(" ")}
             >
               <svg
-                className="h-4 w-4 shrink-0"
+                className={["h-4 w-4 shrink-0", active ? "text-amber-600" : "text-zinc-400"].join(" ")}
                 fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
-                style={{ color: active ? NAVY : TEXT_DIM }}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d={item.d} />
               </svg>
               {t(`nav.${item.key}` as Parameters<typeof t>[0])}
-              {active && (
-                <span
-                  className="ms-auto h-1.5 w-1.5 rounded-full shrink-0"
-                  style={{ background: GOLD }}
-                />
-              )}
             </Link>
           );
         })}
 
         {/* Settings group */}
         <div className="pt-4">
-          <p
-            className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest"
-            style={{ color: TEXT_DIM }}
-          >
+          <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
             Paramètres
           </p>
           {SETTINGS_ITEMS.map((item) => {
@@ -152,12 +128,12 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
               <Link
                 key={item.key}
                 href={item.href as `/${string}`}
-                className="flex items-center rounded-lg px-3 py-2 text-sm transition-all"
-                style={{
-                  background: active ? NAVY_ACTIVE_BG : "transparent",
-                  color: active ? NAVY : TEXT_LIGHT,
-                  fontWeight: active ? 500 : 400,
-                }}
+                className={[
+                  "flex items-center rounded-lg border-s-2 px-3 py-2 text-sm transition-all",
+                  active
+                    ? "border-amber-500 bg-amber-500/10 font-medium text-amber-700"
+                    : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900",
+                ].join(" ")}
               >
                 {item.label}
               </Link>
@@ -173,12 +149,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
             href={`/fr/a/${agencySlug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-medium transition-all hover:opacity-80"
-            style={{
-              border: `1px solid ${BORDER}`,
-              color: NAVY,
-              background: "rgba(26,54,93,0.05)",
-            }}
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-medium text-zinc-700 transition-all hover:bg-zinc-100"
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -189,23 +160,17 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
       )}
 
       {/* User footer */}
-      <div
-        className="flex items-center gap-3 px-4 py-3"
-        style={{ borderTop: `1px solid ${BORDER}` }}
-      >
-        <div
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
-          style={{ background: NAVY, color: "#f7fafc" }}
-        >
+      <div className="flex items-center gap-3 border-t border-zinc-200 px-4 py-3">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-zinc-50">
           {initial}
         </div>
         <div className="min-w-0 flex-1">
           {fullName && (
-            <p className="truncate text-xs font-semibold" style={{ color: NAVY }}>
+            <p className="truncate text-xs font-semibold text-zinc-800">
               {fullName}
             </p>
           )}
-          <p className="truncate text-[10px]" style={{ color: TEXT_DIM }}>{userEmail}</p>
+          <p className="truncate text-[10px] text-zinc-400">{userEmail}</p>
         </div>
         <form action={signOutAction}>
           <input type="hidden" name="locale" value={pathname.split("/")[1] || "fr"} />
@@ -213,8 +178,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
           <button
             type="submit"
             title="Se déconnecter"
-            className="shrink-0 rounded-md p-1 transition-opacity hover:opacity-60"
-            style={{ color: TEXT_DIM }}
+            className="shrink-0 rounded-md p-1 text-zinc-400 transition-opacity hover:opacity-60"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />

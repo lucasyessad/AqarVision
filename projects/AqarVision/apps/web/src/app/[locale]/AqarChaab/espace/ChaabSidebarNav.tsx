@@ -24,21 +24,19 @@ export function ChaabSidebarNav({ items }: { items: NavItem[] }) {
           <Link
             key={item.href}
             href={item.href as "/"}
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
-            style={{
-              color: isActive ? "var(--ivoire)" : "rgba(253,251,247,0.45)",
-              background: isActive ? "rgba(253,251,247,0.1)" : "transparent",
-            }}
+            className={[
+              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
+              isActive
+                ? "bg-zinc-800 text-zinc-100"
+                : "text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-300",
+            ].join(" ")}
           >
             <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
             </svg>
             {item.label}
             {isActive && (
-              <span
-                className="ms-auto h-1.5 w-1.5 rounded-full"
-                style={{ background: "var(--or)" }}
-              />
+              <span className="ms-auto h-1.5 w-1.5 rounded-full bg-amber-500" />
             )}
           </Link>
         );

@@ -15,35 +15,25 @@ export default async function ChaabLoginPage({ params }: PageProps) {
   return (
     <div>
       <div className="mb-8">
-        <p
-          className="text-xs font-semibold uppercase tracking-[0.25em]"
-          style={{ color: "var(--or)" }}
-        >
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
           AqarChaab
         </p>
-        <h2
-          className="mt-2 text-2xl font-semibold"
-          style={{ color: "var(--ivoire)" }}
-        >
+        <h2 className="mt-2 text-2xl font-semibold text-zinc-50">
           Mon espace
         </h2>
-        <p className="mt-1 text-sm" style={{ color: "rgba(253,251,247,0.35)" }}>
+        <p className="mt-1 text-sm text-zinc-50/35">
           Particuliers — acheteurs, locataires, vendeurs.
         </p>
       </div>
 
       <ChaabLoginForm locale={locale} />
 
-      <div
-        className="mt-8 border-t pt-6"
-        style={{ borderColor: "rgba(253,251,247,0.07)" }}
-      >
-        <p className="text-center text-xs" style={{ color: "rgba(253,251,247,0.2)" }}>
+      <div className="mt-8 border-t border-zinc-50/[0.07] pt-6">
+        <p className="text-center text-xs text-zinc-50/20">
           Vous êtes une agence ?{" "}
           <Link
             href="/AqarPro/auth/login"
-            className="hover:underline"
-            style={{ color: "var(--or)" }}
+            className="hover:underline text-amber-500"
           >
             Espace AqarPro →
           </Link>

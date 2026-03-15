@@ -28,10 +28,10 @@ export function ListingCard({ listing }: ListingCardProps) {
   return (
     <Link
       href={`/AqarPro/dashboard/listings/${listing.id}/edit`}
-      className="group block w-full rounded-xl bg-[#f7fafc] text-start shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+      className="group block w-full rounded-xl bg-zinc-50 text-start shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
     >
       {/* Cover image */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-xl bg-gray-200">
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-xl bg-zinc-100">
         {listing.cover_url ? (
           <Image
             src={listing.cover_url}
@@ -41,7 +41,7 @@ export function ListingCard({ listing }: ListingCardProps) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-gray-400">
+          <div className="flex h-full w-full items-center justify-center text-zinc-300">
             <svg
               className="h-12 w-12"
               fill="none"
@@ -66,21 +66,21 @@ export function ListingCard({ listing }: ListingCardProps) {
       {/* Content */}
       <div className="p-4">
         {/* Property type badge */}
-        <span className="mb-1 inline-block rounded bg-[#d4af37]/15 px-2 py-0.5 text-xs font-medium text-[#d4af37]">
+        <span className="mb-1 inline-block rounded bg-amber-400/15 px-2 py-0.5 text-xs font-medium text-amber-700">
           {t(listing.property_type)}
         </span>
 
-        <h3 className="mb-1 truncate text-sm font-semibold text-[#2d3748]">
+        <h3 className="mb-1 truncate text-sm font-semibold text-zinc-800">
           {title}
         </h3>
 
         {/* Price */}
-        <p className="mb-2 text-lg font-bold text-[#1a365d]">
+        <p className="mb-2 text-lg font-bold text-zinc-900">
           {formatPrice(listing.current_price, listing.currency)}
         </p>
 
         {/* Details row */}
-        <div className="flex items-center gap-3 text-xs text-[#a0aec0]">
+        <div className="flex items-center gap-3 text-xs text-zinc-400">
           {listing.rooms !== null && (
             <span>{t("rooms_count", { count: listing.rooms })}</span>
           )}

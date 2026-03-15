@@ -287,7 +287,9 @@ export function DeposerWizard({ wilayas, activeCount, quota }: DeposerWizardProp
     if (rooms > 0) formData.set("rooms", String(rooms));
     if (bathrooms > 0) formData.set("bathrooms", String(bathrooms));
     formData.set("details", JSON.stringify({ has_elevator: hasElevator, has_parking: hasParking, has_balcony: hasBalcony, has_pool: hasPool, has_garden: hasGarden, furnished }));
-    submitAction(formData);
+    startTransition(() => {
+      submitAction(formData);
+    });
   };
 
   const wilayaName = wilayas.find((w) => w.code === wilayaCode)?.name ?? "";

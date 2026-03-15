@@ -43,7 +43,7 @@ export function AcceptInvite({
 
   return (
     <div className="mx-auto max-w-md rounded-xl bg-white p-8 shadow-sm">
-      <h1 className="mb-2 text-xl font-bold text-[#1a365d]">
+      <h1 className="mb-2 text-xl font-bold text-zinc-900">
         {t("accept_invite_title")}
       </h1>
       <p className="mb-6 text-gray-500">
@@ -61,7 +61,7 @@ export function AcceptInvite({
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-lg bg-[#1a365d] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90 disabled:opacity-50"
+          className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
         >
           {isPending ? t("accepting") : t("accept_invite")}
         </button>

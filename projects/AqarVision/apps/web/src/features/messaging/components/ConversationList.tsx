@@ -65,7 +65,7 @@ export function ConversationList({
             }`}
           >
             {/* Avatar placeholder */}
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1a365d] text-sm font-semibold text-white">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white">
               {conv.other_party_name.charAt(0).toUpperCase()}
             </div>
 
@@ -99,7 +99,7 @@ export function ConversationList({
                 </p>
 
                 {hasUnread && (
-                  <span className="inline-flex h-5 min-w-[1.25rem] shrink-0 items-center justify-center rounded-full bg-[#d4af37] px-1.5 text-xs font-bold text-white">
+                  <span className="inline-flex h-5 min-w-[1.25rem] shrink-0 items-center justify-center rounded-full bg-amber-500 px-1.5 text-xs font-bold text-white">
                     {conv.unread_count}
                   </span>
                 )}

@@ -29,7 +29,7 @@ const DOT_SIZE: Record<string, string> = {
 // Dot color per product
 const DOT_COLOR: Record<Product, string> = {
   Vision: "#B8A88A",
-  Pro:    "#d4af37",
+  Pro:    "#f59e0b",
   Chaab:  "#B8A88A",
   Search: "#B8A88A",
 };
@@ -42,12 +42,12 @@ export function AqarBrandLogo({
   locale,
   className = "",
 }: AqarBrandLogoProps) {
-  const textColor = onDark ? "var(--ivoire)" : "var(--onyx)";
+  const textColor = onDark ? "#fafafa" : "#09090b";
 
   const inner = (
     <span
-      className={`inline-flex items-center gap-[0.2em] ${SIZE[size]} ${className}`}
-      style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.01em" }}
+      className={`inline-flex items-center gap-[0.2em] font-display ${SIZE[size]} ${className}`}
+      style={{ letterSpacing: "-0.01em" }}
     >
       <span style={{ color: textColor, fontWeight: 300 }}>Aqar</span>
       <span

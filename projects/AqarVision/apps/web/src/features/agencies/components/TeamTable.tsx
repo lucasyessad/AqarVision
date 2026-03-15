@@ -18,7 +18,7 @@ interface TeamTableProps {
 }
 
 const ROLE_STYLES: Record<AnyAgencyRole, string> = {
-  owner: "bg-[#d4af37]/20 text-[#d4af37] border-[#d4af37]/30",
+  owner: "bg-amber-500/20 text-amber-500 border-amber-500/30",
   admin: "bg-blue-100 text-blue-700 border-blue-200",
   agent: "bg-green-100 text-green-700 border-green-200",
   editor: "bg-gray-100 text-gray-600 border-gray-200",
@@ -139,7 +139,7 @@ export function TeamTable({
                             if (form) form.requestSubmit();
                           }}
                           disabled={isRolePending}
-                          className="rounded border border-gray-200 px-2 py-1 text-xs focus:border-[#1a365d] focus:outline-none"
+                          className="rounded border border-gray-200 px-2 py-1 text-xs focus:border-zinc-900 focus:outline-none"
                         >
                           {AGENCY_ROLES.map((role) => (
                             <option key={role} value={role}>

@@ -30,16 +30,16 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold text-[#1a365d]">{t("nav.profil")}</h1>
+      <h1 className="mb-6 text-2xl font-bold text-zinc-900">{t("nav.profil")}</h1>
 
       <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
         {/* Avatar */}
         <div className="mb-6 flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#1a365d]/10 text-xl font-bold text-[#1a365d]">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-900/10 text-xl font-bold text-zinc-900">
             {(profile?.full_name ?? user!.email ?? "?")[0].toUpperCase()}
           </div>
           <div>
-            <p className="font-semibold text-[#2d3748]">
+            <p className="font-semibold text-zinc-800">
               {profile?.full_name ?? t("profil_no_name")}
             </p>
             <p className="text-sm text-gray-400">{user!.email}</p>
@@ -52,7 +52,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
             <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-400">
               {t("profil_email")}
             </label>
-            <p className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm text-[#2d3748]">
+            <p className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm text-zinc-800">
               {user!.email}
             </p>
           </div>
@@ -61,7 +61,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
             <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-400">
               {t("profil_name")}
             </label>
-            <p className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm text-[#2d3748]">
+            <p className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm text-zinc-800">
               {profile?.full_name ?? <span className="italic text-gray-400">{t("profil_not_set")}</span>}
             </p>
           </div>
@@ -71,7 +71,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
               <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-400">
                 {t("profil_phone")}
               </label>
-              <p className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm text-[#2d3748]">
+              <p className="rounded-lg border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm text-zinc-800">
                 {profile.phone}
               </p>
             </div>

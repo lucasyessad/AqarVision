@@ -25,7 +25,7 @@ export function ChaabLoginForm({ locale = "fr" }: ChaabLoginFormProps) {
       )}
 
       <div>
-        <label htmlFor="chaab-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em]" style={{ color: "rgba(253,251,247,0.4)" }}>
+        <label htmlFor="chaab-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-zinc-50/40">
           {t("email")}
         </label>
         <input
@@ -34,18 +34,13 @@ export function ChaabLoginForm({ locale = "fr" }: ChaabLoginFormProps) {
           name="email"
           required
           defaultValue={state?.email ?? ""}
-          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none"
-          style={{
-            background: "rgba(253,251,247,0.06)",
-            border: "1px solid rgba(253,251,247,0.12)",
-            color: "var(--ivoire)",
-          }}
+          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none bg-zinc-50/[0.06] border border-zinc-50/[0.12] text-zinc-50"
           placeholder="votre@email.dz"
         />
       </div>
 
       <div>
-        <label htmlFor="chaab-password" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em]" style={{ color: "rgba(253,251,247,0.4)" }}>
+        <label htmlFor="chaab-password" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-zinc-50/40">
           {t("password")}
         </label>
         <input
@@ -53,20 +48,14 @@ export function ChaabLoginForm({ locale = "fr" }: ChaabLoginFormProps) {
           type="password"
           name="password"
           required
-          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none"
-          style={{
-            background: "rgba(253,251,247,0.06)",
-            border: "1px solid rgba(253,251,247,0.12)",
-            color: "var(--ivoire)",
-          }}
+          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none bg-zinc-50/[0.06] border border-zinc-50/[0.12] text-zinc-50"
         />
       </div>
 
       <div className="flex justify-end">
         <Link
           href="/AqarChaab/auth/forgot-password"
-          className="text-xs hover:underline"
-          style={{ color: "var(--or)" }}
+          className="text-xs hover:underline text-amber-500"
         >
           {t("forgot_password")}
         </Link>
@@ -75,15 +64,14 @@ export function ChaabLoginForm({ locale = "fr" }: ChaabLoginFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-md px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-        style={{ background: "var(--ivoire)", color: "var(--onyx)" }}
+        className="w-full rounded-md px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 bg-zinc-50 text-zinc-950"
       >
         {isPending ? t("logging_in") : "Se connecter"}
       </button>
 
-      <p className="text-center text-xs" style={{ color: "rgba(253,251,247,0.3)" }}>
+      <p className="text-center text-xs text-zinc-50/30">
         Pas encore de compte ?{" "}
-        <Link href="/AqarChaab/auth/signup" className="hover:underline" style={{ color: "var(--or)" }}>
+        <Link href="/AqarChaab/auth/signup" className="hover:underline text-amber-500">
           {t("signup_button")}
         </Link>
       </p>

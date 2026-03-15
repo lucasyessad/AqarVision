@@ -43,11 +43,11 @@ export function ListingNoteWidget({
   return (
     <div className="rounded-xl bg-white p-5 shadow-sm">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-[#2d3748]">
+        <h3 className="text-sm font-semibold text-zinc-800">
           Votre note privée
         </h3>
         {isSaving && (
-          <span className="text-xs text-[#a0aec0]">Sauvegarde...</span>
+          <span className="text-xs text-zinc-400">Sauvegarde...</span>
         )}
         {!isSaving && savedAt && (
           <span className="text-xs text-emerald-500">Sauvegardé à {savedAt}</span>
@@ -66,11 +66,11 @@ export function ListingNoteWidget({
           placeholder="Ajoutez une note personnelle sur cette annonce..."
           rows={4}
           maxLength={2000}
-          className="w-full resize-none rounded-lg border border-gray-200 bg-[#f7fafc] px-3 py-2 text-sm text-[#2d3748] outline-none transition-colors focus:border-[#1a365d] focus:bg-white focus:ring-1 focus:ring-[#1a365d] placeholder:text-[#a0aec0]"
+          className="w-full resize-none rounded-lg border border-gray-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 outline-none transition-colors focus:border-zinc-900 focus:bg-white focus:ring-1 focus:ring-zinc-900 placeholder:text-zinc-400"
         />
       </form>
 
-      <p className="mt-1 text-right text-xs text-[#a0aec0]">
+      <p className="mt-1 text-right text-xs text-zinc-400">
         {content.length}/2000
       </p>
     </div>

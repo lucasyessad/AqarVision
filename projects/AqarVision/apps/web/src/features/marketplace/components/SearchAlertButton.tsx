@@ -86,8 +86,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
       <button
         type="button"
         onClick={openModal}
-        className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors"
-        style={{ borderColor: "var(--or)", color: "var(--or)", background: "transparent" }}
+        className="flex items-center gap-2 rounded-lg border border-amber-500 px-3 py-2 text-sm font-medium text-amber-500 transition-colors"
         title="Créer une alerte"
       >
         <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -112,8 +111,8 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-[#2d3748]">Alerte créée !</h3>
-                <p className="mt-1 text-sm text-[#a0aec0]">
+                <h3 className="text-lg font-semibold text-zinc-800">Alerte créée !</h3>
+                <p className="mt-1 text-sm text-zinc-400">
                   Vous serez notifié lors de nouvelles annonces correspondant à vos critères.
                 </p>
               </div>
@@ -121,10 +120,10 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
               <form onSubmit={handleSubmit}>
                 <div className="mb-5 flex items-start justify-between">
                   <div>
-                    <h2 id="alert-modal-title" className="text-lg font-semibold text-[#1a365d]">
+                    <h2 id="alert-modal-title" className="text-lg font-semibold text-zinc-900">
                       Créer une alerte de recherche
                     </h2>
-                    <p className="mt-1 text-sm text-[#a0aec0]">
+                    <p className="mt-1 text-sm text-zinc-400">
                       Recevez des notifications pour les nouvelles annonces.
                     </p>
                   </div>
@@ -142,7 +141,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
 
                 {/* Alert name */}
                 <div className="mb-4">
-                  <label htmlFor="alert-name" className="mb-1.5 block text-sm font-medium text-[#2d3748]">
+                  <label htmlFor="alert-name" className="mb-1.5 block text-sm font-medium text-zinc-800">
                     Nom de l&apos;alerte
                   </label>
                   <input
@@ -151,7 +150,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
                     value={alertName}
                     onChange={(e) => setAlertName(e.target.value)}
                     placeholder="Ex: Appartements Alger centre"
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
                     maxLength={100}
                     required
                   />
@@ -159,22 +158,22 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
 
                 {/* Frequency */}
                 <div className="mb-5">
-                  <span className="mb-1.5 block text-sm font-medium text-[#2d3748]">
+                  <span className="mb-1.5 block text-sm font-medium text-zinc-800">
                     Fréquence de notification
                   </span>
                   <div className="space-y-2">
                     {(Object.entries(FREQUENCY_LABELS) as [Frequency, string][]).map(
                       ([value, label]) => (
-                        <label key={value} className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:border-[#d4af37]">
+                        <label key={value} className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:border-amber-500">
                           <input
                             type="radio"
                             name="frequency"
                             value={value}
                             checked={frequency === value}
                             onChange={() => setFrequency(value)}
-                            className="text-[#1a365d] focus:ring-[#d4af37]"
+                            className="text-zinc-900 focus:ring-amber-500"
                           />
-                          <span className="text-sm text-[#2d3748]">{label}</span>
+                          <span className="text-sm text-zinc-800">{label}</span>
                         </label>
                       )
                     )}
@@ -193,14 +192,14 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
                   <button
                     type="button"
                     onClick={() => setIsOpen(false)}
-                    className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-[#2d3748] transition-colors hover:bg-gray-50"
+                    className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-zinc-800 transition-colors hover:bg-gray-50"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="flex-1 rounded-lg bg-[#1a365d] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex-1 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isPending ? "Création..." : "Créer l'alerte"}
                   </button>

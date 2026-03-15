@@ -203,7 +203,7 @@ export function PhotoGallery({ media, title }: PhotoGalleryProps) {
                   onClick={() => setLightboxIndex(i)}
                   className={`h-12 w-16 shrink-0 overflow-hidden rounded transition-all ${
                     i === lightboxIndex
-                      ? "ring-2 ring-[#d4af37] ring-offset-1 ring-offset-black"
+                      ? "ring-2 ring-amber-500 ring-offset-1 ring-offset-black"
                       : "opacity-60 hover:opacity-100"
                   }`}
                 >

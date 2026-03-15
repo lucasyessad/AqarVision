@@ -90,14 +90,14 @@ function AlertRow({
           {item.notify && (
             <span className="flex h-2 w-2 shrink-0 rounded-full bg-emerald-500" aria-label="Alerte active" />
           )}
-          <p className="truncate font-medium text-[#2d3748]">{item.name}</p>
+          <p className="truncate font-medium text-zinc-800">{item.name}</p>
         </div>
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5">
-          <span className="text-xs text-[#a0aec0]">
+          <span className="text-xs text-zinc-400">
             Créée le {formatDate(item.created_at)}
           </span>
           {item.notify && (
-            <span className="text-xs text-[#a0aec0]">
+            <span className="text-xs text-zinc-400">
               · {getFrequencyLabel(item.filters)}
             </span>
           )}
@@ -214,10 +214,10 @@ export function AlertesClient({
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#1a365d]">Alertes de recherche</h1>
+        <h1 className="text-2xl font-bold text-zinc-900">Alertes de recherche</h1>
         <a
           href={`/${locale}/search`}
-          className="rounded-lg bg-[#1a365d] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90"
+          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
         >
           Nouvelle recherche
         </a>
@@ -247,7 +247,7 @@ export function AlertesClient({
           </p>
           <a
             href={`/${locale}/search`}
-            className="rounded-lg bg-[#1a365d] px-4 py-2 text-sm font-medium text-white hover:bg-[#1a365d]/90"
+            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-900/90"
           >
             Lancer une recherche
           </a>
@@ -257,7 +257,7 @@ export function AlertesClient({
           {/* Active alerts */}
           {alerts.length > 0 && (
             <section>
-              <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-[#a0aec0]">
+              <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">
                 <span className="flex h-2 w-2 rounded-full bg-emerald-500" />
                 Alertes actives ({alerts.length})
               </h2>
@@ -278,7 +278,7 @@ export function AlertesClient({
           {/* Saved searches without notifications */}
           {savedSearches.length > 0 && (
             <section>
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#a0aec0]">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
                 Recherches sauvegardées ({savedSearches.length})
               </h2>
               <div className="space-y-3">

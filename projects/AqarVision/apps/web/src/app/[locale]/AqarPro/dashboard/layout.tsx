@@ -61,28 +61,24 @@ export default async function DashboardLayout({
       <div className="flex flex-1 flex-col">
         {/* Onboarding banner */}
         {showOnboardingBanner && (
-          <div
-            className="border-b px-8 py-3"
-            style={{ borderColor: "var(--amber-glow)", background: "var(--warning-ghost)" }}
-          >
+          <div className="border-b border-amber-200 bg-amber-50 px-8 py-3">
             <div className="flex items-center justify-between">
-              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                <span className="font-semibold" style={{ color: "var(--amber)" }}>
+              <p className="text-sm text-zinc-600">
+                <span className="font-semibold text-amber-700">
                   Terminez la configuration de votre agence
                 </span>{" "}
                 — ajoutez votre logo, publiez votre première annonce et invitez votre équipe.
               </p>
               <Link
                 href="/AqarPro/dashboard/onboarding"
-                className="ms-4 flex-shrink-0 rounded-lg px-4 py-1.5 text-sm font-semibold transition-opacity hover:opacity-90"
-                style={{ background: "var(--amber)", color: "var(--text-inverse)" }}
+                className="ms-4 flex-shrink-0 rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-semibold text-zinc-950 transition-opacity hover:opacity-90"
               >
                 Commencer →
               </Link>
             </div>
           </div>
         )}
-        <main className="flex-1 p-8" style={{ background: "var(--bg-primary)" }}>{children}</main>
+        <main className="flex-1 bg-zinc-50 p-8">{children}</main>
       </div>
     </div>
   );

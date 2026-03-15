@@ -79,7 +79,7 @@ export function LeadsPageClient({
             <button
               type="button"
               onClick={handleBack}
-              className="flex items-center gap-1 border-b border-gray-200 px-4 py-2 text-sm text-[#1a365d] md:hidden"
+              className="flex items-center gap-1 border-b border-gray-200 px-4 py-2 text-sm text-zinc-900 md:hidden"
             >
               <svg
                 className="h-4 w-4 rtl:rotate-180"

@@ -82,26 +82,16 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
   ];
 
   return (
-    <div className="flex min-h-screen" style={{ background: "var(--ivoire)" }}>
+    <div className="flex min-h-screen bg-zinc-50">
 
       {/* ── Sidebar desktop ── */}
-      <aside
-        className="hidden w-60 shrink-0 flex-col md:flex"
-        style={{
-          background: "var(--onyx)",
-          borderRight: "1px solid rgba(253,251,247,0.06)",
-        }}
-      >
+      <aside className="hidden w-60 shrink-0 flex-col border-e border-zinc-800/60 bg-zinc-950 md:flex">
         {/* Header */}
-        <div
-          className="flex flex-col gap-3 px-5 py-5"
-          style={{ borderBottom: "1px solid rgba(253,251,247,0.07)" }}
-        >
+        <div className="flex flex-col gap-3 border-b border-zinc-800/60 px-5 py-5">
           <AqarBrandLogo product="Chaab" size="sm" onDark />
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-[10px] font-medium transition-opacity hover:opacity-80"
-            style={{ color: "rgba(253,251,247,0.35)" }}
+            className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 transition-opacity hover:opacity-80"
           >
             <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -114,22 +104,16 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
         <ChaabSidebarNav items={navItems} />
 
         {/* User footer */}
-        <div
-          className="px-4 py-4"
-          style={{ borderTop: "1px solid rgba(253,251,247,0.07)" }}
-        >
+        <div className="border-t border-zinc-800/60 px-4 py-4">
           <div className="flex items-center gap-3">
-            <div
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
-              style={{ background: "rgba(253,251,247,0.12)", color: "var(--ivoire)" }}
-            >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-xs font-semibold text-zinc-100">
               {initial}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-medium" style={{ color: "var(--ivoire)" }}>
+              <p className="truncate text-xs font-medium text-zinc-100">
                 {displayName}
               </p>
-              <p className="truncate text-[10px]" style={{ color: "rgba(253,251,247,0.35)" }}>
+              <p className="truncate text-[10px] text-zinc-500">
                 {user.email}
               </p>
             </div>
@@ -139,8 +123,7 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
               <button
                 type="submit"
                 title="Se déconnecter"
-                className="shrink-0 rounded-md p-1 transition-opacity hover:opacity-70"
-                style={{ color: "rgba(253,251,247,0.35)" }}
+                className="shrink-0 rounded-md p-1 text-zinc-500 transition-opacity hover:opacity-70"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
@@ -152,38 +135,22 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
       </aside>
 
       {/* ── Mobile top bar ── */}
-      <div
-        className="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-4 py-3 md:hidden"
-        style={{
-          background: "var(--onyx)",
-          borderBottom: "1px solid rgba(253,251,247,0.07)",
-        }}
-      >
+      <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between border-b border-zinc-800/60 bg-zinc-950 px-4 py-3 md:hidden">
         <Link href="/">
           <AqarBrandLogo product="Chaab" size="sm" onDark />
         </Link>
-        <div
-          className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold"
-          style={{ background: "rgba(253,251,247,0.12)", color: "var(--ivoire)" }}
-        >
+        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-800 text-xs font-semibold text-zinc-100">
           {initial}
         </div>
       </div>
 
       {/* ── Mobile bottom nav ── */}
-      <nav
-        className="fixed inset-x-0 bottom-0 z-20 flex md:hidden"
-        style={{
-          background: "var(--onyx)",
-          borderTop: "1px solid rgba(253,251,247,0.07)",
-        }}
-      >
+      <nav className="fixed inset-x-0 bottom-0 z-20 flex border-t border-zinc-800/60 bg-zinc-950 md:hidden">
         {navItems.slice(0, 5).map((item) => (
           <Link
             key={item.href}
             href={item.href as "/"}
-            className="flex flex-1 flex-col items-center gap-1 px-1 py-3 text-[10px] transition-opacity hover:opacity-80"
-            style={{ color: "rgba(253,251,247,0.45)" }}
+            className="flex flex-1 flex-col items-center gap-1 px-1 py-3 text-[10px] text-zinc-500 transition-opacity hover:opacity-80"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
@@ -194,7 +161,7 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
       </nav>
 
       {/* ── Main content ── */}
-      <main className="flex-1 overflow-y-auto pt-14 pb-20 md:pt-0 md:pb-0">
+      <main className="flex-1 overflow-y-auto pb-20 pt-14 md:pb-0 md:pt-0">
         <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">
           {children}
         </div>

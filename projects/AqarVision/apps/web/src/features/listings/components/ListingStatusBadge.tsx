@@ -4,13 +4,13 @@ import { useTranslations } from "next-intl";
 import type { ListingStatus } from "../types/listing.types";
 
 const STATUS_STYLES: Record<ListingStatus, string> = {
-  draft: "bg-gray-100 text-gray-700",
-  pending_review: "bg-yellow-100 text-yellow-800",
+  draft: "bg-zinc-100 text-zinc-600",
+  pending_review: "bg-amber-100 text-amber-800",
   published: "bg-green-100 text-green-800",
   paused: "bg-orange-100 text-orange-800",
   rejected: "bg-red-100 text-red-800",
-  sold: "bg-[#1a365d]/10 text-[#1a365d]",
-  archived: "bg-gray-100 text-gray-500",
+  sold: "bg-zinc-900/10 text-zinc-900",
+  archived: "bg-zinc-100 text-zinc-500",
 };
 
 interface ListingStatusBadgeProps {

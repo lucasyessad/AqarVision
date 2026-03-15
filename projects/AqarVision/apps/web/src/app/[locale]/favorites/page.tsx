@@ -99,9 +99,9 @@ export default async function FavoritesPage({ params }: FavoritesPageProps) {
   }));
 
   return (
-    <main className="min-h-screen bg-[#f7fafc]">
+    <main className="min-h-screen bg-zinc-50">
       <div className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="mb-6 text-2xl font-bold text-[#1a365d]">
+        <h1 className="mb-6 text-2xl font-bold text-zinc-900">
           {t("title")}
         </h1>
 

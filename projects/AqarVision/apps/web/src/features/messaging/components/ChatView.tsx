@@ -121,12 +121,12 @@ export function ChatView({
                 <div
                   className={`max-w-[75%] rounded-2xl px-4 py-2 ${
                     isOwn
-                      ? "rounded-ee-sm bg-[#1a365d] text-white"
+                      ? "rounded-ee-sm bg-zinc-900 text-white"
                       : "rounded-es-sm bg-gray-100 text-gray-700"
                   }`}
                 >
                   {!isOwn && (
-                    <p className="mb-0.5 text-xs font-medium text-[#1a365d]">
+                    <p className="mb-0.5 text-xs font-medium text-zinc-900">
                       {msg.sender_name}
                     </p>
                   )}
@@ -146,7 +146,7 @@ export function ChatView({
                         {msg.read_at ? (
                           /* Double checkmark for read */
                           <svg
-                            className="h-3.5 w-3.5 text-[#d4af37]"
+                            className="h-3.5 w-3.5 text-amber-500"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -208,12 +208,12 @@ export function ChatView({
             placeholder={t("your_message")}
             maxLength={2000}
             rows={1}
-            className="flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-[#1a365d] focus:outline-none focus:ring-1 focus:ring-[#1a365d]"
+            className="flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
           />
           <button
             type="submit"
             disabled={isSending || !body.trim()}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1a365d] text-white transition-colors hover:bg-[#1a365d]/90 disabled:opacity-50"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
           >
             {isSending ? (
               <svg

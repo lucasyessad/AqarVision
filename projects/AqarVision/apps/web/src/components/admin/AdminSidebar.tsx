@@ -15,11 +15,12 @@ const NAV_ITEMS = [
 ] as const;
 
 export function AdminSidebar({ locale }: AdminSidebarProps) {
+  void locale;
   return (
-    <aside className="flex w-56 flex-col border-e border-gray-800 bg-[#0f2238] text-white">
+    <aside className="flex w-56 flex-col border-e border-zinc-800 bg-zinc-950 text-white">
       {/* Logo */}
-      <div className="border-b border-gray-800 px-5 py-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-gold/70">
+      <div className="border-b border-zinc-800 px-5 py-4">
+        <p className="text-xs font-semibold uppercase tracking-widest text-amber-500/70">
           AqarVision
         </p>
         <h2 className="mt-0.5 text-base font-bold text-white">Administration</h2>
@@ -31,7 +32,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
           <Link
             key={item.href}
             href={item.href}
-            className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+            className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
           >
             {item.label}
           </Link>
@@ -39,10 +40,10 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-gray-800 px-2 py-3">
+      <div className="border-t border-zinc-800 px-2 py-3">
         <Link
           href="/AqarPro/dashboard"
-          className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-white/50 transition-colors hover:bg-white/10 hover:text-white/80"
+          className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-zinc-300"
         >
           ← Retour au site
         </Link>

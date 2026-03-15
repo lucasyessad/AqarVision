@@ -192,15 +192,15 @@ export function MediaUploader({
           rounded-xl border-2 border-dashed p-8 transition-colors
           ${
             isDragging
-              ? "border-[#d4af37] bg-[#d4af37]/5"
-              : "border-gray-300 bg-[#f7fafc] hover:border-[#1a365d]/40"
+              ? "border-amber-500 bg-amber-500/5"
+              : "border-gray-300 bg-zinc-50 hover:border-zinc-900/40"
           }
           ${isUploading ? "pointer-events-none opacity-60" : ""}
         `}
       >
         {/* Upload icon */}
         <svg
-          className="mb-3 h-10 w-10 text-[#a0aec0]"
+          className="mb-3 h-10 w-10 text-zinc-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -213,10 +213,10 @@ export function MediaUploader({
           />
         </svg>
 
-        <p className="mb-1 text-sm font-medium text-[#2d3748]">
+        <p className="mb-1 text-sm font-medium text-zinc-800">
           {t("drop_zone_title")}
         </p>
-        <p className="text-xs text-[#a0aec0]">
+        <p className="text-xs text-zinc-400">
           {t("drop_zone_subtitle", {
             types: "JPEG, PNG, WebP",
             max: formatFileSize(MAX_SIZE_BYTES),
@@ -238,11 +238,11 @@ export function MediaUploader({
         <div className="space-y-1">
           <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
             <div
-              className="h-full rounded-full bg-[#1a365d] transition-all duration-300"
+              className="h-full rounded-full bg-zinc-900 transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-xs text-[#a0aec0]">
+          <p className="text-xs text-zinc-400">
             {t("uploading", { progress })}
           </p>
         </div>

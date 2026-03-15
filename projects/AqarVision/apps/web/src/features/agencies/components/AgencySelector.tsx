@@ -29,7 +29,7 @@ export function AgencySelector() {
             className="h-6 w-6 rounded-full object-cover"
           />
         ) : (
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1a365d] text-xs font-bold text-white">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-900 text-xs font-bold text-white">
             {agency.name.charAt(0).toUpperCase()}
           </div>
         )}
@@ -55,7 +55,7 @@ export function AgencySelector() {
           className="h-6 w-6 rounded-full object-cover"
         />
       ) : agency ? (
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1a365d] text-xs font-bold text-white">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-900 text-xs font-bold text-white">
           {agency.name.charAt(0).toUpperCase()}
         </div>
       ) : null}
@@ -63,7 +63,7 @@ export function AgencySelector() {
         value={agency?.id ?? ""}
         onChange={handleChange}
         aria-label={t("switch_agency")}
-        className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+        className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
       >
         {agencies.map((a) => (
           <option key={a.id} value={a.id}>

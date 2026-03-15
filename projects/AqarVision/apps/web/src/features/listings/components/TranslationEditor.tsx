@@ -54,7 +54,7 @@ export function TranslationEditor({
   }
 
   const inputClassName =
-    "w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20";
+    "w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20";
 
   return (
     <div className="rounded-xl bg-white p-6 shadow-sm">
@@ -67,8 +67,8 @@ export function TranslationEditor({
             onClick={() => handleLocaleChange(locale)}
             className={`relative flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
               activeLocale === locale
-                ? "bg-white text-[#1a365d] shadow-sm"
-                : "text-[#a0aec0] hover:text-[#2d3748]"
+                ? "bg-white text-zinc-900 shadow-sm"
+                : "text-zinc-400 hover:text-zinc-800"
             }`}
           >
             {locale.toUpperCase()}
@@ -148,13 +148,13 @@ export function TranslationEditor({
             className={`${inputClassName} font-mono text-sm`}
             dir="ltr"
           />
-          <p className="mt-1 text-xs text-[#a0aec0]">{t("slug_hint")}</p>
+          <p className="mt-1 text-xs text-zinc-400">{t("slug_hint")}</p>
         </div>
 
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-lg bg-[#1a365d] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#1a365d]/90 disabled:opacity-50"
+          className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
         >
           {isPending ? t("saving") : t("save_translation")}
         </button>

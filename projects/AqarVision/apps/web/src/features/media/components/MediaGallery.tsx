@@ -117,8 +117,8 @@ export function MediaGallery({
 
   if (items.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-xl bg-[#f7fafc] p-8">
-        <p className="text-sm text-[#a0aec0]">{t("no_media")}</p>
+      <div className="flex items-center justify-center rounded-xl bg-zinc-50 p-8">
+        <p className="text-sm text-zinc-400">{t("no_media")}</p>
       </div>
     );
   }
@@ -144,7 +144,7 @@ export function MediaGallery({
             <button
               type="button"
               onClick={() => setPreviewIndex(index)}
-              className="h-full w-full focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+              className="h-full w-full focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
             >
               <img
                 src={item.url}
@@ -155,7 +155,7 @@ export function MediaGallery({
 
             {/* Cover badge */}
             {item.is_cover && (
-              <div className="absolute inset-block-start-2 inset-inline-start-2 flex items-center gap-1 rounded-full bg-[#d4af37] px-2 py-0.5">
+              <div className="absolute inset-block-start-2 inset-inline-start-2 flex items-center gap-1 rounded-full bg-amber-500 px-2 py-0.5">
                 <svg
                   className="h-3 w-3 text-white"
                   fill="currentColor"
@@ -179,7 +179,7 @@ export function MediaGallery({
                     e.stopPropagation();
                     handleSetCover(item.id);
                   }}
-                  className="rounded bg-white/90 px-2 py-1 text-[10px] font-medium text-[#2d3748] transition-colors hover:bg-white"
+                  className="rounded bg-white/90 px-2 py-1 text-[10px] font-medium text-zinc-800 transition-colors hover:bg-white"
                 >
                   {t("set_as_cover")}
                 </button>
@@ -218,17 +218,17 @@ export function MediaGallery({
       {confirmDeleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="mx-4 w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="mb-2 text-base font-semibold text-[#2d3748]">
+            <h3 className="mb-2 text-base font-semibold text-zinc-800">
               {t("delete_confirm_title")}
             </h3>
-            <p className="mb-4 text-sm text-[#a0aec0]">
+            <p className="mb-4 text-sm text-zinc-400">
               {t("delete_confirm_message")}
             </p>
             <div className="flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setConfirmDeleteId(null)}
-                className="rounded-lg px-4 py-2 text-sm font-medium text-[#2d3748] transition-colors hover:bg-gray-100"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-800 transition-colors hover:bg-gray-100"
               >
                 {t("cancel")}
               </button>

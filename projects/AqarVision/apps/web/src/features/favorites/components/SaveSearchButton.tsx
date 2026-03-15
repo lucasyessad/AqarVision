@@ -28,7 +28,7 @@ export function SaveSearchButton({ filters }: SaveSearchButtonProps) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-[#1a365d]/20 bg-white px-3 py-2 text-sm font-medium text-[#1a365d] transition-colors hover:bg-[#1a365d]/5"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-900/20 bg-white px-3 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-900/5"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ export function SaveSearchButton({ filters }: SaveSearchButtonProps) {
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="mb-4 text-lg font-semibold text-[#2d3748]">
+            <h3 className="mb-4 text-lg font-semibold text-zinc-800">
               {t("save_search")}
             </h3>
 
@@ -63,7 +63,7 @@ export function SaveSearchButton({ filters }: SaveSearchButtonProps) {
             <form action={handleSubmit}>
               <input type="hidden" name="filters" value={JSON.stringify(filters)} />
               <label className="mb-4 block">
-                <span className="mb-1 block text-sm font-medium text-[#2d3748]">
+                <span className="mb-1 block text-sm font-medium text-zinc-800">
                   {t("search_name")}
                 </span>
                 <input
@@ -72,7 +72,7 @@ export function SaveSearchButton({ filters }: SaveSearchButtonProps) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#1a365d] focus:outline-none focus:ring-1 focus:ring-[#1a365d]"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
                   placeholder={t("search_name")}
                 />
               </label>
@@ -84,14 +84,14 @@ export function SaveSearchButton({ filters }: SaveSearchButtonProps) {
                     setIsOpen(false);
                     setName("");
                   }}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-[#2d3748] transition-colors hover:bg-gray-50"
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-zinc-800 transition-colors hover:bg-gray-50"
                 >
                   {t("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={!name.trim()}
-                  className="rounded-lg bg-[#1a365d] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90 disabled:opacity-50"
+                  className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
                 >
                   {t("save_search")}
                 </button>

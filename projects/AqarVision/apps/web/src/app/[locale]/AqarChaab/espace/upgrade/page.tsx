@@ -49,10 +49,10 @@ export default async function UpgradePage({ params, searchParams }: UpgradePageP
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold" style={{ color: "var(--onyx)" }}>
+        <h1 className="text-2xl font-semibold text-zinc-950">
           Augmenter mon quota
         </h1>
-        <p className="mt-0.5 text-sm" style={{ color: "var(--text-muted)" }}>
+        <p className="mt-0.5 text-sm text-zinc-500">
           Publiez plus d'annonces sur AqarChaab
         </p>
       </div>

@@ -53,30 +53,26 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
     { href: "/agences", label: "Trouver un agent" },
   ];
 
-  const textColor = transparent ? "rgba(253,251,247,0.80)" : "var(--text-body)";
-  const textHover = transparent ? "var(--ivoire)" : "var(--text-dark)";
-
   return (
     <header
-      className="sticky top-0 z-50 transition-all duration-300"
-      style={{
-        background: transparent ? "transparent" : "rgba(253, 251, 247, 0.97)",
-        backdropFilter: transparent ? "none" : "blur(20px)",
-        borderBottom: transparent
-          ? "1px solid transparent"
-          : "1px solid var(--ivoire-border)",
-        boxShadow: transparent ? "none" : "var(--shadow-sm)",
-      }}
+      className={[
+        "sticky top-0 z-50 transition-all duration-300",
+        transparent
+          ? "bg-transparent"
+          : "border-b border-zinc-200 bg-white/95 shadow-xs backdrop-blur-xl",
+      ].join(" ")}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Logo */}
-        <Link href="/" locale={locale} className="flex flex-col items-start shrink-0">
+        <Link href="/" locale={locale} className="flex shrink-0 flex-col items-start">
           <AqarBrandLogo product="Vision" size="md" onDark={transparent} />
           {isSearch && (
             <span
-              className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.2em]"
-              style={{ color: transparent ? "rgba(253,251,247,0.4)" : "var(--text-faint)" }}
+              className={[
+                "mt-0.5 text-[10px] font-semibold uppercase tracking-[0.2em]",
+                transparent ? "text-zinc-50/40" : "text-zinc-400",
+              ].join(" ")}
             >
               Search
             </span>
@@ -90,10 +86,12 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
               key={href}
               href={href}
               locale={locale}
-              className="text-sm font-medium transition-colors"
-              style={{ color: textColor }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = textHover; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = textColor; }}
+              className={[
+                "text-sm font-medium transition-colors",
+                transparent
+                  ? "text-zinc-50/80 hover:text-zinc-50"
+                  : "text-zinc-600 hover:text-zinc-900",
+              ].join(" ")}
             >
               {label}
             </Link>
@@ -114,39 +112,40 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
               >
                 {/* Avatar circle */}
                 <div
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold"
-                  style={{
-                    background: user.profileType === "pro" ? "#1a365d" : "var(--onyx)",
-                    color: "var(--ivoire)",
-                  }}
+                  className={[
+                    "flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold text-zinc-50",
+                    user.profileType === "pro" ? "bg-zinc-900" : "bg-zinc-800",
+                  ].join(" ")}
                 >
                   {user.initial}
                 </div>
                 {/* Name + profile type badge */}
-                <div className="hidden sm:flex flex-col items-start leading-tight">
+                <div className="hidden flex-col items-start leading-tight sm:flex">
                   <span
-                    className="text-sm font-medium truncate max-w-[110px]"
-                    style={{ color: transparent ? "rgba(253,251,247,0.9)" : "var(--text-dark)" }}
+                    className={[
+                      "max-w-[110px] truncate text-sm font-medium",
+                      transparent ? "text-zinc-50/90" : "text-zinc-800",
+                    ].join(" ")}
                   >
                     {user.name}
                   </span>
                   <span
-                    className="text-[10px] font-semibold uppercase tracking-wide"
-                    style={{
-                      color: user.profileType === "pro"
-                        ? (transparent ? "rgba(212,175,55,0.8)" : "#1a365d")
-                        : (transparent ? "rgba(253,251,247,0.4)" : "var(--text-faint)"),
-                    }}
+                    className={[
+                      "text-[10px] font-semibold uppercase tracking-wide",
+                      user.profileType === "pro"
+                        ? transparent ? "text-amber-400/80" : "text-amber-700"
+                        : transparent ? "text-zinc-50/40" : "text-zinc-400",
+                    ].join(" ")}
                   >
                     {user.profileType === "pro" ? "Pro" : "Particulier"}
                   </span>
                 </div>
                 <svg
-                  className="h-3 w-3 shrink-0 transition-transform"
-                  style={{
-                    transform: avatarOpen ? "rotate(180deg)" : "rotate(0deg)",
-                    color: transparent ? "rgba(253,251,247,0.5)" : "var(--text-faint)",
-                  }}
+                  className={[
+                    "h-3 w-3 shrink-0 transition-transform",
+                    avatarOpen ? "rotate-180" : "rotate-0",
+                    transparent ? "text-zinc-50/50" : "text-zinc-400",
+                  ].join(" ")}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -155,20 +154,13 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
 
               {/* Avatar dropdown */}
               {avatarOpen && (
-                <div
-                  className="absolute end-0 top-full mt-2 w-52 overflow-hidden rounded-xl shadow-xl"
-                  style={{
-                    background: "#fff",
-                    border: "1px solid var(--ivoire-border)",
-                    boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-                  }}
-                >
+                <div className="absolute end-0 top-full mt-2 w-52 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xl">
                   {/* Profile info */}
-                  <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--ivoire-border)" }}>
-                    <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                  <div className="border-b border-zinc-100 px-4 py-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
                       {user.profileType === "pro" ? "Espace Professionnel" : "Espace Particulier"}
                     </p>
-                    <p className="mt-0.5 text-sm font-medium truncate" style={{ color: "var(--onyx)" }}>
+                    <p className="mt-0.5 truncate text-sm font-medium text-zinc-900">
                       {user.name}
                     </p>
                   </div>
@@ -177,8 +169,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                   <Link
                     href={user.espaceHref as "/"}
                     onClick={() => setAvatarOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors hover:bg-[#fafaf9]"
-                    style={{ color: "var(--text-body)" }}
+                    className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
                   >
                     <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
@@ -187,14 +178,13 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                   </Link>
 
                   {/* Sign out */}
-                  <div style={{ borderTop: "1px solid var(--ivoire-border)" }}>
+                  <div className="border-t border-zinc-100">
                     <form action={signOutAction}>
                       <input type="hidden" name="locale" value={locale} />
                       <input type="hidden" name="origin" value={user.espaceHref} />
                       <button
                         type="submit"
-                        className="flex w-full items-center gap-2.5 px-4 py-3 text-sm transition-colors hover:bg-[#fafaf9]"
-                        style={{ color: "var(--text-faint)" }}
+                        className="flex w-full items-center gap-2.5 px-4 py-3 text-sm text-zinc-400 transition-colors hover:bg-zinc-50"
                       >
                         <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
@@ -209,25 +199,16 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
 
           ) : (
             /* ── Logged out: two separate buttons ── */
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden items-center gap-2 sm:flex">
               <Link
                 href="/AqarChaab/auth/login"
                 locale={locale}
-                className="flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-all"
-                style={{
-                  color: transparent ? "rgba(253,251,247,0.85)" : "var(--text-body)",
-                  border: transparent ? "1px solid rgba(253,251,247,0.2)" : "1px solid var(--ivoire-border)",
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.color = transparent ? "var(--ivoire)" : "var(--text-dark)";
-                  el.style.background = transparent ? "rgba(253,251,247,0.08)" : "var(--ivoire)";
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.color = transparent ? "rgba(253,251,247,0.85)" : "var(--text-body)";
-                  el.style.background = "transparent";
-                }}
+                className={[
+                  "flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-all",
+                  transparent
+                    ? "border border-zinc-50/20 text-zinc-50/85 hover:border-zinc-50/40 hover:bg-zinc-50/8 hover:text-zinc-50"
+                    : "border border-zinc-200 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900",
+                ].join(" ")}
               >
                 <svg className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
@@ -238,20 +219,12 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
               <Link
                 href="/AqarPro/auth/login"
                 locale={locale}
-                className="flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-semibold transition-all"
-                style={{
-                  color: transparent ? "var(--ivoire)" : "#1a365d",
-                  background: transparent ? "rgba(253,251,247,0.12)" : "rgba(26,54,93,0.06)",
-                  border: transparent ? "1px solid rgba(253,251,247,0.25)" : "1px solid rgba(26,54,93,0.15)",
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = transparent ? "rgba(253,251,247,0.2)" : "rgba(26,54,93,0.12)";
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = transparent ? "rgba(253,251,247,0.12)" : "rgba(26,54,93,0.06)";
-                }}
+                className={[
+                  "flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-semibold transition-all",
+                  transparent
+                    ? "border border-zinc-50/25 bg-zinc-50/12 text-zinc-50 hover:bg-zinc-50/20"
+                    : "border border-zinc-200 bg-zinc-100 text-zinc-800 hover:bg-zinc-200",
+                ].join(" ")}
               >
                 <svg className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />

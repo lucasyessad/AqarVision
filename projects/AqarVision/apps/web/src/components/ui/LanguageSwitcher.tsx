@@ -52,7 +52,7 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+        className="flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-amber-500"
         aria-haspopup="listbox"
         aria-expanded={open}
         title="Changer la langue"
@@ -84,8 +84,8 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
               onClick={() => switchLocale(locale.code)}
               className={`flex w-full items-center gap-2.5 px-3 py-2 text-sm transition-colors hover:bg-gray-50 ${
                 locale.code === currentLocale
-                  ? "font-semibold text-[#1a365d]"
-                  : "text-[#2d3748]"
+                  ? "font-semibold text-zinc-900"
+                  : "text-zinc-800"
               }`}
             >
               <span className="w-6 text-center font-mono text-xs font-bold">
@@ -94,7 +94,7 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
               <span>{locale.name}</span>
               {locale.code === currentLocale && (
                 <svg
-                  className="ms-auto h-3.5 w-3.5 text-[#d4af37]"
+                  className="ms-auto h-3.5 w-3.5 text-amber-500"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >

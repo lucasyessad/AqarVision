@@ -15,21 +15,17 @@ export function ChaabSignUpForm({ locale = "fr" }: ChaabSignUpFormProps) {
 
   if (state?.success && state.emailConfirmation) {
     return (
-      <div
-        className="rounded-xl p-6 text-center"
-        style={{ background: "rgba(253,251,247,0.05)", border: "1px solid rgba(253,251,247,0.1)" }}
-      >
+      <div className="rounded-xl p-6 text-center bg-zinc-50/[0.05] border border-zinc-50/10">
         <div className="mb-3 text-3xl">✉️</div>
-        <h3 className="mb-2 text-base font-semibold" style={{ color: "var(--ivoire)" }}>
+        <h3 className="mb-2 text-base font-semibold text-zinc-50">
           {t("check_email_title")}
         </h3>
-        <p className="text-sm" style={{ color: "rgba(253,251,247,0.45)" }}>
+        <p className="text-sm text-zinc-50/45">
           {t("check_email_message")}
         </p>
         <Link
           href="/AqarChaab/auth/login"
-          className="mt-4 inline-block text-sm font-medium hover:underline"
-          style={{ color: "var(--or)" }}
+          className="mt-4 inline-block text-sm font-medium hover:underline text-amber-500"
         >
           {t("back_to_login")}
         </Link>
@@ -54,8 +50,7 @@ export function ChaabSignUpForm({ locale = "fr" }: ChaabSignUpFormProps) {
       <div>
         <label
           htmlFor="chaab-signup-name"
-          className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em]"
-          style={{ color: "rgba(253,251,247,0.4)" }}
+          className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-zinc-50/40"
         >
           {t("full_name")}
         </label>
@@ -65,20 +60,14 @@ export function ChaabSignUpForm({ locale = "fr" }: ChaabSignUpFormProps) {
           name="full_name"
           required
           defaultValue={state?.success === false ? state.fullName ?? "" : ""}
-          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none"
-          style={{
-            background: "rgba(253,251,247,0.06)",
-            border: "1px solid rgba(253,251,247,0.12)",
-            color: "var(--ivoire)",
-          }}
+          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none bg-zinc-50/[0.06] border border-zinc-50/[0.12] text-zinc-50"
         />
       </div>
 
       <div>
         <label
           htmlFor="chaab-signup-email"
-          className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em]"
-          style={{ color: "rgba(253,251,247,0.4)" }}
+          className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-zinc-50/40"
         >
           {t("email")}
         </label>
@@ -88,20 +77,14 @@ export function ChaabSignUpForm({ locale = "fr" }: ChaabSignUpFormProps) {
           name="email"
           required
           defaultValue={state?.success === false ? state.email ?? "" : ""}
-          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none"
-          style={{
-            background: "rgba(253,251,247,0.06)",
-            border: "1px solid rgba(253,251,247,0.12)",
-            color: "var(--ivoire)",
-          }}
+          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none bg-zinc-50/[0.06] border border-zinc-50/[0.12] text-zinc-50"
         />
       </div>
 
       <div>
         <label
           htmlFor="chaab-signup-password"
-          className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em]"
-          style={{ color: "rgba(253,251,247,0.4)" }}
+          className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-zinc-50/40"
         >
           {t("password")}
         </label>
@@ -111,14 +94,9 @@ export function ChaabSignUpForm({ locale = "fr" }: ChaabSignUpFormProps) {
           name="password"
           required
           minLength={8}
-          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none"
-          style={{
-            background: "rgba(253,251,247,0.06)",
-            border: "1px solid rgba(253,251,247,0.12)",
-            color: "var(--ivoire)",
-          }}
+          className="w-full rounded-md px-4 py-2.5 text-sm focus:outline-none bg-zinc-50/[0.06] border border-zinc-50/[0.12] text-zinc-50"
         />
-        <p className="mt-1 text-xs" style={{ color: "rgba(253,251,247,0.2)" }}>
+        <p className="mt-1 text-xs text-zinc-50/20">
           {t("password_hint")}
         </p>
       </div>
@@ -126,8 +104,7 @@ export function ChaabSignUpForm({ locale = "fr" }: ChaabSignUpFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-md px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-        style={{ background: "var(--ivoire)", color: "var(--onyx)" }}
+        className="w-full rounded-md px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 bg-zinc-50 text-zinc-950"
       >
         {isPending ? t("signing_up") : "Créer mon compte"}
       </button>

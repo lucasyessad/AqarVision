@@ -34,15 +34,27 @@ Multi-tenant (RLS-isolated per agency), hybrid SaaS + marketplace, multilingual 
 
 ## Commands
 
+All commands run from `projects/AqarVision/` (the monorepo root, not the parent PersoDev workspace).
+
 ```bash
+# Setup
+pnpm install          # Install all workspace dependencies
+
+# Development
 pnpm dev              # Start all workspaces (web on port 3000)
 pnpm build            # Build all workspaces via Turbo
 pnpm lint             # Lint all workspaces
 pnpm typecheck        # TypeScript check all workspaces
 pnpm format           # Prettier on all TS/TSX/MD/JSON files
+
+# Testing
 pnpm test             # Run all Vitest tests
 pnpm test:e2e         # Run Playwright E2E tests (requires build first)
 cd apps/web && pnpm vitest run path/to/file.test.ts  # Single test file
+cd apps/web && pnpm test:watch       # Watch mode
+cd apps/web && pnpm test:coverage    # Coverage report
+
+# Scoped commands
 pnpm turbo run <task> --filter=<package>  # Run task for specific package
 ```
 

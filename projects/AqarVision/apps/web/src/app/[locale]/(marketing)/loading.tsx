@@ -5,12 +5,8 @@ export default function MarketingLoading() {
         {[0, 1, 2].map((i) => (
           <span
             key={i}
-            className="h-1.5 w-1.5 rounded-full animate-pulse"
-            style={{
-              background: "var(--onyx)",
-              opacity: 0.3,
-              animationDelay: `${i * 150}ms`,
-            }}
+            className="h-1.5 w-1.5 rounded-full animate-pulse bg-zinc-950 opacity-30"
+            style={{ animationDelay: `${i * 150}ms` }}
           />
         ))}
       </div>

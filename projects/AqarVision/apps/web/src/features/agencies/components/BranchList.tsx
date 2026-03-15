@@ -28,7 +28,7 @@ export function BranchList({ branches, agencyId, canCreate }: BranchListProps) {
           <button
             type="button"
             onClick={() => setShowForm(!showForm)}
-            className="rounded-lg bg-[#1a365d] px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90"
+            className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
           >
             {showForm ? t("cancel") : t("add_branch")}
           </button>
@@ -65,7 +65,7 @@ export function BranchList({ branches, agencyId, canCreate }: BranchListProps) {
                 name="name"
                 required
                 minLength={2}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
               />
             </div>
 
@@ -82,7 +82,7 @@ export function BranchList({ branches, agencyId, canCreate }: BranchListProps) {
                 name="wilaya_code"
                 required
                 placeholder={t("wilaya_code_placeholder")}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
               />
             </div>
 
@@ -97,14 +97,14 @@ export function BranchList({ branches, agencyId, canCreate }: BranchListProps) {
                 id="branch-address"
                 type="text"
                 name="address_text"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
               />
             </div>
 
             <button
               type="submit"
               disabled={isPending}
-              className="rounded-lg bg-[#1a365d] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90 disabled:opacity-50"
+              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
             >
               {isPending ? t("creating") : t("create_branch")}
             </button>

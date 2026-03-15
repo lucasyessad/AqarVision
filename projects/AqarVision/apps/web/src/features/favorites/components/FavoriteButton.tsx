@@ -36,7 +36,7 @@ export function FavoriteButton({
       <input type="hidden" name="listing_id" value={listingId} />
       <button
         type="submit"
-        className="group inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium transition-colors hover:border-[#d4af37]/50 hover:bg-[#d4af37]/5"
+        className="group inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium transition-colors hover:border-amber-500/50 hover:bg-amber-500/5"
         aria-label={
           optimisticFavorited ? t("remove") : t("my_favorites")
         }
@@ -44,10 +44,10 @@ export function FavoriteButton({
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
-          fill={optimisticFavorited ? "#d4af37" : "none"}
-          stroke={optimisticFavorited ? "#d4af37" : "currentColor"}
+          fill={optimisticFavorited ? "#f59e0b" : "none"}
+          stroke={optimisticFavorited ? "#f59e0b" : "currentColor"}
           strokeWidth={2}
-          className="h-5 w-5 transition-colors group-hover:stroke-[#d4af37]"
+          className="h-5 w-5 transition-colors group-hover:stroke-amber-500"
         >
           <path
             strokeLinecap="round"

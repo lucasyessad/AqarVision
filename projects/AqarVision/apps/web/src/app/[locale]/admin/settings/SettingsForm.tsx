@@ -43,8 +43,8 @@ export function SettingsForm({ setting }: SettingsFormProps) {
         <button
           type="submit"
           disabled={pending}
-          className="rounded-lg px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
-          style={{ background: "rgba(184,168,138,0.15)", color: "var(--or)" }}
+          className="rounded-lg px-3 py-1.5 text-xs font-semibold text-amber-500 transition-opacity hover:opacity-80 disabled:opacity-40"
+          style={{ background: "rgba(245,158,11,0.15)" }}
         >
           {pending ? "…" : "Sauver"}
         </button>

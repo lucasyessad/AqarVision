@@ -60,10 +60,10 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
       <aside className="w-full lg:w-64 shrink-0">
         <div className="rounded-xl border border-gray-100 bg-white shadow-sm">
           <div className="flex items-center justify-between border-b border-gray-100 p-4">
-            <h2 className="text-sm font-semibold text-[#1a365d]">Collections</h2>
+            <h2 className="text-sm font-semibold text-zinc-900">Collections</h2>
             <button
               onClick={() => setShowNewForm(true)}
-              className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-[#d4af37] transition-colors hover:bg-[#d4af37]/10"
+              className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-amber-500 transition-colors hover:bg-amber-500/10"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-3.5 w-3.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -95,7 +95,7 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
                 type="text"
                 autoFocus
                 placeholder="Nom de la collection"
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#1a365d] focus:ring-1 focus:ring-[#1a365d]"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
                 required
               />
               {createState && !createState.success && (
@@ -104,7 +104,7 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
               <div className="mt-2 flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 rounded-lg bg-[#1a365d] py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#1a365d]/90"
+                  className="flex-1 rounded-lg bg-zinc-900 py-1.5 text-xs font-medium text-white transition-colors hover:bg-zinc-900/90"
                 >
                   Créer
                 </button>
@@ -125,14 +125,14 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
             onDragOver={handleDragOver}
             onDrop={() => handleDrop(null)}
             className={`w-full flex items-center gap-3 px-4 py-3 text-start text-sm transition-colors hover:bg-gray-50 border-b border-gray-50 ${
-              selectedCollectionId === null ? "bg-[#1a365d]/5 text-[#1a365d] font-medium" : "text-[#2d3748]"
+              selectedCollectionId === null ? "bg-zinc-900/5 text-zinc-900 font-medium" : "text-zinc-800"
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 shrink-0 text-gray-400">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
             <span className="flex-1 truncate">Sans collection</span>
-            <span className="text-xs text-[#a0aec0]">
+            <span className="text-xs text-zinc-400">
               {favorites.filter((f) => !f.collection_id).length}
             </span>
           </button>
@@ -155,20 +155,20 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
                       type="text"
                       autoFocus
                       defaultValue={col.name}
-                      className="w-full rounded border border-gray-200 px-2 py-1 text-sm outline-none focus:border-[#1a365d]"
+                      className="w-full rounded border border-gray-200 px-2 py-1 text-sm outline-none focus:border-zinc-900"
                     />
                     {renameState && !renameState.success && (
                       <p className="mt-1 text-xs text-red-500">{renameState.error.message}</p>
                     )}
                     <div className="mt-1.5 flex gap-1.5">
-                      <button type="submit" className="flex-1 rounded bg-[#1a365d] py-1 text-xs text-white">OK</button>
+                      <button type="submit" className="flex-1 rounded bg-zinc-900 py-1 text-xs text-white">OK</button>
                       <button type="button" onClick={() => setRenamingId(null)} className="flex-1 rounded border border-gray-200 py-1 text-xs text-gray-500">✕</button>
                     </div>
                   </form>
                 ) : (
                   <div
                     className={`group flex items-center gap-2 px-4 py-2.5 cursor-pointer transition-colors hover:bg-gray-50 ${
-                      selectedCollectionId === col.id ? "bg-[#1a365d]/5 text-[#1a365d] font-medium" : "text-[#2d3748]"
+                      selectedCollectionId === col.id ? "bg-zinc-900/5 text-zinc-900 font-medium" : "text-zinc-800"
                     }`}
                     onClick={() => setSelectedCollectionId(col.id)}
                     onDragOver={handleDragOver}
@@ -178,13 +178,13 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                     </svg>
                     <span className="flex-1 truncate text-sm">{col.name}</span>
-                    <span className="text-xs text-[#a0aec0]">{col.favorite_count}</span>
+                    <span className="text-xs text-zinc-400">{col.favorite_count}</span>
 
                     {/* Actions — visible on hover */}
                     <div className="hidden group-hover:flex items-center gap-1">
                       <button
                         onClick={(e) => { e.stopPropagation(); setRenamingId(col.id); }}
-                        className="rounded p-0.5 text-gray-400 hover:text-[#1a365d]"
+                        className="rounded p-0.5 text-gray-400 hover:text-zinc-900"
                         title="Renommer"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-3.5 w-3.5">
@@ -217,7 +217,7 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
           </ul>
 
           {optimisticCollections.length === 0 && !showNewForm && (
-            <p className="px-4 py-6 text-center text-xs text-[#a0aec0]">
+            <p className="px-4 py-6 text-center text-xs text-zinc-400">
               Aucune collection. Créez-en une pour organiser vos favoris.
             </p>
           )}
@@ -227,12 +227,12 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
       {/* Favorites in selected collection */}
       <div className="flex-1">
         <div className="mb-3 flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-[#2d3748]">
+          <h3 className="text-sm font-semibold text-zinc-800">
             {selectedCollectionId
               ? optimisticCollections.find((c) => c.id === selectedCollectionId)?.name ?? "Collection"
               : "Sans collection"}
           </h3>
-          <span className="text-xs text-[#a0aec0]">
+          <span className="text-xs text-zinc-400">
             ({selectedFavorites.length} favori{selectedFavorites.length !== 1 ? "s" : ""})
           </span>
         </div>
@@ -246,7 +246,7 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-3 h-8 w-8 text-gray-300">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
-            <p className="text-sm text-[#a0aec0]">Glissez des favoris ici</p>
+            <p className="text-sm text-zinc-400">Glissez des favoris ici</p>
           </div>
         ) : (
           <div
@@ -266,12 +266,12 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4 shrink-0 text-gray-300">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
                     </svg>
-                    <p className="text-sm font-medium text-[#2d3748] line-clamp-2 min-w-0">
+                    <p className="text-sm font-medium text-zinc-800 line-clamp-2 min-w-0">
                       {fav.listing_title}
                     </p>
                   </div>
                 </div>
-                <p className="mt-2 text-xs text-[#a0aec0]">
+                <p className="mt-2 text-xs text-zinc-400">
                   Ajouté le {new Date(fav.created_at).toLocaleDateString("fr-FR")}
                 </p>
 
@@ -292,7 +292,7 @@ export function CollectionsManager({ collections, favorites }: CollectionsManage
                       formData.set("collection_id", e.target.value || "null");
                       startTransition(() => assignAction(formData));
                     }}
-                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-[#2d3748] outline-none focus:border-[#1a365d]"
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-zinc-800 outline-none focus:border-zinc-900"
                   >
                     <option value="">Sans collection</option>
                     {collections.map((col) => (

@@ -74,20 +74,14 @@ export default async function EspacePage({ params }: EspacePageProps) {
     <div>
       {/* Welcome */}
       <div className="mb-8">
-        <p
-          className="mb-1 text-xs font-semibold uppercase tracking-widest"
-          style={{ color: "var(--or)" }}
-        >
+        <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-amber-500">
           Espace Particulier
         </p>
-        <h1
-          className="text-2xl font-light"
-          style={{ color: "var(--onyx)", fontFamily: "var(--font-display)" }}
-        >
+        <h1 className="text-2xl font-light text-zinc-950 font-display">
           <span style={{ fontStyle: "italic" }}>Bonjour,</span>{" "}
           <span className="font-semibold">{firstName}</span>
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--text-faint)" }}>
+        <p className="mt-1 text-sm text-zinc-400">
           {t("welcome_subtitle")}
         </p>
       </div>
@@ -98,34 +92,20 @@ export default async function EspacePage({ params }: EspacePageProps) {
           <Link
             key={card.href}
             href={card.href}
-            className="group flex flex-col gap-3 rounded-xl p-4 transition-all hover:-translate-y-0.5"
-            style={{
-              background: "#fff",
-              border: "1px solid var(--ivoire-border)",
-              boxShadow: "var(--shadow-sm)",
-            }}
+            className="group flex flex-col gap-3 rounded-xl p-4 transition-all hover:-translate-y-0.5 bg-white border border-zinc-200 shadow-sm"
           >
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-lg"
-              style={{ background: "var(--onyx)" }}
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="var(--ivoire)" strokeWidth={1.5}>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-950">
+              <svg className="h-4 w-4 text-zinc-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d={card.icon} />
               </svg>
             </div>
             <div>
               {card.count !== null && (
-                <p
-                  className="text-xl font-semibold"
-                  style={{ color: "var(--onyx)" }}
-                >
+                <p className="text-xl font-semibold text-zinc-950">
                   {card.count}
                 </p>
               )}
-              <p
-                className="text-xs font-medium"
-                style={{ color: card.count !== null ? "var(--text-faint)" : "var(--onyx)" }}
-              >
+              <p className={`text-xs font-medium ${card.count !== null ? "text-zinc-400" : "text-zinc-950"}`}>
                 {card.label}
               </p>
             </div>
@@ -138,32 +118,24 @@ export default async function EspacePage({ params }: EspacePageProps) {
         {/* Déposer une annonce */}
         <Link
           href="/deposer"
-          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5"
-          style={{
-            background: "var(--onyx)",
-            border: "1px solid rgba(253,251,247,0.06)",
-            boxShadow: "var(--shadow-sm)",
-          }}
+          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5 bg-zinc-950 border border-zinc-50/[0.06] shadow-sm"
         >
-          <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-            style={{ background: "rgba(253,251,247,0.1)" }}
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="var(--ivoire)" strokeWidth={1.5}>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-50/10">
+            <svg className="h-5 w-5 text-zinc-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </div>
           <div>
-            <p className="font-semibold" style={{ color: "var(--ivoire)" }}>
+            <p className="font-semibold text-zinc-50">
               Déposer une annonce
             </p>
-            <p className="text-xs" style={{ color: "rgba(253,251,247,0.4)" }}>
+            <p className="text-xs text-zinc-50/40">
               Vente, location, vacances — gratuit
             </p>
           </div>
           <svg
-            className="ms-auto h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180"
-            fill="none" viewBox="0 0 24 24" stroke="rgba(253,251,247,0.3)" strokeWidth={2}
+            className="ms-auto h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180 text-zinc-50/30"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
           </svg>
@@ -172,32 +144,24 @@ export default async function EspacePage({ params }: EspacePageProps) {
         {/* Rechercher */}
         <Link
           href="/search"
-          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5"
-          style={{
-            background: "#fff",
-            border: "1px solid var(--ivoire-border)",
-            boxShadow: "var(--shadow-sm)",
-          }}
+          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5 bg-white border border-zinc-200 shadow-sm"
         >
-          <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-            style={{ background: "var(--ivoire)" }}
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="var(--onyx)" strokeWidth={1.5}>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-50">
+            <svg className="h-5 w-5 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
           </div>
           <div>
-            <p className="font-semibold" style={{ color: "var(--onyx)" }}>
+            <p className="font-semibold text-zinc-950">
               {t("search_cta_title")}
             </p>
-            <p className="text-xs" style={{ color: "var(--text-faint)" }}>
+            <p className="text-xs text-zinc-400">
               {t("search_cta_subtitle")}
             </p>
           </div>
           <svg
-            className="ms-auto h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180"
-            fill="none" viewBox="0 0 24 24" stroke="var(--text-faint)" strokeWidth={2}
+            className="ms-auto h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180 text-zinc-400"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
           </svg>

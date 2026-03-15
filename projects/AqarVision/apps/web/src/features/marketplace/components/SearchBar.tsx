@@ -110,12 +110,12 @@ export function SearchBar() {
             value={query}
             onChange={(e) => handleQueryChange(e.target.value)}
             placeholder={t("placeholder")}
-            className="w-full rounded-lg border border-gray-300 py-3 ps-10 pe-4 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+            className="w-full rounded-lg border border-gray-300 py-3 ps-10 pe-4 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
         </div>
         <button
           type="submit"
-          className="rounded-lg bg-[#d4af37] px-6 py-3 font-medium text-[#1a365d] transition-colors hover:bg-[#d4af37]/90"
+          className="rounded-lg bg-amber-500 px-6 py-3 font-medium text-zinc-900 transition-colors hover:bg-amber-500/90"
         >
           {t("button")}
         </button>
@@ -129,7 +129,7 @@ export function SearchBar() {
             setListingType(e.target.value);
             updateSearchParams({ listing_type: e.target.value });
           }}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
         >
           <option value="">{t("listing_type_filter")}</option>
           {LISTING_TYPES.map((type) => (
@@ -145,7 +145,7 @@ export function SearchBar() {
             setPropertyType(e.target.value);
             updateSearchParams({ property_type: e.target.value });
           }}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
         >
           <option value="">{t("property_type_filter")}</option>
           {PROPERTY_TYPES.map((type) => (
@@ -165,7 +165,7 @@ export function SearchBar() {
           placeholder={t("wilaya_filter")}
           min={1}
           max={58}
-          className="w-28 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+          className="w-28 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
         />
 
         <input
@@ -175,7 +175,7 @@ export function SearchBar() {
           onBlur={() => updateSearchParams()}
           placeholder={t("price_range") + " min"}
           min={0}
-          className="w-36 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+          className="w-36 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
         />
 
         <input
@@ -185,7 +185,7 @@ export function SearchBar() {
           onBlur={() => updateSearchParams()}
           placeholder={t("price_range") + " max"}
           min={0}
-          className="w-36 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+          className="w-36 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
         />
       </div>
     </form>

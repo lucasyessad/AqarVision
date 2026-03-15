@@ -63,14 +63,14 @@ export function MortgageCalculator({ defaultPrice }: MortgageCalculatorProps) {
 
   return (
     <div className="rounded-xl bg-white p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-semibold text-[#2d3748]">
+      <h3 className="mb-4 text-sm font-semibold text-zinc-800">
         Calculateur de crédit immobilier
       </h3>
 
       <div className="space-y-3">
         {/* Prix du bien */}
         <div>
-          <label className="mb-1 block text-xs font-medium text-[#a0aec0]">
+          <label className="mb-1 block text-xs font-medium text-zinc-400">
             Prix du bien (DZD)
           </label>
           <input
@@ -79,17 +79,17 @@ export function MortgageCalculator({ defaultPrice }: MortgageCalculatorProps) {
             onChange={(e) => setPrice(Number(e.target.value))}
             min={0}
             step={100000}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-[#2d3748] outline-none focus:border-[#1a365d] focus:ring-1 focus:ring-[#1a365d]"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-zinc-800 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
           />
         </div>
 
         {/* Apport */}
         <div>
           <div className="mb-1 flex items-center justify-between">
-            <label className="text-xs font-medium text-[#a0aec0]">
+            <label className="text-xs font-medium text-zinc-400">
               Apport personnel
             </label>
-            <span className="text-xs font-semibold text-[#1a365d]">
+            <span className="text-xs font-semibold text-zinc-900">
               {downPaymentPct}% — {formatCurrency((price * downPaymentPct) / 100)}
             </span>
           </div>
@@ -100,15 +100,15 @@ export function MortgageCalculator({ defaultPrice }: MortgageCalculatorProps) {
             step={5}
             value={downPaymentPct}
             onChange={(e) => setDownPaymentPct(Number(e.target.value))}
-            className="w-full accent-[#1a365d]"
+            className="w-full accent-zinc-900"
           />
         </div>
 
         {/* Durée */}
         <div>
           <div className="mb-1 flex items-center justify-between">
-            <label className="text-xs font-medium text-[#a0aec0]">Durée</label>
-            <span className="text-xs font-semibold text-[#1a365d]">
+            <label className="text-xs font-medium text-zinc-400">Durée</label>
+            <span className="text-xs font-semibold text-zinc-900">
               {durationYears} ans
             </span>
           </div>
@@ -119,13 +119,13 @@ export function MortgageCalculator({ defaultPrice }: MortgageCalculatorProps) {
             step={1}
             value={durationYears}
             onChange={(e) => setDurationYears(Number(e.target.value))}
-            className="w-full accent-[#1a365d]"
+            className="w-full accent-zinc-900"
           />
         </div>
 
         {/* Taux annuel */}
         <div>
-          <label className="mb-1 block text-xs font-medium text-[#a0aec0]">
+          <label className="mb-1 block text-xs font-medium text-zinc-400">
             Taux annuel (%)
           </label>
           <input
@@ -135,14 +135,14 @@ export function MortgageCalculator({ defaultPrice }: MortgageCalculatorProps) {
             min={0}
             max={30}
             step={0.1}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-[#2d3748] outline-none focus:border-[#1a365d] focus:ring-1 focus:ring-[#1a365d]"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-zinc-800 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
           />
         </div>
       </div>
 
       {/* Results */}
       {isValid && (
-        <div className="mt-5 rounded-xl bg-[#1a365d] p-4 text-white">
+        <div className="mt-5 rounded-xl bg-zinc-900 p-4 text-white">
           <div className="mb-3 text-center">
             <p className="text-xs font-medium text-white/60">Mensualité estimée</p>
             <p className="mt-1 text-2xl font-bold">
@@ -160,7 +160,7 @@ export function MortgageCalculator({ defaultPrice }: MortgageCalculatorProps) {
             </div>
             <div className="text-center">
               <p className="text-xs text-white/60">Total intérêts</p>
-              <p className="mt-0.5 text-sm font-semibold text-[#d4af37]">
+              <p className="mt-0.5 text-sm font-semibold text-amber-500">
                 {formatCurrency(result.totalInterest)}
               </p>
             </div>

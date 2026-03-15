@@ -44,7 +44,7 @@ export function CreateAgencyForm() {
 
   return (
     <div className="mx-auto max-w-lg">
-      <h1 className="mb-6 text-2xl font-bold text-[#1a365d]">
+      <h1 className="mb-6 text-2xl font-bold text-zinc-900">
         {t("create_title")}
       </h1>
 
@@ -72,7 +72,7 @@ export function CreateAgencyForm() {
             required
             minLength={2}
             onChange={handleNameChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
           />
         </div>
 
@@ -91,7 +91,7 @@ export function CreateAgencyForm() {
             required
             minLength={3}
             pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
           />
           <p className="mt-1 text-xs text-gray-400">{t("slug_hint")}</p>
         </div>
@@ -107,7 +107,7 @@ export function CreateAgencyForm() {
             id="agency-description"
             name="description"
             rows={3}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
           />
         </div>
 
@@ -123,7 +123,7 @@ export function CreateAgencyForm() {
               id="agency-phone"
               type="tel"
               name="phone"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
             />
           </div>
 
@@ -138,7 +138,7 @@ export function CreateAgencyForm() {
               id="agency-email"
               type="email"
               name="email"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
             />
           </div>
         </div>
@@ -146,7 +146,7 @@ export function CreateAgencyForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-lg bg-[#1a365d] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[#1a365d]/90 disabled:opacity-50"
+          className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
         >
           {isPending ? t("creating") : t("create_button")}
         </button>

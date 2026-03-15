@@ -28,7 +28,7 @@ export function InviteMemberDialog({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="rounded-lg bg-[#1a365d] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90"
+        className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
       >
         {t("invite_member")}
       </button>
@@ -37,7 +37,7 @@ export function InviteMemberDialog({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-[#1a365d]">
+              <h3 className="text-lg font-semibold text-zinc-900">
                 {t("invite_member")}
               </h3>
               <button
@@ -88,7 +88,7 @@ export function InviteMemberDialog({
                   type="email"
                   name="email"
                   required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
                 />
               </div>
 
@@ -103,7 +103,7 @@ export function InviteMemberDialog({
                   id="invite-role"
                   name="role"
                   required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#1a365d] focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
                 >
                   {AGENCY_ROLES.map((role) => (
                     <option key={role} value={role}>
@@ -124,7 +124,7 @@ export function InviteMemberDialog({
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="rounded-lg bg-[#1a365d] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90 disabled:opacity-50"
+                  className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
                 >
                   {isPending ? t("sending") : t("send_invite")}
                 </button>

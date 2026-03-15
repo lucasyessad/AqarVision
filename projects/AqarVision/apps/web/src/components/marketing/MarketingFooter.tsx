@@ -8,41 +8,29 @@ interface MarketingFooterProps {
 
 export function MarketingFooter({ locale }: MarketingFooterProps) {
   return (
-    <footer style={{ background: "var(--ivoire-warm)", borderTop: "1px solid var(--ivoire-border)" }}>
+    <footer className="border-t border-zinc-200 bg-zinc-50">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-10 lg:grid-cols-4">
 
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
             <Link href="/" locale={locale} className="inline-flex items-center gap-1">
-              <span
-                className="text-xl tracking-tight"
-                style={{ fontFamily: "var(--font-display)", color: "var(--onyx)", fontWeight: 600 }}
-              >
+              <span className="font-display text-xl font-semibold tracking-tight text-zinc-900">
                 Aqar
               </span>
-              <span
-                className="inline-block h-1.5 w-1.5 rounded-full mx-0.5"
-                style={{ background: "var(--or)", marginBottom: "3px" }}
-              />
-              <span
-                className="text-xl tracking-tight"
-                style={{ fontFamily: "var(--font-display)", color: "var(--onyx)", fontWeight: 600 }}
-              >
+              <span className="mx-0.5 mb-0.5 inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
+              <span className="font-display text-xl font-semibold tracking-tight text-zinc-900">
                 Vision
               </span>
             </Link>
-            <p className="mt-3 max-w-[200px] text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+            <p className="mt-3 max-w-[200px] text-sm leading-relaxed text-zinc-400">
               Le portail immobilier des 58 wilayas d&apos;Algérie.
             </p>
           </div>
 
           {/* Recherche */}
           <div>
-            <h3
-              className="mb-4 text-xs font-semibold uppercase tracking-widest"
-              style={{ color: "var(--text-dark)" }}
-            >
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900">
               Recherche
             </h3>
             <ul className="space-y-2.5">
@@ -56,10 +44,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
                   <Link
                     href={href}
                     locale={locale}
-                    className="text-sm transition-colors"
-                    style={{ color: "var(--text-body)" }}
-                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-dark)")}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-body)")}
+                    className="text-sm text-zinc-600 transition-colors hover:text-zinc-900"
                   >
                     {label}
                   </Link>
@@ -70,10 +55,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
 
           {/* Professionnels */}
           <div>
-            <h3
-              className="mb-4 text-xs font-semibold uppercase tracking-widest"
-              style={{ color: "var(--text-dark)" }}
-            >
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900">
               Professionnels
             </h3>
             <ul className="space-y-2.5">
@@ -86,10 +68,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
                   <Link
                     href={href}
                     locale={locale}
-                    className="text-sm transition-colors"
-                    style={{ color: "var(--text-body)" }}
-                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-dark)")}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-body)")}
+                    className="text-sm text-zinc-600 transition-colors hover:text-zinc-900"
                   >
                     {label}
                   </Link>
@@ -100,28 +79,20 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
 
           {/* Légal */}
           <div>
-            <h3
-              className="mb-4 text-xs font-semibold uppercase tracking-widest"
-              style={{ color: "var(--text-dark)" }}
-            >
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900">
               Légal
             </h3>
             <ul className="space-y-2.5">
               {["À propos", "Confidentialité", "CGU", "Contact"].map((label) => (
                 <li key={label}>
-                  <span className="text-sm" style={{ color: "var(--text-body)" }}>
-                    {label}
-                  </span>
+                  <span className="text-sm text-zinc-600">{label}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        <div
-          className="mt-12 pt-8 text-center text-xs"
-          style={{ borderTop: "1px solid var(--ivoire-border)", color: "var(--text-muted)" }}
-        >
+        <div className="mt-12 border-t border-zinc-200 pt-8 text-center text-xs text-zinc-400">
           &copy; {new Date().getFullYear()} AqarVision — Tous droits réservés
         </div>
       </div>

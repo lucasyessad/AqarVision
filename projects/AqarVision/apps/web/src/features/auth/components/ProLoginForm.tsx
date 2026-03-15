@@ -24,7 +24,7 @@ export function ProLoginForm({ locale = "fr" }: ProLoginFormProps) {
       )}
 
       <div>
-        <label htmlFor="pro-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-[#a0aec0]">
+        <label htmlFor="pro-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
           {t("email")}
         </label>
         <input
@@ -33,13 +33,13 @@ export function ProLoginForm({ locale = "fr" }: ProLoginFormProps) {
           name="email"
           required
           defaultValue={state?.email ?? ""}
-          className="w-full rounded-md border border-[#2d3748] bg-[#1a1f2e] px-4 py-2.5 text-sm text-white placeholder-[#4a5568] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]/30"
+          className="w-full rounded-md border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
           placeholder="agence@exemple.dz"
         />
       </div>
 
       <div>
-        <label htmlFor="pro-password" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-[#a0aec0]">
+        <label htmlFor="pro-password" className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-zinc-400">
           {t("password")}
         </label>
         <input
@@ -47,14 +47,14 @@ export function ProLoginForm({ locale = "fr" }: ProLoginFormProps) {
           type="password"
           name="password"
           required
-          className="w-full rounded-md border border-[#2d3748] bg-[#1a1f2e] px-4 py-2.5 text-sm text-white placeholder-[#4a5568] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]/30"
+          className="w-full rounded-md border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
         />
       </div>
 
       <div className="flex justify-end">
         <Link
           href="/AqarPro/auth/forgot-password"
-          className="text-xs text-[#d4af37] hover:underline"
+          className="text-xs text-amber-500 hover:underline"
         >
           {t("forgot_password")}
         </Link>
@@ -63,14 +63,14 @@ export function ProLoginForm({ locale = "fr" }: ProLoginFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-md bg-[#d4af37] px-4 py-3 text-sm font-semibold text-[#0f1623] transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="w-full rounded-md bg-amber-500 px-4 py-3 text-sm font-semibold text-zinc-950 transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {isPending ? t("logging_in") : "Accéder à AqarPro"}
       </button>
 
-      <p className="text-center text-xs text-[#4a5568]">
+      <p className="text-center text-xs text-zinc-600">
         Pas encore d&apos;agence ?{" "}
-        <Link href="/AqarPro/auth/signup" className="text-[#d4af37] hover:underline">
+        <Link href="/AqarPro/auth/signup" className="text-amber-500 hover:underline">
           Créer un compte agence
         </Link>
       </p>

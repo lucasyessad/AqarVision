@@ -101,38 +101,34 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
 
       <Suspense fallback={<MarketingHeader locale={locale} user={null} />}><MarketingHeaderWrapper locale={locale} /></Suspense>
 
-      <main className="min-h-screen" style={{ background: "var(--ivoire)" }}>
+      <main className="min-h-screen bg-zinc-50">
 
         {/* ── Breadcrumb ──────────────────────────────────────────── */}
         <div
-          className="border-b px-4 py-3"
-          style={{ borderColor: "var(--ivoire-border)", background: "var(--ivoire)" }}
+          className="border-b border-zinc-200 bg-zinc-50 px-4 py-3"
         >
-          <div className="mx-auto flex max-w-[1320px] items-center gap-2 text-xs" style={{ color: "var(--text-muted)" }}>
+          <div className="mx-auto flex max-w-[1320px] items-center gap-2 text-xs text-zinc-500">
             <Link
               href="/search"
               locale={locale}
-              className="flex items-center gap-1 transition-colors"
-              style={{ color: "var(--text-muted)" }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--or)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-muted)")}
+              className="flex items-center gap-1 text-zinc-500 transition-colors hover:text-amber-500"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
               </svg>
               Annonces
             </Link>
-            <span style={{ color: "var(--ivoire-border)" }}>/</span>
-            <span style={{ color: "var(--text-body)" }}>{listing.wilaya_name}</span>
-            <span style={{ color: "var(--ivoire-border)" }}>/</span>
-            <span className="max-w-[200px] truncate" style={{ color: "var(--text-dark)" }}>
+            <span className="text-zinc-200">/</span>
+            <span className="text-zinc-600">{listing.wilaya_name}</span>
+            <span className="text-zinc-200">/</span>
+            <span className="max-w-[200px] truncate text-zinc-900">
               {listing.title}
             </span>
           </div>
         </div>
 
         {/* ── Photo gallery — full-bleed, hero ───────────────────── */}
-        <div style={{ background: "var(--onyx)" }}>
+        <div className="bg-zinc-950">
           <div className="mx-auto max-w-[1320px]">
             <PhotoGallery media={listing.media} title={listing.title} />
           </div>
@@ -148,14 +144,12 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
               {/* Type chips */}
               <div className="mb-4 flex flex-wrap gap-2">
                 <span
-                  className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide"
-                  style={{ background: "var(--amber-glow)", color: "var(--amber)" }}
+                  className="rounded-full bg-amber-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-500"
                 >
                   {tListings(listing.listing_type)}
                 </span>
                 <span
-                  className="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide"
-                  style={{ background: "var(--or-ghost)", color: "var(--or)" }}
+                  className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-500"
                 >
                   {tListings(listing.property_type)}
                 </span>
@@ -165,8 +159,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
               <div className="mb-3 flex items-center gap-3 text-sm">
                 <Link
                   href={`/a/${listing.agency_slug}`}
-                  className="flex items-center gap-2 font-medium transition-colors"
-                  style={{ color: "var(--text-body)" }}
+                  className="flex items-center gap-2 font-medium text-zinc-600 transition-colors"
                 >
                   {listing.agency_logo_url ? (
                     <img
@@ -176,42 +169,36 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                     />
                   ) : (
                     <span
-                      className="flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold"
-                      style={{ background: "var(--or-ghost)", color: "var(--or)" }}
+                      className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-50 text-[9px] font-bold text-amber-500"
                     >
                       {listing.agency_name.charAt(0).toUpperCase()}
                     </span>
                   )}
                   {listing.agency_name}
                 </Link>
-                <span style={{ color: "var(--ivoire-deep)" }}>·</span>
-                <span className="font-mono text-xs" style={{ color: "var(--text-faint)" }}>
+                <span className="text-zinc-100">·</span>
+                <span className="font-mono text-xs text-zinc-400">
                   {formatListingRef(listing.reference_number)}
                 </span>
               </div>
 
               {/* Editorial title — Libre Baskerville */}
               <h1
-                className="mb-5 text-2xl font-bold leading-snug md:text-3xl"
-                style={{
-                  color: "var(--text-dark)",
-                  fontFamily: "var(--font-display)",
-                }}
+                className="mb-5 font-display text-2xl font-bold leading-snug text-zinc-900 md:text-3xl"
               >
                 {listing.title}
               </h1>
 
               {/* Price block */}
               <div
-                className="mb-6 inline-flex flex-col rounded-xl border px-5 py-4"
-                style={{ background: "var(--bg-card)", borderColor: "var(--ivoire-border)" }}
+                className="mb-6 inline-flex flex-col rounded-xl border border-zinc-200 bg-white px-5 py-4"
               >
-                <p className="text-3xl font-bold tracking-tight" style={{ color: "var(--text-dark)" }}>
+                <p className="text-3xl font-bold tracking-tight text-zinc-900">
                   {formatPrice(listing.current_price, listing.currency)}
                 </p>
                 {listing.surface_m2 !== null && listing.surface_m2 > 0 && listing.current_price > 0 && (
-                  <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
-                    <span style={{ color: "var(--or)", fontWeight: 600 }}>
+                  <p className="mt-1 text-sm text-zinc-500">
+                    <span className="font-semibold text-amber-500">
                       {formatPrice(Math.round(listing.current_price / listing.surface_m2), listing.currency)}
                     </span>
                     {" "}/ m²
@@ -221,44 +208,43 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
 
               {/* Property details grid */}
               <div
-                className="mb-8 grid grid-cols-2 gap-4 rounded-xl border p-5 sm:grid-cols-4"
-                style={{ background: "var(--bg-card)", borderColor: "var(--ivoire-border)" }}
+                className="mb-8 grid grid-cols-2 gap-4 rounded-xl border border-zinc-200 bg-white p-5 sm:grid-cols-4"
               >
                 {listing.surface_m2 !== null && (
                   <div>
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-zinc-400">
                       {tListings("surface")}
                     </p>
-                    <p className="text-base font-semibold" style={{ color: "var(--text-dark)" }}>
+                    <p className="text-base font-semibold text-zinc-900">
                       {listing.surface_m2} m²
                     </p>
                   </div>
                 )}
                 {listing.rooms !== null && (
                   <div>
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-zinc-400">
                       {tListings("rooms")}
                     </p>
-                    <p className="text-base font-semibold" style={{ color: "var(--text-dark)" }}>
+                    <p className="text-base font-semibold text-zinc-900">
                       {listing.rooms}
                     </p>
                   </div>
                 )}
                 {listing.bathrooms !== null && (
                   <div>
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-zinc-400">
                       {tListings("bathrooms")}
                     </p>
-                    <p className="text-base font-semibold" style={{ color: "var(--text-dark)" }}>
+                    <p className="text-base font-semibold text-zinc-900">
                       {listing.bathrooms}
                     </p>
                   </div>
                 )}
                 <div>
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wide" style={{ color: "var(--text-faint)" }}>
+                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-zinc-400">
                     {tListings("wilaya")}
                   </p>
-                  <p className="text-base font-semibold" style={{ color: "var(--text-dark)" }}>
+                  <p className="text-base font-semibold text-zinc-900">
                     {listing.commune_name
                       ? `${listing.commune_name}, ${listing.wilaya_name}`
                       : listing.wilaya_name}
@@ -270,16 +256,14 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
               {listing.description && (
                 <div className="mb-8">
                   <h2
-                    className="mb-4 text-xl font-bold"
-                    style={{ color: "var(--text-dark)", fontFamily: "var(--font-display)" }}
+                    className="mb-4 font-display text-xl font-bold text-zinc-900"
                   >
                     Description
                   </h2>
                   <div
-                    className="rounded-xl border p-5"
-                    style={{ background: "var(--bg-card)", borderColor: "var(--ivoire-border)" }}
+                    className="rounded-xl border border-zinc-200 bg-white p-5"
                   >
-                    <p className="whitespace-pre-wrap text-sm leading-relaxed" style={{ color: "var(--text-body)" }}>
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-600">
                       {listing.description}
                     </p>
                   </div>
@@ -290,30 +274,27 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
               {Object.keys(listing.details).length > 0 && (
                 <div className="mb-8">
                   <h2
-                    className="mb-4 text-xl font-bold"
-                    style={{ color: "var(--text-dark)", fontFamily: "var(--font-display)" }}
+                    className="mb-4 font-display text-xl font-bold text-zinc-900"
                   >
                     {tListings("details")}
                   </h2>
                   <div
-                    className="grid grid-cols-2 gap-3 rounded-xl border p-5 sm:grid-cols-3"
-                    style={{ background: "var(--bg-card)", borderColor: "var(--ivoire-border)" }}
+                    className="grid grid-cols-2 gap-3 rounded-xl border border-zinc-200 bg-white p-5 sm:grid-cols-3"
                   >
                     {Object.entries(listing.details).map(([key, value]) => (
                       <div key={key} className="flex items-start gap-2">
                         <span
-                          className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
-                          style={{ background: "var(--or-ghost)" }}
+                          className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber-50"
                         >
-                          <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3} style={{ color: "var(--or)" }}>
+                          <svg className="h-2.5 w-2.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                           </svg>
                         </span>
                         <div>
-                          <p className="text-xs capitalize" style={{ color: "var(--text-muted)" }}>
+                          <p className="text-xs capitalize text-zinc-500">
                             {key.replace(/_/g, " ")}
                           </p>
-                          <p className="text-sm font-medium" style={{ color: "var(--text-dark)" }}>
+                          <p className="text-sm font-medium text-zinc-900">
                             {typeof value === "boolean"
                               ? value ? "Oui" : "Non"
                               : String(value)}
@@ -332,38 +313,33 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
 
                 {/* Agency contact card — JE style */}
                 <div
-                  className="overflow-hidden rounded-xl border"
-                  style={{ background: "var(--bg-card)", borderColor: "var(--ivoire-border)" }}
+                  className="overflow-hidden rounded-xl border border-zinc-200 bg-white"
                 >
                   {/* Card header */}
                   <div
-                    className="border-b px-5 py-4"
-                    style={{ borderColor: "var(--ivoire-border)" }}
+                    className="border-b border-zinc-200 px-5 py-4"
                   >
                     <div className="flex items-center gap-3">
                       {listing.agency_logo_url ? (
                         <img
                           src={listing.agency_logo_url}
                           alt={listing.agency_name}
-                          className="h-12 w-12 rounded-xl object-cover"
-                          style={{ boxShadow: "var(--shadow-sm)" }}
+                          className="h-12 w-12 rounded-xl object-cover shadow-sm"
                         />
                       ) : (
                         <div
-                          className="flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold"
-                          style={{ background: "var(--or-ghost)", color: "var(--or)" }}
+                          className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-lg font-bold text-amber-500"
                         >
                           {listing.agency_name.charAt(0).toUpperCase()}
                         </div>
                       )}
                       <div>
-                        <h3 className="font-semibold" style={{ color: "var(--text-dark)", fontFamily: "var(--font-display)" }}>
+                        <h3 className="font-display font-semibold text-zinc-900">
                           {listing.agency_name}
                         </h3>
                         <Link
                           href={`/a/${listing.agency_slug}`}
-                          className="text-xs transition-colors"
-                          style={{ color: "var(--or)" }}
+                          className="text-xs text-amber-500 transition-colors"
                         >
                           Voir la vitrine →
                         </Link>
@@ -376,8 +352,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                     {listing.agency_phone ? (
                       <a
                         href={`tel:${listing.agency_phone}`}
-                        className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
-                        style={{ background: "var(--onyx)", color: "var(--ivoire)" }}
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-3 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90"
                       >
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
@@ -387,8 +362,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                     ) : (
                       <Link
                         href={`/a/${listing.agency_slug}`}
-                        className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
-                        style={{ background: "var(--onyx)", color: "var(--ivoire)" }}
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-3 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90"
                       >
                         {t("contact_agency")}
                       </Link>
@@ -396,8 +370,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
 
                     <Link
                       href={`/a/${listing.agency_slug}`}
-                      className="flex w-full items-center justify-center rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors"
-                      style={{ borderColor: "var(--ivoire-border)", color: "var(--text-body)", background: "var(--ivoire)" }}
+                      className="flex w-full items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-600 transition-colors"
                     >
                       Voir toutes les annonces
                     </Link>

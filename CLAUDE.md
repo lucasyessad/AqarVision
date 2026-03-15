@@ -15,7 +15,8 @@ The repository follows a **dual-structure approach**:
 - **`projects/`** — Independent development projects, each with its own stack and dependencies. Reference library resources via `../../library/...`.
 - **`templates/`** — Starter templates + `clone-template.sh` (supports: nextjs, saas, saas-nextjs, api-node, api-fastapi, mobile, ds).
 - **`scripts/`** — Automation scripts for maintenance.
-- **`docs/`** — Guides (`quick-start.md`, `maintenance.md`), best practices, and references.
+- **`docs/`** — Guides (`quick-start.md`, `maintenance.md`), best practices, references, and `NeoAqar/` product vision & strategy docs.
+- **`tools/`** — Utility tools (e.g., `je-extractor`).
 
 ## Key Commands
 
@@ -47,7 +48,7 @@ Activate the Python specialist subagent from library/subagents/languages/python
 
 ## Active Projects
 
-- **`projects/AqarVision/`** — Algerian proptech ecosystem (marketplace + agency CRM). Has its own `CLAUDE.md` with full stack details, architecture, and conventions.
+- **`projects/AqarVision/`** — Algerian proptech ecosystem (marketplace + agency CRM). See `projects/CLAUDE.md` for full stack details, architecture, and conventions.
 
 ## MCP Configuration
 

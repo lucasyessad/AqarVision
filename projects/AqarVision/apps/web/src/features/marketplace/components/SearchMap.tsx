@@ -165,7 +165,7 @@ export function SearchMap({ listings, onBoundsChange, fillContainer, onListingHo
         el.className =
           "cursor-pointer select-none rounded-full px-2.5 py-1 text-xs font-bold shadow-md whitespace-nowrap transition-all";
         el.style.cssText =
-          "background:#0D0D0D;color:#FDFBF7;border:1.5px solid rgba(255,255,255,0.15);";
+          "background:#09090b;color:#fafafa;border:1.5px solid rgba(255,255,255,0.15);";
         el.textContent = formatPrice(listing.price, listing.currency);
 
         if (onListingHover) {
@@ -176,11 +176,11 @@ export function SearchMap({ listings, onBoundsChange, fillContainer, onListingHo
         // Popup content
         const popupHtml = `
           <div class="p-2 min-w-[160px]">
-            <p class="text-xs font-semibold text-[#2d3748] truncate mb-1">${listing.title}</p>
-            <p class="text-sm font-bold text-[#1a365d] mb-2">${formatPrice(listing.price, listing.currency)}</p>
+            <p class="text-xs font-semibold text-zinc-800 truncate mb-1">${listing.title}</p>
+            <p class="text-sm font-bold text-zinc-900 mb-2">${formatPrice(listing.price, listing.currency)}</p>
             <a
               href="/fr/l/${listing.slug}"
-              class="block w-full rounded bg-[#1a365d] px-3 py-1 text-center text-xs font-medium text-white hover:bg-[#d4af37] transition-colors"
+              class="block w-full rounded bg-zinc-900 px-3 py-1 text-center text-xs font-medium text-white hover:bg-amber-500 transition-colors"
             >
               Voir l'annonce
             </a>

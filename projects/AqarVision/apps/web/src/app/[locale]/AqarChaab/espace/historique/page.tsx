@@ -190,7 +190,7 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#1a365d]">Historique</h1>
+          <h1 className="text-2xl font-bold text-zinc-900">Historique</h1>
           <p className="mt-1 text-sm text-gray-500">
             Annonces consultées ces 30 derniers jours
           </p>
@@ -236,7 +236,7 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="mb-4 h-12 w-12 text-[#a0aec0]"
+            className="mb-4 h-12 w-12 text-zinc-400"
           >
             <path
               strokeLinecap="round"
@@ -244,13 +244,13 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
               d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p className="text-sm font-medium text-[#2d3748]">Aucun historique</p>
-          <p className="mt-1 text-xs text-[#a0aec0]">
+          <p className="text-sm font-medium text-zinc-800">Aucun historique</p>
+          <p className="mt-1 text-xs text-zinc-400">
             Les annonces consultées apparaîtront ici
           </p>
           <Link
             href="/search"
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#1a365d] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1a365d]/90"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
           >
             Rechercher des annonces
           </Link>
@@ -261,7 +261,7 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
       <div className="space-y-8">
         {groupLabels.map((label) => (
           <section key={label}>
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#a0aec0]">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-400">
               {label}
             </h2>
             <div className="space-y-2">
@@ -301,12 +301,12 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
 
                   {/* Content */}
                   <div className="min-w-0 flex-1">
-                    <p className="line-clamp-1 text-sm font-semibold text-[#2d3748]">
+                    <p className="line-clamp-1 text-sm font-semibold text-zinc-800">
                       {entry.title}
                     </p>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-[#a0aec0]">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-zinc-400">
                       {entry.current_price !== null && (
-                        <span className="font-medium text-[#1a365d]">
+                        <span className="font-medium text-zinc-900">
                           {formatPrice(entry.current_price, entry.currency)}
                         </span>
                       )}
@@ -323,7 +323,7 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
                   </div>
 
                   {/* Time */}
-                  <time className="shrink-0 text-xs text-[#a0aec0]">
+                  <time className="shrink-0 text-xs text-zinc-400">
                     {new Date(entry.viewed_at).toLocaleTimeString("fr-FR", {
                       hour: "2-digit",
                       minute: "2-digit",

@@ -83,12 +83,12 @@ export function ThemePicker({
       )}
 
       {/* ── Theme selection card ─────────────────────────────────── */}
-      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
-        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+      <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
+        <div className="border-b border-zinc-200 px-6 py-4">
+          <h2 className="text-sm font-semibold text-zinc-950">
             Thème de la vitrine
           </h2>
-          <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+          <p className="mt-0.5 text-xs text-zinc-500">
             Le thème définit l'apparence de votre page publique.
           </p>
         </div>
@@ -108,17 +108,15 @@ export function ThemePicker({
                   className={[
                     "relative rounded-lg border-2 p-4 text-start transition-all focus:outline-none",
                     isSelected
-                      ? "shadow-sm"
-                      : "border-[#E3E8EF] bg-white hover:border-[var(--coral)]",
+                      ? "border-rose-500 bg-rose-500/[0.04] shadow-sm"
+                      : "border-zinc-200 bg-white hover:border-rose-500",
                     !available ? "cursor-not-allowed opacity-40 grayscale" : "cursor-pointer",
                   ].join(" ")}
-                  style={isSelected ? { borderColor: "var(--coral)", background: "rgba(232,114,92,0.04)" } : {}}
                 >
                   {/* Selected indicator */}
                   {isSelected && (
                     <span
-                      className="absolute end-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full text-white"
-                      style={{ background: "var(--coral)" }}
+                      className="absolute end-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-white"
                     >
                       <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -136,13 +134,13 @@ export function ThemePicker({
                   )}
 
                   <div className="flex items-start justify-between gap-1 pe-6">
-                    <span className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+                    <span className="text-sm font-semibold text-zinc-950">
                       {theme.name}
                     </span>
                     <PlanBadge plan={theme.plan} />
                   </div>
 
-                  <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+                  <p className="mt-0.5 text-xs text-zinc-500">
                     {theme.style.themeMode === "dark" ? "Sombre" : "Clair"} &middot;{" "}
                     {theme.style.fontFamily === "elegant"
                       ? "Élégant"
@@ -164,30 +162,29 @@ export function ThemePicker({
       </div>
 
       {/* ── Custom colors card ───────────────────────────────────── */}
-      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
-        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+      <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
+        <div className="border-b border-zinc-200 px-6 py-4">
+          <h2 className="text-sm font-semibold text-zinc-950">
             Couleurs personnalisées
           </h2>
-          <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+          <p className="mt-0.5 text-xs text-zinc-500">
             Ces couleurs remplacent les valeurs par défaut du thème sélectionné.
           </p>
         </div>
 
         {/* Color pickers row */}
-        <div className="grid grid-cols-1 gap-6 border-b p-6 sm:grid-cols-3" style={{ borderColor: "#E3E8EF" }}>
+        <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 p-6 sm:grid-cols-3">
           {[
             { label: "Couleur principale", value: primaryColor, onChange: setPrimaryColor },
             { label: "Couleur d'accentuation", value: accentColor, onChange: setAccentColor },
             { label: "Couleur secondaire", value: secondaryColor, onChange: setSecondaryColor },
           ].map(({ label, value, onChange }) => (
             <div key={label}>
-              <label className="mb-1.5 block text-xs font-medium" style={{ color: "var(--charcoal-700)" }}>
+              <label className="mb-1.5 block text-xs font-medium text-zinc-700">
                 {label}
               </label>
               <div
-                className="flex items-center gap-3 rounded-md border px-3 py-2"
-                style={{ borderColor: "#E3E8EF" }}
+                className="flex items-center gap-3 rounded-md border border-zinc-200 px-3 py-2"
               >
                 <input
                   type="color"
@@ -195,7 +192,7 @@ export function ThemePicker({
                   onChange={(e) => onChange(e.target.value)}
                   className="h-7 w-7 cursor-pointer rounded border-0 bg-transparent p-0"
                 />
-                <span className="font-mono text-sm" style={{ color: "var(--charcoal-700)" }}>
+                <span className="font-mono text-sm text-zinc-700">
                   {value}
                 </span>
               </div>
@@ -204,8 +201,8 @@ export function ThemePicker({
         </div>
 
         {/* Preview bar */}
-        <div className="px-6 py-4" style={{ background: "#F6F9FC" }}>
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-400)" }}>
+        <div className="bg-zinc-50 px-6 py-4">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">
             Aperçu
           </p>
           <div className="flex h-8 w-full overflow-hidden rounded-md shadow-sm">
@@ -226,8 +223,7 @@ export function ThemePicker({
           <button
             type="submit"
             disabled={isPending}
-            className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
-            style={{ background: "var(--coral)" }}
+            className="inline-flex items-center gap-2 rounded-md bg-rose-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {isPending ? (
               <>
