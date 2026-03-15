@@ -13,7 +13,7 @@ const SearchMap = dynamic(
   () => import("@/features/marketplace/components/SearchMap").then((m) => m.SearchMap),
   {
     ssr: false,
-    loading: () => <div className="h-full bg-gray-100 animate-pulse" />,
+    loading: () => <div className="h-full animate-pulse bg-zinc-100" />,
   }
 );
 
@@ -49,7 +49,7 @@ const AMENITY_PILLS = [
   { label: "Balcon",   icon: "🏡", key: "has_balcony" },
 ];
 
-// ── Dropdown component ───────────────────────────────────────────────────────
+// ── FilterDropdown ────────────────────────────────────────────────────────────
 
 function FilterDropdown({
   label,
@@ -76,17 +76,16 @@ function FilterDropdown({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all"
-        style={{
-          background: active ? "var(--onyx)" : "var(--ivoire)",
-          borderColor: active ? "var(--onyx)" : "var(--ivoire-border)",
-          color: active ? "var(--ivoire)" : "var(--text-body)",
-        }}
+        className={[
+          "flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all",
+          active
+            ? "border-zinc-950 bg-zinc-950 text-zinc-50"
+            : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400",
+        ].join(" ")}
       >
         {label}
         <svg
-          className="h-3.5 w-3.5 shrink-0 transition-transform"
-          style={{ transform: open ? "rotate(180deg)" : "none" }}
+          className={["h-3.5 w-3.5 shrink-0 transition-transform", open ? "rotate-180" : ""].join(" ")}
           fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -95,12 +94,7 @@ function FilterDropdown({
 
       {open && (
         <div
-          className="absolute start-0 top-full z-50 mt-2 min-w-[220px] rounded-xl p-3 shadow-lg"
-          style={{
-            background: "#FFFFFF",
-            border: "1px solid var(--ivoire-border)",
-            boxShadow: "0 8px 32px rgba(13,13,13,0.12)",
-          }}
+          className="absolute start-0 top-full z-50 mt-2 min-w-[220px] rounded-xl border border-zinc-200 bg-white p-3 shadow-lg"
           onClick={(e) => e.stopPropagation()}
         >
           {children}
@@ -137,7 +131,7 @@ export function SearchPageClient({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // ── Filter state (synced from URL) ─────────────────────────────────────────
+  // ── Filter state ───────────────────────────────────────────────────────────
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [listingType, setListingType] = useState(searchParams.get("listing_type") ?? "");
   const [propertyType, setPropertyType] = useState(searchParams.get("property_type") ?? "");
@@ -150,8 +144,8 @@ export function SearchPageClient({
     AMENITY_PILLS.filter((p) => searchParams.get(p.key) === "true").map((p) => p.key)
   );
 
-  // ── View mode: "split" (default desktop), "list", "map" ────────────────────
-  const [mobileView, setMobileView] = useState<"list" | "map">("list");
+  // ── View mode: "listings" (default) or "map" ───────────────────────────────
+  const [viewMode, setViewMode] = useState<"listings" | "map">("listings");
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
 
   // ── Map listings ───────────────────────────────────────────────────────────
@@ -165,7 +159,7 @@ export function SearchPageClient({
 
   const handleBoundsChange = useCallback((bounds: MapBounds) => { void bounds; }, []);
 
-  // ── Apply filters ──────────────────────────────────────────────────────────
+  // ── Filter helpers ─────────────────────────────────────────────────────────
   const queryDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function handleQueryChange(value: string) {
@@ -192,17 +186,13 @@ export function SearchPageClient({
       surface_min: surfaceMin,
       ...Object.fromEntries(activeAmenities.map((k) => [k, "true"])),
     };
-
-    // Clear amenities not active
     AMENITY_PILLS.forEach((p) => {
       if (!activeAmenities.includes(p.key)) params.delete(p.key);
     });
-
     Object.entries({ ...state, ...overrides }).forEach(([k, v]) => {
       if (v) params.set(k, v);
       else params.delete(k);
     });
-
     params.delete("page");
     router.push(`${pathname}?${params.toString()}`);
   }
@@ -212,7 +202,6 @@ export function SearchPageClient({
       ? activeAmenities.filter((k) => k !== key)
       : [...activeAmenities, key];
     setActiveAmenities(next);
-
     const params = new URLSearchParams(searchParams.toString());
     if (next.includes(key)) params.set(key, "true");
     else params.delete(key);
@@ -241,28 +230,19 @@ export function SearchPageClient({
     listingType || propertyType || wilayaCode || priceMin || priceMax ||
     roomsMin || surfaceMin || activeAmenities.length > 0;
 
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div
-      className="flex flex-col"
-      style={{ height: "calc(100vh - 64px)", overflow: "hidden", background: "var(--ivoire)" }}
-    >
+    <div className="flex min-h-screen flex-col bg-zinc-50">
 
-      {/* ── Filter bar ─────────────────────────────────────────────────────── */}
-      <div
-        className="shrink-0 border-b px-4 py-2.5"
-        style={{
-          background: "rgba(253,251,247,0.97)",
-          backdropFilter: "blur(20px)",
-          borderColor: "var(--ivoire-border)",
-        }}
-      >
-        {/* Row 1: text search + alert + mobile toggle */}
-        <div className="flex items-center gap-2 mb-2.5">
-          <div className="relative flex-1 max-w-sm">
+      {/* ── Sticky filter bar ───────────────────────────────────────────────── */}
+      <div className="sticky top-0 z-30 shrink-0 border-b border-zinc-200 bg-white/95 px-4 py-2.5 backdrop-blur-lg">
+        {/* Row 1 */}
+        <div className="mb-2.5 flex items-center gap-2">
+          {/* Search input */}
+          <div className="relative max-w-sm flex-1">
             <svg
-              className="pointer-events-none absolute inset-y-0 start-3 my-auto h-4 w-4"
+              className="pointer-events-none absolute inset-y-0 start-3 my-auto h-4 w-4 text-zinc-400"
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-              style={{ color: "var(--text-faint)" }}
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
@@ -271,31 +251,37 @@ export function SearchPageClient({
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
               placeholder="Ville, quartier ou type de bien…"
-              className="w-full rounded-full border py-2 ps-9 pe-4 text-sm focus:outline-none"
-              style={{
-                borderColor: "var(--ivoire-border)",
-                background: "white",
-                color: "var(--text-dark)",
-              }}
+              className="w-full rounded-full border border-zinc-200 bg-zinc-50 py-2 pe-4 ps-9 text-sm text-zinc-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
           </div>
-          <SearchAlertButton />
-          {/* Mobile view toggle */}
-          <div className="flex md:hidden overflow-hidden rounded-full border" style={{ borderColor: "var(--ivoire-border)" }}>
-            {(["list", "map"] as const).map((mode) => (
+
+          {/* View toggle [Annonces | Carte] */}
+          <div className="flex overflow-hidden rounded-full border border-zinc-200">
+            {(["listings", "map"] as const).map((mode) => (
               <button
                 key={mode}
                 type="button"
-                onClick={() => setMobileView(mode)}
-                className="px-3 py-1.5 text-xs font-medium transition-colors"
-                style={{
-                  background: mobileView === mode ? "var(--onyx)" : "transparent",
-                  color: mobileView === mode ? "var(--ivoire)" : "var(--text-muted)",
-                }}
+                onClick={() => setViewMode(mode)}
+                className={[
+                  "px-4 py-1.5 text-xs font-semibold transition-colors",
+                  viewMode === mode
+                    ? "bg-zinc-950 text-zinc-50"
+                    : "bg-transparent text-zinc-500 hover:text-zinc-700",
+                ].join(" ")}
               >
-                {mode === "list" ? "Liste" : "Carte"}
+                {mode === "listings" ? "Annonces" : "Carte"}
               </button>
             ))}
+          </div>
+
+          {/* Result count */}
+          <span className="hidden text-sm text-zinc-400 sm:block">
+            <span className="font-semibold text-zinc-800">{totalCount.toLocaleString("fr-DZ")}</span>{" "}
+            annonce{totalCount !== 1 ? "s" : ""}
+          </span>
+
+          <div className="ms-auto">
+            <SearchAlertButton compact />
           </div>
         </div>
 
@@ -320,15 +306,15 @@ export function SearchPageClient({
                     params.delete("page");
                     router.push(`${pathname}?${params.toString()}`);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-[#F6F1EA]"
-                  style={{
-                    background: listingType === t ? "var(--ivoire-deep)" : "transparent",
-                    color: "var(--text-dark)",
-                    fontWeight: listingType === t ? 600 : 400,
-                  }}
+                  className={[
+                    "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
+                    listingType === t
+                      ? "bg-zinc-100 font-semibold text-zinc-900"
+                      : "text-zinc-700 hover:bg-zinc-50",
+                  ].join(" ")}
                 >
                   {listingType === t && (
-                    <svg className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <svg className="h-3.5 w-3.5 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                   )}
@@ -356,11 +342,12 @@ export function SearchPageClient({
                     params.delete("page");
                     router.push(`${pathname}?${params.toString()}`);
                   }}
-                  className="rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors text-start"
-                  style={{
-                    background: propertyType === t ? "var(--onyx)" : "var(--ivoire-deep)",
-                    color: propertyType === t ? "var(--ivoire)" : "var(--text-body)",
-                  }}
+                  className={[
+                    "rounded-lg px-2.5 py-1.5 text-start text-xs font-medium transition-colors",
+                    propertyType === t
+                      ? "bg-zinc-950 text-zinc-50"
+                      : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                  ].join(" ")}
                 >
                   {PROPERTY_TYPE_LABELS[t]}
                 </button>
@@ -373,7 +360,7 @@ export function SearchPageClient({
             label={wilayaCode ? (wilayas.find((w) => w.code === wilayaCode)?.name ?? wilayaCode) : "Wilaya"}
             active={!!wilayaCode}
           >
-            <div className="max-h-56 overflow-y-auto space-y-0.5">
+            <div className="max-h-56 space-y-0.5 overflow-y-auto">
               {wilayas.map(({ code, name }) => (
                 <button
                   key={code}
@@ -386,14 +373,14 @@ export function SearchPageClient({
                     params.delete("page");
                     router.push(`${pathname}?${params.toString()}`);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors hover:bg-[#F6F1EA]"
-                  style={{
-                    background: wilayaCode === code ? "var(--ivoire-deep)" : "transparent",
-                    color: "var(--text-dark)",
-                    fontWeight: wilayaCode === code ? 600 : 400,
-                  }}
+                  className={[
+                    "flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors",
+                    wilayaCode === code
+                      ? "bg-zinc-100 font-semibold text-zinc-900"
+                      : "text-zinc-700 hover:bg-zinc-50",
+                  ].join(" ")}
                 >
-                  <span className="text-xs font-mono w-5 shrink-0" style={{ color: "var(--text-muted)" }}>{code}</span>
+                  <span className="w-5 shrink-0 font-mono text-xs text-zinc-400">{code}</span>
                   {name}
                 </button>
               ))}
@@ -406,31 +393,28 @@ export function SearchPageClient({
             active={!!(priceMin || priceMax)}
           >
             <div className="space-y-3 p-1">
-              <p className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>Fourchette de prix (DZD)</p>
+              <p className="text-xs font-semibold text-zinc-400">Fourchette de prix (DZD)</p>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
                   value={priceMin}
                   onChange={(e) => setPriceMin(e.target.value)}
                   placeholder="Min"
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
-                  style={{ borderColor: "var(--ivoire-border)", color: "var(--text-dark)", background: "var(--ivoire-deep)" }}
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 focus:border-amber-500 focus:outline-none"
                 />
-                <span style={{ color: "var(--text-muted)" }}>–</span>
+                <span className="text-zinc-400">–</span>
                 <input
                   type="number"
                   value={priceMax}
                   onChange={(e) => setPriceMax(e.target.value)}
                   placeholder="Max"
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
-                  style={{ borderColor: "var(--ivoire-border)", color: "var(--text-dark)", background: "var(--ivoire-deep)" }}
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 focus:border-amber-500 focus:outline-none"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => applyFilters()}
-                className="w-full rounded-lg py-2 text-sm font-semibold"
-                style={{ background: "var(--onyx)", color: "var(--ivoire)" }}
+                className="w-full rounded-lg bg-zinc-950 py-2 text-sm font-semibold text-zinc-50"
               >
                 Appliquer
               </button>
@@ -444,18 +428,19 @@ export function SearchPageClient({
           >
             <div className="space-y-3 p-1">
               <div>
-                <p className="mb-1.5 text-xs font-semibold" style={{ color: "var(--text-muted)" }}>Pièces minimum</p>
+                <p className="mb-1.5 text-xs font-semibold text-zinc-400">Pièces minimum</p>
                 <div className="flex gap-1.5">
                   {["", "1", "2", "3", "4", "5"].map((n) => (
                     <button
                       key={n}
                       type="button"
                       onClick={() => setRoomsMin(n)}
-                      className="flex-1 rounded-lg py-1.5 text-sm font-medium transition-colors"
-                      style={{
-                        background: roomsMin === n ? "var(--onyx)" : "var(--ivoire-deep)",
-                        color: roomsMin === n ? "var(--ivoire)" : "var(--text-body)",
-                      }}
+                      className={[
+                        "flex-1 rounded-lg py-1.5 text-sm font-medium transition-colors",
+                        roomsMin === n
+                          ? "bg-zinc-950 text-zinc-50"
+                          : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                      ].join(" ")}
                     >
                       {n || "—"}
                     </button>
@@ -463,21 +448,19 @@ export function SearchPageClient({
                 </div>
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-semibold" style={{ color: "var(--text-muted)" }}>Surface min (m²)</p>
+                <p className="mb-1.5 text-xs font-semibold text-zinc-400">Surface min (m²)</p>
                 <input
                   type="number"
                   value={surfaceMin}
                   onChange={(e) => setSurfaceMin(e.target.value)}
                   placeholder="ex: 80"
-                  className="w-full rounded-lg border px-3 py-2 text-sm"
-                  style={{ borderColor: "var(--ivoire-border)", color: "var(--text-dark)", background: "var(--ivoire-deep)" }}
+                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 focus:border-amber-500 focus:outline-none"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => applyFilters()}
-                className="w-full rounded-lg py-2 text-sm font-semibold"
-                style={{ background: "var(--onyx)", color: "var(--ivoire)" }}
+                className="w-full rounded-lg bg-zinc-950 py-2 text-sm font-semibold text-zinc-50"
               >
                 Appliquer
               </button>
@@ -485,7 +468,7 @@ export function SearchPageClient({
           </FilterDropdown>
 
           {/* Divider */}
-          <div className="h-5 w-px shrink-0" style={{ background: "var(--ivoire-border)" }} />
+          <div className="h-5 w-px shrink-0 bg-zinc-200" />
 
           {/* Amenity pills */}
           {AMENITY_PILLS.map(({ label, icon, key }) => {
@@ -495,12 +478,12 @@ export function SearchPageClient({
                 key={key}
                 type="button"
                 onClick={() => toggleAmenity(key)}
-                className="flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all"
-                style={{
-                  background: active ? "var(--onyx)" : "transparent",
-                  borderColor: active ? "var(--onyx)" : "var(--ivoire-border)",
-                  color: active ? "var(--ivoire)" : "var(--text-body)",
-                }}
+                className={[
+                  "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
+                  active
+                    ? "border-amber-500 bg-amber-50 text-amber-700"
+                    : "border-zinc-200 text-zinc-600 hover:border-zinc-400",
+                ].join(" ")}
               >
                 <span>{icon}</span>
                 {label}
@@ -513,8 +496,7 @@ export function SearchPageClient({
             <button
               type="button"
               onClick={resetAll}
-              className="flex shrink-0 items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-medium transition-all hover:border-red-300 hover:text-red-500"
-              style={{ borderColor: "var(--ivoire-border)", color: "var(--text-muted)" }}
+              className="flex shrink-0 items-center gap-1 rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-400 transition-all hover:border-red-300 hover:text-red-500"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -525,54 +507,41 @@ export function SearchPageClient({
         </div>
       </div>
 
-      {/* ── Split layout (desktop) / single (mobile) ─────────────────────── */}
-      <div className="flex min-h-0 flex-1">
-
-        {/* List panel — desktop always shown, mobile conditionally */}
-        <div
-          className={`flex flex-col ${mobileView === "list" ? "flex" : "hidden"} md:flex`}
-          style={{ width: "100%", maxWidth: "480px", borderInlineEnd: "1px solid var(--ivoire-border)", overflowY: "auto" }}
-        >
-          {/* Count bar */}
-          <div
-            className="shrink-0 flex items-center justify-between px-4 py-3 sticky top-0 z-10"
-            style={{ background: "rgba(253,251,247,0.97)", borderBottom: "1px solid var(--ivoire-border)", backdropFilter: "blur(8px)" }}
-          >
-            <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-              <span className="font-semibold" style={{ color: "var(--text-dark)" }}>
-                {totalCount.toLocaleString("fr-DZ")}
-              </span>{" "}
-              annonce{totalCount !== 1 ? "s" : ""}
-            </span>
-            <SearchAlertButton compact />
-          </div>
-
-          {/* Results */}
-          <div className="flex-1 px-3 py-3">
-            <SearchResults
-              results={results}
-              totalCount={totalCount}
-              page={page}
-              pageSize={pageSize}
-              viewedIds={viewedIds}
-              highlightedId={highlightedId}
-            />
-          </div>
+      {/* ── Content ─────────────────────────────────────────────────────────── */}
+      {viewMode === "listings" ? (
+        /* Listings mode: full-width grid */
+        <div className="mx-auto w-full max-w-[1320px] px-4 py-6 sm:px-6 lg:px-8">
+          <SearchResults
+            results={results}
+            totalCount={totalCount}
+            page={page}
+            pageSize={pageSize}
+            viewedIds={viewedIds}
+            highlightedId={highlightedId}
+          />
         </div>
-
-        {/* Map panel — desktop always shown right, mobile conditionally */}
-        <div
-          className={`${mobileView === "map" ? "flex" : "hidden"} md:flex flex-1 relative`}
-          style={{ minHeight: 0 }}
-        >
+      ) : (
+        /* Map mode: full screen */
+        <div className="relative flex-1" style={{ height: "calc(100vh - 120px)" }}>
           <SearchMap
             listings={mapListings}
             onBoundsChange={handleBoundsChange}
             onListingHover={setHighlightedId}
             fillContainer
           />
+          {/* Back to listings button */}
+          <button
+            type="button"
+            onClick={() => setViewMode("listings")}
+            className="absolute right-4 top-4 z-10 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-zinc-800 shadow-md hover:bg-zinc-50"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            Voir les annonces
+          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

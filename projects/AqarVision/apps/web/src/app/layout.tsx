@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { cookies } from "next/headers";
 import "./globals.css";
 
 const geist = Geist({
@@ -30,14 +31,18 @@ export const metadata: Metadata = {
     "Plateforme immobiliere intelligente pour l'Algerie - Recherche, gestion et analyse",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("theme")?.value ?? "light";
+
   return (
     <html
       className={`${geist.variable} ${geistMono.variable} ${ibmPlexSansArabic.variable}`}
+      data-theme={theme}
       suppressHydrationWarning
     >
       <body className="min-h-screen font-sans" suppressHydrationWarning>

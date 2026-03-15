@@ -74,7 +74,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
             <select
               name="property_type"
               required
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#2d3748] outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-zinc-800 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
             >
               <option value="">Choisir un type</option>
               {PROPERTY_TYPES.map((pt) => (
@@ -93,7 +93,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
             <select
               name="wilaya_code"
               required
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-[#2d3748] outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-zinc-800 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
             >
               <option value="">Sélectionner une wilaya</option>
               {wilayas.map((w) => (
@@ -116,7 +116,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
               max={10000}
               required
               placeholder="Ex : 120"
-              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-[#2d3748] outline-none focus:border-[#1a365d] focus:ring-1 focus:ring-[#1a365d] placeholder:text-zinc-400"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-zinc-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 placeholder:text-zinc-400"
             />
           </div>
 
@@ -131,7 +131,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
               min={1}
               max={20}
               placeholder="Ex : 4"
-              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-[#2d3748] outline-none focus:border-[#1a365d] focus:ring-1 focus:ring-[#1a365d] placeholder:text-zinc-400"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-zinc-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 placeholder:text-zinc-400"
             />
           </div>
 

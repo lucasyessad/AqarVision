@@ -108,7 +108,7 @@ function AlertRow({
         {/* View results link */}
         <a
           href={searchUrl}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-[#2d3748] transition-colors hover:bg-gray-50"
+          className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
         >
           Voir les annonces
         </a>

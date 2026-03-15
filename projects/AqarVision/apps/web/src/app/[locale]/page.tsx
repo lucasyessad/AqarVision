@@ -7,6 +7,9 @@ import { MarketingHeaderWrapper } from "@/components/marketing/MarketingHeaderWr
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 import { HomeSearchBar } from "@/components/marketing/HomeSearchBar";
+import { EditorialSplit } from "@/components/editorial/EditorialSplit";
+import { FullBleedPhoto } from "@/components/editorial/FullBleedPhoto";
+import { WilayaScroller } from "@/components/editorial/WilayaScroller";
 import { searchListingsAction } from "@/features/marketplace/actions/search.action";
 import { getWilayas } from "@/features/marketplace/services/search.service";
 import { createClient } from "@/lib/supabase/server";
@@ -138,16 +141,17 @@ export default async function HomePage({
 
             {/* Headline */}
             <h1
-              className="mb-10 font-display font-light tracking-[-0.02em] text-zinc-50"
+              className="mb-10 font-display font-bold tracking-tight text-zinc-50"
               style={{
                 fontSize: "clamp(2.8rem, 6vw, 6rem)",
                 lineHeight: 1.05,
                 maxWidth: "900px",
               }}
             >
-              <span className="italic">L&apos;art de trouver</span>
+              Trouvez votre{" "}
+              <span className="text-amber-400">chez-vous</span>
               <br />
-              <span className="font-semibold not-italic">votre bien idéal</span>
+              en Algérie
             </h1>
 
             {/* Search bar */}
@@ -191,6 +195,15 @@ export default async function HomePage({
             />
           </div>
         </section>
+
+        {/* ─────────────────────── EDITORIAL SPLIT ─── */}
+        <EditorialSplit
+          statement="Plus de 15 000 biens dans 58 wilayas"
+          subtitle="De la côte méditerranéenne aux hauts plateaux sahariens, explorez chaque marché immobilier d'Algérie en temps réel."
+          imageUrl="/images/editorial-split.jpg"
+          imageAlt="Immobilier en Algérie"
+          cta={{ label: "Explorer les annonces", href: `/${locale}/search` }}
+        />
 
         {/* ──────────────────────────────────────── TICKER ─── */}
         <div className="overflow-hidden border-y border-zinc-800 bg-zinc-900 py-3">
@@ -469,6 +482,13 @@ export default async function HomePage({
           </section>
         )}
 
+        {/* ──────────────────── FULL BLEED PHOTO ─── */}
+        <FullBleedPhoto
+          src="/images/editorial-fullbleed.jpg"
+          statement="Chaque quartier a son caractère"
+          cta={{ label: "Découvrir par wilaya", href: `/${locale}/search` }}
+        />
+
         {/* ──────────────────────────────── STATS ONYX ─── */}
         <section className="bg-zinc-950">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -552,24 +572,7 @@ export default async function HomePage({
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-              {POPULAR_WILAYAS.map((city) => (
-                <Link
-                  key={city.code}
-                  href={`/search?wilaya_code=${city.code}`}
-                  locale={locale}
-                  className="group flex flex-col gap-3 rounded-sm border border-zinc-200 bg-white p-5 shadow-card transition-all hover:-translate-y-0.5 hover:border-amber-500 hover:shadow-md"
-                >
-                  <div>
-                    <p className="text-sm font-semibold text-zinc-950">{city.name}</p>
-                    <p className="mt-0.5 text-xs text-zinc-300">{city.sub}</p>
-                  </div>
-                  <p className="font-mono text-xs font-semibold text-amber-500">
-                    {city.count}
-                  </p>
-                </Link>
-              ))}
-            </div>
+            <WilayaScroller wilayas={POPULAR_WILAYAS} locale={locale} />
           </div>
         </section>
       </main>

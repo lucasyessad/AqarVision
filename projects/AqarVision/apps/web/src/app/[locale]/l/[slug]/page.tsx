@@ -13,6 +13,7 @@ import { getListingNote } from "@/features/marketplace/actions/listing-notes.act
 import { ListingNoteWidget } from "@/features/marketplace/components/ListingNoteWidget";
 import { MortgageCalculator } from "@/features/marketplace/components/MortgageCalculator";
 import { PhotoGallery } from "@/features/marketplace/components/PhotoGallery";
+import { ListingAISummary } from "@/features/listings/components/ListingAISummary";
 import { Suspense } from "react";
 import { MarketingHeaderWrapper } from "@/components/marketing/MarketingHeaderWrapper";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
@@ -129,9 +130,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
 
         {/* ── Photo gallery — full-bleed, hero ───────────────────── */}
         <div className="bg-zinc-950">
-          <div className="mx-auto max-w-[1320px]">
-            <PhotoGallery media={listing.media} title={listing.title} />
-          </div>
+          <PhotoGallery media={listing.media} title={listing.title} />
         </div>
 
         {/* ── Content ─────────────────────────────────────────────── */}
@@ -251,6 +250,9 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                   </p>
                 </div>
               </div>
+
+              {/* Panel IA ✨ */}
+              <ListingAISummary data={null} />
 
               {/* Description — editorial style */}
               {listing.description && (

@@ -149,8 +149,8 @@ export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) 
             const translation = translations.find((t) => t.locale === "fr") ?? translations[0];
             const status = STATUS_CONFIG[listing.current_status as string] ?? {
               label: listing.current_status,
-              color: "var(--text-muted)",
-              bg: "var(--ivoire-deep)",
+              color: "#71717a",
+              bg: "#f4f4f5",
             };
 
             return (

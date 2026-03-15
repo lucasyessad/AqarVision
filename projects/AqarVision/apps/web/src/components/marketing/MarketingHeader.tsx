@@ -5,6 +5,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { usePathname } from "next/navigation";
 import { AqarBrandLogo } from "@/components/brand/AqarBrandLogo";
 import { signOutAction } from "@/features/auth/actions/auth.action";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface HeaderUser {
   name: string;
@@ -49,8 +50,8 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
   const navLinks = [
     { href: "/search?listing_type=sale", label: "Acheter" },
     { href: "/search?listing_type=rent", label: "Louer" },
-    { href: "/vendre", label: "Vendre" },
-    { href: "/agences", label: "Trouver un agent" },
+    { href: "/agences", label: "Agences" },
+    { href: "/estimer", label: "Estimer" },
   ];
 
   return (
@@ -100,6 +101,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
 
         {/* Right CTA area */}
         <div className="flex items-center gap-2">
+          <ThemeToggle />
 
           {user ? (
             /* ── Logged in: avatar + dropdown ── */

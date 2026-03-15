@@ -17,12 +17,11 @@ function formatPrice(price: number, currency: string): string {
   }).format(price);
 }
 
-// JE-style status badge config
-const STATUS_BADGE: Record<string, { label: string; bg: string; color: string }> = {
-  available:       { label: "Disponible",   bg: "rgba(59,155,109,0.12)", color: "#3B9B6D" },
-  under_offer:     { label: "Sous offre",   bg: "rgba(212,148,58,0.12)", color: "#D4943A" },
-  sold:            { label: "Vendu",        bg: "rgba(209,69,69,0.12)",  color: "#D14545" },
-  rented:          { label: "Loué",         bg: "rgba(209,69,69,0.12)",  color: "#D14545" },
+const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
+  available:   { label: "Disponible", cls: "bg-emerald-100/90 text-emerald-700 backdrop-blur-sm" },
+  under_offer: { label: "Sous offre", cls: "bg-amber-100/90 text-amber-700 backdrop-blur-sm" },
+  sold:        { label: "Vendu",      cls: "bg-red-100/90 text-red-700 backdrop-blur-sm" },
+  rented:      { label: "Loué",       cls: "bg-red-100/90 text-red-700 backdrop-blur-sm" },
 };
 
 interface SearchResultCardProps {
@@ -41,19 +40,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
   const agencyPhone = (listing as SearchResultDto & { agency_phone?: string }).agency_phone;
 
   return (
-    <div
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all"
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = "#f59e0b";
-        (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(0,0,0,0.12)";
-        (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = "";
-        (e.currentTarget as HTMLElement).style.boxShadow = "";
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-      }}
-    >
+    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-card transition-all duration-200 hover:-translate-y-[3px] hover:border-zinc-300 hover:shadow-card-hover dark:border-zinc-800 dark:bg-zinc-900">
       {/* ── Image area ─────────────────────────────────────────── */}
       <Link href={`/l/${listing.slug}`} className="relative block aspect-[16/10] overflow-hidden">
         {listing.cover_url ? (
@@ -80,10 +67,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
             </span>
           )}
           {badge && (
-            <span
-              className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold backdrop-blur-sm"
-              style={{ background: badge.bg, color: badge.color }}
-            >
+            <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${badge.cls}`}>
               {badge.label}
             </span>
           )}
@@ -106,10 +90,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
 
         {/* Bottom-left: agency logo */}
         {agencyLogo && (
-          <div
-            className="absolute bottom-2 start-2 h-8 w-8 overflow-hidden rounded-full border-2 border-white relative"
-            style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.2)" }}
-          >
+          <div className="absolute bottom-2 start-2 h-8 w-8 overflow-hidden rounded-full border-2 border-white shadow-sm">
             <Image src={agencyLogo} alt={listing.agency_name} fill className="object-cover" sizes="32px" />
           </div>
         )}
@@ -286,8 +267,7 @@ export function SearchResults({
         <select
           value={searchParams.get("sort") ?? "newest"}
           onChange={(e) => handleSortChange(e.target.value)}
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-sm text-zinc-600 outline-none"
-          style={{ fontFamily: "inherit" }}
+          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-sm text-zinc-600 outline-none font-sans"
         >
           <option value="newest">{t("newest")}</option>
           <option value="oldest">{t("oldest")}</option>
@@ -297,17 +277,15 @@ export function SearchResults({
         </select>
       </div>
 
-      {/* Grid — single-column in split layout, multi-col otherwise */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      {/* Grid — 3 columns full-width */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {results.map((listing) => (
           <div
             key={listing.id}
-            className="transition-all"
-            style={
-              highlightedId === listing.id
-                ? { outline: "2px solid #09090b", borderRadius: "12px" }
-                : undefined
-            }
+            className={[
+              "transition-all",
+              highlightedId === listing.id ? "outline outline-2 outline-zinc-950 rounded-xl" : "",
+            ].join(" ")}
           >
             <SearchResultCard
               listing={listing}
