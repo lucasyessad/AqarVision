@@ -200,7 +200,7 @@ export default async function HomePage({
         <EditorialSplit
           statement="Plus de 15 000 biens dans 58 wilayas"
           subtitle="De la côte méditerranéenne aux hauts plateaux sahariens, explorez chaque marché immobilier d'Algérie en temps réel."
-          imageUrl="/images/editorial-split.jpg"
+          imageUrl={process.env.NEXT_PUBLIC_EDITORIAL_SPLIT_URL ?? "/images/editorial-split.jpg"}
           imageAlt="Immobilier en Algérie"
           cta={{ label: "Explorer les annonces", href: `/${locale}/search` }}
         />
@@ -484,7 +484,7 @@ export default async function HomePage({
 
         {/* ──────────────────── FULL BLEED PHOTO ─── */}
         <FullBleedPhoto
-          src="/images/editorial-fullbleed.jpg"
+          src={process.env.NEXT_PUBLIC_EDITORIAL_FULLBLEED_URL ?? "/images/editorial-fullbleed.jpg"}
           statement="Chaque quartier a son caractère"
           cta={{ label: "Découvrir par wilaya", href: `/${locale}/search` }}
         />
