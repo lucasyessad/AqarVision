@@ -3,181 +3,262 @@
 @tailwind utilities;
 
 /* ============================================================
-   AQARVISION — ONYX & IVOIRE
-   Le silence du luxe absolu
+   AQARVISION — ZINC DESIGN SYSTEM
+   Tech premium. Dense but breathable. Light + Dark.
    ============================================================ */
-:root {
-  /* ── Onyx ramp ───────────────────────────────────────────── */
-  --onyx:       #0D0D0D;
-  --onyx-light: #1A1917;
-  --onyx-mid:   #2A2926;
-  --onyx-soft:  #3D3B37;
 
-  /* ── Ivoire (warm whites) ─────────────────────────────────── */
-  --ivoire:        #FDFBF7;
-  --ivoire-warm:   #F6F1EA;
-  --ivoire-deep:   #EBE5DB;
-  --ivoire-border: #DDD7CC;
+:root,
+[data-theme="light"] {
+  color-scheme: light;
 
-  /* ── Or (gold accent) ────────────────────────────────────── */
-  --or:       #B8A88A;
-  --or-light: #D4C9B0;
-  --or-deep:  #8B7A5E;
-  --or-ghost: rgba(184, 168, 138, 0.08);
-  --or-glow:  rgba(184, 168, 138, 0.18);
+  /* Backgrounds */
+  --bg-app:      #FAFAFA;
+  --bg-surface:  #FFFFFF;
+  --bg-muted:    #F4F4F5;
+  --bg-elevated: #FFFFFF;
+  --bg-overlay:  rgba(0, 0, 0, 0.5);
 
-  /* ── Text ────────────────────────────────────────────────── */
-  --text-dark:    #0D0D0D;
-  --text-body:    #5C5347;
-  --text-muted:   #8A8279;
-  --text-faint:   #B0A89E;
-  --text-inverse: #F6F1EA;
+  /* Text */
+  --text-primary:   #09090B;
+  --text-secondary: #71717A;
+  --text-tertiary:  #A1A1AA;
+  --text-inverse:   #FAFAFA;
 
-  /* ── Semantic backgrounds ────────────────────────────────── */
-  --bg-deep:         var(--ivoire);
-  --bg-primary:      var(--ivoire);
-  --bg-secondary:    #FFFFFF;
-  --bg-tertiary:     var(--ivoire-warm);
-  --bg-card:         #FFFFFF;
-  --bg-card-hover:   var(--ivoire-warm);
-  --bg-surface:      var(--ivoire-warm);
-  --bg-dark:         var(--onyx);
-  --bg-dark-surface: var(--onyx-light);
+  /* Borders */
+  --border-default: #E4E4E7;
+  --border-strong:  #D4D4D8;
+  --border-focus:   #F59E0B;
 
-  /* ── Semantic / status ───────────────────────────────────── */
-  --success:       #5A8F6E;
-  --success-ghost: rgba(90, 143, 110, 0.08);
-  --warning:       #C49A3A;
-  --warning-ghost: rgba(196, 154, 58, 0.08);
-  --danger:        #B84A3A;
-  --danger-ghost:  rgba(184, 74, 58, 0.08);
+  /* Accent */
+  --accent:       #F59E0B;
+  --accent-hover: #D97706;
+  --accent-ghost: rgba(245, 158, 11, 0.08);
+  --accent-glow:  rgba(245, 158, 11, 0.15);
 
-  /* ── Borders ─────────────────────────────────────────────── */
-  --border:         var(--ivoire-border);
-  --border-light:   var(--ivoire-deep);
-  --border-hover:   var(--or);
+  /* Status */
+  --success:       #22C55E;
+  --success-ghost: rgba(34, 197, 94, 0.08);
+  --warning:       #F59E0B;
+  --warning-ghost: rgba(245, 158, 11, 0.08);
+  --danger:        #EF4444;
+  --danger-ghost:  rgba(239, 68, 68, 0.08);
+  --info:          #3B82F6;
+  --info-ghost:    rgba(59, 130, 246, 0.08);
 
-  /* ── Typography ──────────────────────────────────────────── */
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-sans:    "DM Sans", "Noto Sans Arabic", system-ui, sans-serif;
-  --font-arabic:  "Noto Sans Arabic", sans-serif;
-  --font-mono:    "JetBrains Mono", monospace;
+  /* Typography */
+  --font-display: "Geist", system-ui, sans-serif;
+  --font-sans:    "Geist", system-ui, sans-serif;
+  --font-arabic:  "IBM Plex Sans Arabic", "Noto Sans Arabic", sans-serif;
+  --font-mono:    "Geist Mono", "JetBrains Mono", monospace;
 
-  /* ── Border radius ───────────────────────────────────────── */
-  --radius:      4px;
-  --radius-md:   8px;
-  --radius-lg:   12px;
-  --radius-full: 999px;
+  /* Radius */
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-2xl:  16px;
+  --radius-full: 9999px;
 
-  /* ── Shadows ─────────────────────────────────────────────── */
-  --shadow-sm:         0 1px 3px rgba(13, 13, 13, 0.04);
-  --shadow-md:         0 4px 16px rgba(13, 13, 13, 0.06);
-  --shadow-lg:         0 12px 40px rgba(13, 13, 13, 0.08);
-  --shadow-card:       0 1px 4px rgba(13, 13, 13, 0.03);
-  --shadow-card-hover: 0 16px 48px rgba(13, 13, 13, 0.12);
-  --shadow-elevated:   0 8px 30px rgba(13, 13, 13, 0.08);
+  /* Sidebar */
+  --sidebar-width:     240px;
+  --sidebar-collapsed: 64px;
 
-  /* ── Spacing (JE offset system) ──────────────────────────── */
+  /* Backward compat — Onyx & Ivoire aliases → Zinc */
+  --onyx:          #09090B;
+  --onyx-light:    #18181B;
+  --onyx-mid:      #27272A;
+  --onyx-soft:     #3F3F46;
+  --ivoire:        #FAFAFA;
+  --ivoire-warm:   #F4F4F5;
+  --ivoire-deep:   #E4E4E7;
+  --ivoire-border: #D4D4D8;
+  --or:            #F59E0B;
+  --or-light:      #FBBF24;
+  --or-deep:       #D97706;
+  --or-ghost:      rgba(245, 158, 11, 0.08);
+  --or-glow:       rgba(245, 158, 11, 0.15);
+  --text-dark:     #09090B;
+  --text-body:     #71717A;
+  --text-muted:    #A1A1AA;
+  --text-faint:    #D4D4D8;
+  --bg-primary:    #FAFAFA;
+  --bg-secondary:  #FFFFFF;
+  --bg-card:       #FFFFFF;
+  --border:        #E4E4E7;
+  --border-light:  #F4F4F5;
+  --border-hover:  #F59E0B;
+  --coral:         #F59E0B;
+  --coral-hover:   #D97706;
+  --coral-light:   #FBBF24;
+  --coral-ghost:   rgba(245, 158, 11, 0.08);
+  --coral-glow:    rgba(245, 158, 11, 0.15);
+  --cyan:          #F59E0B;
+  --cyan-dim:      #D97706;
+  --cyan-glow:     rgba(245, 158, 11, 0.15);
+  --cyan-ghost:    rgba(245, 158, 11, 0.08);
+  --amber:         #F59E0B;
+  --amber-glow:    rgba(245, 158, 11, 0.08);
+  --red:           #EF4444;
+  --red-glow:      rgba(239, 68, 68, 0.08);
+  --charcoal-950:  #09090B;
+  --charcoal-900:  #18181B;
+  --charcoal-800:  #27272A;
+  --charcoal-700:  #3F3F46;
+  --charcoal-600:  #52525B;
+  --charcoal-500:  #71717A;
+  --charcoal-400:  #A1A1AA;
+  --charcoal-300:  #D4D4D8;
+  --charcoal-200:  #E4E4E7;
+  --charcoal-100:  #F4F4F5;
+  --warm-50:       #FAFAFA;
+  --warm-100:      #F4F4F5;
+  --warm-200:      #E4E4E7;
+  --warm-300:      #D4D4D8;
+  --color-blue-night: #18181B;
+  --color-gold:       #F59E0B;
+  --color-off-white:  #FAFAFA;
+  --color-gray-700:   #71717A;
+  --color-gray-400:   #A1A1AA;
+  --transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  --shadow-sm:         0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:         0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:         0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);
+  --shadow-card:       0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-card-hover: 0 8px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+  --shadow-elevated:   0 20px 25px rgba(0,0,0,0.10), 0 8px 10px rgba(0,0,0,0.04);
   --offset-xs: 16px;
   --offset-s:  24px;
   --offset-m:  32px;
   --offset-l:  48px;
   --offset-xl: 64px;
-
-  /* ── Transition ──────────────────────────────────────────── */
-  --transition: all 0.25s ease;
-
-  /* ── Legacy aliases (dashboard / ThemeRenderer compat) ────── */
-  --coral:       var(--or);
-  --coral-hover: var(--or-deep);
-  --coral-light: var(--or-light);
-  --coral-ghost: var(--or-ghost);
-  --coral-glow:  var(--or-glow);
-  --cyan:        var(--or);
-  --cyan-dim:    var(--or-deep);
-  --cyan-glow:   var(--or-glow);
-  --cyan-ghost:  var(--or-ghost);
-  --amber:       var(--warning);
-  --amber-glow:  var(--warning-ghost);
-  --red:         var(--danger);
-  --red-glow:    var(--danger-ghost);
-
-  --charcoal-950: var(--onyx);
-  --charcoal-900: var(--onyx-light);
-  --charcoal-800: var(--onyx-mid);
-  --charcoal-700: var(--onyx-soft);
-  --charcoal-600: var(--text-body);
-  --charcoal-500: var(--text-muted);
-  --charcoal-400: var(--text-faint);
-  --charcoal-300: var(--ivoire-border);
-  --charcoal-200: var(--ivoire-deep);
-  --charcoal-100: var(--ivoire-border);
-  --warm-50:   var(--ivoire);
-  --warm-100:  var(--ivoire-warm);
-  --warm-200:  var(--ivoire-deep);
-  --warm-300:  var(--ivoire-border);
-  --text-primary:   var(--text-dark);
-  --text-secondary: var(--text-body);
-  --text-tertiary:  var(--text-muted);
-
-  --color-blue-night: var(--onyx);
-  --color-gold:       var(--or);
-  --color-off-white:  var(--ivoire);
-  --color-gray-700:   var(--text-body);
-  --color-gray-400:   var(--text-faint);
 }
 
-/* ── Selection ──────────────────────────────────────────────── */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-app:      #09090B;
+  --bg-surface:  #18181B;
+  --bg-muted:    #27272A;
+  --bg-elevated: #1F1F23;
+  --bg-overlay:  rgba(0, 0, 0, 0.7);
+
+  --text-primary:   #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --text-tertiary:  #71717A;
+  --text-inverse:   #09090B;
+
+  --border-default: #27272A;
+  --border-strong:  #3F3F46;
+  --border-focus:   #FBBF24;
+
+  --accent:       #FBBF24;
+  --accent-hover: #F59E0B;
+  --accent-ghost: rgba(251, 191, 36, 0.08);
+  --accent-glow:  rgba(251, 191, 36, 0.12);
+
+  /* Status — slightly brighter in dark mode */
+  --success: #4ADE80;
+  --warning: #FBBF24;
+  --danger:  #F87171;
+  --info:    #60A5FA;
+
+  /* Backward compat overrides for dark mode */
+  --onyx:          #FAFAFA;
+  --onyx-light:    #F4F4F5;
+  --onyx-mid:      #E4E4E7;
+  --onyx-soft:     #D4D4D8;
+  --ivoire:        #09090B;
+  --ivoire-warm:   #18181B;
+  --ivoire-deep:   #27272A;
+  --ivoire-border: #3F3F46;
+  --or:            #FBBF24;
+  --or-light:      #FCD34D;
+  --or-deep:       #F59E0B;
+  --or-ghost:      rgba(251, 191, 36, 0.08);
+  --or-glow:       rgba(251, 191, 36, 0.12);
+  --text-dark:     #FAFAFA;
+  --text-body:     #A1A1AA;
+  --text-muted:    #71717A;
+  --text-faint:    #52525B;
+  --bg-primary:    #09090B;
+  --bg-secondary:  #18181B;
+  --bg-card:       #18181B;
+  --border:        #27272A;
+  --border-light:  #3F3F46;
+  --border-hover:  #FBBF24;
+  --coral:         #FBBF24;
+  --coral-hover:   #F59E0B;
+  --coral-light:   #FCD34D;
+  --coral-ghost:   rgba(251, 191, 36, 0.08);
+  --coral-glow:    rgba(251, 191, 36, 0.12);
+  --cyan:          #FBBF24;
+  --cyan-dim:      #F59E0B;
+  --cyan-glow:     rgba(251, 191, 36, 0.12);
+  --cyan-ghost:    rgba(251, 191, 36, 0.08);
+  --shadow-card:       0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 8px 25px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ── Selection ───────────────────────────────────────────────── */
 ::selection {
-  background: var(--onyx);
-  color: var(--ivoire);
+  background: var(--accent-ghost);
+  color: var(--text-primary);
 }
 
 @layer base {
+  * { box-sizing: border-box; }
+
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background: var(--ivoire);
-    color: var(--text-dark);
+    background: var(--bg-app);
+    color: var(--text-primary);
     font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic);
   }
 
   a {
     color: inherit;
     text-decoration: none;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+  }
 }
 
-/* ── Scrollbar ──────────────────────────────────────────────── */
+/* ── Scrollbar ───────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--ivoire-warm); }
-::-webkit-scrollbar-thumb { background: var(--ivoire-border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--or); }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
-/* ── Hide scrollbar utility ─────────────────────────────────── */
+/* ── Hide scrollbar utility ──────────────────────────────────── */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── Animations ──────────────────────────────────────────────── */
-@keyframes aqar-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
-.aqar-pulse { animation: aqar-pulse 2.5s infinite; }
-
-@keyframes aqar-fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.aqar-fade-up { animation: aqar-fade-up 0.8s ease both; }
+/* ── Legacy animation utilities ──────────────────────────────── */
+.aqar-pulse    { animation: aqar-pulse 2.5s infinite; }
+.aqar-fade-up  { animation: aqar-fade-up 0.8s ease both; }
 
 /* ── Font utility classes ────────────────────────────────────── */
 .font-serif { font-family: var(--font-display) !important; }
 .font-sans  { font-family: var(--font-sans) !important; }
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

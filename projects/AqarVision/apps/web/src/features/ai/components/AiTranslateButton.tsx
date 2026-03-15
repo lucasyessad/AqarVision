@@ -59,7 +59,7 @@ export function AiTranslateButton({
         <div className="flex-1">
           <label
             htmlFor="target_locale"
-            className="mb-1 block text-sm font-medium text-gray-700"
+            className="mb-1 block text-sm font-medium text-secondary"
           >
             {t("target_locale")}
           </label>
@@ -68,7 +68,7 @@ export function AiTranslateButton({
             name="target_locale"
             value={targetLocale}
             onChange={(e) => setTargetLocale(e.target.value)}
-            className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-night focus:outline-none focus:ring-1 focus:ring-blue-night"
+            className="block w-full rounded border border-[var(--border-default)] bg-surface px-3 py-2 text-sm text-primary shadow-xs focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
             required
           >
             <option value="">{t("target_locale")}...</option>
@@ -82,7 +82,7 @@ export function AiTranslateButton({
         <button
           type="submit"
           disabled={isPending || !targetLocale}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-night px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-night/90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-50 transition-colors hover:bg-zinc-800 disabled:opacity-50"
         >
           {isPending ? (
             <>
@@ -131,7 +131,7 @@ export function AiTranslateButton({
       </form>
 
       {!state?.success && state?.error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded border border-danger/20 bg-danger/5 p-3 text-sm text-danger">
           {state.error.code === "QUOTA_EXCEEDED"
             ? t("quota_exceeded")
             : state.error.message}
@@ -139,15 +139,15 @@ export function AiTranslateButton({
       )}
 
       {showResult && state?.success && (
-        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-[var(--border-default)] bg-surface p-4 shadow-card">
           <div className="mb-4 space-y-2">
-            <p className="mb-1 text-xs font-semibold uppercase text-gray-400">
+            <p className="mb-1 text-xs font-semibold uppercase text-tertiary">
               {t("generated_text")}
             </p>
-            <div className="rounded-lg bg-green-50 p-3 text-sm font-medium text-gray-800">
+            <div className="rounded bg-success/5 p-3 text-sm font-medium text-primary">
               {state.data.translation.title}
             </div>
-            <div className="rounded-lg bg-green-50 p-3 text-sm text-gray-700 whitespace-pre-wrap">
+            <div className="whitespace-pre-wrap rounded bg-success/5 p-3 text-sm text-secondary">
               {state.data.translation.description}
             </div>
           </div>
@@ -155,14 +155,14 @@ export function AiTranslateButton({
             <button
               type="button"
               onClick={handleAccept}
-              className="rounded-lg bg-gold px-4 py-2 text-sm font-medium text-blue-night transition-colors hover:bg-gold/90"
+              className="rounded bg-amber-400 px-4 py-2 text-sm font-medium text-zinc-950 transition-colors hover:bg-amber-400/90"
             >
               {t("accept")}
             </button>
             <button
               type="button"
               onClick={handleReject}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              className="rounded border border-[var(--border-default)] bg-surface px-4 py-2 text-sm font-medium text-secondary transition-colors hover:bg-[var(--bg-muted)]"
             >
               {t("reject")}
             </button>

@@ -1,30 +1,20 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, JetBrains_Mono, Noto_Sans_Arabic } from "next/font/google";
+import { Geist, Geist_Mono, IBM_Plex_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 
-const cormorantGaramond = Cormorant_Garamond({
+const geist = Geist({
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-sans",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500"],
   variable: "--font-mono",
 });
 
-const notoSansArabic = Noto_Sans_Arabic({
+const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
@@ -47,7 +37,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      className={`${cormorantGaramond.variable} ${dmSans.variable} ${jetbrainsMono.variable} ${notoSansArabic.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${ibmPlexSansArabic.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-screen font-sans" suppressHydrationWarning>

@@ -15,26 +15,25 @@ export default async function ProLoginPage({ params }: PageProps) {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "#d4af37" }}>
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-400">
           AqarPro
         </p>
-        <h2 className="mt-2 text-2xl font-semibold" style={{ color: "#f7fafc" }}>
+        <h2 className="mt-2 text-2xl font-semibold text-zinc-50">
           Espace professionnel
         </h2>
-        <p className="mt-1 text-sm" style={{ color: "#718096" }}>
+        <p className="mt-1 text-sm text-zinc-500">
           Réservé aux agences immobilières et agents.
         </p>
       </div>
 
       <ProLoginForm locale={locale} />
 
-      <div className="mt-8 border-t pt-6" style={{ borderColor: "#1e2d4a" }}>
-        <p className="text-center text-xs" style={{ color: "#4a5568" }}>
+      <div className="mt-8 border-t border-zinc-800 pt-6">
+        <p className="text-center text-xs text-zinc-600">
           Vous cherchez un bien ?{" "}
           <Link
             href="/AqarChaab/auth/login"
-            className="hover:underline"
-            style={{ color: "#d4af37" }}
+            className="text-amber-400 hover:underline"
           >
             Espace AqarChaab →
           </Link>

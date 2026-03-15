@@ -15,20 +15,20 @@ export default async function ProForgotPasswordPage({ params }: PageProps) {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em]" style={{ color: "#d4af37" }}>
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-400">
           AqarPro
         </p>
-        <h2 className="mt-2 text-2xl font-semibold" style={{ color: "#f7fafc" }}>
+        <h2 className="mt-2 text-2xl font-semibold text-zinc-50">
           Mot de passe oublié
         </h2>
       </div>
 
-      <div className="[&_input]:bg-[#1a1f2e] [&_input]:border-[#2d3748] [&_input]:text-white [&_input:focus]:border-[#d4af37] [&_label]:text-[#a0aec0] [&_p]:text-[#718096] [&_button[type=submit]]:bg-[#d4af37] [&_button[type=submit]]:text-[#0f1623]">
+      <div className="[&_input]:bg-zinc-900 [&_input]:border-zinc-700 [&_input]:text-zinc-50 [&_input:focus]:border-amber-400 [&_label]:text-zinc-400 [&_p]:text-zinc-500 [&_button[type=submit]]:bg-amber-400 [&_button[type=submit]]:text-zinc-950">
         <ForgotPasswordForm />
       </div>
 
       <p className="mt-6 text-center text-xs">
-        <Link href="/AqarPro/auth/login" className="hover:underline" style={{ color: "#d4af37" }}>
+        <Link href="/AqarPro/auth/login" className="text-amber-400 hover:underline">
           ← Retour à la connexion
         </Link>
       </p>
