@@ -14,9 +14,13 @@ const intlMiddleware = createIntlMiddleware(routing);
 const PUBLIC_PATTERNS = [
   /^\/[a-z]{2}\/?$/, // / or /fr, /ar, /en, /es
   /^\/[a-z]{2}\/auth(\/|$)/, // /[locale]/auth/*
+  /^\/[a-z]{2}\/AqarPro\/auth(\/|$)/, // /[locale]/AqarPro/auth/*
+  /^\/[a-z]{2}\/AqarChaab\/auth(\/|$)/, // /[locale]/AqarChaab/auth/*
   /^\/[a-z]{2}\/search(\/|$)/, // /[locale]/search/*
   /^\/[a-z]{2}\/l(\/|$)/, // /[locale]/l/*
   /^\/[a-z]{2}\/a(\/|$)/, // /[locale]/a/*
+  /^\/[a-z]{2}\/agences(\/|$)/, // /[locale]/agences
+  /^\/[a-z]{2}\/vendre(\/|$)/, // /[locale]/vendre
   /^\/[a-z]{2}\/pricing(\/|$)/, // /[locale]/pricing
   /^\/[a-z]{2}\/pro(\/|$)/, // /[locale]/pro
   /^\/[a-z]{2}\/estimer(\/|$)/, // /[locale]/estimer
@@ -228,7 +232,11 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
     if (!user) {
       const locale = extractLocale(pathname);
-      const loginUrl = new URL(`/${locale}/auth/login`, request.url);
+      const isProRoute = pathname.includes("/AqarPro/dashboard") || pathname.includes("/dashboard") || pathname.includes("/admin") || pathname.includes("/agency");
+      const loginPath = isProRoute
+        ? `/${locale}/AqarPro/auth/login`
+        : `/${locale}/AqarChaab/auth/login`;
+      const loginUrl = new URL(loginPath, request.url);
       loginUrl.searchParams.set("redirect", pathname);
       const authRedirect = NextResponse.redirect(loginUrl);
       // Appliquer les security headers même sur les redirections auth

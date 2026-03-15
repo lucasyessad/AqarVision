@@ -15,7 +15,7 @@ export default async function NewAgencyPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/auth/login`);
+    redirect(`/${locale}/AqarPro/auth/login`);
   }
 
   return (

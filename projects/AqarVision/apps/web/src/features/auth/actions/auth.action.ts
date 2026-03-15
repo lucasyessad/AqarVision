@@ -61,12 +61,72 @@ export async function signInAction(
       .maybeSingle();
 
     if (membership && ["owner", "admin", "agent"].includes(membership.role)) {
-      redirect(`/${locale}/dashboard`);
+      redirect(`/${locale}/AqarPro/dashboard`);
     }
   }
 
   // No active agency membership → visiteur space
-  redirect(`/${locale}/espace`);
+  redirect(`/${locale}/AqarChaab/espace`);
+}
+
+// ── Sign In (Pro — requires agency membership) ────────
+export async function signInProAction(
+  _prevState: AuthFormState,
+  formData: FormData
+): Promise<AuthFormState> {
+  const email = formData.get("email") as string;
+
+  const parsed = SignInSchema.safeParse({
+    email,
+    password: formData.get("password"),
+  });
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: { code: "VALIDATION_ERROR", message: "Email ou mot de passe invalide" },
+      email,
+    };
+  }
+
+  const supabase = await createClient();
+  const { data: signInData, error } = await supabase.auth.signInWithPassword(parsed.data);
+
+  if (error) {
+    return {
+      success: false,
+      error: { code: "AUTH_ERROR", message: "Email ou mot de passe incorrect" },
+      email,
+    };
+  }
+
+  const userId = signInData.user?.id;
+  const locale = (formData.get("locale") as string) || "fr";
+
+  if (userId) {
+    const { data: membership } = await supabase
+      .from("agency_memberships")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle();
+
+    if (membership && ["owner", "admin", "agent"].includes(membership.role)) {
+      redirect(`/${locale}/AqarPro/dashboard`);
+    }
+  }
+
+  // No agency membership — sign out and return error
+  await supabase.auth.signOut();
+  return {
+    success: false,
+    error: {
+      code: "NO_AGENCY",
+      message: "Ce compte n'est pas associé à une agence. Utilisez l'espace AqarChaab pour les particuliers.",
+    },
+    email,
+  };
 }
 
 // ── Sign Up ──────────────────────────────────
@@ -146,7 +206,8 @@ export async function signUpAction(
 
   // Direct sign-in success (no email confirmation needed) → redirect to dashboard
   const locale = parsed.data.preferred_locale ?? "fr";
-  redirect(`/${locale}/dashboard`);
+  const redirectTo = (formData.get("redirect_to") as string | null) || `/${locale}/AqarPro/dashboard`;
+  redirect(redirectTo);
 }
 
 // ── Forgot Password ──────────────────────────
@@ -232,8 +293,11 @@ export async function resetPasswordAction(
 
 // ── Sign Out ─────────────────────────────────
 
-export async function signOutAction(): Promise<void> {
+export async function signOutAction(formData?: FormData): Promise<void> {
   const supabase = await createClient();
+  const locale = (formData?.get("locale") as string | null) || "fr";
+  const origin = (formData?.get("origin") as string | null) || "";
   await supabase.auth.signOut();
-  redirect("/fr/auth/login");
+  const isProOrigin = origin.includes("/dashboard") || origin.includes("/admin");
+  redirect(isProOrigin ? `/${locale}/AqarPro/auth/login` : `/${locale}/AqarChaab/auth/login`);
 }

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { signOutAction } from "@/features/auth/actions/auth.action";
+import { AqarBrandLogo } from "@/components/brand/AqarBrandLogo";
 
 interface DashboardSidebarProps {
   agencySlug: string | null;
@@ -14,116 +15,98 @@ interface DashboardSidebarProps {
 const NAV_ITEMS = [
   {
     key: "overview",
-    href: "/dashboard",
+    href: "/AqarPro/dashboard",
     exact: true,
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-      </svg>
-    ),
+    d: "M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z",
   },
   {
     key: "listings",
-    href: "/dashboard/listings",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-      </svg>
-    ),
+    href: "/AqarPro/dashboard/listings",
+    d: "M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z",
   },
   {
     key: "leads",
-    href: "/dashboard/leads",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-      </svg>
-    ),
+    href: "/AqarPro/dashboard/leads",
+    d: "M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z",
   },
   {
     key: "visit_requests",
-    href: "/dashboard/visit-requests",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 9v7.5" />
-      </svg>
-    ),
+    href: "/AqarPro/dashboard/visit-requests",
+    d: "M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 9v7.5",
   },
   {
     key: "analytics",
-    href: "/dashboard/analytics",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-      </svg>
-    ),
+    href: "/AqarPro/dashboard/analytics",
+    d: "M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z",
   },
   {
     key: "ai",
-    href: "/dashboard/ai",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-      </svg>
-    ),
+    href: "/AqarPro/dashboard/ai",
+    d: "M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z",
   },
   {
     key: "team",
-    href: "/dashboard/team",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-      </svg>
-    ),
+    href: "/AqarPro/dashboard/team",
+    d: "M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z",
   },
   {
     key: "billing",
-    href: "/dashboard/billing",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-      </svg>
-    ),
+    href: "/AqarPro/dashboard/billing",
+    d: "M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z",
   },
 ];
 
 const SETTINGS_ITEMS = [
-  { key: "settings", href: "/dashboard/settings", label: "Paramètres" },
-  { key: "appearance", href: "/dashboard/settings/appearance", label: "Apparence" },
-  { key: "branding", href: "/dashboard/settings/branding", label: "Branding" },
-  { key: "verification", href: "/dashboard/settings/verification", label: "Vérification" },
+  { key: "settings", href: "/AqarPro/dashboard/settings", label: "Paramètres" },
+  { key: "appearance", href: "/AqarPro/dashboard/settings/appearance", label: "Apparence" },
+  { key: "branding", href: "/AqarPro/dashboard/settings/branding", label: "Branding" },
+  { key: "verification", href: "/AqarPro/dashboard/settings/verification", label: "Vérification" },
 ];
+
+const NAVY = "#1a365d";
+const NAVY_ACTIVE_BG = "rgba(26,54,93,0.12)";
+const GOLD = "#d4af37";
+const TEXT_DIM = "rgba(26,54,93,0.45)";
+const TEXT_LIGHT = "rgba(26,54,93,0.7)";
+const BORDER = "rgba(26,54,93,0.1)";
 
 export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardSidebarProps) {
   const t = useTranslations("dashboard");
   const pathname = usePathname();
 
   function isActive(href: string, exact = false): boolean {
-    // Normalize: remove locale prefix (/fr/, /ar/, etc.) for comparison
     const normalized = pathname.replace(/^\/[a-z]{2}/, "");
     if (exact) return normalized === href || normalized === "";
     return normalized.startsWith(href);
   }
 
+  const initial = (fullName ?? userEmail).charAt(0).toUpperCase();
+
   return (
     <aside
-      className="flex w-64 flex-col border-e"
-      style={{ background: "var(--bg-secondary)", borderColor: "var(--border-light)" }}
+      className="flex w-60 shrink-0 flex-col"
+      style={{ background: "#f0f4f8", borderRight: `1px solid ${BORDER}` }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-1.5 px-6 py-5">
-        <span className="font-display text-lg font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
-          Aqar
-        </span>
-        <span
-          className="aqar-pulse inline-block h-2 w-2 rounded-full"
-          style={{ background: "var(--coral)" }}
-        />
-        <span className="font-display text-lg font-bold italic" style={{ color: "var(--coral)" }}>Pro</span>
+      <div
+        className="flex flex-col gap-2 px-5 py-5"
+        style={{ borderBottom: `1px solid ${BORDER}` }}
+      >
+        <AqarBrandLogo product="Pro" size="sm" onDark={false} />
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 text-[10px] font-medium transition-opacity hover:opacity-70"
+          style={{ color: TEXT_DIM }}
+        >
+          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Retour au portail
+        </Link>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 pb-4">
+      {/* Main nav */}
+      <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
         {NAV_ITEMS.map((item) => {
           const active = isActive(item.href, item.exact);
           return (
@@ -132,22 +115,34 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
               href={item.href as `/${string}`}
               className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
               style={{
-                background: active ? "var(--coral-ghost)" : "transparent",
-                color: active ? "var(--coral)" : "var(--text-secondary)",
-                borderLeft: active ? `2px solid var(--coral)` : "2px solid transparent",
+                background: active ? NAVY_ACTIVE_BG : "transparent",
+                color: active ? NAVY : TEXT_LIGHT,
+                fontWeight: active ? 600 : 400,
               }}
             >
-              <span style={{ color: active ? "var(--coral)" : "var(--text-tertiary)" }}>{item.icon}</span>
+              <svg
+                className="h-4 w-4 shrink-0"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                style={{ color: active ? NAVY : TEXT_DIM }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d={item.d} />
+              </svg>
               {t(`nav.${item.key}` as Parameters<typeof t>[0])}
+              {active && (
+                <span
+                  className="ms-auto h-1.5 w-1.5 rounded-full shrink-0"
+                  style={{ background: GOLD }}
+                />
+              )}
             </Link>
           );
         })}
 
         {/* Settings group */}
-        <div className="pt-3">
+        <div className="pt-4">
           <p
             className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest"
-            style={{ color: "var(--text-tertiary)" }}
+            style={{ color: TEXT_DIM }}
           >
             Paramètres
           </p>
@@ -157,10 +152,10 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
               <Link
                 key={item.key}
                 href={item.href as `/${string}`}
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all"
+                className="flex items-center rounded-lg px-3 py-2 text-sm transition-all"
                 style={{
-                  background: active ? "var(--coral-ghost)" : "transparent",
-                  color: active ? "var(--coral)" : "var(--text-secondary)",
+                  background: active ? NAVY_ACTIVE_BG : "transparent",
+                  color: active ? NAVY : TEXT_LIGHT,
                   fontWeight: active ? 500 : 400,
                 }}
               >
@@ -171,17 +166,18 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
         </div>
       </nav>
 
-      {/* Accès vitrine */}
+      {/* Voir ma vitrine */}
       {agencySlug && (
-        <div className="px-4 pb-3">
+        <div className="px-3 pb-3">
           <a
             href={`/fr/a/${agencySlug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors"
+            className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-medium transition-all hover:opacity-80"
             style={{
-              borderColor: "var(--coral-glow)",
-              color: "var(--coral)",
+              border: `1px solid ${BORDER}`,
+              color: NAVY,
+              background: "rgba(26,54,93,0.05)",
             }}
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -193,35 +189,38 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
       )}
 
       {/* User footer */}
-      <div className="border-t px-4 py-3" style={{ borderColor: "var(--border-light)" }}>
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-            style={{ background: "var(--warm-100)", color: "var(--coral)" }}
-          >
-            {(fullName ?? userEmail).charAt(0).toUpperCase()}
-          </div>
-          <div className="min-w-0 flex-1">
-            {fullName && (
-              <p className="truncate text-xs font-medium" style={{ color: "var(--text-primary)" }}>
-                {fullName}
-              </p>
-            )}
-            <p className="truncate text-xs" style={{ color: "var(--text-tertiary)" }}>{userEmail}</p>
-          </div>
-          <form action={signOutAction}>
-            <button
-              type="submit"
-              title="Se déconnecter"
-              className="flex-shrink-0 rounded-md p-1.5 transition-colors"
-              style={{ color: "var(--text-tertiary)" }}
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-              </svg>
-            </button>
-          </form>
+      <div
+        className="flex items-center gap-3 px-4 py-3"
+        style={{ borderTop: `1px solid ${BORDER}` }}
+      >
+        <div
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+          style={{ background: NAVY, color: "#f7fafc" }}
+        >
+          {initial}
         </div>
+        <div className="min-w-0 flex-1">
+          {fullName && (
+            <p className="truncate text-xs font-semibold" style={{ color: NAVY }}>
+              {fullName}
+            </p>
+          )}
+          <p className="truncate text-[10px]" style={{ color: TEXT_DIM }}>{userEmail}</p>
+        </div>
+        <form action={signOutAction}>
+          <input type="hidden" name="locale" value={pathname.split("/")[1] || "fr"} />
+          <input type="hidden" name="origin" value={pathname} />
+          <button
+            type="submit"
+            title="Se déconnecter"
+            className="shrink-0 rounded-md p-1 transition-opacity hover:opacity-60"
+            style={{ color: TEXT_DIM }}
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+          </button>
+        </form>
       </div>
     </aside>
   );

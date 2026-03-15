@@ -78,7 +78,7 @@ export async function updateVisitRequestStatusAction(
       parsed.data.status
     );
 
-    revalidatePath("/dashboard/visit-requests");
+    revalidatePath("/AqarPro/dashboard/visit-requests");
 
     return { success: true, data: result };
   } catch (err) {

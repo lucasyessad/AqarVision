@@ -43,7 +43,7 @@ export function AgencySelector() {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newId = e.target.value;
     setCurrentAgency(newId);
-    router.push("/dashboard");
+    router.push("/AqarPro/dashboard");
   };
 
   return (

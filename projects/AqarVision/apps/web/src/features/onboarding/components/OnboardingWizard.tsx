@@ -141,7 +141,7 @@ function StepBasics({
       <p className="text-sm text-gray-500">
         Pour modifier ces informations, rendez-vous dans{" "}
         <Link
-          href="/dashboard/settings"
+          href="/AqarPro/dashboard/settings"
           className="font-medium text-blue-night hover:underline"
         >
           Paramètres de l&apos;agence
@@ -179,7 +179,7 @@ function StepBranding() {
             Ajoutez une identité visuelle professionnelle à votre vitrine.
           </p>
           <Link
-            href="/dashboard/settings/branding"
+            href="/AqarPro/dashboard/settings/branding"
             className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-blue-night px-4 py-1.5 text-sm font-medium text-blue-night transition-colors hover:bg-blue-night hover:text-white"
           >
             Configurer le branding
@@ -211,7 +211,7 @@ function StepBranding() {
             Choisissez le thème de votre vitrine publique.
           </p>
           <Link
-            href="/dashboard/settings/appearance"
+            href="/AqarPro/dashboard/settings/appearance"
             className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-gold px-4 py-1.5 text-sm font-medium text-gold transition-colors hover:bg-gold hover:text-white"
           >
             Personnaliser l&apos;apparence
@@ -253,7 +253,7 @@ function StepFirstListing() {
         immobilier sur AqarSearch.
       </p>
       <Link
-        href="/dashboard/listings/new"
+        href="/AqarPro/dashboard/listings/new"
         className="inline-flex items-center gap-2 rounded-lg bg-blue-night px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-night/90"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,7 +311,7 @@ function StepInviteTeam({ agencyId }: { agencyId: string }) {
       <p className="text-xs text-gray-400">
         Le membre sera invité avec le rôle &quot;Agent&quot;. Vous pourrez modifier son rôle
         depuis{" "}
-        <Link href="/dashboard/team" className="underline">
+        <Link href="/AqarPro/dashboard/team" className="underline">
           l&apos;équipe
         </Link>
         .
@@ -351,7 +351,7 @@ export function OnboardingWizard({
   function handleNext() {
     if (isLast) {
       localStorage.removeItem(STORAGE_KEY);
-      router.push(`/${locale}/dashboard`);
+      router.push(`/${locale}/AqarPro/dashboard`);
     } else {
       setStepIndex((i) => i + 1);
     }
@@ -360,7 +360,7 @@ export function OnboardingWizard({
   function handleSkip() {
     if (isLast) {
       localStorage.removeItem(STORAGE_KEY);
-      router.push(`/${locale}/dashboard`);
+      router.push(`/${locale}/AqarPro/dashboard`);
     } else {
       setStepIndex((i) => i + 1);
     }
@@ -425,7 +425,7 @@ export function OnboardingWizard({
       {/* Skip all */}
       <div className="mt-4 text-center">
         <Link
-          href="/dashboard"
+          href="/AqarPro/dashboard"
           onClick={() => localStorage.removeItem(STORAGE_KEY)}
           className="text-sm text-gray-400 hover:text-gray-600 hover:underline"
         >

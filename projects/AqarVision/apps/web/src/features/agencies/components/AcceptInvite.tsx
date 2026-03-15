@@ -28,7 +28,7 @@ export function AcceptInvite({
   >(async (_prev, formData) => {
     const result = await acceptInviteAction(null, formData);
     if (result.success) {
-      router.push("/dashboard");
+      router.push("/AqarPro/dashboard");
     }
     return result;
   }, null);

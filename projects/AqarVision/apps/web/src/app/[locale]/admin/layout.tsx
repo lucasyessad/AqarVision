@@ -19,7 +19,7 @@ export default async function AdminLayout({
   } = await supabase.auth.getUser();
 
   if (sessionError || !user) {
-    redirect(`/${locale}/auth/login`);
+    redirect(`/${locale}/AqarPro/auth/login`);
   }
 
   // 2. Verify super_admin role via DB function

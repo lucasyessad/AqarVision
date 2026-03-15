@@ -3,104 +3,134 @@
 @tailwind utilities;
 
 /* ============================================================
-   AQAR DESIGN SYSTEM — CHARBON & CORAIL
+   AQARVISION — ONYX & IVOIRE
+   Le silence du luxe absolu
    ============================================================ */
 :root {
-  /* ── Charcoal ramp ───────────────────────────────────────── */
-  --charcoal-950: #1C1C1E;
-  --charcoal-900: #2C2C2E;
-  --charcoal-800: #3A3A3C;
-  --charcoal-700: #48484A;
-  --charcoal-600: #636366;
-  --charcoal-500: #8E8E93;
-  --charcoal-400: #AEAEB2;
-  --charcoal-300: #C7C7CC;
-  --charcoal-200: #D1D1D6;
-  --charcoal-100: #E5E5EA;
+  /* ── Onyx ramp ───────────────────────────────────────────── */
+  --onyx:       #0D0D0D;
+  --onyx-light: #1A1917;
+  --onyx-mid:   #2A2926;
+  --onyx-soft:  #3D3B37;
 
-  /* ── Warm whites ─────────────────────────────────────────── */
-  --warm-50:  #FDFCFA;
-  --warm-100: #F5F0EB;
-  --warm-200: #EBE5DD;
-  --warm-300: #DDD5CA;
+  /* ── Ivoire (warm whites) ─────────────────────────────────── */
+  --ivoire:        #FDFBF7;
+  --ivoire-warm:   #F6F1EA;
+  --ivoire-deep:   #EBE5DB;
+  --ivoire-border: #DDD7CC;
 
-  /* ── Coral accent ────────────────────────────────────────── */
-  --coral:       #E8725C;
-  --coral-hover: #D4624D;
-  --coral-light: #F0998A;
-  --coral-ghost: rgba(232, 114, 92, 0.08);
-  --coral-glow:  rgba(232, 114, 92, 0.15);
-
-  /* ── Semantic backgrounds ────────────────────────────────── */
-  --bg-deep:       var(--warm-50);      /* body background */
-  --bg-primary:    var(--warm-50);      /* page sections   */
-  --bg-secondary:  #FFFFFF;             /* sidebar / cards */
-  --bg-tertiary:   var(--warm-100);     /* sunken / hover  */
-  --bg-card:       #FFFFFF;
-  --bg-card-hover: var(--warm-100);
-  --bg-surface:    var(--warm-100);     /* chips, small surfaces */
-  --bg-dark:       var(--charcoal-950);
-  --bg-dark-surface: var(--charcoal-900);
-
-  /* ── Accent aliases (keep old names for component compat) ── */
-  --cyan:       var(--coral);             /* was cyan, now coral */
-  --cyan-dim:   var(--coral-hover);
-  --cyan-glow:  var(--coral-glow);
-  --cyan-ghost: var(--coral-ghost);
-  --amber:      #D4943A;
-  --amber-glow: rgba(212, 148, 58, 0.08);
-  --red:        #D14545;
-  --red-glow:   rgba(209, 69, 69, 0.08);
+  /* ── Or (gold accent) ────────────────────────────────────── */
+  --or:       #B8A88A;
+  --or-light: #D4C9B0;
+  --or-deep:  #8B7A5E;
+  --or-ghost: rgba(184, 168, 138, 0.08);
+  --or-glow:  rgba(184, 168, 138, 0.18);
 
   /* ── Text ────────────────────────────────────────────────── */
-  --text-primary:   var(--charcoal-950);
-  --text-secondary: var(--charcoal-600);
-  --text-tertiary:  var(--charcoal-500);
-  --text-inverse:   #FFFFFF;
+  --text-dark:    #0D0D0D;
+  --text-body:    #5C5347;
+  --text-muted:   #8A8279;
+  --text-faint:   #B0A89E;
+  --text-inverse: #F6F1EA;
 
-  /* ── Borders ─────────────────────────────────────────────── */
-  --border:         var(--charcoal-100);
-  --border-light:   var(--warm-200);
-  --border-hover:   var(--charcoal-300);
+  /* ── Semantic backgrounds ────────────────────────────────── */
+  --bg-deep:         var(--ivoire);
+  --bg-primary:      var(--ivoire);
+  --bg-secondary:    #FFFFFF;
+  --bg-tertiary:     var(--ivoire-warm);
+  --bg-card:         #FFFFFF;
+  --bg-card-hover:   var(--ivoire-warm);
+  --bg-surface:      var(--ivoire-warm);
+  --bg-dark:         var(--onyx);
+  --bg-dark-surface: var(--onyx-light);
 
   /* ── Semantic / status ───────────────────────────────────── */
-  --success:       #3B9B6D;
-  --success-ghost: rgba(59, 155, 109, 0.08);
-  --warning:       #D4943A;
-  --warning-ghost: rgba(212, 148, 58, 0.08);
-  --danger:        #D14545;
+  --success:       #5A8F6E;
+  --success-ghost: rgba(90, 143, 110, 0.08);
+  --warning:       #C49A3A;
+  --warning-ghost: rgba(196, 154, 58, 0.08);
+  --danger:        #B84A3A;
+  --danger-ghost:  rgba(184, 74, 58, 0.08);
 
-  /* ── Border radius ───────────────────────────────────────── */
-  --radius:      8px;
-  --radius-lg:   12px;
-  --radius-xl:   16px;
-  --radius-full: 999px;
+  /* ── Borders ─────────────────────────────────────────────── */
+  --border:         var(--ivoire-border);
+  --border-light:   var(--ivoire-deep);
+  --border-hover:   var(--or);
 
   /* ── Typography ──────────────────────────────────────────── */
-  --font-display: "Libre Baskerville", Georgia, serif;
-  --font-sans:    "Figtree", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans:    "DM Sans", "Noto Sans Arabic", system-ui, sans-serif;
   --font-arabic:  "Noto Sans Arabic", sans-serif;
   --font-mono:    "JetBrains Mono", monospace;
 
-  /* ── Shadows ─────────────────────────────────────────────── */
-  --shadow-sm:        0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-md:        0 4px 16px rgba(0, 0, 0, 0.06);
-  --shadow-lg:        0 12px 40px rgba(0, 0, 0, 0.08);
-  --shadow-card:      0 1px 4px rgba(0, 0, 0, 0.03);
-  --shadow-card-hover: 0 12px 36px rgba(0, 0, 0, 0.10);
+  /* ── Border radius ───────────────────────────────────────── */
+  --radius:      4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-full: 999px;
 
-  /* ── Legacy tokens (dashboard / ThemeRenderer compat) ───── */
-  --color-blue-night: #1a365d;
-  --color-gold:       #d4af37;
-  --color-off-white:  #f7fafc;
-  --color-gray-700:   #2d3748;
-  --color-gray-400:   #a0aec0;
+  /* ── Shadows ─────────────────────────────────────────────── */
+  --shadow-sm:         0 1px 3px rgba(13, 13, 13, 0.04);
+  --shadow-md:         0 4px 16px rgba(13, 13, 13, 0.06);
+  --shadow-lg:         0 12px 40px rgba(13, 13, 13, 0.08);
+  --shadow-card:       0 1px 4px rgba(13, 13, 13, 0.03);
+  --shadow-card-hover: 0 16px 48px rgba(13, 13, 13, 0.12);
+  --shadow-elevated:   0 8px 30px rgba(13, 13, 13, 0.08);
+
+  /* ── Spacing (JE offset system) ──────────────────────────── */
+  --offset-xs: 16px;
+  --offset-s:  24px;
+  --offset-m:  32px;
+  --offset-l:  48px;
+  --offset-xl: 64px;
+
+  /* ── Transition ──────────────────────────────────────────── */
+  --transition: all 0.25s ease;
+
+  /* ── Legacy aliases (dashboard / ThemeRenderer compat) ────── */
+  --coral:       var(--or);
+  --coral-hover: var(--or-deep);
+  --coral-light: var(--or-light);
+  --coral-ghost: var(--or-ghost);
+  --coral-glow:  var(--or-glow);
+  --cyan:        var(--or);
+  --cyan-dim:    var(--or-deep);
+  --cyan-glow:   var(--or-glow);
+  --cyan-ghost:  var(--or-ghost);
+  --amber:       var(--warning);
+  --amber-glow:  var(--warning-ghost);
+  --red:         var(--danger);
+  --red-glow:    var(--danger-ghost);
+
+  --charcoal-950: var(--onyx);
+  --charcoal-900: var(--onyx-light);
+  --charcoal-800: var(--onyx-mid);
+  --charcoal-700: var(--onyx-soft);
+  --charcoal-600: var(--text-body);
+  --charcoal-500: var(--text-muted);
+  --charcoal-400: var(--text-faint);
+  --charcoal-300: var(--ivoire-border);
+  --charcoal-200: var(--ivoire-deep);
+  --charcoal-100: var(--ivoire-border);
+  --warm-50:   var(--ivoire);
+  --warm-100:  var(--ivoire-warm);
+  --warm-200:  var(--ivoire-deep);
+  --warm-300:  var(--ivoire-border);
+  --text-primary:   var(--text-dark);
+  --text-secondary: var(--text-body);
+  --text-tertiary:  var(--text-muted);
+
+  --color-blue-night: var(--onyx);
+  --color-gold:       var(--or);
+  --color-off-white:  var(--ivoire);
+  --color-gray-700:   var(--text-body);
+  --color-gray-400:   var(--text-faint);
 }
 
 /* ── Selection ──────────────────────────────────────────────── */
 ::selection {
-  background: var(--coral);
-  color: white;
+  background: var(--onyx);
+  color: var(--ivoire);
 }
 
 @layer base {
@@ -109,8 +139,8 @@
   }
 
   body {
-    background: var(--bg-deep);
-    color: var(--text-primary);
+    background: var(--ivoire);
+    color: var(--text-dark);
     font-family: var(--font-sans);
     font-weight: 400;
     font-size: 15px;
@@ -127,20 +157,27 @@
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--warm-100); }
-::-webkit-scrollbar-thumb { background: var(--charcoal-300); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--charcoal-400); }
+::-webkit-scrollbar-track { background: var(--ivoire-warm); }
+::-webkit-scrollbar-thumb { background: var(--ivoire-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--or); }
 
-/* ── Pulse animation (nav logo dot) ────────────────────────── */
+/* ── Hide scrollbar utility ─────────────────────────────────── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Animations ──────────────────────────────────────────────── */
 @keyframes aqar-pulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.4; }
 }
-.aqar-pulse { animation: aqar-pulse 2s infinite; }
+.aqar-pulse { animation: aqar-pulse 2.5s infinite; }
 
-/* ── Fade-up animation ──────────────────────────────────────── */
 @keyframes aqar-fade-up {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.aqar-fade-up { animation: aqar-fade-up 0.6s ease both; }
+.aqar-fade-up { animation: aqar-fade-up 0.8s ease both; }
+
+/* ── Font utility classes ────────────────────────────────────── */
+.font-serif { font-family: var(--font-display) !important; }
+.font-sans  { font-family: var(--font-sans) !important; }

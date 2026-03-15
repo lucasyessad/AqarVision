@@ -132,7 +132,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
   useEffect(() => {
     if (state?.success && state.data) {
       router.push(
-        `/dashboard/listings/${state.data.listing_id}/edit?tab=translations`
+        `/AqarPro/dashboard/listings/${state.data.listing_id}/edit?tab=translations`
       );
     }
   }, [state, router]);
@@ -194,7 +194,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
       {/* Header */}
       <div className="mb-6 flex items-center gap-4">
         <Link
-          href="/dashboard/listings"
+          href="/AqarPro/dashboard/listings"
           className="text-sm text-gray-500 transition-colors hover:text-[#1a365d]"
         >
           ← Mes annonces

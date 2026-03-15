@@ -8,7 +8,10 @@ const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/agencies", label: "Agences" },
   { href: "/admin/users", label: "Utilisateurs" },
+  { href: "/admin/listings", label: "Annonces" },
   { href: "/admin/verifications", label: "Vérifications" },
+  { href: "/admin/payments", label: "Paiements en attente" },
+  { href: "/admin/settings", label: "Paramètres" },
 ] as const;
 
 export function AdminSidebar({ locale }: AdminSidebarProps) {
@@ -38,7 +41,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
       {/* Footer */}
       <div className="border-t border-gray-800 px-2 py-3">
         <Link
-          href="/dashboard"
+          href="/AqarPro/dashboard"
           className="flex items-center rounded-md px-3 py-2 text-sm font-medium text-white/50 transition-colors hover:bg-white/10 hover:text-white/80"
         >
           ← Retour au site

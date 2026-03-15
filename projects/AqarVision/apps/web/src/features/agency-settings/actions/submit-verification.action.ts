@@ -120,7 +120,7 @@ export async function submitVerificationAction(
     };
   }
 
-  revalidatePath("/dashboard/settings/verification");
+  revalidatePath("/AqarPro/dashboard/settings/verification");
 
   return { success: true, data: { verification_status: "pending" } };
 }

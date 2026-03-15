@@ -78,6 +78,12 @@ export default async function AdminDashboardPage() {
             Examiner les demandes de vérification →
           </Link>
           <Link
+            href="/admin/payments"
+            className="rounded-xl border border-gold/30 bg-gold/5 px-5 py-4 text-sm font-medium text-blue-night transition-colors hover:bg-gold/10"
+          >
+            Paiements en attente →
+          </Link>
+          <Link
             href="/admin/agencies"
             className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-blue-night transition-colors hover:bg-gray-50"
           >
@@ -88,6 +94,12 @@ export default async function AdminDashboardPage() {
             className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-blue-night transition-colors hover:bg-gray-50"
           >
             Gérer les utilisateurs →
+          </Link>
+          <Link
+            href="/admin/settings"
+            className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-blue-night transition-colors hover:bg-gray-50"
+          >
+            Paramètres plateforme →
           </Link>
         </div>
       </div>

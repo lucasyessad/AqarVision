@@ -146,7 +146,7 @@ function PlanCard({
           </form>
         ) : (
           <a
-            href="/auth/login"
+            href="/AqarChaab/auth/login"
             className="flex w-full items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90"
             style={{ background: "var(--coral)" }}
           >

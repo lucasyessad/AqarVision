@@ -15,7 +15,7 @@ export default async function InvitePage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/auth/login?redirect=/${locale}/invite/${token}`);
+    redirect(`/${locale}/AqarChaab/auth/login?redirect=/${locale}/invite/${token}`);
   }
 
   // Fetch invite details

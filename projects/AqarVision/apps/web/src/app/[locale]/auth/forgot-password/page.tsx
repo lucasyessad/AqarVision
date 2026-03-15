@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
       <ForgotPasswordForm />
       <p className="mt-4 text-center text-sm text-gray-500">
         <Link
-          href="/auth/login"
+          href="/AqarChaab/auth/login"
           className="font-medium text-gold hover:underline"
         >
           {t("back_to_login")}

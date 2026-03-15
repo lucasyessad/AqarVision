@@ -35,7 +35,7 @@ export default async function FavoritesPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/auth/login`);
+    redirect(`/${locale}/AqarChaab/auth/login`);
   }
 
   const [favorites, notes, searches] = await Promise.all([

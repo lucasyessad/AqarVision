@@ -21,7 +21,7 @@ export function SignUpForm() {
           {t("check_email_message")}
         </p>
         <Link
-          href="/auth/login"
+          href="/AqarChaab/auth/login"
           className="mt-4 inline-block text-sm font-medium text-gold hover:underline"
         >
           {t("back_to_login")}

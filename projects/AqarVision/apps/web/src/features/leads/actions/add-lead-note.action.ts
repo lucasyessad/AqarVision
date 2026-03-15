@@ -77,7 +77,7 @@ export async function addLeadNoteAction(
       user.id
     );
 
-    revalidatePath("/dashboard/leads");
+    revalidatePath("/AqarPro/dashboard/leads");
 
     return { success: true, data: { notes } };
   } catch (err) {

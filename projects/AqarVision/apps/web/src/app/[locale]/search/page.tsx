@@ -4,6 +4,10 @@ import { searchListingsAction } from "@/features/marketplace/actions/search.acti
 import { getWilayas } from "@/features/marketplace/services/search.service";
 import { getViewedListingIds } from "@/features/marketplace/actions/view-history.action";
 import { createClient } from "@/lib/supabase/server";
+import { Suspense } from "react";
+import { MarketingHeaderWrapper } from "@/components/marketing/MarketingHeaderWrapper";
+import { MarketingHeader } from "@/components/marketing/MarketingHeader";
+import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 import { SearchPageClient } from "./SearchPageClient";
 
 interface SearchPageProps {
@@ -70,15 +74,19 @@ export default async function SearchPage({
     : { results: [], total_count: 0, page: 1, page_size: 20 };
 
   return (
-    <SearchPageClient
-      results={data.results}
-      totalCount={data.total_count}
-      page={data.page}
-      pageSize={data.page_size}
-      locale={locale}
-      wilayas={wilayas}
-      viewedIds={viewedIds}
-    />
+    <>
+      <Suspense fallback={<MarketingHeader locale={locale} user={null} />}><MarketingHeaderWrapper locale={locale} /></Suspense>
+      <SearchPageClient
+        results={data.results}
+        totalCount={data.total_count}
+        page={data.page}
+        pageSize={data.page_size}
+        locale={locale}
+        wilayas={wilayas}
+        viewedIds={viewedIds}
+      />
+      <MarketingFooter locale={locale} />
+    </>
   );
 }
 

@@ -26,6 +26,10 @@ export interface MapListing {
 interface SearchMapProps {
   listings: MapListing[];
   onBoundsChange: (bounds: MapBounds) => void;
+  /** When true, the map fills its parent container (used in split layout) */
+  fillContainer?: boolean;
+  /** Called with listing id on marker hover, null on leave */
+  onListingHover?: (id: string | null) => void;
 }
 
 function formatPrice(price: number, currency: string): string {
@@ -37,7 +41,7 @@ function formatPrice(price: number, currency: string): string {
   }).format(price);
 }
 
-export function SearchMap({ listings, onBoundsChange }: SearchMapProps) {
+export function SearchMap({ listings, onBoundsChange, fillContainer, onListingHover }: SearchMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap>(null);
   const markersRef = useRef<MapLibreMarker[]>([]);
@@ -156,11 +160,18 @@ export function SearchMap({ listings, onBoundsChange }: SearchMapProps) {
           return;
         }
 
-        // Create custom marker element
+        // Create custom marker element — Onyx & Ivoire price badge
         const el = document.createElement("div");
         el.className =
-          "cursor-pointer rounded-full bg-[#1a365d] px-2 py-1 text-xs font-bold text-white shadow-md hover:bg-[#d4af37] transition-colors whitespace-nowrap";
+          "cursor-pointer select-none rounded-full px-2.5 py-1 text-xs font-bold shadow-md whitespace-nowrap transition-all";
+        el.style.cssText =
+          "background:#0D0D0D;color:#FDFBF7;border:1.5px solid rgba(255,255,255,0.15);";
         el.textContent = formatPrice(listing.price, listing.currency);
+
+        if (onListingHover) {
+          el.addEventListener("mouseenter", () => onListingHover(listing.id));
+          el.addEventListener("mouseleave", () => onListingHover(null));
+        }
 
         // Popup content
         const popupHtml = `
@@ -192,6 +203,17 @@ export function SearchMap({ listings, onBoundsChange }: SearchMapProps) {
       });
     });
   }, [listings]);
+
+  if (fillContainer) {
+    return (
+      <div
+        ref={containerRef}
+        className="h-full w-full"
+        aria-label="Carte des annonces immobilières"
+        role="img"
+      />
+    );
+  }
 
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-sm">

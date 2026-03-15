@@ -1,5 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
+import { Suspense } from "react";
+import { MarketingHeaderWrapper } from "@/components/marketing/MarketingHeaderWrapper";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
@@ -142,7 +144,7 @@ export default async function ProPage({
 
   return (
     <>
-      <MarketingHeader locale={locale} />
+      <Suspense fallback={<MarketingHeader locale={locale} user={null} />}><MarketingHeaderWrapper locale={locale} /></Suspense>
 
       <main>
         {/* ─── Hero ─────────────────────────────────────────────────────── */}

@@ -70,7 +70,7 @@ export async function updateAgencyThemeAction(
     .maybeSingle();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const planCode: string = (subscription?.plans as any)?.code ?? "starter";
+  const planCode: string = (subscription?.plans as any)?.code ?? "enterprise";
 
   // 4. Check plan gating
   if (!isThemeAvailable(parsed.data.theme, planCode)) {
@@ -102,7 +102,7 @@ export async function updateAgencyThemeAction(
   }
 
   // 6. Revalidate appearance page + storefront
-  revalidatePath("/dashboard/settings/appearance");
+  revalidatePath("/AqarPro/dashboard/settings/appearance");
   revalidatePath(`/a/${auth.agencySlug}`);
 
   return { success: true, data: { theme: parsed.data.theme } };

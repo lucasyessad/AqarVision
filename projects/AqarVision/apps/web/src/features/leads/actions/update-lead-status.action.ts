@@ -83,7 +83,7 @@ export async function updateLeadStatusAction(
     );
 
     // 6. Revalidate leads page
-    revalidatePath("/dashboard/leads");
+    revalidatePath("/AqarPro/dashboard/leads");
 
     return { success: true, data: result };
   } catch (err) {

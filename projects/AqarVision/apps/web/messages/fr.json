@@ -102,8 +102,10 @@
     "space_label": "Mon espace",
     "nav": {
       "home": "Accueil",
+      "messagerie": "Messagerie",
       "favorites": "Favoris",
       "alertes": "Alertes",
+      "collections": "Collections",
       "historique": "Historique",
       "profil": "Profil"
     },

@@ -80,8 +80,79 @@ async function handleCheckoutCompleted(
   supabase: ReturnType<typeof createClient>,
   session: Record<string, unknown>
 ): Promise<void> {
-  const agencyId = (session.metadata as Record<string, string>)?.agency_id;
-  const planId = (session.metadata as Record<string, string>)?.plan_id;
+  const meta = (session.metadata as Record<string, string>) ?? {};
+  const paymentType = meta.payment_type;
+
+  // ── Individual pack (one-time payment) ────────────────────────────────────
+  if (paymentType === "individual_pack") {
+    const userId = meta.user_id;
+    const packSlug = meta.pack_slug;
+    const extraSlots = parseInt(meta.extra_slots ?? "0", 10);
+    const stripeSessionId = session.id as string;
+
+    if (!userId || !packSlug || extraSlots <= 0) return;
+
+    const { data: existing } = await supabase
+      .from("individual_listing_packs")
+      .select("id")
+      .eq("stripe_session_id", stripeSessionId)
+      .maybeSingle();
+
+    if (existing) return;
+
+    await supabase.from("individual_listing_packs").insert({
+      user_id: userId,
+      pack_slug: packSlug,
+      extra_slots: extraSlots,
+      stripe_session_id: stripeSessionId,
+      stripe_payment_intent_id: session.payment_intent as string | null,
+      payment_provider: "stripe",
+      payment_status: "confirmed",
+    });
+    return;
+  }
+
+  // ── Individual subscription (first checkout) ───────────────────────────────
+  if (paymentType === "individual_subscription") {
+    const userId = meta.user_id;
+    const planSlug = meta.plan_slug;
+    const maxListings = parseInt(meta.max_listings ?? "0", 10);
+    const stripeSubscriptionId = session.subscription as string;
+
+    if (!userId || !planSlug || !stripeSubscriptionId) return;
+
+    const { data: existing } = await supabase
+      .from("individual_subscriptions")
+      .select("id")
+      .eq("stripe_subscription_id", stripeSubscriptionId)
+      .maybeSingle();
+
+    if (existing) {
+      // Already inserted by subscription.created event — just activate it
+      await supabase
+        .from("individual_subscriptions")
+        .update({ status: "active", payment_provider: "stripe" })
+        .eq("stripe_subscription_id", stripeSubscriptionId);
+      return;
+    }
+
+    await supabase.from("individual_subscriptions").insert({
+      user_id: userId,
+      plan_slug: planSlug,
+      stripe_subscription_id: stripeSubscriptionId,
+      stripe_customer_id: session.customer as string | null,
+      status: "active",
+      max_listings: maxListings,
+      current_period_start: new Date().toISOString(),
+      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      payment_provider: "stripe",
+    });
+    return;
+  }
+
+  // ── Agency subscription (original handler) ─────────────────────────────────
+  const agencyId = meta.agency_id;
+  const planId = meta.plan_id;
   const stripeSubscriptionId = session.subscription as string;
 
   if (!agencyId || !planId || !stripeSubscriptionId) return;
@@ -169,13 +240,58 @@ async function handleSubscriptionDeleted(
 ): Promise<void> {
   const stripeSubId = subscription.id as string;
 
+  // Cancel agency subscription
   await supabase
     .from("subscriptions")
+    .update({ status: "canceled", updated_at: new Date().toISOString() })
+    .eq("stripe_subscription_id", stripeSubId);
+
+  // Cancel individual subscription if exists
+  await supabase
+    .from("individual_subscriptions")
+    .update({ status: "canceled", updated_at: new Date().toISOString() })
+    .eq("stripe_subscription_id", stripeSubId);
+}
+
+async function handleIndividualSubscriptionUpdated(
+  supabase: ReturnType<typeof createClient>,
+  subscription: Record<string, unknown>
+): Promise<void> {
+  const stripeSubId = subscription.id as string;
+  const status = subscription.status as string;
+  const currentPeriodStart = subscription.current_period_start as number;
+  const currentPeriodEnd = subscription.current_period_end as number;
+  const cancelAtPeriodEnd = subscription.cancel_at_period_end as boolean;
+
+  const statusMap: Record<string, string> = {
+    active: "active",
+    trialing: "active",
+    past_due: "past_due",
+    canceled: "canceled",
+    unpaid: "canceled",
+    incomplete: "past_due",
+    incomplete_expired: "canceled",
+    paused: "past_due",
+  };
+
+  const { data: sub } = await supabase
+    .from("individual_subscriptions")
+    .select("id")
+    .eq("stripe_subscription_id", stripeSubId)
+    .maybeSingle();
+
+  if (!sub) return;
+
+  await supabase
+    .from("individual_subscriptions")
     .update({
-      status: "canceled",
+      status: statusMap[status] ?? "canceled",
+      current_period_start: new Date(currentPeriodStart * 1000).toISOString(),
+      current_period_end: new Date(currentPeriodEnd * 1000).toISOString(),
+      cancel_at_period_end: cancelAtPeriodEnd ?? false,
       updated_at: new Date().toISOString(),
     })
-    .eq("stripe_subscription_id", stripeSubId);
+    .eq("id", sub.id);
 }
 
 async function syncEntitlementsFromPlan(
@@ -257,9 +373,14 @@ Deno.serve(async (req) => {
         break;
 
       case "customer.subscription.created":
-      case "customer.subscription.updated":
-        await handleSubscriptionUpdated(supabase, event.data.object);
+      case "customer.subscription.updated": {
+        // Run both agency + individual handlers (each checks if the sub exists)
+        await Promise.all([
+          handleSubscriptionUpdated(supabase, event.data.object),
+          handleIndividualSubscriptionUpdated(supabase, event.data.object),
+        ]);
         break;
+      }
 
       case "customer.subscription.deleted":
         await handleSubscriptionDeleted(supabase, event.data.object);

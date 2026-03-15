@@ -1,0 +1,14 @@
+{
+  "name": "je-extractor",
+  "version": "1.0.0",
+  "description": "JamesEdition design extractor",
+  "type": "module",
+  "scripts": {
+    "extract": "node extract.js"
+  },
+  "dependencies": {
+    "playwright": "^1.42.0",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}

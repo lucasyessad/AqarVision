@@ -1,30 +1,8 @@
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import { Figtree, Libre_Baskerville, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { routing } from "@/lib/i18n/routing";
-
-const figtree = Figtree({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700", "800"],
-  variable: "--font-sans",
-});
-
-const libreBaskerville = Libre_Baskerville({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500"],
-  variable: "--font-mono",
-});
+import { LocaleHtmlSync } from "@/components/LocaleHtmlSync";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -49,16 +27,11 @@ export default async function LocaleLayout({
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
-    <html
-      lang={locale}
-      dir={dir}
-      className={`${figtree.variable} ${libreBaskerville.variable} ${jetbrainsMono.variable}`}
-    >
-      <body className="min-h-screen font-sans" suppressHydrationWarning>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <>
+      <LocaleHtmlSync locale={locale} dir={dir} />
+      <NextIntlClientProvider messages={messages}>
+        {children}
+      </NextIntlClientProvider>
+    </>
   );
 }

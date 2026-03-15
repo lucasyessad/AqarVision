@@ -28,7 +28,7 @@ export function ListingCard({ listing }: ListingCardProps) {
   return (
     <button
       type="button"
-      onClick={() => router.push(`/dashboard/listings/${listing.id}/edit`)}
+      onClick={() => router.push(`/AqarPro/dashboard/listings/${listing.id}/edit`)}
       className="group w-full rounded-xl bg-[#f7fafc] text-start shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#1a365d]/20"
     >
       {/* Cover image */}
