@@ -305,12 +305,10 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
           <React.Fragment key={s.key}>
             <div className="flex flex-col items-center gap-1.5">
               <div
-                className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-all"
-                style={{
-                  background: done ? "#16a34a" : active ? "#09090b" : "#f1f5f9",
-                  color: done || active ? "#fff" : "#94a3b8",
-                  boxShadow: active ? "0 0 0 4px rgba(9,9,11,0.15)" : "none",
-                }}
+                className={[
+                  "flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-all",
+                  done ? "bg-green-600 text-white" : active ? "bg-zinc-950 dark:bg-amber-500 text-white dark:text-zinc-950 ring-4 ring-zinc-950/15 dark:ring-amber-500/20" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500",
+                ].join(" ")}
               >
                 {done ? (
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -319,16 +317,20 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
                 ) : idx}
               </div>
               <span
-                className="hidden text-[10px] font-medium sm:block"
-                style={{ color: active ? "#09090b" : done ? "#16a34a" : "#94a3b8" }}
+                className={[
+                  "hidden text-[10px] font-medium sm:block",
+                  active ? "text-zinc-950 dark:text-zinc-50" : done ? "text-green-600 dark:text-green-400" : "text-zinc-400 dark:text-zinc-500",
+                ].join(" ")}
               >
                 {s.label}
               </span>
             </div>
             {i < total - 1 && (
               <div
-                className="mb-5 h-px flex-1 mx-1.5 sm:mx-2 transition-all"
-                style={{ background: done ? "#16a34a" : "#e2e8f0" }}
+                className={[
+                  "mb-5 h-px flex-1 mx-1.5 sm:mx-2 transition-all",
+                  done ? "bg-green-600 dark:bg-green-500" : "bg-zinc-200 dark:bg-zinc-700",
+                ].join(" ")}
               />
             )}
           </React.Fragment>
@@ -370,14 +372,13 @@ function AmenityToggle({
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className="flex items-center gap-2.5 rounded-xl border-2 px-3 py-2.5 text-left transition-all"
-      style={{
-        borderColor: checked ? "#09090b" : "#e2e8f0",
-        background: checked ? "rgba(9,9,11,0.05)" : "#fff",
-      }}
+      className={[
+        "flex items-center gap-2.5 rounded-xl border-2 px-3 py-2.5 text-left transition-all",
+        checked ? "border-zinc-950 dark:border-amber-500 bg-zinc-950/5 dark:bg-amber-500/5" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900",
+      ].join(" ")}
     >
       <span className="text-base leading-none">{emoji}</span>
-      <span className="text-sm font-medium" style={{ color: checked ? "#09090b" : "#374151" }}>
+      <span className={`text-sm font-medium ${checked ? "text-zinc-950 dark:text-zinc-50" : "text-zinc-700 dark:text-zinc-300"}`}>
         {label}
       </span>
       {checked && (
@@ -626,15 +627,14 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
                       key={type}
                       type="button"
                       onClick={() => set("listing_type", type)}
-                      className="flex w-full items-center gap-4 rounded-xl border-2 p-4 text-left transition-all"
-                      style={{
-                        borderColor: sel ? "#09090b" : "#e2e8f0",
-                        background: sel ? "rgba(9,9,11,0.04)" : "#fff",
-                      }}
+                      className={[
+                        "flex w-full items-center gap-4 rounded-xl border-2 p-4 text-left transition-all",
+                        sel ? "border-zinc-950 dark:border-amber-500 bg-zinc-950/[0.04] dark:bg-amber-500/5" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900",
+                      ].join(" ")}
                     >
-                      <span style={{ color: sel ? "#09090b" : "#9ca3af" }}>{meta.icon}</span>
+                      <span className={sel ? "text-zinc-950 dark:text-amber-500" : "text-zinc-400 dark:text-zinc-500"}>{meta.icon}</span>
                       <div className="flex-1">
-                        <p className="font-semibold" style={{ color: sel ? "#09090b" : "#1f2937" }}>{meta.label}</p>
+                        <p className={`font-semibold ${sel ? "text-zinc-950 dark:text-zinc-50" : "text-zinc-800 dark:text-zinc-200"}`}>{meta.label}</p>
                         <p className="text-xs text-gray-500">{meta.description}</p>
                       </div>
                       {sel && (
@@ -661,14 +661,13 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
                       key={type}
                       type="button"
                       onClick={() => set("property_type", type)}
-                      className="flex flex-col items-center gap-2 rounded-xl border-2 p-3.5 text-center transition-all"
-                      style={{
-                        borderColor: sel ? "#09090b" : "#e2e8f0",
-                        background: sel ? "rgba(9,9,11,0.04)" : "#fff",
-                      }}
+                      className={[
+                        "flex flex-col items-center gap-2 rounded-xl border-2 p-3.5 text-center transition-all",
+                        sel ? "border-zinc-950 dark:border-amber-500 bg-zinc-950/[0.04] dark:bg-amber-500/5" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900",
+                      ].join(" ")}
                     >
-                      <span style={{ color: sel ? "#09090b" : "#9ca3af" }}>{meta.icon}</span>
-                      <span className="text-xs font-medium leading-tight" style={{ color: sel ? "#09090b" : "#374151" }}>
+                      <span className={sel ? "text-zinc-950 dark:text-amber-500" : "text-zinc-400 dark:text-zinc-500"}>{meta.icon}</span>
+                      <span className={`text-xs font-medium leading-tight ${sel ? "text-zinc-950 dark:text-zinc-50" : "text-zinc-700 dark:text-zinc-300"}`}>
                         {meta.label}
                       </span>
                     </button>
@@ -896,12 +895,12 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
                     key={o}
                     type="button"
                     onClick={() => set("orientation", data.orientation === o ? "" : o)}
-                    className="rounded-lg border-2 px-3 py-1.5 text-sm font-medium transition-all"
-                    style={{
-                      borderColor: data.orientation === o ? "#09090b" : "#e2e8f0",
-                      background: data.orientation === o ? "rgba(9,9,11,0.06)" : "#fff",
-                      color: data.orientation === o ? "#09090b" : "#374151",
-                    }}
+                    className={[
+                      "rounded-lg border-2 px-3 py-1.5 text-sm font-medium transition-all",
+                      data.orientation === o
+                        ? "border-zinc-950 dark:border-amber-500 bg-zinc-950/[0.06] dark:bg-amber-500/10 text-zinc-950 dark:text-zinc-50"
+                        : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300",
+                    ].join(" ")}
                   >
                     {o}
                   </button>

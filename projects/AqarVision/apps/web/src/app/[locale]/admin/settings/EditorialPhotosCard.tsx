@@ -76,20 +76,17 @@ function UploadSlot({ slot }: { slot: PhotoSlot }) {
   return (
     <div className="flex flex-col gap-3">
       <div>
-        <p className="text-sm font-medium text-white/90">{slot.label}</p>
-        <p className="mt-0.5 text-xs text-white/40">{slot.hint}</p>
+        <p className="text-sm font-medium text-white/90 dark:text-zinc-100">{slot.label}</p>
+        <p className="mt-0.5 text-xs text-white/40 dark:text-zinc-400">{slot.hint}</p>
       </div>
 
       {/* Preview */}
-      <div
-        className="relative h-36 w-full overflow-hidden rounded-xl"
-        style={{ background: "rgba(255,255,255,0.06)", border: "1px dashed rgba(255,255,255,0.15)" }}
-      >
+      <div className="relative h-36 w-full overflow-hidden rounded-xl bg-white/[0.06] dark:bg-zinc-800 border border-dashed border-white/15 dark:border-zinc-700">
         {preview ? (
           <Image src={preview} alt={slot.label} fill className="object-cover" unoptimized />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <svg className="h-8 w-8 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+            <svg className="h-8 w-8 text-white/20 dark:text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M18 10.5h.008v.008H18V10.5zm-12 6h12a2.25 2.25 0 002.25-2.25v-7.5A2.25 2.25 0 0018 4.5H6A2.25 2.25 0 003.75 6.75v7.5A2.25 2.25 0 006 16.5z" />
             </svg>
           </div>
@@ -111,8 +108,7 @@ function UploadSlot({ slot }: { slot: PhotoSlot }) {
         onDrop={onDrop}
         onDragOver={(e) => e.preventDefault()}
         onClick={() => inputRef.current?.click()}
-        className="flex cursor-pointer items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition-opacity hover:opacity-80"
-        style={{ background: "rgba(245,158,11,0.15)", color: "#F59E0B" }}
+        className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-amber-500/15 py-2.5 text-sm font-medium text-amber-500 transition-opacity hover:opacity-80"
       >
         {uploading ? (
           <>
@@ -134,17 +130,14 @@ function UploadSlot({ slot }: { slot: PhotoSlot }) {
       <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={onFileChange} />
 
       {error && <p className="text-xs text-red-400">{error}</p>}
-      {saved && <p className="text-xs text-green-400">✓ Photo enregistrée</p>}
+      {saved && <p className="text-xs text-green-400">Photo enregistrée</p>}
     </div>
   );
 }
 
 export function EditorialPhotosCard({ slots }: EditorialPhotosCardProps) {
   return (
-    <div
-      className="grid grid-cols-1 gap-6 rounded-xl p-5 sm:grid-cols-3"
-      style={{ background: "rgba(255,255,255,0.04)" }}
-    >
+    <div className="grid grid-cols-1 gap-6 rounded-xl bg-white/[0.04] dark:bg-zinc-800/50 p-5 sm:grid-cols-3">
       {slots.map((slot) => (
         <UploadSlot key={slot.key} slot={slot} />
       ))}

@@ -40,8 +40,7 @@ export function ChaabSignUpForm({ locale = "fr" }: ChaabSignUpFormProps) {
 
       {state?.success === false && (
         <div
-          className="rounded-lg px-4 py-3 text-sm"
-          style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#fca5a5" }}
+          className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
         >
           {state.error.message}
         </div>

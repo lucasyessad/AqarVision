@@ -41,10 +41,10 @@ export default async function AppearancePage({
   return (
     <div className="space-y-1">
       <div className="mb-4">
-        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+        <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           Apparence
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Choisissez le thème, les couleurs et le branding de votre vitrine publique.
         </p>
       </div>

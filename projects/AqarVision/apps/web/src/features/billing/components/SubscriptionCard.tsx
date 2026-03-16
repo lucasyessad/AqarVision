@@ -15,20 +15,20 @@ interface SubscriptionCardProps {
 function UsageBar({ label, used, max }: { label: string; used: number; max: number }) {
   const isUnlimited = max === -1;
   const pct = isUnlimited ? 0 : Math.min((used / max) * 100, 100);
-  const barColor = pct > 90 ? "#DC2626" : pct > 70 ? "#D97706" : "var(--coral)";
+  const barColor = pct > 90 ? "bg-red-500" : pct > 70 ? "bg-amber-500" : "bg-amber-500";
 
   return (
     <div>
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium" style={{ color: "var(--charcoal-700)" }}>{label}</span>
-        <span className="text-xs tabular-nums" style={{ color: "var(--charcoal-500)" }}>
+        <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{label}</span>
+        <span className="text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
           {used} / {isUnlimited ? "∞" : max}
         </span>
       </div>
-      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full" style={{ background: "#E3E8EF" }}>
+      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
         <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{ width: isUnlimited ? "3%" : `${pct}%`, backgroundColor: barColor }}
+          className={`h-full rounded-full transition-all duration-500 ${barColor}`}
+          style={{ width: isUnlimited ? "3%" : `${pct}%` }}
         />
       </div>
     </div>
@@ -36,18 +36,15 @@ function UsageBar({ label, used, max }: { label: string; used: number; max: numb
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const map: Record<string, { label: string; bg: string; color: string }> = {
-    active:    { label: "Actif",     bg: "#F0FDF4", color: "#16A34A" },
-    trialing:  { label: "Essai",     bg: "#EFF6FF", color: "#2563EB" },
-    past_due:  { label: "Impayé",    bg: "#FFFBEB", color: "#D97706" },
-    canceled:  { label: "Annulé",    bg: "#FFF5F5", color: "#DC2626" },
+  const map: Record<string, { label: string; className: string }> = {
+    active:    { label: "Actif",     className: "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400" },
+    trialing:  { label: "Essai",     className: "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" },
+    past_due:  { label: "Impayé",    className: "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400" },
+    canceled:  { label: "Annulé",    className: "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400" },
   };
-  const cfg = map[status] ?? { label: status, bg: "#F6F9FC", color: "var(--charcoal-600)" };
+  const cfg = map[status] ?? { label: status, className: "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400" };
   return (
-    <span
-      className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
-      style={{ background: cfg.bg, color: cfg.color }}
-    >
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${cfg.className}`}>
       {cfg.label}
     </span>
   );
@@ -77,31 +74,31 @@ export function SubscriptionCard({
   });
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+    <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
       {/* Card header */}
-      <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-        <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+      <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4">
+        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
           Abonnement actuel
         </h2>
-        <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+        <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
           Gérez votre plan et votre facturation.
         </p>
       </div>
 
       {/* Plan info row */}
-      <div className="grid grid-cols-1 gap-6 border-b p-6 md:grid-cols-[240px_1fr]" style={{ borderColor: "#E3E8EF" }}>
+      <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 dark:border-zinc-700 p-6 md:grid-cols-[240px_1fr]">
         <div>
-          <p className="text-sm font-medium" style={{ color: "var(--charcoal-950)" }}>Plan</p>
-          <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
+          <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">Plan</p>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
             Renouvellement le {periodEnd}.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <div>
-            <p className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
               {subscription.plan.name}
             </p>
-            <p className="mt-0.5 text-xs" style={{ color: "var(--charcoal-500)" }}>
+            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
               {subscription.plan.price_eur} {t("eur")} / {t("per_month")}
             </p>
           </div>
@@ -110,10 +107,10 @@ export function SubscriptionCard({
       </div>
 
       {/* Usage row */}
-      <div className="grid grid-cols-1 gap-6 border-b p-6 md:grid-cols-[240px_1fr]" style={{ borderColor: "#E3E8EF" }}>
+      <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 dark:border-zinc-700 p-6 md:grid-cols-[240px_1fr]">
         <div>
-          <p className="text-sm font-medium" style={{ color: "var(--charcoal-950)" }}>Utilisation</p>
-          <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
+          <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">Utilisation</p>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
             Quotas du mois en cours.
           </p>
         </div>
@@ -132,8 +129,8 @@ export function SubscriptionCard({
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between px-6 py-4" style={{ background: "#F6F9FC" }}>
-        <p className="text-xs" style={{ color: "var(--charcoal-500)" }}>
+      <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-800 px-6 py-4">
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
           Factures, paiement et résiliation via le portail Stripe.
         </p>
         <form action={formAction}>
@@ -141,8 +138,7 @@ export function SubscriptionCard({
           <button
             type="submit"
             disabled={isPending}
-            className="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-white disabled:opacity-50"
-            style={{ borderColor: "#E3E8EF", color: "var(--charcoal-700)", background: "white" }}
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-50"
           >
             {isPending ? (
               <>
@@ -165,8 +161,8 @@ export function SubscriptionCard({
       </div>
 
       {state && !state.success && (
-        <div className="border-t px-6 py-3" style={{ borderColor: "#E3E8EF" }}>
-          <p className="text-xs text-red-500">{state.error.message}</p>
+        <div className="border-t border-zinc-200 dark:border-zinc-700 px-6 py-3">
+          <p className="text-xs text-red-500 dark:text-red-400">{state.error.message}</p>
         </div>
       )}
     </div>

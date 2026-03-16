@@ -77,11 +77,11 @@ export default async function EspacePage({ params }: EspacePageProps) {
         <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-amber-500">
           Espace Particulier
         </p>
-        <h1 className="text-2xl font-light text-zinc-950 font-display">
-          <span style={{ fontStyle: "italic" }}>Bonjour,</span>{" "}
+        <h1 className="text-2xl font-light text-zinc-950 dark:text-zinc-50 font-display">
+          <span className="italic">Bonjour,</span>{" "}
           <span className="font-semibold">{firstName}</span>
         </h1>
-        <p className="mt-1 text-sm text-zinc-400">
+        <p className="mt-1 text-sm text-zinc-400 dark:text-zinc-500">
           {t("welcome_subtitle")}
         </p>
       </div>
@@ -92,20 +92,20 @@ export default async function EspacePage({ params }: EspacePageProps) {
           <Link
             key={card.href}
             href={card.href}
-            className="group flex flex-col gap-3 rounded-xl p-4 transition-all hover:-translate-y-0.5 bg-white border border-zinc-200 shadow-sm"
+            className="group flex flex-col gap-3 rounded-xl p-4 transition-all hover:-translate-y-0.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-950">
-              <svg className="h-4 w-4 text-zinc-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-950 dark:bg-amber-500/10">
+              <svg className="h-4 w-4 text-zinc-50 dark:text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d={card.icon} />
               </svg>
             </div>
             <div>
               {card.count !== null && (
-                <p className="text-xl font-semibold text-zinc-950">
+                <p className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
                   {card.count}
                 </p>
               )}
-              <p className={`text-xs font-medium ${card.count !== null ? "text-zinc-400" : "text-zinc-950"}`}>
+              <p className={`text-xs font-medium ${card.count !== null ? "text-zinc-400 dark:text-zinc-500" : "text-zinc-950 dark:text-zinc-50"}`}>
                 {card.label}
               </p>
             </div>
@@ -118,7 +118,7 @@ export default async function EspacePage({ params }: EspacePageProps) {
         {/* Déposer une annonce */}
         <Link
           href="/deposer"
-          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5 bg-zinc-950 border border-zinc-50/[0.06] shadow-sm"
+          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5 bg-zinc-950 dark:bg-zinc-900 border border-zinc-50/[0.06] shadow-sm"
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-50/10">
             <svg className="h-5 w-5 text-zinc-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -144,7 +144,7 @@ export default async function EspacePage({ params }: EspacePageProps) {
         {/* Rechercher */}
         <Link
           href="/search"
-          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5 bg-white border border-zinc-200 shadow-sm"
+          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm"
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-50">
             <svg className="h-5 w-5 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -152,7 +152,7 @@ export default async function EspacePage({ params }: EspacePageProps) {
             </svg>
           </div>
           <div>
-            <p className="font-semibold text-zinc-950">
+            <p className="font-semibold text-zinc-950 dark:text-zinc-50">
               {t("search_cta_title")}
             </p>
             <p className="text-xs text-zinc-400">

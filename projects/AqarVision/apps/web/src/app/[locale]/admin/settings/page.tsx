@@ -64,8 +64,8 @@ export default async function AdminSettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Paramètres plateforme</h1>
-        <p className="mt-1 text-sm text-white/50">
+        <h1 className="text-2xl font-bold text-white dark:text-zinc-50">Paramètres plateforme</h1>
+        <p className="mt-1 text-sm text-white/50 dark:text-zinc-400">
           Configuration globale du site — modifiée en temps réel.
         </p>
       </div>
@@ -73,7 +73,7 @@ export default async function AdminSettingsPage() {
       <div className="space-y-8">
         {/* Photos éditoriales — section en premier */}
         <section>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40 dark:text-zinc-500">
             Photos homepage
           </h2>
           <EditorialPhotosCard slots={slotsWithUrls} />
@@ -81,13 +81,10 @@ export default async function AdminSettingsPage() {
 
         {categories.map((cat) => (
           <section key={cat}>
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40 dark:text-zinc-500">
               {CATEGORY_LABELS[cat] ?? cat}
             </h2>
-            <div
-              className="divide-y rounded-xl"
-              style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.08)" }}
-            >
+            <div className="divide-y divide-white/[0.06] dark:divide-zinc-700 rounded-xl bg-white/[0.04] dark:bg-zinc-800/50">
               {grouped[cat]!.map((setting) => (
                 <SettingsForm key={setting.key} setting={setting} />
               ))}

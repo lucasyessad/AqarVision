@@ -11,10 +11,10 @@ export default async function PricingPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-12 text-center">
-        <h1 className="text-3xl font-bold text-blue-night sm:text-4xl">
+        <h1 className="text-3xl font-bold text-zinc-900 sm:text-4xl dark:text-zinc-50">
           {t("pricing_title")}
         </h1>
-        <p className="mt-4 text-lg text-gray-500">
+        <p className="mt-4 text-lg text-zinc-500 dark:text-zinc-400">
           {t("features")}
         </p>
       </div>

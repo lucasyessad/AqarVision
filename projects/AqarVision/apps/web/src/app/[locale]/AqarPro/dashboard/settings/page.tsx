@@ -53,56 +53,53 @@ export default async function SettingsPage() {
     <div className="mx-auto max-w-3xl space-y-1">
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+        <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           Paramètres du compte
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Gérez vos informations personnelles et vos préférences.
         </p>
       </div>
 
-      {/* ── Email (read-only) ─────────────────────────────────────── */}
-      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+      {/* Email (read-only) */}
+      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
         <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-[240px_1fr]">
           <div>
-            <h3 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+            <h3 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
               Adresse e-mail
             </h3>
-            <p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--charcoal-500)" }}>
+            <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
               Votre adresse de connexion. Contactez le support pour la modifier.
             </p>
           </div>
           <div>
-            <div
-              className="flex items-center gap-3 rounded-md border px-3 py-2.5"
-              style={{ background: "#F6F9FC", borderColor: "#E3E8EF" }}
-            >
-              <svg className="h-4 w-4 shrink-0" style={{ color: "var(--charcoal-400)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2.5 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <svg className="h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
-              <span className="text-sm" style={{ color: "var(--charcoal-700)" }}>{user.email}</span>
+              <span className="text-sm text-zinc-700 dark:text-zinc-300">{user.email}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── Profile form ──────────────────────────────────────────── */}
+      {/* Profile form */}
       <form action={updateProfileAction}>
-        <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
           {/* Card header */}
-          <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-            <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+            <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
               Informations personnelles
             </h2>
           </div>
 
           {/* Full name row */}
-          <div className="grid grid-cols-1 gap-6 border-b p-6 md:grid-cols-[240px_1fr]" style={{ borderColor: "#E3E8EF" }}>
+          <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 p-6 dark:border-zinc-800 md:grid-cols-[240px_1fr]">
             <div>
-              <label htmlFor="full_name" className="block text-sm font-medium" style={{ color: "var(--charcoal-950)" }}>
+              <label htmlFor="full_name" className="block text-sm font-medium text-zinc-950 dark:text-zinc-50">
                 {t("full_name")}
               </label>
-              <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                 Affiché sur votre profil et dans les communications.
               </p>
             </div>
@@ -113,19 +110,18 @@ export default async function SettingsPage() {
                 name="full_name"
                 defaultValue={profile?.full_name ?? ""}
                 placeholder="Votre nom complet"
-                className="w-full rounded-md border px-3 py-2 text-sm transition-shadow focus:outline-none focus:border-[var(--coral)] focus:ring-2 focus:ring-[rgba(232,114,92,0.1)]"
-                style={{ borderColor: "#E3E8EF", color: "var(--charcoal-950)" }}
+                className="h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-950 transition-shadow focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
               />
             </div>
           </div>
 
           {/* Phone row */}
-          <div className="grid grid-cols-1 gap-6 border-b p-6 md:grid-cols-[240px_1fr]" style={{ borderColor: "#E3E8EF" }}>
+          <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 p-6 dark:border-zinc-800 md:grid-cols-[240px_1fr]">
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium" style={{ color: "var(--charcoal-950)" }}>
+              <label htmlFor="phone" className="block text-sm font-medium text-zinc-950 dark:text-zinc-50">
                 {t("phone")}
               </label>
-              <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                 Numéro de contact (optionnel).
               </p>
             </div>
@@ -136,19 +132,18 @@ export default async function SettingsPage() {
                 name="phone"
                 defaultValue={profile?.phone ?? ""}
                 placeholder="+213 XX XX XX XX"
-                className="w-full rounded-md border px-3 py-2 text-sm transition-shadow focus:outline-none focus:border-[var(--coral)] focus:ring-2 focus:ring-[rgba(232,114,92,0.1)]"
-                style={{ borderColor: "#E3E8EF", color: "var(--charcoal-950)" }}
+                className="h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-950 transition-shadow focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
               />
             </div>
           </div>
 
           {/* Language row */}
-          <div className="grid grid-cols-1 gap-6 border-b p-6 md:grid-cols-[240px_1fr]" style={{ borderColor: "#E3E8EF" }}>
+          <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 p-6 dark:border-zinc-800 md:grid-cols-[240px_1fr]">
             <div>
-              <label htmlFor="preferred_locale" className="block text-sm font-medium" style={{ color: "var(--charcoal-950)" }}>
+              <label htmlFor="preferred_locale" className="block text-sm font-medium text-zinc-950 dark:text-zinc-50">
                 {t("preferred_locale")}
               </label>
-              <p className="mt-1 text-xs" style={{ color: "var(--charcoal-500)" }}>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                 Langue de l&apos;interface du dashboard.
               </p>
             </div>
@@ -157,8 +152,7 @@ export default async function SettingsPage() {
                 id="preferred_locale"
                 name="preferred_locale"
                 defaultValue={profile?.preferred_locale ?? "fr"}
-                className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none"
-                style={{ borderColor: "#E3E8EF", color: "var(--charcoal-950)" }}
+                className="h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-950 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
               >
                 {SUPPORTED_LOCALES.map((locale) => (
                   <option key={locale} value={locale}>
@@ -170,11 +164,10 @@ export default async function SettingsPage() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end px-6 py-4" style={{ background: "#F6F9FC" }}>
+          <div className="flex items-center justify-end bg-zinc-50 px-6 py-4 dark:bg-zinc-900/50">
             <button
               type="submit"
-              className="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 focus:outline-none"
-              style={{ background: "var(--coral)" }}
+              className="inline-flex items-center rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-amber-600 focus:outline-none"
             >
               {tDashboard("save")}
             </button>

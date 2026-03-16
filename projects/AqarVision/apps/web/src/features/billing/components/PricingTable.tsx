@@ -107,7 +107,7 @@ function PlanCard({
       <div className="border-t border-gray-200 bg-zinc-50 p-6">
         {isEnterprise ? (
           <a
-            href="mailto:contact@aqarvision.com"
+            href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "contact@aqarvision.dz"}`}
             className="flex w-full items-center justify-center rounded-md border border-gray-200 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-white"
           >
             {t("contact_sales")}

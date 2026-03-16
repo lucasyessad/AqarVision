@@ -6,7 +6,7 @@
  * No external API fetching — just styled anchor links with official brand colors.
  */
 
-// ── Types ─────────────────────────────────────────────────────────────────────
+// -- Types --
 
 export interface SocialFeedProps {
   instagramUrl?: string | null
@@ -14,7 +14,7 @@ export interface SocialFeedProps {
   tiktokUrl?: string | null
 }
 
-// ── Icons ─────────────────────────────────────────────────────────────────────
+// -- Icons --
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -40,19 +40,17 @@ function TikTokIcon({ className }: { className?: string }) {
   )
 }
 
-// ── Social link config ────────────────────────────────────────────────────────
+// -- Social link config --
 
 interface SocialNetwork {
   key: 'instagram' | 'facebook' | 'tiktok'
   label: string
   url: string
   Icon: React.ComponentType<{ className?: string }>
-  bgColor: string
-  textColor: string
-  hoverBgColor: string
+  className: string
 }
 
-// ── SocialFeed ────────────────────────────────────────────────────────────────
+// -- SocialFeed --
 
 export default function SocialFeed({ instagramUrl, facebookUrl, tiktokUrl }: SocialFeedProps) {
   const networks: SocialNetwork[] = []
@@ -63,10 +61,7 @@ export default function SocialFeed({ instagramUrl, facebookUrl, tiktokUrl }: Soc
       label: 'Instagram',
       url: instagramUrl,
       Icon: InstagramIcon,
-      // Official Instagram gradient approximated as solid purple/pink
-      bgColor: 'bg-[#833ab4]',
-      textColor: 'text-white',
-      hoverBgColor: 'hover:bg-[#6a2f91]',
+      className: 'bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600',
     })
   }
 
@@ -76,9 +71,7 @@ export default function SocialFeed({ instagramUrl, facebookUrl, tiktokUrl }: Soc
       label: 'Facebook',
       url: facebookUrl,
       Icon: FacebookIcon,
-      bgColor: 'bg-[#1877f2]',
-      textColor: 'text-white',
-      hoverBgColor: 'hover:bg-[#0d65d9]',
+      className: 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600',
     })
   }
 
@@ -88,33 +81,30 @@ export default function SocialFeed({ instagramUrl, facebookUrl, tiktokUrl }: Soc
       label: 'TikTok',
       url: tiktokUrl,
       Icon: TikTokIcon,
-      bgColor: 'bg-[#010101]',
-      textColor: 'text-white',
-      hoverBgColor: 'hover:bg-[#2a2a2a]',
+      className: 'bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200',
     })
   }
 
-  // Nothing configured → render nothing
+  // Nothing configured -> render nothing
   if (networks.length === 0) return null
 
   return (
     <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6" aria-labelledby="social-feed-title">
       <h2
         id="social-feed-title"
-        className="mb-4 text-sm font-semibold uppercase tracking-widest"
-        style={{ color: 'var(--agency-primary, #1a1a1a)' }}
+        className="mb-4 text-sm font-semibold uppercase tracking-widest text-zinc-900 dark:text-zinc-100"
       >
         Suivez-nous
       </h2>
       <div className="flex flex-wrap gap-3">
-        {networks.map(({ key, label, url, Icon, bgColor, textColor, hoverBgColor }) => (
+        {networks.map(({ key, label, url, Icon, className }) => (
           <a
             key={key}
             href={url}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Voir notre page ${label}`}
-            className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${bgColor} ${textColor} ${hoverBgColor}`}
+            className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${className}`}
           >
             <Icon className="h-4 w-4" />
             {label}

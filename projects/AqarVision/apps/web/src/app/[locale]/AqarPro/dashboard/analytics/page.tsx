@@ -30,8 +30,8 @@ export default async function AnalyticsDashboardPage({
 
   if (!membership) {
     return (
-      <div className="flex items-center justify-center rounded-lg border bg-white py-16" style={{ borderColor: "#E3E8EF" }}>
-        <p className="text-sm" style={{ color: "var(--charcoal-500)" }}>{t("no_data")}</p>
+      <div className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white py-16 dark:border-zinc-800 dark:bg-zinc-900">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{t("no_data")}</p>
       </div>
     );
   }
@@ -53,18 +53,18 @@ export default async function AnalyticsDashboardPage({
     <div className="space-y-4">
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+        <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           {t("title")}
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Performances de votre agence sur les 30 derniers jours.
         </p>
       </div>
 
       {/* Overview section */}
-      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
-        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+          <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             {t("overview")}
           </h2>
         </div>
@@ -74,9 +74,9 @@ export default async function AnalyticsDashboardPage({
       </div>
 
       {/* Chart section */}
-      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
-        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+          <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             Évolution quotidienne
           </h2>
         </div>
@@ -86,9 +86,9 @@ export default async function AnalyticsDashboardPage({
       </div>
 
       {/* Advanced analytics section */}
-      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
-        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+          <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             Analyses avancées
           </h2>
         </div>

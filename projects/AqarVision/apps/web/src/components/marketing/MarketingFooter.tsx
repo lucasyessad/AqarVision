@@ -8,29 +8,29 @@ interface MarketingFooterProps {
 
 export function MarketingFooter({ locale }: MarketingFooterProps) {
   return (
-    <footer className="border-t border-zinc-200 bg-zinc-50">
+    <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-10 lg:grid-cols-4">
 
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
             <Link href="/" locale={locale} className="inline-flex items-center gap-1">
-              <span className="font-display text-xl font-semibold tracking-tight text-zinc-900">
+              <span className="font-display text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
                 Aqar
               </span>
               <span className="mx-0.5 mb-0.5 inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
-              <span className="font-display text-xl font-semibold tracking-tight text-zinc-900">
+              <span className="font-display text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
                 Vision
               </span>
             </Link>
-            <p className="mt-3 max-w-[200px] text-sm leading-relaxed text-zinc-400">
+            <p className="mt-3 max-w-[200px] text-sm leading-relaxed text-zinc-400 dark:text-zinc-500">
               Le portail immobilier des 58 wilayas d&apos;Algérie.
             </p>
           </div>
 
           {/* Recherche */}
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">
               Recherche
             </h3>
             <ul className="space-y-2.5">
@@ -44,7 +44,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
                   <Link
                     href={href}
                     locale={locale}
-                    className="text-sm text-zinc-600 transition-colors hover:text-zinc-900"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
                   >
                     {label}
                   </Link>
@@ -55,7 +55,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
 
           {/* Professionnels */}
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">
               Professionnels
             </h3>
             <ul className="space-y-2.5">
@@ -68,7 +68,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
                   <Link
                     href={href}
                     locale={locale}
-                    className="text-sm text-zinc-600 transition-colors hover:text-zinc-900"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
                   >
                     {label}
                   </Link>
@@ -77,23 +77,23 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
             </ul>
           </div>
 
-          {/* Légal */}
+          {/* Legal */}
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">
               Légal
             </h3>
             <ul className="space-y-2.5">
               {["À propos", "Confidentialité", "CGU", "Contact"].map((label) => (
                 <li key={label}>
-                  <span className="text-sm text-zinc-600">{label}</span>
+                  <span className="text-sm text-zinc-600 dark:text-zinc-400">{label}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-zinc-200 pt-8 text-center text-xs text-zinc-400">
-          &copy; {new Date().getFullYear()} AqarVision — Tous droits réservés
+        <div className="mt-12 border-t border-zinc-200 dark:border-zinc-800 pt-8 text-center text-xs text-zinc-400 dark:text-zinc-500">
+          &copy; 2026 AqarVision — Tous droits réservés
         </div>
       </div>
     </footer>

@@ -56,8 +56,7 @@ export function EspaceMessagerieClient({
 
   return (
     <div
-      className="flex overflow-hidden rounded-xl border border-zinc-200 bg-white"
-      style={{ height: "calc(100vh - 7rem)" }}
+      className="flex h-[calc(100vh-7rem)] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
     >
       {/* Conversation list */}
       <div className="w-72 shrink-0 overflow-y-auto border-e border-zinc-200">

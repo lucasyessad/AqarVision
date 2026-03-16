@@ -49,7 +49,7 @@ function ManualPaymentModal({
         </button>
 
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#3D7A5A" strokeWidth={1.5}>
+          <svg className="h-6 w-6 text-green-700 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75" />
           </svg>
         </div>
@@ -189,21 +189,17 @@ export function UpgradePricingClient({
             return (
               <div
                 key={plan.slug}
-                className="relative rounded-xl border bg-white p-5"
-                style={{
-                  borderWidth: "1.5px",
-                  borderColor: isActive ? "#09090b" : "#e4e4e7",
-                }}
+                className={`relative rounded-xl border-[1.5px] p-5 bg-white dark:bg-zinc-900 ${isActive ? "border-zinc-950 dark:border-amber-500" : "border-zinc-200 dark:border-zinc-700"}`}
               >
                 {plan.badge && (
-                  <span className="absolute right-4 top-4 rounded-full bg-zinc-950 px-2.5 py-0.5 text-xs font-semibold text-zinc-50">
+                  <span className="absolute right-4 top-4 rounded-full bg-zinc-950 dark:bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-zinc-50 dark:text-zinc-950">
                     {plan.badge}
                   </span>
                 )}
                 {isActive && (
                   <span
                     className="absolute left-4 top-4 rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                    style={{ background: "rgba(90,143,110,0.12)", color: "#3D7A5A" }}
+                    className="bg-green-500/10 text-green-700 dark:text-green-400"
                   >
                     Actif
                   </span>
@@ -225,7 +221,7 @@ export function UpgradePricingClient({
                 <ul className="mt-4 space-y-1.5">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-sm text-zinc-600">
-                      <svg className="mt-0.5 h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="#3D7A5A" strokeWidth={2.5}>
+                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-green-700 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                       {f}
@@ -239,9 +235,9 @@ export function UpgradePricingClient({
                     type="submit"
                     disabled={isLoading || isActive}
                     className={`w-full rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-85 disabled:opacity-50 ${
-                      isActive ? "text-[#3D7A5A]" : "bg-zinc-950 text-zinc-50"
+                      isActive ? "text-green-700 dark:text-green-400" : "bg-zinc-950 dark:bg-amber-500 text-zinc-50 dark:text-zinc-950"
                     }`}
-                    style={isActive ? { background: "rgba(90,143,110,0.1)" } : undefined}
+                    className={isActive ? "bg-green-500/10" : ""}
                   >
                     {isActive ? "Plan actuel" : subPending ? "Chargement…" : "S'abonner"}
                   </button>
@@ -266,14 +262,10 @@ export function UpgradePricingClient({
           {LISTING_PACKS.map((pack) => (
             <div
               key={pack.slug}
-              className="relative rounded-xl border bg-white p-5"
-              style={{
-                borderWidth: "1.5px",
-                borderColor: pack.badge ? "#09090b" : "#e4e4e7",
-              }}
+              className={`relative rounded-xl border-[1.5px] p-5 bg-white dark:bg-zinc-900 ${pack.badge ? "border-zinc-950 dark:border-amber-500" : "border-zinc-200 dark:border-zinc-700"}`}
             >
               {pack.badge && (
-                <span className="absolute right-4 top-4 rounded-full bg-zinc-950 px-2.5 py-0.5 text-xs font-semibold text-zinc-50">
+                <span className="absolute right-4 top-4 rounded-full bg-zinc-950 dark:bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-zinc-50 dark:text-zinc-950">
                   {pack.badge}
                 </span>
               )}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Search, MapPin, Home, Building2 } from "lucide-react";
 
 interface HomeSearchBarProps {
   locale: string;
@@ -43,21 +44,20 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
   };
 
   return (
-    <div className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-xl">
+    <div className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-xl focus-within:ring-2 focus-within:ring-amber-500/30">
       <div className="flex flex-col sm:flex-row">
         {/* Wilaya */}
-        <div className="flex flex-1 items-center gap-2 border-zinc-100 px-4 py-4 sm:border-e">
-          <svg className="h-4 w-4 shrink-0 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-          </svg>
+        <div className="flex flex-1 items-center gap-2 px-4 h-14">
+          <MapPin className="h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-500" />
           <select
             value={wilaya}
             onChange={(e) => setWilaya(e.target.value)}
             onKeyDown={handleKeyDown}
             className={[
               "flex-1 cursor-pointer appearance-none bg-transparent text-sm outline-none",
-              wilaya ? "text-zinc-900" : "text-zinc-400",
+              wilaya
+                ? "text-zinc-900 dark:text-zinc-100"
+                : "text-zinc-400 dark:text-zinc-500",
             ].join(" ")}
           >
             <option value="">Toutes les wilayas</option>
@@ -67,18 +67,23 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
           </select>
         </div>
 
+        {/* Separator */}
+        <div className="hidden sm:flex items-center">
+          <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-700" />
+        </div>
+
         {/* Listing type */}
-        <div className="flex flex-1 items-center gap-2 border-zinc-100 px-4 py-4 sm:border-e">
-          <svg className="h-4 w-4 shrink-0 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-          </svg>
+        <div className="flex flex-1 items-center gap-2 px-4 h-14">
+          <Home className="h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-500" />
           <select
             value={listingType}
             onChange={(e) => setListingType(e.target.value)}
             onKeyDown={handleKeyDown}
             className={[
               "flex-1 cursor-pointer appearance-none bg-transparent text-sm outline-none",
-              listingType ? "text-zinc-900" : "text-zinc-400",
+              listingType
+                ? "text-zinc-900 dark:text-zinc-100"
+                : "text-zinc-400 dark:text-zinc-500",
             ].join(" ")}
           >
             {LISTING_TYPES.map((t) => (
@@ -87,18 +92,23 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
           </select>
         </div>
 
+        {/* Separator */}
+        <div className="hidden sm:flex items-center">
+          <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-700" />
+        </div>
+
         {/* Property type */}
-        <div className="flex flex-1 items-center gap-2 px-4 py-4">
-          <svg className="h-4 w-4 shrink-0 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819" />
-          </svg>
+        <div className="flex flex-1 items-center gap-2 px-4 h-14">
+          <Building2 className="h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-500" />
           <select
             value={propertyType}
             onChange={(e) => setPropertyType(e.target.value)}
             onKeyDown={handleKeyDown}
             className={[
               "flex-1 cursor-pointer appearance-none bg-transparent text-sm outline-none",
-              propertyType ? "text-zinc-900" : "text-zinc-400",
+              propertyType
+                ? "text-zinc-900 dark:text-zinc-100"
+                : "text-zinc-400 dark:text-zinc-500",
             ].join(" ")}
           >
             {PROPERTY_TYPES.map((t) => (
@@ -111,11 +121,9 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
         <button
           type="button"
           onClick={handleSearch}
-          className="flex min-w-[140px] items-center justify-center gap-2 whitespace-nowrap rounded-e-2xl bg-amber-500 px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
+          className="flex min-w-[140px] items-center justify-center gap-2 whitespace-nowrap rounded-e-2xl bg-amber-500 hover:bg-amber-600 h-14 px-7 text-sm font-semibold text-white transition-colors"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
+          <Search className="h-4 w-4" />
           Rechercher
         </button>
       </div>

@@ -67,18 +67,17 @@ export default async function TeamPage({
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
             {t("team_title")}
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             {members.length} membre{members.length !== 1 ? "s" : ""} dans votre agence.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/AqarPro/dashboard/team/invites"
-            className="rounded-md border px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-50"
-            style={{ borderColor: "#E3E8EF", color: "var(--charcoal-700)" }}
+            className="rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             Invitations
           </Link>
@@ -101,9 +100,9 @@ export default async function TeamPage({
       </div>
 
       {/* Team table card */}
-      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
-        <div className="border-b px-6 py-4" style={{ borderColor: "#E3E8EF" }}>
-          <h2 className="text-sm font-semibold" style={{ color: "var(--charcoal-950)" }}>
+      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+          <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             Membres actifs
           </h2>
         </div>

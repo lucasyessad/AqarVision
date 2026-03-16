@@ -8,14 +8,14 @@
  * Uses CSS logical properties: `end-6` instead of `right-6`.
  */
 
-// ── Types ─────────────────────────────────────────────────────────────────────
+// -- Types --
 
 export interface WhatsAppButtonProps {
   phone?: string | null
   agencyName: string
 }
 
-// ── WhatsApp icon ─────────────────────────────────────────────────────────────
+// -- WhatsApp icon --
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -30,7 +30,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
   )
 }
 
-// ── WhatsAppButton ────────────────────────────────────────────────────────────
+// -- WhatsAppButton --
 
 export default function WhatsAppButton({ phone, agencyName }: WhatsAppButtonProps) {
   if (!phone) return null
@@ -47,7 +47,7 @@ export default function WhatsAppButton({ phone, agencyName }: WhatsAppButtonProp
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Contacter ${agencyName} sur WhatsApp`}
-      className="fixed bottom-6 end-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] shadow-lg transition-transform hover:scale-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25d366]/40"
+      className="fixed bottom-6 end-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 shadow-lg transition-transform hover:scale-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-green-500/40"
     >
       <WhatsAppIcon className="h-7 w-7 text-white" />
     </a>

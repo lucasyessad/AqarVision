@@ -25,8 +25,7 @@ export function ConfirmPaymentButton({ id, type }: ConfirmPaymentButtonProps) {
     <button
       onClick={handleConfirm}
       disabled={pending}
-      className="rounded-lg px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
-      style={{ background: "rgba(90,143,110,0.15)", color: "#5A8F6E" }}
+      className="rounded-lg bg-green-500/15 px-3 py-1.5 text-xs font-semibold text-green-600 dark:text-green-400 transition-opacity hover:opacity-80 disabled:opacity-40"
     >
       {pending ? "…" : "Valider"}
     </button>

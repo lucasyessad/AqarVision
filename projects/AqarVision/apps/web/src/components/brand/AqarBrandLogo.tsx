@@ -26,12 +26,12 @@ const DOT_SIZE: Record<string, string> = {
   lg: "h-2 w-2",
 };
 
-// Dot color per product
+// Dot color per product — Tailwind classes
 const DOT_COLOR: Record<Product, string> = {
-  Vision: "#B8A88A",
-  Pro:    "#f59e0b",
-  Chaab:  "#B8A88A",
-  Search: "#B8A88A",
+  Vision: "bg-amber-300 dark:bg-amber-400",
+  Pro:    "bg-amber-500 dark:bg-amber-400",
+  Chaab:  "bg-amber-300 dark:bg-amber-400",
+  Search: "bg-amber-300 dark:bg-amber-400",
 };
 
 export function AqarBrandLogo({
@@ -42,19 +42,19 @@ export function AqarBrandLogo({
   locale,
   className = "",
 }: AqarBrandLogoProps) {
-  const textColor = onDark ? "#fafafa" : "#09090b";
+  const textClass = onDark
+    ? "text-zinc-50 dark:text-zinc-50"
+    : "text-zinc-950 dark:text-zinc-50";
 
   const inner = (
     <span
-      className={`inline-flex items-center gap-[0.2em] font-display ${SIZE[size]} ${className}`}
-      style={{ letterSpacing: "-0.01em" }}
+      className={`inline-flex items-center gap-[0.2em] font-display tracking-tight ${SIZE[size]} ${className}`}
     >
-      <span style={{ color: textColor, fontWeight: 300 }}>Aqar</span>
+      <span className={`font-light ${textClass}`}>Aqar</span>
       <span
-        className={`inline-block shrink-0 rounded-full ${DOT_SIZE[size]}`}
-        style={{ background: DOT_COLOR[product], marginBottom: "1px" }}
+        className={`inline-block shrink-0 rounded-full mb-px ${DOT_SIZE[size]} ${DOT_COLOR[product]}`}
       />
-      <span style={{ color: textColor, fontWeight: product === "Vision" ? 600 : 500 }}>
+      <span className={`${textClass} ${product === "Vision" ? "font-semibold" : "font-medium"}`}>
         {product}
       </span>
     </span>

@@ -26,6 +26,7 @@ export interface MapListing {
 interface SearchMapProps {
   listings: MapListing[];
   onBoundsChange: (bounds: MapBounds) => void;
+  locale?: string;
   /** When true, the map fills its parent container (used in split layout) */
   fillContainer?: boolean;
   /** Called with listing id on marker hover, null on leave */
@@ -41,7 +42,7 @@ function formatPrice(price: number, currency: string): string {
   }).format(price);
 }
 
-export function SearchMap({ listings, onBoundsChange, fillContainer, onListingHover }: SearchMapProps) {
+export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContainer, onListingHover }: SearchMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap>(null);
   const markersRef = useRef<MapLibreMarker[]>([]);
@@ -179,7 +180,7 @@ export function SearchMap({ listings, onBoundsChange, fillContainer, onListingHo
             <p class="text-xs font-semibold text-zinc-800 truncate mb-1">${listing.title}</p>
             <p class="text-sm font-bold text-zinc-900 mb-2">${formatPrice(listing.price, listing.currency)}</p>
             <a
-              href="/fr/l/${listing.slug}"
+              href="/${locale}/annonce/${listing.slug}"
               class="block w-full rounded bg-zinc-900 px-3 py-1 text-center text-xs font-medium text-white hover:bg-amber-500 transition-colors"
             >
               Voir l'annonce

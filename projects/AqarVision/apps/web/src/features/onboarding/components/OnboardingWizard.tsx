@@ -79,7 +79,7 @@ function ProgressBar({
         />
       </div>
       {/* Step labels */}
-      <div className="mt-3 grid gap-1" style={{ gridTemplateColumns: `repeat(${total}, 1fr)` }}>
+      <div className="mt-3 grid grid-cols-4 gap-1">
         {STEPS.map((step, idx) => (
           <div
             key={step.id}

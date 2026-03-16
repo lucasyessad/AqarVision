@@ -22,8 +22,7 @@ export function WilayaScroller({ wilayas, locale }: WilayaScrollerProps) {
         <Link
           key={city.code}
           href={`/${locale}/search?wilaya_code=${city.code}`}
-          className="group relative flex w-48 shrink-0 snap-start flex-col justify-end overflow-hidden rounded-xl bg-zinc-800 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-          style={{ minHeight: "200px" }}
+          className="group relative flex w-48 shrink-0 snap-start flex-col justify-end overflow-hidden rounded-xl bg-zinc-800 dark:bg-zinc-900 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-h-[200px]"
         >
           {/* Background image or gradient */}
           {city.imageUrl ? (

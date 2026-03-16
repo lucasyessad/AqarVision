@@ -34,10 +34,10 @@ export default async function VerificationPage({
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <div>
-        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+        <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           Vérification de l&apos;agence
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Obtenez le badge de confiance AqarVision en vérifiant votre agence.
         </p>
       </div>

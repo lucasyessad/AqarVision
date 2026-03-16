@@ -54,7 +54,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-white dark:bg-zinc-950">
       <DashboardSidebar
         agencySlug={agencySlug}
         userEmail={user.email ?? ""}
@@ -64,24 +64,24 @@ export default async function DashboardLayout({
       <div className="flex flex-1 flex-col">
         {/* Onboarding banner */}
         {showOnboardingBanner && (
-          <div className="border-b border-amber-200 bg-amber-50 px-8 py-3">
+          <div className="border-b border-amber-200 bg-amber-50 px-8 py-3 dark:border-amber-800 dark:bg-amber-950">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-zinc-600">
-                <span className="font-semibold text-amber-700">
+              <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                <span className="font-semibold text-amber-700 dark:text-amber-400">
                   Terminez la configuration de votre agence
                 </span>{" "}
                 — ajoutez votre logo, publiez votre première annonce et invitez votre équipe.
               </p>
               <Link
                 href="/AqarPro/dashboard/onboarding"
-                className="ms-4 flex-shrink-0 rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-semibold text-zinc-950 transition-opacity hover:opacity-90"
+                className="ms-4 flex-shrink-0 rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
               >
                 Commencer →
               </Link>
             </div>
           </div>
         )}
-        <main className="flex-1 bg-zinc-50 p-8">{children}</main>
+        <main className="flex-1 bg-zinc-50 p-8 dark:bg-zinc-950">{children}</main>
       </div>
     </div>
   );

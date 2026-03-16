@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 import { updateSession } from "@/lib/supabase/middleware";
 import { routing } from "@/lib/i18n/routing";
 import { LOCALES as SUPPORTED_LOCALES, DEFAULT_LOCALE, type Locale as SupportedLocale } from "@aqarvision/config";
+import { extractAgencySubdomain } from "@/lib/agency-url";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
@@ -18,7 +19,8 @@ const PUBLIC_PATTERNS = [
   /^\/[a-z]{2}\/AqarPro\/auth(\/|$)/, // /[locale]/AqarPro/auth/*
   /^\/[a-z]{2}\/AqarChaab\/auth(\/|$)/, // /[locale]/AqarChaab/auth/*
   /^\/[a-z]{2}\/search(\/|$)/, // /[locale]/search/*
-  /^\/[a-z]{2}\/l(\/|$)/, // /[locale]/l/*
+  /^\/[a-z]{2}\/l(\/|$)/, // /[locale]/l/* (legacy)
+  /^\/[a-z]{2}\/annonce(\/|$)/, // /[locale]/annonce/*
   /^\/[a-z]{2}\/a(\/|$)/, // /[locale]/a/*
   /^\/[a-z]{2}\/agences(\/|$)/, // /[locale]/agences
   /^\/[a-z]{2}\/vendre(\/|$)/, // /[locale]/vendre
@@ -34,8 +36,6 @@ const CSRF_EXEMPT_PREFIXES = ["/api/webhooks/stripe", "/api/whatsapp/webhook"];
 
 // Mutative HTTP methods that require CSRF validation
 const CSRF_METHODS = new Set(["POST", "PUT", "DELETE", "PATCH"]);
-
-// Supported locales and default — sourced from @aqarvision/config (see top-level import)
 
 // Static asset extensions — security headers are skipped for these
 const STATIC_ASSET_PATTERN =
@@ -78,14 +78,12 @@ function isStaticAsset(pathname: string): boolean {
 
 /**
  * Détecte la locale depuis l'en-tête Accept-Language.
- * Retourne la première locale supportée trouvée, ou DEFAULT_LOCALE.
  */
 function detectLocaleFromAcceptLanguage(
   acceptLanguage: string | null
 ): SupportedLocale {
   if (!acceptLanguage) return DEFAULT_LOCALE;
 
-  // Parse "fr-FR,fr;q=0.9,en;q=0.8,ar;q=0.7" into priority-ordered tags
   const tags = acceptLanguage
     .split(",")
     .map((part) => {
@@ -105,10 +103,9 @@ function detectLocaleFromAcceptLanguage(
 
 /**
  * Vérifie si le pathname est une route vitrine sans locale préfixée.
- * Patterns concernés: /a/[slug] et /l/[slug]
  */
 function isUnprefixedVitrineRoute(pathname: string): boolean {
-  return /^\/(?:a|l)(\/|$)/.test(pathname);
+  return /^\/(?:a|l|annonce)(\/|$)/.test(pathname);
 }
 
 /**
@@ -121,21 +118,93 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
+/**
+ * Check if two hosts share the same parent domain for CSRF.
+ * "slug.aqarvision.dz" and "aqarvision.dz" → true
+ * "slug.localhost" and "localhost" → true
+ */
+function isSameParentDomain(host1: string, host2: string): boolean {
+  const strip = (h: string) => h.split(":")[0]!;
+  const h1 = strip(host1);
+  const h2 = strip(host2);
+  if (h1 === h2) return true;
+  // Check if one is a subdomain of the other
+  if (h1.endsWith(`.${h2}`) || h2.endsWith(`.${h1}`)) return true;
+  // Both subdomains of the same parent
+  const parent1 = h1.split(".").slice(-2).join(".");
+  const parent2 = h2.split(".").slice(-2).join(".");
+  return parent1 === parent2;
+}
+
 // ---------------------------------------------------------------------------
 // Middleware
 // ---------------------------------------------------------------------------
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
+  const host = request.headers.get("host") ?? "localhost:3000";
 
   // ------------------------------------------------------------------
-  // Protection CSRF
-  // Vérifier avant toute autre logique pour court-circuiter tôt.
+  // Agency subdomain detection
+  // slug.aqarvision.dz → rewrite to /[locale]/a/[slug]/...
+  // slug.localhost:3000 → same in dev
+  // ------------------------------------------------------------------
+  const agencySlug = extractAgencySubdomain(host);
+
+  if (agencySlug) {
+    // On an agency subdomain — all routes are public (vitrine)
+    const hasLocalePrefix = /^\/[a-z]{2}(\/|$)/.test(pathname);
+    const locale = hasLocalePrefix
+      ? extractLocale(pathname)
+      : detectLocaleFromAcceptLanguage(request.headers.get("accept-language"));
+
+    // Strip locale prefix from pathname if present to get the "rest"
+    const rest = hasLocalePrefix
+      ? pathname.replace(/^\/[a-z]{2}/, "") || "/"
+      : pathname;
+
+    // If someone navigates to /a/xxx on a subdomain, redirect to root
+    // (avoid double context: subdomain + path)
+    if (/^\/a\//.test(rest) || /^\/a$/.test(rest)) {
+      const redirectUrl = new URL("/", request.url);
+      return NextResponse.redirect(redirectUrl, { status: 307 });
+    }
+
+    // Determine rewrite target:
+    // - Root "/" → agency vitrine page /[locale]/a/[slug]
+    // - Other paths (e.g. /annonce/xxx) → serve normally with locale
+    let rewritePath: string;
+    if (rest === "/" || rest === "") {
+      rewritePath = `/${locale}/a/${agencySlug}`;
+    } else {
+      rewritePath = `/${locale}${rest}`;
+    }
+
+    const rewriteUrl = new URL(rewritePath, request.url);
+    rewriteUrl.search = request.nextUrl.search;
+
+    const response = NextResponse.rewrite(rewriteUrl);
+    // Pass agency slug as header for downstream use
+    response.headers.set("x-agency-slug", agencySlug);
+
+    // Supabase session refresh
+    const supabaseResponse = await updateSession(request);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      response.cookies.set(cookie.name, cookie.value, { ...cookie });
+    });
+
+    if (!isStaticAsset(pathname)) {
+      applySecurityHeaders(response);
+    }
+    return response;
+  }
+
+  // ------------------------------------------------------------------
+  // Protection CSRF (with subdomain-aware check)
   // ------------------------------------------------------------------
   const method = request.method;
   if (CSRF_METHODS.has(method)) {
     const origin = request.headers.get("origin");
-    const host = request.headers.get("host");
 
     if (origin && host) {
       try {
@@ -144,11 +213,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
           pathname.startsWith(prefix)
         );
 
-        if (!isExempt && originHost !== host) {
+        if (!isExempt && !isSameParentDomain(originHost, host)) {
           return new NextResponse("Forbidden", { status: 403 });
         }
       } catch {
-        // Origin header malformé — refuser par précaution
         return new NextResponse("Forbidden", { status: 403 });
       }
     }
@@ -156,7 +224,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   // ------------------------------------------------------------------
   // Détection de locale pour routes vitrines sans préfixe
-  // Ex: /a/agence-xyz → /fr/a/agence-xyz
   // ------------------------------------------------------------------
   if (isUnprefixedVitrineRoute(pathname)) {
     const detectedLocale = detectLocaleFromAcceptLanguage(
@@ -166,7 +233,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       `/${detectedLocale}${pathname}`,
       request.url
     );
-    // Conserver les search params existants
     redirectUrl.search = request.nextUrl.search;
     const redirectResponse = NextResponse.redirect(redirectUrl, { status: 307 });
     applySecurityHeaders(redirectResponse);
@@ -174,7 +240,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // ------------------------------------------------------------------
-  // Supabase Auth SSR — rafraîchir la session (obligatoire en premier)
+  // Supabase Auth SSR — rafraîchir la session
   // ------------------------------------------------------------------
   const supabaseResponse = await updateSession(request);
 
@@ -189,13 +255,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       ...cookie,
     });
   });
-
-  // ------------------------------------------------------------------
-  // Pour les routes vitrines avec locale, s'assurer que la
-  // locale dans l'URL correspond bien à une locale supportée. Si un
-  // visiteur arrive sur /xx/a/slug avec xx non supporté, next-intl
-  // gérera la redirection — on laisse passer.
-  // ------------------------------------------------------------------
 
   // ------------------------------------------------------------------
   // Vérification d'authentification pour les routes protégées
@@ -229,7 +288,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       const loginUrl = new URL(loginPath, request.url);
       loginUrl.searchParams.set("redirect", pathname);
       const authRedirect = NextResponse.redirect(loginUrl);
-      // Appliquer les security headers même sur les redirections auth
       if (!isStaticAsset(pathname)) {
         applySecurityHeaders(authRedirect);
       }
@@ -239,7 +297,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   // ------------------------------------------------------------------
   // Security Headers
-  // Appliqués sur toutes les réponses sauf les assets statiques.
   // ------------------------------------------------------------------
   if (!isStaticAsset(pathname)) {
     applySecurityHeaders(intlResponse);

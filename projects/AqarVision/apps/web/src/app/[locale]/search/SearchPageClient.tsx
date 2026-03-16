@@ -5,6 +5,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { SearchResults } from "@/features/marketplace/components/SearchResults";
 import { SearchAlertButton } from "@/features/marketplace/components/SearchAlertButton";
+import { Search, ChevronDown, X, Check, List, Map } from "lucide-react";
 import type { SearchResultDto } from "@/features/marketplace/types/search.types";
 import type { MapBounds } from "@/features/marketplace/schemas/search.schema";
 import type { MapListing } from "@/features/marketplace/components/SearchMap";
@@ -13,7 +14,7 @@ const SearchMap = dynamic(
   () => import("@/features/marketplace/components/SearchMap").then((m) => m.SearchMap),
   {
     ssr: false,
-    loading: () => <div className="h-full animate-pulse bg-zinc-100" />,
+    loading: () => <div className="h-full animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
   }
 );
 
@@ -79,22 +80,19 @@ function FilterDropdown({
         className={[
           "flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all",
           active
-            ? "border-zinc-950 bg-zinc-950 text-zinc-50"
-            : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400",
+            ? "border-zinc-950 dark:border-zinc-50 bg-zinc-950 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-950"
+            : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-500",
         ].join(" ")}
       >
         {label}
-        <svg
+        <ChevronDown
           className={["h-3.5 w-3.5 shrink-0 transition-transform", open ? "rotate-180" : ""].join(" ")}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-        </svg>
+        />
       </button>
 
       {open && (
         <div
-          className="absolute start-0 top-full z-50 mt-2 min-w-[220px] rounded-xl border border-zinc-200 bg-white p-3 shadow-lg"
+          className="absolute start-0 top-full z-50 mt-2 min-w-[220px] rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-3 shadow-lg"
           onClick={(e) => e.stopPropagation()}
         >
           {children}
@@ -144,7 +142,7 @@ export function SearchPageClient({
     AMENITY_PILLS.filter((p) => searchParams.get(p.key) === "true").map((p) => p.key)
   );
 
-  // ── View mode: "listings" (default) or "map" ───────────────────────────────
+  // ── View mode ──────────────────────────────────────────────────────────────
   const [viewMode, setViewMode] = useState<"listings" | "map">("listings");
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
 
@@ -232,51 +230,56 @@ export function SearchPageClient({
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-50">
+    <div className="flex h-screen flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-950">
 
       {/* ── Sticky filter bar ───────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-30 shrink-0 border-b border-zinc-200 bg-white/95 px-4 py-2.5 backdrop-blur-lg">
+      <div className="z-30 shrink-0 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5">
         {/* Row 1 */}
-        <div className="mb-2.5 flex items-center gap-2">
+        <div className="mb-2.5 flex items-center gap-3">
           {/* Search input */}
           <div className="relative max-w-sm flex-1">
-            <svg
-              className="pointer-events-none absolute inset-y-0 start-3 my-auto h-4 w-4 text-zinc-400"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-            </svg>
+            <Search className="pointer-events-none absolute inset-y-0 start-3 my-auto h-4 w-4 text-zinc-400 dark:text-zinc-500" />
             <input
               type="text"
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
               placeholder="Ville, quartier ou type de bien…"
-              className="w-full rounded-full border border-zinc-200 bg-zinc-50 py-2 pe-4 ps-9 text-sm text-zinc-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 py-2 pe-4 ps-9 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
           </div>
 
           {/* View toggle [Annonces | Carte] */}
-          <div className="flex overflow-hidden rounded-full border border-zinc-200">
+          <div className="flex overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
             {(["listings", "map"] as const).map((mode) => (
               <button
                 key={mode}
                 type="button"
                 onClick={() => setViewMode(mode)}
                 className={[
-                  "px-4 py-1.5 text-xs font-semibold transition-colors",
+                  "flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold transition-colors",
                   viewMode === mode
-                    ? "bg-zinc-950 text-zinc-50"
-                    : "bg-transparent text-zinc-500 hover:text-zinc-700",
+                    ? "bg-zinc-950 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-950"
+                    : "bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300",
                 ].join(" ")}
               >
-                {mode === "listings" ? "Annonces" : "Carte"}
+                {mode === "listings" ? (
+                  <>
+                    <List className="h-3.5 w-3.5" />
+                    Annonces
+                  </>
+                ) : (
+                  <>
+                    <Map className="h-3.5 w-3.5" />
+                    Carte
+                  </>
+                )}
               </button>
             ))}
           </div>
 
           {/* Result count */}
-          <span className="hidden text-sm text-zinc-400 sm:block">
-            <span className="font-semibold text-zinc-800">{totalCount.toLocaleString("fr-DZ")}</span>{" "}
+          <span className="hidden text-sm text-zinc-400 dark:text-zinc-500 sm:block">
+            <span className="font-semibold text-zinc-800 dark:text-zinc-200">{totalCount.toLocaleString("fr-DZ")}</span>{" "}
             annonce{totalCount !== 1 ? "s" : ""}
           </span>
 
@@ -309,14 +312,12 @@ export function SearchPageClient({
                   className={[
                     "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
                     listingType === t
-                      ? "bg-zinc-100 font-semibold text-zinc-900"
-                      : "text-zinc-700 hover:bg-zinc-50",
+                      ? "bg-amber-500/10 font-semibold text-amber-600 dark:text-amber-400"
+                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800",
                   ].join(" ")}
                 >
                   {listingType === t && (
-                    <svg className="h-3.5 w-3.5 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
+                    <Check className="h-3.5 w-3.5 shrink-0 text-amber-500" />
                   )}
                   {LISTING_TYPE_LABELS[t]}
                 </button>
@@ -345,8 +346,8 @@ export function SearchPageClient({
                   className={[
                     "rounded-lg px-2.5 py-1.5 text-start text-xs font-medium transition-colors",
                     propertyType === t
-                      ? "bg-zinc-950 text-zinc-50"
-                      : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                      ? "bg-zinc-950 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-950"
+                      : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700",
                   ].join(" ")}
                 >
                   {PROPERTY_TYPE_LABELS[t]}
@@ -376,11 +377,11 @@ export function SearchPageClient({
                   className={[
                     "flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors",
                     wilayaCode === code
-                      ? "bg-zinc-100 font-semibold text-zinc-900"
-                      : "text-zinc-700 hover:bg-zinc-50",
+                      ? "bg-amber-500/10 font-semibold text-amber-600 dark:text-amber-400"
+                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800",
                   ].join(" ")}
                 >
-                  <span className="w-5 shrink-0 font-mono text-xs text-zinc-400">{code}</span>
+                  <span className="w-5 shrink-0 font-mono text-xs text-zinc-400 dark:text-zinc-500">{code}</span>
                   {name}
                 </button>
               ))}
@@ -393,42 +394,42 @@ export function SearchPageClient({
             active={!!(priceMin || priceMax)}
           >
             <div className="space-y-3 p-1">
-              <p className="text-xs font-semibold text-zinc-400">Fourchette de prix (DZD)</p>
+              <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500">Fourchette de prix (DZD)</p>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
                   value={priceMin}
                   onChange={(e) => setPriceMin(e.target.value)}
                   placeholder="Min"
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 focus:border-amber-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 focus:border-amber-500 focus:outline-none"
                 />
-                <span className="text-zinc-400">–</span>
+                <span className="text-zinc-400 dark:text-zinc-500">–</span>
                 <input
                   type="number"
                   value={priceMax}
                   onChange={(e) => setPriceMax(e.target.value)}
                   placeholder="Max"
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 focus:border-amber-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 focus:border-amber-500 focus:outline-none"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => applyFilters()}
-                className="w-full rounded-lg bg-zinc-950 py-2 text-sm font-semibold text-zinc-50"
+                className="w-full rounded-lg bg-zinc-950 dark:bg-zinc-50 py-2 text-sm font-semibold text-zinc-50 dark:text-zinc-950"
               >
                 Appliquer
               </button>
             </div>
           </FilterDropdown>
 
-          {/* Surface & Pièces */}
+          {/* Surface & Pieces */}
           <FilterDropdown
             label={roomsMin || surfaceMin ? [roomsMin ? `${roomsMin}+ pièces` : "", surfaceMin ? `${surfaceMin}+ m²` : ""].filter(Boolean).join(" · ") : "Surface & Pièces"}
             active={!!(roomsMin || surfaceMin)}
           >
             <div className="space-y-3 p-1">
               <div>
-                <p className="mb-1.5 text-xs font-semibold text-zinc-400">Pièces minimum</p>
+                <p className="mb-1.5 text-xs font-semibold text-zinc-400 dark:text-zinc-500">Pièces minimum</p>
                 <div className="flex gap-1.5">
                   {["", "1", "2", "3", "4", "5"].map((n) => (
                     <button
@@ -438,8 +439,8 @@ export function SearchPageClient({
                       className={[
                         "flex-1 rounded-lg py-1.5 text-sm font-medium transition-colors",
                         roomsMin === n
-                          ? "bg-zinc-950 text-zinc-50"
-                          : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                          ? "bg-zinc-950 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-950"
+                          : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700",
                       ].join(" ")}
                     >
                       {n || "—"}
@@ -448,19 +449,19 @@ export function SearchPageClient({
                 </div>
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-semibold text-zinc-400">Surface min (m²)</p>
+                <p className="mb-1.5 text-xs font-semibold text-zinc-400 dark:text-zinc-500">Surface min (m²)</p>
                 <input
                   type="number"
                   value={surfaceMin}
                   onChange={(e) => setSurfaceMin(e.target.value)}
                   placeholder="ex: 80"
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 focus:border-amber-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 focus:border-amber-500 focus:outline-none"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => applyFilters()}
-                className="w-full rounded-lg bg-zinc-950 py-2 text-sm font-semibold text-zinc-50"
+                className="w-full rounded-lg bg-zinc-950 dark:bg-zinc-50 py-2 text-sm font-semibold text-zinc-50 dark:text-zinc-950"
               >
                 Appliquer
               </button>
@@ -468,7 +469,7 @@ export function SearchPageClient({
           </FilterDropdown>
 
           {/* Divider */}
-          <div className="h-5 w-px shrink-0 bg-zinc-200" />
+          <div className="h-5 w-px shrink-0 bg-zinc-200 dark:bg-zinc-700" />
 
           {/* Amenity pills */}
           {AMENITY_PILLS.map(({ label, icon, key }) => {
@@ -481,8 +482,8 @@ export function SearchPageClient({
                 className={[
                   "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
                   active
-                    ? "border-amber-500 bg-amber-50 text-amber-700"
-                    : "border-zinc-200 text-zinc-600 hover:border-zinc-400",
+                    ? "border-amber-500 dark:border-amber-400 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400"
+                    : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-500",
                 ].join(" ")}
               >
                 <span>{icon}</span>
@@ -496,52 +497,66 @@ export function SearchPageClient({
             <button
               type="button"
               onClick={resetAll}
-              className="flex shrink-0 items-center gap-1 rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-400 transition-all hover:border-red-300 hover:text-red-500"
+              className="flex shrink-0 items-center gap-1 rounded-full border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-400 dark:text-zinc-500 transition-all hover:border-red-300 dark:hover:border-red-500 hover:text-red-500 dark:hover:text-red-400"
             >
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="h-3.5 w-3.5" />
               Réinitialiser
             </button>
           )}
         </div>
       </div>
 
-      {/* ── Content ─────────────────────────────────────────────────────────── */}
-      {viewMode === "listings" ? (
-        /* Listings mode: full-width grid */
-        <div className="mx-auto w-full max-w-[1320px] px-4 py-6 sm:px-6 lg:px-8">
-          <SearchResults
-            results={results}
-            totalCount={totalCount}
-            page={page}
-            pageSize={pageSize}
-            viewedIds={viewedIds}
-            highlightedId={highlightedId}
-          />
+      {/* ── Split content: listings + map ─────────────────────────────────── */}
+      <div className="flex flex-1 overflow-hidden">
+
+        {/* Listings panel */}
+        <div
+          className={[
+            "shrink-0 overflow-y-auto border-e border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-all duration-300 ease-in-out",
+            viewMode === "listings" ? "w-[70%]" : "w-[30%]",
+            // Hide on mobile when map is focused
+            viewMode === "map" ? "hidden lg:block" : "",
+          ].join(" ")}
+        >
+          <div className="p-4">
+            <SearchResults
+              results={results}
+              totalCount={totalCount}
+              page={page}
+              pageSize={pageSize}
+              viewedIds={viewedIds}
+              highlightedId={highlightedId}
+            />
+          </div>
         </div>
-      ) : (
-        /* Map mode: full screen */
-        <div className="relative flex-1" style={{ height: "calc(100vh - 120px)" }}>
+
+        {/* Map panel */}
+        <div
+          className={[
+            "relative flex-1 transition-all duration-300 ease-in-out",
+            // On mobile, show full when map mode, hide when listings mode
+            viewMode === "listings" ? "hidden lg:block" : "",
+          ].join(" ")}
+        >
           <SearchMap
             listings={mapListings}
             onBoundsChange={handleBoundsChange}
             onListingHover={setHighlightedId}
+            locale={locale}
             fillContainer
           />
-          {/* Back to listings button */}
-          <button
-            type="button"
-            onClick={() => setViewMode("listings")}
-            className="absolute right-4 top-4 z-10 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-zinc-800 shadow-md hover:bg-zinc-50"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
-            Voir les annonces
-          </button>
+
+          {/* Floating result count on map */}
+          <div className="absolute start-4 top-4 z-10 rounded-lg bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm px-3 py-1.5 shadow-md border border-zinc-200/50 dark:border-zinc-700/50">
+            <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+              {totalCount.toLocaleString("fr-DZ")}
+            </span>
+            <span className="text-xs text-zinc-500 dark:text-zinc-400">
+              {" "}annonce{totalCount !== 1 ? "s" : ""}
+            </span>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

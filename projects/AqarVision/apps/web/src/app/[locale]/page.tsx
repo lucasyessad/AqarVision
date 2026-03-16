@@ -12,6 +12,7 @@ import { searchListingsAction } from "@/features/marketplace/actions/search.acti
 import { getWilayas } from "@/features/marketplace/services/search.service";
 import { createClient } from "@/lib/supabase/server";
 import type { SearchResultDto } from "@/features/marketplace/types/search.types";
+import { ChevronDown, ArrowRight, Home } from "lucide-react";
 
 function formatPrice(price: number, currency: string): string {
   return new Intl.NumberFormat("fr-DZ", {
@@ -98,22 +99,20 @@ export default async function HomePage({
       <main>
         {/* ─────────────────────────────────────────── HERO ─── */}
         <section className="relative -mt-16 flex min-h-screen flex-col items-center justify-center overflow-hidden">
-          {/* Background photo — full-bleed */}
+          {/* Background photo -- full-bleed */}
           <Image
             src={heroUrl}
             alt=""
             fill
             priority
+            sizes="100vw"
             aria-hidden="true"
             className="pointer-events-none object-cover"
           />
           {/* Gradient overlay */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background: "linear-gradient(180deg, rgba(9,9,11,0.65) 0%, rgba(9,9,11,0.25) 40%, rgba(9,9,11,0.7) 100%)",
-            }}
+            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/65 via-black/25 to-black/70"
           />
 
           {/* Content */}
@@ -128,15 +127,7 @@ export default async function HomePage({
             </div>
 
             {/* Headline */}
-            <h1
-              className="mb-8 font-bold text-zinc-50"
-              style={{
-                fontSize: "clamp(2.5rem, 8vw, 5rem)",
-                lineHeight: 1.05,
-                letterSpacing: "-0.03em",
-                maxWidth: "750px",
-              }}
-            >
+            <h1 className="mb-8 max-w-[750px] text-5xl font-bold leading-[1.05] tracking-tight text-zinc-50 sm:text-6xl lg:text-7xl">
               Trouvez votre
               <br />
               <span className="text-amber-400">chez-vous</span>
@@ -147,20 +138,19 @@ export default async function HomePage({
             {/* Transaction pills */}
             <div className="mb-6 flex gap-2">
               {[
-                { label: "🏠 Acheter", href: "/search?listing_type=sale", active: true },
-                { label: "🔑 Louer",   href: "/search?listing_type=rent",    active: false },
-                { label: "☀️ Vacances", href: "/search?listing_type=vacation", active: false },
+                { label: "Acheter", href: "/search?listing_type=sale", active: true },
+                { label: "Louer",   href: "/search?listing_type=rent",    active: false },
+                { label: "Vacances", href: "/search?listing_type=vacation", active: false },
               ].map(({ label, href, active }) => (
                 <Link
                   key={label}
                   href={href}
                   locale={locale}
-                  className="rounded-full px-5 py-2 text-sm font-medium transition-all"
-                  style={{
-                    background: active ? "#F59E0B" : "rgba(255,255,255,0.1)",
-                    color: active ? "#FFF" : "rgba(255,255,255,0.65)",
-                    backdropFilter: "blur(8px)",
-                  }}
+                  className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
+                    active
+                      ? "bg-amber-500 text-white"
+                      : "bg-white/10 text-white/65 backdrop-blur-sm"
+                  }`}
                 >
                   {label}
                 </Link>
@@ -177,32 +167,24 @@ export default async function HomePage({
             </p>
           </div>
 
-          {/* Scroll indicator — bouncing chevron */}
+          {/* Scroll indicator -- bouncing chevron */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-            <div style={{ animation: "chevron-bounce 2.5s ease infinite" }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </div>
+            <ChevronDown className="h-5 w-5 animate-bounce text-white/40" />
           </div>
-          <style>{`@keyframes chevron-bounce { 0%,100% { transform: translateY(0) } 50% { transform: translateY(8px) } }`}</style>
         </section>
 
         {/* ─────────────────────── SPLIT EDITORIAL ─── */}
         <section className="grid min-h-[70vh] grid-cols-1 lg:grid-cols-2">
-          <div className="flex flex-col justify-center bg-zinc-50 px-8 py-16 lg:px-16">
+          <div className="flex flex-col justify-center bg-zinc-50 px-8 py-16 dark:bg-zinc-900 lg:px-16">
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
               Explorer
             </p>
-            <h2
-              className="text-4xl font-bold leading-[1.08] text-zinc-950 lg:text-5xl"
-              style={{ letterSpacing: "-0.03em" }}
-            >
+            <h2 className="text-4xl font-bold leading-[1.08] tracking-tight text-zinc-950 dark:text-zinc-50 lg:text-5xl">
               Plus de 15 000 biens
               <br />
               dans <span className="text-amber-500">58 wilayas</span>
             </h2>
-            <p className="mt-5 max-w-[420px] text-base leading-relaxed text-zinc-500">
+            <p className="mt-5 max-w-[420px] text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
               Des appartements au cœur d&apos;Alger aux villas de bord de mer à Tipaza,
               trouvez le bien qui correspond à votre projet de vie.
             </p>
@@ -212,9 +194,7 @@ export default async function HomePage({
               className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-semibold text-amber-500 transition-opacity hover:opacity-70"
             >
               Explorer les annonces
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           <div className="relative min-h-[400px] overflow-hidden">
@@ -222,37 +202,34 @@ export default async function HomePage({
               src={splitUrl}
               alt="Bel intérieur"
               fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
             />
           </div>
         </section>
 
         {/* ──────────────────────── WILAYAS SCROLL ─── */}
-        <section className="border-t border-zinc-100 bg-zinc-50 py-16">
+        <section className="border-t border-zinc-100 bg-zinc-50 py-16 dark:border-zinc-800 dark:bg-zinc-900">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <h2 className="mb-2 text-2xl font-bold text-zinc-950" style={{ letterSpacing: "-0.02em" }}>
+            <h2 className="mb-2 text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">
               Explorez par région
             </h2>
-            <p className="mb-7 text-sm text-zinc-400">Les wilayas les plus recherchées</p>
+            <p className="mb-7 text-sm text-zinc-400 dark:text-zinc-500">Les wilayas les plus recherchées</p>
           </div>
-          <div
-            className="flex gap-3 overflow-x-auto px-4 pb-4 sm:px-6 lg:px-8"
-            style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none" }}
-          >
+          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-hide px-4 pb-4 sm:px-6 lg:px-8">
             {POPULAR_WILAYAS.map((city) => (
               <Link
                 key={city.code}
                 href={`/search?wilaya_code=${city.code}`}
                 locale={locale}
-                className="group shrink-0 overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all hover:-translate-y-1 hover:shadow-lg"
-                style={{ width: 200, scrollSnapAlign: "start" }}
+                className="group w-[200px] shrink-0 snap-start overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
               >
-                <div className="flex h-[130px] items-center justify-center bg-zinc-100 text-3xl">
-                  🏙️
+                <div className="flex h-[130px] items-center justify-center bg-zinc-100 text-3xl dark:bg-zinc-700">
+                  <Home className="h-8 w-8 text-zinc-400 dark:text-zinc-500" />
                 </div>
                 <div className="p-3">
-                  <p className="text-sm font-semibold text-zinc-950">{city.name}</p>
-                  <p className="mt-0.5 text-xs text-zinc-400">{city.count} annonces</p>
+                  <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{city.name}</p>
+                  <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">{city.count} annonces</p>
                 </div>
               </Link>
             ))}
@@ -261,43 +238,47 @@ export default async function HomePage({
 
         {/* ──────────────────────────────── FEATURED GRID ─── */}
         {(featured || secondary) && (
-          <section className="border-t border-zinc-100 bg-white py-20">
+          <section className="border-t border-zinc-100 bg-white py-20 dark:border-zinc-800 dark:bg-zinc-950">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="mb-10 flex items-end justify-between">
                 <div>
                   <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
                     Sélection
                   </p>
-                  <h2 className="font-display text-3xl font-light italic text-zinc-950 sm:text-4xl">
+                  <h2 className="font-display text-3xl font-light italic text-zinc-950 dark:text-zinc-50 sm:text-4xl">
                     À la une
                   </h2>
                 </div>
                 <Link
                   href="/search"
                   locale={locale}
-                  className="hidden items-center gap-1.5 text-sm font-medium text-zinc-500 transition-opacity hover:opacity-70 sm:inline-flex"
+                  className="hidden items-center gap-1.5 text-sm font-medium text-zinc-500 transition-opacity hover:opacity-70 dark:text-zinc-400 sm:inline-flex"
                 >
                   Voir toutes les annonces
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
 
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
                 {featured && (
-                  <Link href={`/l/${featured.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
+                  <Link href={`/annonce/${featured.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
                     <div className="relative aspect-[16/10] overflow-hidden bg-zinc-900">
                       {featured.cover_url ? (
-                        <img src={featured.cover_url} alt={featured.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <div className="relative h-full w-full">
+                          <Image
+                            src={featured.cover_url}
+                            alt={featured.title}
+                            fill
+                            sizes="(min-width: 1024px) 60vw, 100vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        </div>
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-zinc-800">
-                          <svg className="h-16 w-16 opacity-20" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={0.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                          </svg>
+                          <Home className="h-16 w-16 text-white opacity-20" />
                         </div>
                       )}
-                      <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(9,9,11,0.75) 0%, transparent 50%)" }} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/75 to-transparent" />
                       <div className="absolute inset-x-5 bottom-5">
                         <p className="font-display text-2xl font-semibold text-zinc-50">
                           {formatPrice(featured.current_price, featured.currency)}
@@ -312,18 +293,22 @@ export default async function HomePage({
                 )}
 
                 {secondary && (
-                  <Link href={`/l/${secondary.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
+                  <Link href={`/annonce/${secondary.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
                     <div className="relative h-full min-h-[280px] overflow-hidden bg-zinc-900">
                       {secondary.cover_url ? (
-                        <img src={secondary.cover_url} alt={secondary.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <Image
+                          src={secondary.cover_url}
+                          alt={secondary.title}
+                          fill
+                          sizes="(min-width: 1024px) 40vw, 100vw"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center bg-zinc-700">
-                          <svg className="h-12 w-12 opacity-20" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={0.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
-                          </svg>
+                          <Home className="h-12 w-12 text-white opacity-20" />
                         </div>
                       )}
-                      <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(9,9,11,0.75) 0%, transparent 55%)" }} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/75 to-transparent" />
                       <div className="absolute inset-x-5 bottom-5">
                         <p className="font-display text-xl font-semibold text-zinc-50">
                           {formatPrice(secondary.current_price, secondary.currency)}
@@ -341,53 +326,58 @@ export default async function HomePage({
 
         {/* ──────────────────────────────────────── TENDANCE ─── */}
         {trending.length > 0 && (
-          <section className="border-t border-zinc-200 bg-zinc-50 py-20">
+          <section className="border-t border-zinc-200 bg-zinc-50 py-20 dark:border-zinc-800 dark:bg-zinc-900">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="flex gap-10 lg:gap-20">
                 <div className="hidden w-[220px] shrink-0 flex-col justify-between lg:flex">
                   <div>
                     <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">Marché</p>
-                    <h2 className="mb-4 font-display text-4xl font-light leading-tight text-zinc-950">Tendance</h2>
-                    <p className="text-sm leading-relaxed text-zinc-400">
+                    <h2 className="mb-4 font-display text-4xl font-light leading-tight text-zinc-950 dark:text-zinc-50">Tendance</h2>
+                    <p className="text-sm leading-relaxed text-zinc-400 dark:text-zinc-500">
                       Les biens qui retiennent l&apos;attention sur le marché algérien en ce moment.
                     </p>
                   </div>
                   <Link
                     href="/search"
                     locale={locale}
-                    className="inline-flex w-fit items-center gap-1.5 border-b border-zinc-950 pb-0.5 text-xs font-semibold text-zinc-950 transition-opacity hover:opacity-60"
+                    className="inline-flex w-fit items-center gap-1.5 border-b border-zinc-950 pb-0.5 text-xs font-semibold text-zinc-950 transition-opacity hover:opacity-60 dark:border-zinc-50 dark:text-zinc-50"
                   >
                     Voir tout
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
+                    <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
 
                 <div className="min-w-0 flex-1">
                   <div className="mb-6 flex items-center justify-between lg:hidden">
-                    <h2 className="font-display text-2xl font-light text-zinc-950">Tendance</h2>
-                    <Link href="/search" locale={locale} className="text-xs text-amber-500">Voir tout →</Link>
+                    <h2 className="font-display text-2xl font-light text-zinc-950 dark:text-zinc-50">Tendance</h2>
+                    <Link href="/search" locale={locale} className="inline-flex items-center gap-1 text-xs text-amber-500">
+                      Voir tout
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
                   </div>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                     {trending.slice(0, 6).map((listing) => (
-                      <Link key={listing.id} href={`/l/${listing.slug}`} locale={locale} className="group">
-                        <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-xl bg-zinc-200">
+                      <Link key={listing.id} href={`/annonce/${listing.slug}`} locale={locale} className="group">
+                        <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-xl bg-zinc-200 dark:bg-zinc-800">
                           {listing.cover_url ? (
-                            <img src={listing.cover_url} alt={listing.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <Image
+                              src={listing.cover_url}
+                              alt={listing.title}
+                              fill
+                              sizes="(min-width: 640px) 33vw, 50vw"
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center text-zinc-300">
-                              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12" />
-                              </svg>
+                            <div className="flex h-full w-full items-center justify-center text-zinc-300 dark:text-zinc-600">
+                              <Home className="h-8 w-8" />
                             </div>
                           )}
                         </div>
-                        <p className="font-display text-sm font-semibold text-zinc-950">
+                        <p className="font-display text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                           {formatPrice(listing.current_price, listing.currency)}
                         </p>
-                        <p className="mt-0.5 line-clamp-1 text-xs text-zinc-500">{listing.title}</p>
-                        <p className="text-xs text-zinc-300">
+                        <p className="mt-0.5 line-clamp-1 text-xs text-zinc-500 dark:text-zinc-400">{listing.title}</p>
+                        <p className="text-xs text-zinc-300 dark:text-zinc-600">
                           {listing.wilaya_name}{listing.commune_name ? `, ${listing.commune_name}` : ""}
                         </p>
                       </Link>
@@ -401,39 +391,44 @@ export default async function HomePage({
 
         {/* ─────────────────────────── NOUVELLES ANNONCES ─── */}
         {newest.length > 0 && (
-          <section className="border-t border-zinc-200 bg-zinc-100 py-20">
+          <section className="border-t border-zinc-200 bg-zinc-100 py-20 dark:border-zinc-800 dark:bg-zinc-900/50">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="mb-8 flex items-end justify-between">
                 <div>
                   <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">Location</p>
-                  <h2 className="font-display text-3xl font-light text-zinc-950">Nouvelles annonces</h2>
+                  <h2 className="font-display text-3xl font-light text-zinc-950 dark:text-zinc-50">Nouvelles annonces</h2>
                 </div>
-                <Link href="/search?listing_type=rent&sort=newest" locale={locale} className="text-xs font-medium text-amber-500">
-                  Voir tout →
+                <Link href="/search?listing_type=rent&sort=newest" locale={locale} className="inline-flex items-center gap-1 text-xs font-medium text-amber-500">
+                  Voir tout
+                  <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
-              <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-2">
+              <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
                 {newest.map((listing) => (
-                  <Link key={listing.id} href={`/l/${listing.slug}`} locale={locale} className="group w-[260px] shrink-0">
-                    <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-xl bg-zinc-200">
+                  <Link key={listing.id} href={`/annonce/${listing.slug}`} locale={locale} className="group w-[260px] shrink-0">
+                    <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-xl bg-zinc-200 dark:bg-zinc-800">
                       {listing.cover_url ? (
-                        <img src={listing.cover_url} alt={listing.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        <Image
+                          src={listing.cover_url}
+                          alt={listing.title}
+                          fill
+                          sizes="260px"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center text-zinc-300">
-                          <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12" />
-                          </svg>
+                        <div className="flex h-full w-full items-center justify-center text-zinc-300 dark:text-zinc-600">
+                          <Home className="h-10 w-10" />
                         </div>
                       )}
                       <span className="absolute start-2 top-2 rounded-lg bg-amber-500 px-2 py-0.5 text-[10px] font-semibold text-zinc-950">
                         Nouveau
                       </span>
                     </div>
-                    <p className="font-display text-base font-semibold text-zinc-950">
+                    <p className="font-display text-base font-semibold text-zinc-950 dark:text-zinc-50">
                       {formatPrice(listing.current_price, listing.currency)}
                     </p>
-                    <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-zinc-500">{listing.title}</p>
-                    <p className="mt-0.5 text-xs text-zinc-300">{listing.wilaya_name}</p>
+                    <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-zinc-500 dark:text-zinc-400">{listing.title}</p>
+                    <p className="mt-0.5 text-xs text-zinc-300 dark:text-zinc-600">{listing.wilaya_name}</p>
                   </Link>
                 ))}
               </div>
@@ -442,22 +437,17 @@ export default async function HomePage({
         )}
 
         {/* ──────────────────── FULL-BLEED PHOTO ─── */}
-        <section className="relative overflow-hidden" style={{ height: "60vh" }}>
+        <section className="relative h-[60vh] overflow-hidden">
           <Image
             src={fullbleedUrl}
             alt=""
             fill
+            sizes="100vw"
             className="object-cover"
           />
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(transparent 30%, rgba(9,9,11,0.8))" }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
           <div className="absolute bottom-0 start-0 p-8 lg:p-16">
-            <h2
-              className="max-w-[550px] text-3xl font-bold leading-[1.1] text-zinc-50 sm:text-4xl lg:text-5xl"
-              style={{ letterSpacing: "-0.02em" }}
-            >
+            <h2 className="max-w-[550px] text-3xl font-bold leading-[1.1] tracking-tight text-zinc-50 sm:text-4xl lg:text-5xl">
               Chaque quartier
               <br />
               a son <span className="text-amber-400">caractère</span>
@@ -468,20 +458,15 @@ export default async function HomePage({
               className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-amber-400"
             >
               Rechercher par quartier
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </section>
 
         {/* ──────────────────────────────── STATS STRIP ─── */}
-        <section className="bg-zinc-950 py-20">
+        <section className="bg-zinc-950 py-20 dark:bg-zinc-900">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <h2
-              className="mb-12 text-center text-3xl font-bold text-zinc-50 sm:text-4xl"
-              style={{ letterSpacing: "-0.02em" }}
-            >
+            <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
               La confiance de milliers
               <br />
               de familles algériennes
@@ -494,7 +479,7 @@ export default async function HomePage({
                 { value: "98%",     label: "satisfaction" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <p className="text-3xl font-bold text-amber-400 sm:text-4xl" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <p className="tabular-nums text-3xl font-bold text-amber-400 sm:text-4xl">
                     {stat.value}
                   </p>
                   <p className="mt-1 text-sm text-zinc-400">{stat.label}</p>
@@ -505,19 +490,16 @@ export default async function HomePage({
         </section>
 
         {/* ──────────────────────────────── CTA PRO ─── */}
-        <section className="bg-zinc-50 py-20 text-center">
+        <section className="bg-zinc-50 py-20 text-center dark:bg-zinc-900">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
             Pour les professionnels
           </p>
-          <h2
-            className="text-3xl font-bold text-zinc-950 sm:text-4xl"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+          <h2 className="text-3xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
             Gérez votre agence
             <br />
             avec <span className="text-amber-500">AqarPro</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-[480px] text-base text-zinc-500">
+          <p className="mx-auto mt-4 max-w-[480px] text-base text-zinc-500 dark:text-zinc-400">
             Dashboard, CRM, analytics, vitrine personnalisée, IA intégrée.
             Tout ce dont votre agence a besoin.
           </p>
@@ -526,7 +508,8 @@ export default async function HomePage({
             locale={locale}
             className="mt-8 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-amber-600"
           >
-            Découvrir AqarPro →
+            Découvrir AqarPro
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </section>
       </main>

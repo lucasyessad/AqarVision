@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getWilayas } from "@/features/marketplace/services/search.service";
 import { DeposerWizardV2 } from "@/features/listings/components/DeposerWizardV2";
 import { getEffectiveQuota } from "@/features/billing/services/individual-billing.service";
+import { AlertTriangle } from "lucide-react";
 
 const INDIVIDUAL_ACTIVE_STATUSES = ["draft", "published", "paused", "pending_review"];
 
@@ -40,14 +41,14 @@ export default async function DeposerPage({
   const quotaReached = active >= effectiveQuota;
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <div className="mx-auto max-w-3xl px-4 py-10">
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="font-display text-3xl font-semibold text-zinc-950">
+            <h1 className="font-display text-3xl font-semibold text-zinc-950 dark:text-zinc-50">
               Déposer une annonce
             </h1>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               Publiez gratuitement votre bien immobilier sur AqarChaab.
             </p>
           </div>
@@ -57,8 +58,8 @@ export default async function DeposerPage({
             className={[
               "flex items-center gap-2 rounded-lg px-3 py-2 text-sm",
               quotaReached
-                ? "border border-red-200 bg-red-50 text-red-700"
-                : "border border-green-200 bg-green-50 text-green-700",
+                ? "border border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/50 dark:text-red-400"
+                : "border border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950/50 dark:text-green-400",
             ].join(" ")}
           >
             <span className="font-semibold">{active}/{effectiveQuota}</span>
@@ -67,26 +68,20 @@ export default async function DeposerPage({
         </div>
 
         {quotaReached ? (
-          <div
-            className="rounded-xl border border-zinc-200 bg-white p-6 text-center"
-          >
-            <div
-              className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50"
-            >
-              <svg className="h-7 w-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
+          <div className="rounded-xl border border-zinc-200 bg-white p-6 text-center dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/50">
+              <AlertTriangle className="h-7 w-7 text-red-600 dark:text-red-400" />
             </div>
-            <h2 className="text-lg font-semibold text-zinc-950">
+            <h2 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
               Limite atteinte
             </h2>
-            <p className="mt-2 text-sm text-zinc-600">
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
               Vous avez déjà <strong>{effectiveQuota} annonces actives</strong>.
               Archivez ou supprimez une annonce existante pour en publier une nouvelle.
             </p>
             <a
               href={`/${locale}/AqarChaab/espace/mes-annonces`}
-              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-zinc-50"
+              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:text-zinc-950"
             >
               Gérer mes annonces
             </a>

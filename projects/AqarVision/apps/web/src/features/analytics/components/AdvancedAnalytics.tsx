@@ -50,7 +50,7 @@ function TopListingsCard({ listings }: { listings: TopListingByViews[] }) {
   const max = listings[0]?.view_count ?? 1;
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
       <h3 className="mb-4 text-sm font-bold text-blue-night">
         Top 5 annonces par vues
       </h3>
@@ -81,7 +81,7 @@ function LeadsBySourceCard({ data }: { data: LeadsBySource[] }) {
   const max = data[0]?.count ?? 1;
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
       <h3 className="mb-4 text-sm font-bold text-blue-night">
         Prospects par source
       </h3>
@@ -119,7 +119,7 @@ function LeadsByStatusCard({ data }: { data: LeadsByStatus[] }) {
   const total = data.reduce((sum, d) => sum + d.count, 0);
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
       <h3 className="mb-4 text-sm font-bold text-blue-night">
         Prospects par statut
       </h3>

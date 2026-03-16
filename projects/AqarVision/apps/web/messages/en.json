@@ -102,10 +102,16 @@
     "space_label": "My space",
     "nav": {
       "home": "Home",
+      "annonces": "My listings",
+      "messagerie": "Messages",
       "favorites": "Favorites",
       "alertes": "Alerts",
+      "collections": "Collections",
       "historique": "History",
-      "profil": "Profile"
+      "upgrade": "Subscription",
+      "profil": "Profile",
+      "back_portal": "Back to portal",
+      "logout": "Sign out"
     },
     "welcome_title": "Hello, {name}",
     "welcome_subtitle": "Welcome to your personal AqarVision space.",

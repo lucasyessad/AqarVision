@@ -1,4 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+
+/** Convert a Supabase storage path to a public URL */
+function storageUrl(path: string | null): string | null {
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+  return `${SUPABASE_URL}/storage/v1/object/public/listing-media/${path}`;
+}
 import type { SearchFiltersInput } from "../schemas/search.schema";
 import type {
   SearchResponse,
@@ -32,9 +41,7 @@ export async function searchListings(
       wilaya_code, commune_id, published_at, created_at, reference_number,
       listing_translations!inner(title, slug, search_vector),
       listing_media(storage_path),
-      agencies!inner(name),
-      wilayas(name_fr),
-      communes(name_fr)
+      agencies(name)
     `,
       { count: "exact" }
     )
@@ -104,14 +111,35 @@ export async function searchListings(
     return { results: [], total_count: 0, page, page_size };
   }
 
+  // Resolve wilaya names from codes
+  const wilayaCodes = [...new Set(data.map((r) => r.wilaya_code as string).filter(Boolean))];
+  const communeIds = [...new Set(data.map((r) => r.commune_id as number).filter(Boolean))];
+
+  let wilayaMap: Record<string, string> = {};
+  let communeMap: Record<number, string> = {};
+
+  if (wilayaCodes.length > 0) {
+    const { data: wRows } = await supabase
+      .from("wilayas")
+      .select("code, name_fr")
+      .in("code", wilayaCodes);
+    wilayaMap = Object.fromEntries((wRows ?? []).map((w) => [w.code as string, w.name_fr as string]));
+  }
+
+  if (communeIds.length > 0) {
+    const { data: cRows } = await supabase
+      .from("communes")
+      .select("id, name_fr")
+      .in("id", communeIds);
+    communeMap = Object.fromEntries((cRows ?? []).map((c) => [c.id as number, c.name_fr as string]));
+  }
+
   const results: SearchResultDto[] = data.map((row) => {
     const translations = row.listing_translations as unknown as Record<string, unknown>[];
     const translation = translations?.[0];
     const mediaRows = (row.listing_media as unknown as Record<string, unknown>[]) ?? [];
     const coverMedia = mediaRows[0];
-    const agency = row.agencies as unknown as Record<string, unknown>;
-    const wilayaRow = row.wilayas as unknown as Record<string, unknown> | null;
-    const communeRow = row.communes as unknown as Record<string, unknown> | null;
+    const agency = row.agencies as unknown as Record<string, unknown> | null;
 
     return {
       id: row.id as string,
@@ -125,14 +153,14 @@ export async function searchListings(
       rooms: (row.rooms as number) ?? null,
       bathrooms: (row.bathrooms as number) ?? null,
       wilaya_code: row.wilaya_code as string,
-      wilaya_name: (wilayaRow?.name_fr as string) ?? `Wilaya ${row.wilaya_code}`,
-      commune_name: (communeRow?.name_fr as string) ?? null,
+      wilaya_name: wilayaMap[row.wilaya_code as string] ?? `Wilaya ${row.wilaya_code}`,
+      commune_name: communeMap[row.commune_id as number] ?? null,
       commune_id: (row.commune_id as number) ?? null,
       published_at: (row.published_at as string) ?? null,
       created_at: row.created_at as string,
       title: (translation?.title as string) ?? "",
       slug: (translation?.slug as string) ?? "",
-      cover_url: (coverMedia?.storage_path as string) ?? null,
+      cover_url: storageUrl((coverMedia?.storage_path as string) ?? null),
       agency_name: (agency?.name as string) ?? "",
       relevance_score: null,
       reference_number: row.reference_number as number,
@@ -178,9 +206,7 @@ export async function getListingBySlug(
       id, agency_id, current_status, current_price, currency,
       listing_type, property_type, surface_m2, rooms, bathrooms,
       wilaya_code, commune_id, published_at, created_at, details, reference_number,
-      agencies(name, slug, logo_url, phone),
-      wilayas(name_fr),
-      communes(name_fr)
+      agencies(name, slug, logo_url, phone)
     `
     )
     .eq("id", listingId)
@@ -205,9 +231,28 @@ export async function getListingBySlug(
     .eq("listing_id", listingId)
     .order("sort_order", { ascending: true });
 
+  // Resolve wilaya and commune names
+  let wilayaName = `Wilaya ${listing.wilaya_code}`;
+  let communeName: string | null = null;
+
+  if (listing.wilaya_code) {
+    const { data: wRow } = await supabase
+      .from("wilayas")
+      .select("name_fr")
+      .eq("code", listing.wilaya_code)
+      .single();
+    if (wRow) wilayaName = wRow.name_fr as string;
+  }
+  if (listing.commune_id) {
+    const { data: cRow } = await supabase
+      .from("communes")
+      .select("name_fr")
+      .eq("id", listing.commune_id)
+      .single();
+    if (cRow) communeName = cRow.name_fr as string;
+  }
+
   const agency = listing.agencies as unknown as Record<string, unknown> | null;
-  const wilayaRowDetail = listing.wilayas as unknown as Record<string, unknown> | null;
-  const communeRowDetail = listing.communes as unknown as Record<string, unknown> | null;
   const currentTranslation = (
     (allTranslations ?? []) as Record<string, unknown>[]
   ).find((t) => t.locale === locale);
@@ -232,8 +277,8 @@ export async function getListingBySlug(
     rooms: (listing.rooms as number) ?? null,
     bathrooms: (listing.bathrooms as number) ?? null,
     wilaya_code: listing.wilaya_code as string,
-    wilaya_name: (wilayaRowDetail?.name_fr as string) ?? `Wilaya ${listing.wilaya_code}`,
-    commune_name: (communeRowDetail?.name_fr as string) ?? null,
+    wilaya_name: wilayaName,
+    commune_name: communeName,
     commune_id: (listing.commune_id as number) ?? null,
     published_at: (listing.published_at as string) ?? null,
     created_at: listing.created_at as string,
@@ -245,7 +290,7 @@ export async function getListingBySlug(
     media: ((media ?? []) as Record<string, unknown>[]).map(
       (m): ListingMediaDto => ({
         id: m.id as string,
-        storage_path: m.storage_path as string,
+        storage_path: storageUrl(m.storage_path as string) ?? (m.storage_path as string),
         content_type: (m.content_type as string) ?? null,
         is_cover: m.is_cover as boolean,
         sort_order: m.sort_order as number,

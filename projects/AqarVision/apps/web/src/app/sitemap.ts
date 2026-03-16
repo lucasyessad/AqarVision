@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase/server";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://aqarvision.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const LOCALES = ["fr", "ar", "en", "es"] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (translations) {
     for (const t of translations) {
       entries.push({
-        url: `${BASE_URL}/${t.locale}/l/${t.slug}`,
+        url: `${BASE_URL}/${t.locale}/annonce/${t.slug}`,
         lastModified: new Date(t.updated_at as string),
         changeFrequency: "daily",
         priority: 0.8,

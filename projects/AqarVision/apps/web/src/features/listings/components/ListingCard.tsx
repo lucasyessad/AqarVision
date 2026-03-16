@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/navigation";
 import { ListingStatusBadge } from "./ListingStatusBadge";
+import { Bed, Ruler, MapPin, Camera } from "lucide-react";
 import type { ListingDto } from "../types/listing.types";
 
 function formatPrice(price: number, currency: string): string {
@@ -25,69 +26,73 @@ export function ListingCard({ listing }: ListingCardProps) {
   const title =
     listing.translations[0]?.title ?? t("untitled");
 
+  const isSale = listing.listing_type === "sale";
+
   return (
     <Link
       href={`/AqarPro/dashboard/listings/${listing.id}/edit`}
-      className="group block w-full rounded-xl bg-zinc-50 text-start shadow-sm transition-shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
+      className="group block w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden text-start transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-zinc-300 dark:hover:border-zinc-700"
     >
       {/* Cover image */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-xl bg-zinc-100">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
         {listing.cover_url ? (
           <Image
             src={listing.cover_url}
             alt={title}
             fill
-            className="object-cover transition-transform group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-zinc-300">
-            <svg
-              className="h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-              />
-            </svg>
+          <div className="flex h-full w-full items-center justify-center text-zinc-300 dark:text-zinc-600">
+            <Camera className="h-12 w-12" strokeWidth={1.5} />
           </div>
         )}
         {/* Status badge overlay */}
-        <div className="absolute inset-block-start-2 inset-inline-end-2">
+        <div className="absolute end-2 top-2">
           <ListingStatusBadge status={listing.current_status} />
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-3">
         {/* Property type badge */}
-        <span className="mb-1 inline-block rounded bg-amber-400/15 px-2 py-0.5 text-xs font-medium text-amber-700">
+        <span
+          className={[
+            "mb-1 inline-block rounded-lg px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+            isSale
+              ? "bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 dark:text-blue-400"
+              : "bg-violet-500/10 text-violet-500 dark:bg-violet-500/20 dark:text-violet-400",
+          ].join(" ")}
+        >
           {t(listing.property_type)}
         </span>
 
-        <h3 className="mb-1 truncate text-sm font-semibold text-zinc-800">
+        <h3 className="mb-1 truncate text-sm font-semibold text-zinc-800 dark:text-zinc-100">
           {title}
         </h3>
 
         {/* Price */}
-        <p className="mb-2 text-lg font-bold text-zinc-900">
+        <p className="mb-2 text-lg font-bold tabular-nums text-zinc-900 dark:text-zinc-50">
           {formatPrice(listing.current_price, listing.currency)}
         </p>
 
         {/* Details row */}
-        <div className="flex items-center gap-3 text-xs text-zinc-400">
+        <div className="flex items-center gap-3 text-xs text-zinc-400 dark:text-zinc-500">
           {listing.rooms !== null && (
-            <span>{t("rooms_count", { count: listing.rooms })}</span>
+            <span className="flex items-center gap-1">
+              <Bed className="h-3.5 w-3.5" />
+              {t("rooms_count", { count: listing.rooms })}
+            </span>
           )}
           {listing.surface_m2 !== null && (
-            <span>{listing.surface_m2} m²</span>
+            <span className="flex items-center gap-1">
+              <Ruler className="h-3.5 w-3.5" />
+              {listing.surface_m2} m²
+            </span>
           )}
-          <span className="ms-auto">
+          <span className="ms-auto flex items-center gap-1">
+            <MapPin className="h-3.5 w-3.5" />
             {t("wilaya")} {listing.wilaya_code}
           </span>
         </div>

@@ -42,7 +42,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-card transition-all duration-200 hover:-translate-y-[3px] hover:border-zinc-300 hover:shadow-card-hover dark:border-zinc-800 dark:bg-zinc-900">
       {/* ── Image area ─────────────────────────────────────────── */}
-      <Link href={`/l/${listing.slug}`} className="relative block aspect-[16/10] overflow-hidden">
+      <Link href={`/annonce/${listing.slug}`} className="relative block aspect-[16/10] overflow-hidden">
         {listing.cover_url ? (
           <Image
             src={listing.cover_url}
@@ -105,7 +105,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
         </p>
 
         {/* Title */}
-        <Link href={`/l/${listing.slug}`}>
+        <Link href={`/annonce/${listing.slug}`}>
           <h3
             className="mb-2 line-clamp-2 text-sm font-semibold leading-snug text-zinc-900 transition-colors font-display hover:text-amber-600"
           >
@@ -189,7 +189,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
             </a>
           ) : (
             <Link
-              href={`/l/${listing.slug}`}
+              href={`/annonce/${listing.slug}`}
               className="shrink-0 flex items-center gap-1 rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-500 transition-colors"
             >
               Voir

@@ -49,20 +49,17 @@ export default async function UpgradePage({ params, searchParams }: UpgradePageP
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-zinc-950">
+        <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
           Augmenter mon quota
         </h1>
-        <p className="mt-0.5 text-sm text-zinc-500">
-          Publiez plus d'annonces sur AqarChaab
+        <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
+          Publiez plus d&apos;annonces sur AqarChaab
         </p>
       </div>
 
       {/* Checkout result banner */}
       {checkout === "success" && (
-        <div
-          className="mb-6 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium"
-          style={{ background: "rgba(90,143,110,0.10)", color: "#3D7A5A", border: "1px solid rgba(90,143,110,0.2)" }}
-        >
+        <div className="mb-6 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium bg-green-500/10 text-green-700 dark:text-green-400 border border-green-500/20">
           <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -70,10 +67,7 @@ export default async function UpgradePage({ params, searchParams }: UpgradePageP
         </div>
       )}
       {checkout === "cancel" && (
-        <div
-          className="mb-6 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium"
-          style={{ background: "rgba(184,74,58,0.08)", color: "#B84A3A", border: "1px solid rgba(184,74,58,0.15)" }}
-        >
+        <div className="mb-6 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium bg-red-500/[0.08] text-red-600 dark:text-red-400 border border-red-500/15">
           <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>

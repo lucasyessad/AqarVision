@@ -24,19 +24,18 @@ export function StatsChart({ stats }: StatsChartProps) {
   return (
     <div className="space-y-6">
       {/* Daily Views Chart */}
-      <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
         <h3 className="mb-4 text-sm font-semibold text-blue-night">
           {t("daily_views")}
         </h3>
-        <div className="flex items-end gap-1" style={{ height: "160px" }}>
+        <div className="flex h-40 items-end gap-1">
           {stats.map((day) => {
             const heightPercent = (day.total_views / maxViews) * 100;
             const label = day.stat_date.slice(5); // MM-DD
             return (
               <div
                 key={`views-${day.stat_date}`}
-                className="group relative flex flex-1 flex-col items-center justify-end"
-                style={{ height: "100%" }}
+                className="group relative flex h-full flex-1 flex-col items-center justify-end"
               >
                 <div
                   className="w-full min-w-[4px] rounded-t bg-blue-night/80 transition-colors group-hover:bg-blue-night"
@@ -56,19 +55,18 @@ export function StatsChart({ stats }: StatsChartProps) {
       </div>
 
       {/* Daily Leads Chart */}
-      <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
         <h3 className="mb-4 text-sm font-semibold text-blue-night">
           {t("daily_leads")}
         </h3>
-        <div className="flex items-end gap-1" style={{ height: "160px" }}>
+        <div className="flex h-40 items-end gap-1">
           {stats.map((day) => {
             const heightPercent = (day.total_leads / maxLeads) * 100;
             const label = day.stat_date.slice(5);
             return (
               <div
                 key={`leads-${day.stat_date}`}
-                className="group relative flex flex-1 flex-col items-center justify-end"
-                style={{ height: "100%" }}
+                className="group relative flex h-full flex-1 flex-col items-center justify-end"
               >
                 <div
                   className="w-full min-w-[4px] rounded-t bg-gold/80 transition-colors group-hover:bg-gold"

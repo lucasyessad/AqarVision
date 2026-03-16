@@ -16,8 +16,9 @@ export function FullBleedPhoto({
   cta,
   height = "60vh",
 }: FullBleedPhotoProps) {
+  const heightClass = height === "60vh" ? "h-[60vh]" : `h-[${height}]`;
   return (
-    <section className="relative overflow-hidden" style={{ height }}>
+    <section className={`relative overflow-hidden ${heightClass}`}>
       <Image src={src} alt={alt} fill className="object-cover" />
 
       {statement && (

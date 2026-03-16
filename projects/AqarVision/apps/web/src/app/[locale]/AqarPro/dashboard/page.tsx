@@ -20,20 +20,18 @@ function TrendBadge({ value }: { value: number }) {
 
 function StatCard({ label, value, trend }: { label: string; value: string; trend?: number }) {
   return (
-    <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
-      <div className="px-6 py-5">
-        <p className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
-          {label}
-        </p>
-        <p className="mt-2 text-3xl font-semibold tabular-nums" style={{ color: "var(--charcoal-950)" }}>
-          {value}
-        </p>
-        {trend !== undefined && (
-          <div className="mt-1">
-            <TrendBadge value={trend} />
-          </div>
-        )}
-      </div>
+    <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+      <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        {label}
+      </p>
+      <p className="mt-2 text-3xl font-semibold tabular-nums text-zinc-950 dark:text-zinc-50">
+        {value}
+      </p>
+      {trend !== undefined && (
+        <div className="mt-1">
+          <TrendBadge value={trend} />
+        </div>
+      )}
     </div>
   );
 }
@@ -91,10 +89,10 @@ export default async function DashboardPage({
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+        <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           {t("title")}
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Vue d&apos;ensemble de votre activité sur les 30 derniers jours.
         </p>
       </div>

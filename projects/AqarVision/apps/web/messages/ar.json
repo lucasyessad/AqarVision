@@ -102,10 +102,16 @@
     "space_label": "مساحتي",
     "nav": {
       "home": "الرئيسية",
+      "annonces": "إعلاناتي",
+      "messagerie": "الرسائل",
       "favorites": "المفضلة",
       "alertes": "التنبيهات",
+      "collections": "المجموعات",
       "historique": "السجل",
-      "profil": "الملف الشخصي"
+      "upgrade": "الاشتراك",
+      "profil": "الملف الشخصي",
+      "back_portal": "العودة للبوابة",
+      "logout": "تسجيل الخروج"
     },
     "welcome_title": "مرحباً، {name}",
     "welcome_subtitle": "مرحباً بك في مساحتك الشخصية على AqarVision.",

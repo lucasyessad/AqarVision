@@ -2,6 +2,11 @@ import { setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/lib/i18n/navigation";
 import type { Metadata } from "next";
+import {
+  ArrowUpDown,
+  Image,
+  ArrowLeft,
+} from "lucide-react";
 
 interface ComparerPageProps {
   params: Promise<{ locale: string }>;
@@ -21,7 +26,7 @@ interface ListingForCompare {
   surface_m2: number | null;
   rooms: number | null;
   bathrooms: number | null;
-  wilaya_code: number | null;
+  wilaya_code: string | null;
   details: Record<string, unknown>;
   title: string;
   slug: string;
@@ -64,18 +69,16 @@ export default async function ComparerPage({
 
   if (listingIds.length < 2) {
     return (
-      <main className="min-h-screen bg-zinc-50">
+      <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mx-auto mb-4 h-12 w-12 text-zinc-400">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-          </svg>
-          <h1 className="text-xl font-bold text-zinc-900">Sélectionnez au moins 2 annonces</h1>
-          <p className="mt-2 text-sm text-gray-500">
+          <ArrowUpDown className="mx-auto mb-4 h-12 w-12 text-zinc-400 dark:text-zinc-600" />
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">Sélectionnez au moins 2 annonces</h1>
+          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
             Utilisez le bouton &quot;Comparer&quot; sur les annonces pour les ajouter ici.
           </p>
           <Link
             href="/search"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             Rechercher des annonces
           </Link>
@@ -150,7 +153,7 @@ export default async function ComparerPage({
         surface_m2: (row.surface_m2 as number) ?? null,
         rooms: (row.rooms as number) ?? null,
         bathrooms: (row.bathrooms as number) ?? null,
-        wilaya_code: (row.wilaya_code as number) ?? null,
+        wilaya_code: (row.wilaya_code as string) ?? null,
         details: (row.details as Record<string, unknown>) ?? {},
         title: (translation as Record<string, unknown> | undefined)?.title as string ?? "—",
         slug: (translation as Record<string, unknown> | undefined)?.slug as string ?? "",
@@ -190,37 +193,38 @@ export default async function ComparerPage({
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50">
+    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900">Comparaison</h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Comparaison</h1>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               {listings.length} annonce{listings.length !== 1 ? "s" : ""} comparées
             </p>
           </div>
           <Link
             href="/search"
-            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-gray-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
           >
-            ← Retour à la recherche
+            <ArrowLeft className="h-4 w-4" />
+            Retour à la recherche
           </Link>
         </div>
 
         {/* Comparison table */}
-        <div className="overflow-x-auto rounded-xl border border-gray-100 bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <table className="min-w-full">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="w-40 px-4 py-4 text-start text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <tr className="border-b border-zinc-200 dark:border-zinc-800">
+                <th className="w-40 px-4 py-4 text-start text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                   Critère
                 </th>
                 {listings.map((listing) => (
                   <th key={listing.id} className="px-4 py-4 text-start">
                     <div className="flex flex-col gap-2">
                       {/* Cover image */}
-                      <div className="h-24 w-full overflow-hidden rounded-lg bg-gray-100">
+                      <div className="h-24 w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
                         {listing.cover_url ? (
                           <img
                             src={listing.cover_url}
@@ -229,19 +233,17 @@ export default async function ComparerPage({
                           />
                         ) : (
                           <div className="flex h-full items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-8 w-8 text-gray-300">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                            </svg>
+                            <Image className="h-8 w-8 text-zinc-300 dark:text-zinc-600" />
                           </div>
                         )}
                       </div>
                       <Link
-                        href={`/l/${listing.slug}`}
-                        className="line-clamp-2 text-sm font-semibold text-zinc-900 hover:underline"
+                        href={`/annonce/${listing.slug}`}
+                        className="line-clamp-2 text-sm font-semibold text-zinc-900 hover:underline dark:text-zinc-100"
                       >
                         {listing.title}
                       </Link>
-                      <span className="text-xs text-zinc-400">{listing.agency_name}</span>
+                      <span className="text-xs text-zinc-400 dark:text-zinc-500">{listing.agency_name}</span>
                     </div>
                   </th>
                 ))}
@@ -251,9 +253,13 @@ export default async function ComparerPage({
               {COMPARE_ROWS.map((row, idx) => (
                 <tr
                   key={row.key}
-                  className={idx % 2 === 0 ? "bg-white" : "bg-gray-50/50"}
+                  className={
+                    idx % 2 === 0
+                      ? "bg-white dark:bg-zinc-900"
+                      : "bg-zinc-50/50 dark:bg-zinc-800/30"
+                  }
                 >
-                  <td className="px-4 py-3 text-xs font-medium text-zinc-400">
+                  <td className="px-4 py-3 text-xs font-medium text-zinc-400 dark:text-zinc-500">
                     {row.label}
                   </td>
                   {listings.map((listing) => {
@@ -271,18 +277,18 @@ export default async function ComparerPage({
                         key={listing.id}
                         className={`px-4 py-3 text-sm ${
                           isBestPrice || isBestSurface
-                            ? "font-semibold text-emerald-600"
-                            : "text-zinc-800"
+                            ? "font-semibold text-emerald-600 dark:text-emerald-400"
+                            : "text-zinc-800 dark:text-zinc-200"
                         }`}
                       >
                         {value}
                         {isBestPrice && (
-                          <span className="ms-1.5 inline-flex rounded-full bg-emerald-100 px-1.5 py-0.5 text-xs font-semibold text-emerald-700">
+                          <span className="ms-1.5 inline-flex rounded-full bg-emerald-100 px-1.5 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
                             Meilleur prix
                           </span>
                         )}
                         {isBestSurface && (
-                          <span className="ms-1.5 inline-flex rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-semibold text-blue-700">
+                          <span className="ms-1.5 inline-flex rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-900/40 dark:text-blue-400">
                             Plus grand
                           </span>
                         )}
@@ -293,23 +299,23 @@ export default async function ComparerPage({
               ))}
 
               {/* Equipements row */}
-              <tr className="bg-white">
-                <td className="px-4 py-3 text-xs font-medium text-zinc-400">Équipements</td>
+              <tr className="bg-white dark:bg-zinc-900">
+                <td className="px-4 py-3 text-xs font-medium text-zinc-400 dark:text-zinc-500">Équipements</td>
                 {listings.map((listing) => (
-                  <td key={listing.id} className="px-4 py-3 text-sm text-zinc-800">
+                  <td key={listing.id} className="px-4 py-3 text-sm text-zinc-800 dark:text-zinc-200">
                     {renderCell(listing, "equipments")}
                   </td>
                 ))}
               </tr>
 
               {/* Actions row */}
-              <tr className="border-t border-gray-100 bg-gray-50">
+              <tr className="border-t border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-800/50">
                 <td className="px-4 py-3" />
                 {listings.map((listing) => (
                   <td key={listing.id} className="px-4 py-3">
                     <Link
-                      href={`/l/${listing.slug}`}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-zinc-900/90"
+                      href={`/annonce/${listing.slug}`}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
                     >
                       Voir l&apos;annonce
                     </Link>

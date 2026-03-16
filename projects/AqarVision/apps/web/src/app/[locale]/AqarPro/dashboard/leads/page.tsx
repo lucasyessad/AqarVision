@@ -49,29 +49,25 @@ export default async function LeadsPage({
       {/* Header + toggle */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+          <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
             Prospects &amp; Messages
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Gérez vos conversations et votre pipeline CRM.
           </p>
         </div>
-        <div
-          className="flex rounded-md border p-0.5"
-          style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}
-        >
+        <div className="flex rounded-lg border border-zinc-200 bg-zinc-50 p-0.5 dark:border-zinc-800 dark:bg-zinc-900">
           {(["messages", "pipeline"] as const).map((v) => {
             const isActive = activeView === v;
             return (
               <a
                 key={v}
                 href={`/dashboard/leads?view=${v}`}
-                className="rounded px-4 py-1.5 text-sm font-medium transition-all"
-                style={
+                className={`rounded px-4 py-1.5 text-sm font-medium transition-all ${
                   isActive
-                    ? { background: "var(--coral)", color: "white" }
-                    : { color: "var(--charcoal-600)" }
-                }
+                    ? "bg-amber-500 text-white"
+                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                }`}
               >
                 {v === "messages" ? "Messages" : "Pipeline CRM"}
               </a>
@@ -93,8 +89,8 @@ export default async function LeadsPage({
           agencyId={membership.agency_id as string}
         />
       ) : (
-        <div className="flex items-center justify-center rounded-lg border bg-white py-16" style={{ borderColor: "#E3E8EF" }}>
-          <p className="text-sm" style={{ color: "var(--charcoal-500)" }}>
+        <div className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white py-16 dark:border-zinc-800 dark:bg-zinc-900">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
             Vous devez appartenir à une agence pour accéder au pipeline CRM.
           </p>
         </div>

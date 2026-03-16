@@ -6,7 +6,7 @@ import { Link } from "@/lib/i18n/navigation";
 interface NavItem {
   href: string;
   label: string;
-  icon: string;
+  icon: React.ReactNode;
 }
 
 export function ChaabSidebarNav({ items }: { items: NavItem[] }) {
@@ -31,9 +31,9 @@ export function ChaabSidebarNav({ items }: { items: NavItem[] }) {
                 : "text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-300",
             ].join(" ")}
           >
-            <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-            </svg>
+            <span className={`shrink-0 [&>svg]:h-4 [&>svg]:w-4 ${isActive ? "text-amber-500" : ""}`}>
+              {item.icon}
+            </span>
             {item.label}
             {isActive && (
               <span className="ms-auto h-1.5 w-1.5 rounded-full bg-amber-500" />

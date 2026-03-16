@@ -26,12 +26,12 @@ const LISTING_TYPE_LABELS: Record<string, string> = {
   vacation: "Vacances",
 };
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  published: { label: "Publiée", color: "#5A8F6E", bg: "rgba(90,143,110,0.10)" },
-  draft: { label: "Brouillon", color: "#8A8279", bg: "rgba(138,130,121,0.10)" },
-  paused: { label: "Suspendue", color: "#C49A3A", bg: "rgba(196,154,58,0.10)" },
-  sold: { label: "Vendue", color: "#5A8F6E", bg: "rgba(90,143,110,0.10)" },
-  archived: { label: "Archivée", color: "#8A8279", bg: "rgba(138,130,121,0.10)" },
+const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
+  published: { label: "Publiée", className: "bg-green-500/10 text-green-700 dark:text-green-400" },
+  draft: { label: "Brouillon", className: "bg-zinc-500/10 text-zinc-600 dark:text-zinc-400" },
+  paused: { label: "Suspendue", className: "bg-amber-500/10 text-amber-700 dark:text-amber-400" },
+  sold: { label: "Vendue", className: "bg-green-500/10 text-green-700 dark:text-green-400" },
+  archived: { label: "Archivée", className: "bg-zinc-500/10 text-zinc-600 dark:text-zinc-400" },
 };
 
 export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) {
@@ -76,10 +76,10 @@ export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) 
       {/* Header */}
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-950">
+          <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
             Mes annonces
           </h1>
-          <p className="mt-0.5 text-sm text-zinc-500">
+          <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
             {items.length} annonce{items.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -91,17 +91,17 @@ export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) 
               {Array.from({ length: effectiveQuota }).map((_, i) => (
                 <div
                   key={i}
-                  className={`h-2 w-8 rounded-full ${i < active ? "bg-zinc-950" : "bg-zinc-200"}`}
+                  className={`h-2 w-8 rounded-full ${i < active ? "bg-zinc-950 dark:bg-amber-500" : "bg-zinc-200 dark:bg-zinc-700"}`}
                 />
               ))}
             </div>
-            <span className="text-xs text-zinc-500">
-              <span className="font-semibold text-zinc-900">{active}</span>/{effectiveQuota} actives
+            <span className="text-xs text-zinc-500 dark:text-zinc-400">
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">{active}</span>/{effectiveQuota} actives
             </span>
           </div>
 
           {quotaReached ? (
-            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium" style={{ background: "rgba(184,74,58,0.08)", color: "#B84A3A" }}>
+            <span className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium bg-red-500/[0.08] text-red-600 dark:bg-red-500/10 dark:text-red-400">
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
               </svg>
@@ -110,7 +110,7 @@ export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) 
           ) : (
             <Link
               href={`/${locale}/deposer`}
-              className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-85 bg-zinc-950 text-zinc-50"
+              className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-85 bg-zinc-950 text-zinc-50 dark:bg-amber-500 dark:text-zinc-950"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -123,21 +123,21 @@ export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) 
 
       {items.length === 0 ? (
         /* Empty state */
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-200 py-16 text-center bg-white">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-100">
-            <svg className="h-7 w-7 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-200 dark:border-zinc-700 py-16 text-center bg-white dark:bg-zinc-900">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
+            <svg className="h-7 w-7 text-zinc-500 dark:text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
             </svg>
           </div>
-          <p className="font-medium text-zinc-900">
-            Vous n'avez pas encore d'annonces
+          <p className="font-medium text-zinc-900 dark:text-zinc-100">
+            Vous n&apos;avez pas encore d&apos;annonces
           </p>
-          <p className="mt-1 text-sm text-zinc-500">
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Déposez gratuitement votre premier bien immobilier.
           </p>
           <Link
             href={`/${locale}/deposer`}
-            className="mt-5 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold bg-zinc-950 text-zinc-50"
+            className="mt-5 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold bg-zinc-950 text-zinc-50 dark:bg-amber-500 dark:text-zinc-950"
           >
             Déposer une annonce
           </Link>
@@ -149,18 +149,17 @@ export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) 
             const translation = translations.find((t) => t.locale === "fr") ?? translations[0];
             const status = STATUS_CONFIG[listing.current_status as string] ?? {
               label: listing.current_status,
-              color: "#71717a",
-              bg: "#f4f4f5",
+              className: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
             };
 
             return (
               <div
                 key={listing.id as string}
-                className="flex items-center gap-4 rounded-xl p-4 bg-white border border-zinc-200"
+                className="flex items-center gap-4 rounded-xl p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
               >
                 {/* Icon */}
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-zinc-100">
-                  <svg className="h-6 w-6 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+                  <svg className="h-6 w-6 text-zinc-500 dark:text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
                   </svg>
                 </div>
@@ -169,19 +168,18 @@ export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) 
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span
-                      className="rounded-full px-2 py-0.5 text-xs font-medium"
-                      style={{ background: status.bg, color: status.color }}
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${status.className}`}
                     >
                       {status.label}
                     </span>
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
                       {LISTING_TYPE_LABELS[listing.listing_type as string]} · {PROPERTY_TYPE_LABELS[listing.property_type as string]}
                     </span>
                   </div>
-                  <p className="mt-1 truncate font-medium text-zinc-900">
+                  <p className="mt-1 truncate font-medium text-zinc-900 dark:text-zinc-100">
                     {translation?.title ?? "Sans titre"}
                   </p>
-                  <p className="text-sm text-zinc-500">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     {(listing.current_price as number).toLocaleString("fr-DZ")} DZD
                     {listing.surface_m2 ? ` · ${listing.surface_m2} m²` : ""}
                     {listing.rooms ? ` · ${listing.rooms} pièces` : ""}
@@ -192,8 +190,8 @@ export default async function MesAnnoncesPage({ params }: MesAnnoncesPageProps) 
                 <div className="flex shrink-0 items-center gap-2">
                   {translation?.slug && (
                     <Link
-                      href={`/${locale}/l/${translation.slug}`}
-                      className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
+                      href={`/annonce/${translation.slug}`}
+                      className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
                       target="_blank"
                     >
                       Voir

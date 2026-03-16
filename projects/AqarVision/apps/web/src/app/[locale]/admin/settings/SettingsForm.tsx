@@ -23,9 +23,9 @@ export function SettingsForm({ setting }: SettingsFormProps) {
       <input type="hidden" name="key" value={setting.key} />
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-white/90">{setting.key}</p>
+        <p className="text-sm font-medium text-white/90 dark:text-zinc-100">{setting.key}</p>
         {setting.description && (
-          <p className="mt-0.5 text-xs text-white/40">{setting.description}</p>
+          <p className="mt-0.5 text-xs text-white/40 dark:text-zinc-400">{setting.description}</p>
         )}
       </div>
 
@@ -33,18 +33,12 @@ export function SettingsForm({ setting }: SettingsFormProps) {
         <input
           name="value"
           defaultValue={displayValue}
-          className="w-52 rounded-lg border px-3 py-1.5 text-sm font-mono"
-          style={{
-            background: "rgba(255,255,255,0.06)",
-            borderColor: "rgba(255,255,255,0.12)",
-            color: "rgba(253,251,247,0.9)",
-          }}
+          className="w-52 rounded-lg border border-white/[0.12] dark:border-zinc-700 bg-white/[0.06] dark:bg-zinc-800 px-3 py-1.5 text-sm font-mono text-zinc-50/90 dark:text-zinc-200"
         />
         <button
           type="submit"
           disabled={pending}
-          className="rounded-lg px-3 py-1.5 text-xs font-semibold text-amber-500 transition-opacity hover:opacity-80 disabled:opacity-40"
-          style={{ background: "rgba(245,158,11,0.15)" }}
+          className="rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-500 transition-opacity hover:opacity-80 disabled:opacity-40"
         >
           {pending ? "…" : "Sauver"}
         </button>

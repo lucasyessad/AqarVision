@@ -126,7 +126,7 @@ function FooterStandard({ agency }: AgencyFooterProps) {
           <p className="text-center text-xs text-white/30">
             &copy; {year} {agency.name}. Propulsé par{' '}
             <a
-              href="https://aqarvision.dz"
+              href={process.env.NEXT_PUBLIC_SITE_URL ?? "/"}
               target="_blank"
               rel="noopener noreferrer"
               className="underline transition-colors hover:text-white/60"
@@ -152,7 +152,7 @@ function FooterMinimal({ agency }: AgencyFooterProps) {
         <p className="text-center text-xs text-gray-400">
           &copy; {year} {agency.name} &mdash; Propulsé par{' '}
           <a
-            href="https://aqarvision.dz"
+            href={process.env.NEXT_PUBLIC_SITE_URL ?? "/"}
             target="_blank"
             rel="noopener noreferrer"
             className="underline transition-colors hover:text-gray-600"

@@ -30,16 +30,7 @@ function SectionPlaceholder({ section }: { section: ThemeSection }) {
     return null
   }
   return (
-    <div
-      style={{
-        border: '2px dashed var(--agency-accent, #e5e5e5)',
-        padding: '2rem',
-        margin: '1rem 0',
-        textAlign: 'center',
-        color: 'var(--agency-secondary, #666)',
-        fontSize: '0.875rem',
-      }}
-    >
+    <div className="mx-4 my-4 rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-600 p-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
       <strong>[{section.id}]</strong> variant: <code>{section.variant}</code> — not yet
       implemented
     </div>

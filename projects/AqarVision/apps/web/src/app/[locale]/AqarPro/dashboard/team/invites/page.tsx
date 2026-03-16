@@ -34,38 +34,38 @@ export default async function InvitesPage({
     .order("created_at", { ascending: false });
 
   const STATUS_MAP = {
-    accepted: { label: "Acceptée", bg: "#F0FDF4", color: "#16A34A" },
-    expired:  { label: "Expirée",  bg: "#F6F9FC", color: "var(--charcoal-400)" },
-    pending:  { label: "En attente", bg: "#FFFBEB", color: "#D97706" },
+    accepted: { label: "Acceptée", cls: "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400" },
+    expired:  { label: "Expirée",  cls: "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500" },
+    pending:  { label: "En attente", cls: "bg-yellow-50 text-yellow-600 dark:bg-yellow-950 dark:text-yellow-400" },
   };
 
   return (
     <div className="space-y-4">
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-semibold" style={{ color: "var(--charcoal-950)" }}>
+        <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           {t("invite_pending")}
         </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--charcoal-500)" }}>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Historique des invitations envoyées à votre agence.
         </p>
       </div>
 
       {/* Table card */}
-      <div className="overflow-hidden rounded-lg border bg-white" style={{ borderColor: "#E3E8EF" }}>
+      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b" style={{ borderColor: "#E3E8EF", background: "#F6F9FC" }}>
-              <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+            <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <th className="px-6 py-3 text-start text-[11px] font-medium uppercase tracking-wider text-zinc-400">
                 {t("member_email")}
               </th>
-              <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+              <th className="px-6 py-3 text-start text-[11px] font-medium uppercase tracking-wider text-zinc-400">
                 {t("member_role")}
               </th>
-              <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+              <th className="px-6 py-3 text-start text-[11px] font-medium uppercase tracking-wider text-zinc-400">
                 {t("member_status")}
               </th>
-              <th className="px-6 py-3 text-start text-xs font-medium uppercase tracking-wide" style={{ color: "var(--charcoal-500)" }}>
+              <th className="px-6 py-3 text-start text-[11px] font-medium uppercase tracking-wider text-zinc-400">
                 Expire le
               </th>
             </tr>
@@ -79,29 +79,24 @@ export default async function InvitesPage({
                 return (
                   <tr
                     key={invite.id}
-                    className="border-b"
-                    style={{ borderColor: i === invites.length - 1 ? "transparent" : "#E3E8EF" }}
+                    className={`h-12 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 ${
+                      i !== invites.length - 1 ? "border-b border-zinc-200 dark:border-zinc-800" : ""
+                    }`}
                   >
-                    <td className="px-6 py-4" style={{ color: "var(--charcoal-950)" }}>
+                    <td className="px-6 py-4 text-zinc-950 dark:text-zinc-50">
                       {invite.email}
                     </td>
                     <td className="px-6 py-4">
-                      <span
-                        className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                        style={{ background: "#EFF6FF", color: "#2563EB" }}
-                      >
+                      <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-600 dark:bg-blue-950 dark:text-blue-400">
                         {invite.role}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span
-                        className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                        style={{ background: status.bg, color: status.color }}
-                      >
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${status.cls}`}>
                         {status.label}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs" style={{ color: "var(--charcoal-400)" }}>
+                    <td className="px-6 py-4 text-xs text-zinc-400 dark:text-zinc-500">
                       {new Date(invite.expires_at).toLocaleDateString(locale)}
                     </td>
                   </tr>
@@ -109,7 +104,7 @@ export default async function InvitesPage({
               })
             ) : (
               <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-sm" style={{ color: "var(--charcoal-400)" }}>
+                <td colSpan={4} className="px-6 py-12 text-center text-sm text-zinc-400 dark:text-zinc-500">
                   Aucune invitation envoyée
                 </td>
               </tr>

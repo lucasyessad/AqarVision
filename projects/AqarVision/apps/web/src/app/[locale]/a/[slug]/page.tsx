@@ -9,6 +9,12 @@ import {
 import { resolveManifest, resolveThemeColors } from "@/lib/themes";
 import { SectionRenderer } from "@/components/agency/ThemeRenderer";
 import { Link } from "@/lib/i18n/navigation";
+import {
+  Image,
+  Phone as PhoneIcon,
+  Mail,
+  MapPin,
+} from "lucide-react";
 
 const getCachedAgency = cache(async (slug: string) => {
   const supabase = await createClient();
@@ -84,8 +90,6 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
   const beforeSections = manifest.sections
     .filter((s) => s.id !== "listings" && s.order < listingsOrder)
     .sort((a, b) => a.order - b.order);
-  // CTA sections are excluded: AgencyFooter (from layout) already acts as the CTA.
-  // Only keep non-CTA sections like stats-strip after listings.
   const afterSections = manifest.sections
     .filter(
       (s) =>
@@ -95,14 +99,8 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
     )
     .sort((a, b) => a.order - b.order);
 
-  const isDark = manifest.style.themeMode === "dark";
-  const bgColor = isDark ? colors.primary : "#fafafa";
-  const cardBg = isDark ? "rgba(255,255,255,0.06)" : "#ffffff";
-  const textPrimary = isDark ? "#ffffff" : colors.primary;
-  const textSecondary = isDark ? "rgba(255,255,255,0.6)" : "#71717a";
-
   return (
-    <div style={{ background: bgColor }}>
+    <div className="bg-zinc-50 dark:bg-zinc-950">
       {/* Hero, About, etc. (before listings) */}
       {beforeSections.map((section) => (
         <SectionRenderer key={section.id} section={section} agency={agency} />
@@ -113,10 +111,7 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Listings grid */}
           <div className="flex-1">
-            <h2
-              className="mb-5 text-lg font-semibold"
-              style={{ color: textPrimary }}
-            >
+            <h2 className="mb-5 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
               {tListings("title")}
             </h2>
             {agencyListings.length > 0 ? (
@@ -124,11 +119,10 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                 {agencyListings.map((listing) => (
                   <Link
                     key={listing.id}
-                    href={`/l/${listing.slug}`}
-                    className="group block overflow-hidden rounded-xl transition-shadow hover:shadow-lg"
-                    style={{ background: cardBg, boxShadow: "0 1px 3px rgba(0,0,0,0.08)" }}
+                    href={`/annonce/${listing.slug}`}
+                    className="group block overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
                   >
-                    <div className="aspect-[16/10] overflow-hidden bg-gray-200">
+                    <div className="aspect-[16/10] overflow-hidden bg-zinc-200 dark:bg-zinc-800">
                       {listing.cover_url ? (
                         <img
                           src={listing.cover_url}
@@ -136,30 +130,19 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                           className="h-full w-full object-cover transition-transform group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center" style={{ color: textSecondary }}>
-                          <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                          </svg>
+                        <div className="flex h-full w-full items-center justify-center text-zinc-400 dark:text-zinc-600">
+                          <Image className="h-10 w-10" />
                         </div>
                       )}
                     </div>
                     <div className="p-4">
-                      <span
-                        className="mb-1 inline-block rounded px-2 py-0.5 text-xs font-medium"
-                        style={{ background: `${colors.accent}22`, color: colors.accent }}
-                      >
+                      <span className="mb-1 inline-block rounded-lg bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
                         {tListings(listing.property_type)}
                       </span>
-                      <h3
-                        className="mb-1 truncate text-sm font-semibold"
-                        style={{ color: isDark ? "rgba(255,255,255,0.9)" : "#3f3f46" }}
-                      >
+                      <h3 className="mb-1 truncate text-sm font-semibold text-zinc-700 dark:text-zinc-200">
                         {listing.title}
                       </h3>
-                      <p
-                        className="text-lg font-bold"
-                        style={{ color: colors.primary }}
-                      >
+                      <p className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
                         {formatPrice(listing.current_price, listing.currency)}
                       </p>
                     </div>
@@ -167,7 +150,7 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                 ))}
               </div>
             ) : (
-              <p className="text-sm" style={{ color: textSecondary }}>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 {tListings("no_listings")}
               </p>
             )}
@@ -176,28 +159,25 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
           {/* Sidebar: contact + branches */}
           <div className="w-full shrink-0 lg:w-80">
             {/* Contact */}
-            <div
-              className="mb-6 rounded-xl p-5"
-              style={{ background: cardBg, boxShadow: "0 1px 3px rgba(0,0,0,0.08)" }}
-            >
-              <h3 className="mb-3 text-sm font-semibold" style={{ color: textPrimary }}>
+            <div className="mb-6 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+              <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
                 {t("contact_agency")}
               </h3>
               {agency.phone && (
                 <a
                   href={`tel:${agency.phone}`}
-                  className="mb-2 block w-full rounded-lg px-4 py-2.5 text-center text-sm font-medium text-white transition-opacity hover:opacity-90"
-                  style={{ background: colors.primary }}
+                  className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-2.5 text-center text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:text-zinc-950"
                 >
+                  <PhoneIcon className="h-4 w-4" />
                   {agency.phone}
                 </a>
               )}
               {agency.email && (
                 <a
                   href={`mailto:${agency.email}`}
-                  className="block w-full rounded-lg border px-4 py-2.5 text-center text-sm font-medium transition-colors hover:opacity-80"
-                  style={{ borderColor: colors.primary, color: colors.primary }}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 px-4 py-2.5 text-center text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 >
+                  <Mail className="h-4 w-4" />
                   {agency.email}
                 </a>
               )}
@@ -205,28 +185,25 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
 
             {/* Branches */}
             {agency.branches.length > 0 && (
-              <div
-                className="rounded-xl p-5"
-                style={{ background: cardBg, boxShadow: "0 1px 3px rgba(0,0,0,0.08)" }}
-              >
-                <h3 className="mb-3 text-sm font-semibold" style={{ color: textPrimary }}>
+              <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
                   {tAgencies("branches_title")}
                 </h3>
                 <div className="space-y-3">
                   {agency.branches.map((branch) => (
                     <div
                       key={branch.id}
-                      className="rounded-lg p-3"
-                      style={{ background: isDark ? "rgba(255,255,255,0.08)" : "#fafafa" }}
+                      className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800"
                     >
-                      <p className="text-sm font-medium" style={{ color: isDark ? "rgba(255,255,255,0.9)" : "#3f3f46" }}>
+                      <p className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
                         {branch.name}
                       </p>
-                      <p className="text-xs" style={{ color: textSecondary }}>
+                      <p className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
+                        <MapPin className="h-3 w-3" />
                         {tAgencies("branch_wilaya")} {branch.wilaya_code}
                       </p>
                       {branch.address_text && (
-                        <p className="text-xs" style={{ color: textSecondary }}>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
                           {branch.address_text}
                         </p>
                       )}
