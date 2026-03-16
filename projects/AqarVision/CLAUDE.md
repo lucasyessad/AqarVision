@@ -1,603 +1,314 @@
-# CLAUDE.md — AqarVision
+# CLAUDE.md
 
-> Dernière mise à jour : 16 mars 2026 — basée sur un audit complet du code source.
-> Ce fichier est la **source de vérité** pour Claude Code. Lire intégralement avant toute modification.
+> Dernière mise à jour : 16 mars 2026.
+> Ce fichier est lu automatiquement par Claude Code à chaque session. C’est la **source de vérité unique** du projet. Lire intégralement avant toute modification.
 
----
+-----
 
-## 1. Identité projet
+## Identité projet
 
-**AqarVision** — Plateforme immobilière algérienne (proptech). 4 surfaces :
+**AqarVision** — Plateforme immobilière algérienne (proptech) composée de quatre surfaces :
 
-- **AqarSearch** — Marketplace publique (recherche, carte, SEO, alertes, favoris)
-- **AqarPro** — CRM agence (annonces, leads, messaging, analytics, IA, facturation)
-- **AqarChaab** — Espace particulier (déposer annonce, favoris, messagerie, profil)
-- **Marketing** — Homepage, /pro, /vendre, /estimer, /pricing, vitrines agences
+**AqarSearch** est la marketplace publique : recherche, carte, SEO, alertes, favoris. **AqarPro** est le CRM agence : annonces, leads, messaging, analytics, IA, facturation. **AqarChaab** est l’espace particulier : déposer une annonce, favoris, messagerie, profil. **Marketing** regroupe la homepage, les pages /pro, /vendre, /estimer, /pricing, et les vitrines agences.
 
-Multi-tenant (RLS Supabase par agence), multilingue (FR/AR/EN/ES avec RTL), ciblant l'Algérie (58 wilayas, 1 541 communes). Monétisation via Stripe (Starter/Pro/Enterprise).
+Le projet est multi-tenant (RLS Supabase isolé par agence), multilingue (FR/AR/EN/ES avec RTL natif pour l’arabe), et cible l’Algérie (58 wilayas, 1 541 communes). La monétisation se fait via Stripe (plans Starter/Pro/Enterprise).
 
----
+-----
 
-## 2. Stack technique
+## Stack technique
 
-| Couche | Technologie |
-|--------|------------|
-| Frontend | Next.js 15 App Router + Server Actions |
-| Langage | TypeScript strict (pas de `any`) |
-| UI | Tailwind CSS + Lucide React (icônes) |
-| Backend | Supabase (Auth SSR + Postgres + RLS + Storage + Edge Functions) |
-| Base de données | PostgreSQL 15+ avec PostGIS |
-| Paiements | Stripe (Checkout + Customer Portal + Webhooks via Edge Functions) |
-| Cartes | MapLibre GL JS + tuiles OpenStreetMap |
-| IA | Backend Python (FastAPI) — voir section 9 |
-| Validation | Zod |
-| i18n | next-intl |
-| Monorepo | Turborepo + pnpm workspaces |
-| Hébergement | Vercel (web) + Supabase Cloud (DB/Auth/Storage) |
-| Tests | Vitest (unit) + Playwright (E2E) |
-| Polices | Geist (latin) + IBM Plex Sans Arabic (arabe) via next/font |
+|Couche         |Technologie                                                              |
+|---------------|-------------------------------------------------------------------------|
+|Frontend       |Next.js 15 App Router + Server Actions                                   |
+|Langage        |TypeScript strict (pas de `any`)                                         |
+|UI             |Tailwind CSS brut + Lucide React (icônes)                                |
+|Backend        |Supabase (Auth SSR + Postgres + RLS + Storage + Edge Functions)          |
+|Base de données|PostgreSQL 15+ avec PostGIS                                              |
+|Paiements      |Stripe (Checkout + Customer Portal + Webhooks via Edge Function Supabase)|
+|Cartes         |MapLibre GL JS + tuiles OpenStreetMap                                    |
+|IA             |Migration en cours vers backend Python FastAPI (voir section dédiée)     |
+|Validation     |Zod                                                                      |
+|i18n           |next-intl (4 locales : fr, ar, en, es)                                   |
+|Monorepo       |Turborepo + pnpm workspaces                                              |
+|Hébergement    |Vercel (web) + Supabase Cloud                                            |
+|Tests          |Vitest (unit, 3 fichiers) + Playwright (E2E, 8 specs)                    |
+|Polices        |Geist (latin) + IBM Plex Sans Arabic — chargées via next/font            |
+|Observabilité  |Sentry (version mismatch à corriger — voir section dette)                |
 
-**Note :** shadcn/ui n'est pas utilisé dans le projet. L'UI est construite en Tailwind CSS brut avec les tokens du design system "Zinc".
+**Précisions importantes :** shadcn/ui n’est PAS utilisé dans le projet malgré des mentions antérieures — l’UI est 100% Tailwind CSS brut. Il n’y a PAS de route API dans `src/app/api/` — les webhooks Stripe passent par `supabase/functions/stripe-webhook`.
 
----
+-----
 
-## 3. Commandes
+## Commandes
 
-Toutes depuis la racine monorepo `AqarVision/` :
+Toutes les commandes s’exécutent depuis la racine monorepo `AqarVision/` :
 
 ```bash
 pnpm install              # Installer les dépendances
-pnpm dev                  # Démarrer (port 3000)
-pnpm build                # Build complet via Turbo
+pnpm dev                  # Démarrer le dev server (port 3000)
+pnpm build                # Build production via Turbo
 pnpm lint                 # Lint
 pnpm typecheck            # Vérification TypeScript
 pnpm test                 # Tests Vitest
 pnpm test:e2e             # Tests Playwright (nécessite build)
 ```
 
----
+-----
 
-## 4. Structure réelle du monorepo
+## Structure du monorepo
 
 ```
 AqarVision/
-├── apps/web/                         # Next.js App Router
-│   ├── src/app/
-│   │   ├── layout.tsx                # Root layout (Geist fonts, theme cookie)
-│   │   ├── globals.css               # Tokens CSS Zinc (light + dark)
-│   │   ├── sitemap.ts
-│   │   └── [locale]/
-│   │       ├── page.tsx              # Homepage (hero + search + wilayas)
-│   │       ├── (marketing)/          # Pricing
-│   │       ├── auth/                 # Redirect login → AqarPro ou AqarChaab
-│   │       ├── AqarPro/
-│   │       │   ├── auth/             # Login/signup pro (layout split dark)
-│   │       │   └── dashboard/        # CRM agence (8 sections + settings)
-│   │       ├── AqarChaab/
-│   │       │   ├── auth/             # Login/signup particulier
-│   │       │   └── espace/           # Espace perso (7 sections)
-│   │       ├── search/               # Marketplace (SearchPageClient)
-│   │       ├── annonce/[slug]/       # Détail annonce
-│   │       ├── a/[slug]/             # Vitrine agence
-│   │       ├── agences/              # Annuaire agences
-│   │       ├── admin/                # Super admin (agencies, verifications, users, payments, settings)
-│   │       ├── deposer/              # Wizard dépôt annonce individuel (V2)
-│   │       ├── comparer/             # Comparaison annonces
-│   │       ├── estimer/              # Estimation de prix
-│   │       ├── favorites/            # Favoris (hors AqarChaab)
-│   │       ├── vendre/               # Page marketing "Vendre"
-│   │       ├── pro/                  # Page marketing "AqarPro"
-│   │       ├── agency/new/           # Création agence
-│   │       └── invite/[token]/       # Acceptation invitation équipe
-│   ├── src/features/                 # 16 modules feature-based
-│   │   ├── admin/                    # Actions super-admin
-│   │   ├── agencies/                 # CRUD agence, équipe, invitations
-│   │   ├── agency-settings/          # Branding, thème, vérification
-│   │   ├── ai/                       # Génération description, traduction (→ migrer vers Python)
-│   │   ├── analytics/                # Stats dashboard, graphiques
-│   │   ├── auth/                     # Login, signup, reset, signout
-│   │   ├── billing/                  # Stripe, plans, abonnements
-│   │   ├── favorites/                # Favoris, collections, recherches sauvegardées
-│   │   ├── leads/                    # Kanban leads, notes, statuts
-│   │   ├── listings/                 # CRUD annonces, wizard, publication
-│   │   ├── marketplace/              # Recherche, filtres, carte, estimateur
-│   │   ├── media/                    # Upload, galerie, prévisualisation
-│   │   ├── messaging/                # Conversations, messages
-│   │   ├── moderation/               # Queue modération (non câblé — M10)
-│   │   ├── onboarding/               # Wizard d'accueil agence
-│   │   └── visit-requests/           # Demandes de visite
-│   ├── src/components/
-│   │   ├── dashboard/DashboardSidebar.tsx
+├── apps/web/src/
+│   ├── app/[locale]/
+│   │   ├── page.tsx                          # Homepage
+│   │   ├── (marketing)/pricing/              # Page tarifs
+│   │   ├── auth/                             # Redirect login → AqarPro ou AqarChaab
+│   │   ├── AqarPro/auth/                     # Login/signup pro
+│   │   ├── AqarPro/dashboard/                # CRM agence (overview, listings, leads,
+│   │   │                                     #   visit-requests, analytics, ai, team,
+│   │   │                                     #   billing, settings, onboarding)
+│   │   ├── AqarChaab/auth/                   # Login/signup particulier
+│   │   ├── AqarChaab/espace/                 # Espace perso (mes-annonces, messagerie,
+│   │   │                                     #   alertes, collections, historique, profil, upgrade)
+│   │   ├── search/                           # Marketplace (SearchPageClient)
+│   │   ├── annonce/[slug]/                   # Détail annonce (PAS /l/[slug])
+│   │   ├── a/[slug]/                         # Vitrine agence
+│   │   ├── agences/                          # Annuaire agences
+│   │   ├── admin/                            # Super admin
+│   │   ├── deposer/                          # Wizard dépôt annonce individuel (V2)
+│   │   ├── comparer/                         # Comparaison
+│   │   ├── estimer/                          # Estimation prix
+│   │   ├── favorites/                        # Favoris
+│   │   ├── vendre/                           # Page marketing vente
+│   │   ├── pro/                              # Page marketing AqarPro
+│   │   ├── agency/new/                       # Création agence
+│   │   └── invite/[token]/                   # Acceptation invitation
+│   ├── features/                             # 16 modules (admin, agencies, agency-settings,
+│   │                                         #   ai, analytics, auth, billing, favorites,
+│   │                                         #   leads, listings, marketplace, media,
+│   │                                         #   messaging, moderation, onboarding, visit-requests)
+│   ├── components/
+│   │   ├── dashboard/DashboardSidebar.tsx     # Sidebar dashboard actuelle
 │   │   ├── brand/AqarBrandLogo.tsx
-│   │   ├── marketing/                # Header, Footer, HomeSearchBar
-│   │   ├── editorial/                # EditorialSplit, StatsStrip, FullBleedPhoto, WilayaScroller
-│   │   ├── agency/                   # ThemeRenderer, 10 thèmes vitrines, ChatbotWidget, WhatsApp
+│   │   ├── marketing/                        # Header, Footer, HomeSearchBar
+│   │   ├── editorial/                        # EditorialSplit, StatsStrip, FullBleedPhoto, WilayaScroller
+│   │   ├── agency/                           # ThemeRenderer + 10 thèmes vitrines
 │   │   ├── admin/AdminSidebar.tsx
 │   │   ├── ui/LanguageSwitcher.tsx
-│   │   ├── ErrorBoundary.tsx
-│   │   ├── LocaleHtmlSync.tsx
-│   │   └── ThemeToggle.tsx
-│   ├── src/lib/
-│   │   ├── auth/                     # with-agency-auth.ts, with-super-admin-auth.ts, get-cached-user.ts
-│   │   ├── supabase/                 # client.ts, server.ts, middleware.ts
-│   │   ├── i18n/                     # navigation.ts, request.ts, routing.ts
-│   │   ├── logger/                   # Pino structured logger
-│   │   ├── themes/                   # registry.ts (10 thèmes vitrines agences)
-│   │   ├── sanitize.ts              # Échappement HTML, suppression null bytes, normalisation Unicode
-│   │   ├── format.ts                # formatPrice et helpers
-│   │   ├── agency-url.ts            # Construction URL vitrines
-│   │   ├── plan-gating.ts           # Gating par plan Stripe
-│   │   ├── rate-limit.ts            # Rate limiting par IP
-│   │   ├── theme.ts                 # useTheme hook (light/dark toggle)
-│   │   ├── seo/json-ld.ts           # JSON-LD structuré pour annonces
-│   │   ├── cache/tags.ts            # Tags de cache Next.js
-│   │   └── countries.ts             # Données pays
-│   ├── src/hooks/
-│   │   └── useAnimatedCounter.ts    # Compteur animé (utilisé par StatsStrip)
-│   ├── src/types/
-│   │   └── action-result.ts         # ActionResult<T>, ok(), fail()
-│   ├── src/middleware.ts             # Auth + i18n middleware
-│   └── messages/                     # fr.json, ar.json, en.json, es.json
-├── packages/
-│   └── config/                       # Validation env, constantes (seul package actif)
+│   │   ├── ErrorBoundary.tsx, LocaleHtmlSync.tsx, ThemeToggle.tsx
+│   ├── lib/
+│   │   ├── auth/with-agency-auth.ts          # Guard RBAC — LE SEUL PATTERN AUTH AUTORISÉ
+│   │   ├── auth/with-super-admin-auth.ts     # Guard super-admin
+│   │   ├── auth/get-cached-user.ts
+│   │   ├── supabase/ (client.ts, server.ts, middleware.ts)
+│   │   ├── i18n/ (navigation.ts, request.ts, routing.ts)
+│   │   ├── logger/ (Pino)
+│   │   ├── themes/ (registry.ts — 10 thèmes vitrines)
+│   │   ├── sanitize.ts, format.ts, agency-url.ts, plan-gating.ts, rate-limit.ts, theme.ts
+│   │   ├── seo/json-ld.ts, cache/tags.ts, countries.ts
+│   ├── hooks/useAnimatedCounter.ts           # Seul hook actif
+│   ├── types/action-result.ts                # ActionResult<T>, ok(), fail()
+│   ├── middleware.ts                         # Auth + i18n + CSRF + security headers
+│   └── messages/ (fr.json, ar.json, en.json, es.json)
+├── packages/config/                          # Seul package actif (env validation, constantes)
 ├── supabase/
-│   ├── migrations/                   # 00000–00182 (extensions, enums, tables, RLS, triggers, géographie)
-│   ├── functions/                    # stripe-webhook (Edge Function)
-│   ├── seed.sql                      # Données initiales (wilayas, communes, plans)
+│   ├── migrations/                           # 44 fichiers de migration
+│   ├── functions/stripe-webhook/             # Edge Function webhook Stripe
+│   ├── seed.sql
 │   └── config.toml
-└── theme/                            # 10 templates HTML vitrines agences
+└── theme/                                    # 10 templates HTML vitrines agences
 ```
 
----
+-----
 
-## 5. Patterns d'architecture
+## Patterns d’architecture
 
-### Feature Module
+### Feature module
 
 Chaque module dans `src/features/` suit cette structure :
+`actions/` (Server Actions “use server”) → `schemas/` (Zod) → `services/` (logique métier, reçoit SupabaseClient) → `components/` (React) → `types/` (DTOs) → `hooks/` (si nécessaire).
 
-```
-feature-name/
-  actions/      # Server Actions ("use server")
-  components/   # Composants React
-  hooks/        # Hooks personnalisés
-  schemas/      # Validation Zod
-  services/     # Logique métier (reçoit SupabaseClient en paramètre)
-  types/        # Contrats TypeScript
-```
+### Server Action — flux obligatoire
 
-### Server Action Pattern
+Valider l’input via Zod (avec `.transform(sanitizeInput)` sur les champs texte libre) → résoudre l’acteur via `withAgencyAuth` ou `withSuperAdminAuth` → appeler le service → retourner `ActionResult<T>` via `ok(data)` ou `fail("CODE", "message")` → déclencher `revalidatePath`/`revalidateTag` si nécessaire.
 
-Chaque server action suit ce flux :
-1. Valider l'input via Zod (appliquer `.transform(sanitizeInput)` sur les champs texte libre)
-2. Résoudre l'acteur courant via `withAgencyAuth` ou `withSuperAdminAuth`
-3. Appeler le service métier
-4. Retourner le résultat typé
-5. Déclencher `revalidatePath` / `revalidateTag` si nécessaire
-
-Type de retour : `ActionResult<T> = { success: true; data: T } | { success: false; error: { code: string; message: string } }`
-
-Helpers : `ok(data)` et `fail("CODE", "message")` depuis `@/types/action-result`.
-
-### Auth Guards
-
-**Un seul pattern autorisé** — `withAgencyAuth` pour les actions agence, `withSuperAdminAuth` pour les actions admin :
+### Auth — un seul pattern autorisé
 
 ```typescript
-// Vérifie : session active + membership agence + permission RBAC
+// Pour les mutations agence — vérifie session + membership + RBAC
 withAgencyAuth(agencyId, resource, permission, async (ctx) => {
-  // ctx.agencyId, ctx.userId, ctx.role disponibles
-  return data; // wrappé dans ActionOk automatiquement
-});
-
-// Vérifie : session active + RPC is_super_admin()
-withSuperAdminAuth(async (ctx) => {
+  // ctx.userId, ctx.agencyId, ctx.role disponibles
   return data;
 });
+
+// Pour les mutations admin — vérifie session + RPC is_super_admin()
+withSuperAdminAuth(async (ctx) => { return data; });
 ```
 
-**RBAC :** 5 rôles (owner > admin > agent > editor > viewer) × 8 ressources (listing, team_member, invitation, billing, settings, analytics, media, ai_job) × 4 permissions (create, read, update, delete). Matrice complète dans `lib/auth/with-agency-auth.ts`.
+La matrice RBAC couvre 5 rôles (owner > admin > agent > editor > viewer) × 8 ressources (listing, team_member, invitation, billing, settings, analytics, media, ai_job) × 4 permissions (create, read, update, delete). Définie dans `lib/auth/with-agency-auth.ts`.
 
----
+-----
 
-## 6. Design System — "Zinc"
+## Design System — “Zinc”
 
-**Philosophie :** Tech premium meets real estate warmth. Inspiré de Linear (densité), Stripe (précision), Airbnb (photos immersives), Apple (fluidité), Zillow (densité fonctionnelle).
+**Philosophie :** Tech premium meets real estate warmth. Inspiré de Linear (densité, keyboard-first), Stripe (précision, data tables), Apple (fluidité), Zillow (photos immersives), avec une identité visuelle tricolore algérienne (or saharien, bleu méditerranéen, vert montagne).
 
-**Source de vérité :** Le skill `/mnt/skills/user/aqarvision-ux-ui/SKILL.md` et ses fichiers dans `references/`. Consulter OBLIGATOIREMENT avant toute tâche visuelle.
+**Source de vérité design :** Le skill `/mnt/skills/user/aqarvision-ux-ui/SKILL.md` et ses fichiers `references/` (design-tokens.md, component-library.md, aqarpro-ux.md, aqarsearch-ux.md, aqarchaab-ux.md, editorial-immersive.md, product-vision.md). Consulter OBLIGATOIREMENT avant toute tâche visuelle.
 
-### Tokens essentiels
+**Palette :** Zinc (neutral gray blue-undertone) + Amber (warm accent) + semantic (success, warning, danger, info) + tricolore régional (or `#e8920a` Sahara, bleu `#1a8aaa` Méditerranée, vert `#2a8a4a` Montagnes). Tokens dans `globals.css` et `tailwind.config.ts`.
 
-**Couleurs :** Zinc (gray blue-undertone) + Amber (warm accent) + semantic colors (success/warning/danger/info). Définis dans `globals.css` (CSS custom properties) et `tailwind.config.ts`.
+**Polices :** Geist (display + body), IBM Plex Sans Arabic (arabe), Geist Mono (code). Chargées dans `app/layout.tsx`.
 
-**Polices :** Geist (display + body), IBM Plex Sans Arabic (arabe), Geist Mono (code). Chargées via `next/font` dans `app/layout.tsx`.
+**Dark mode :** Via `data-theme="dark"` sur `<html>`, persisté en cookie + localStorage.
 
-**Dark mode :** Via `data-theme="dark"` sur `<html>`, persisted en cookie + localStorage. Utiliser le prefix Tailwind `dark:` systématiquement.
+-----
 
-### Règles absolues
+## Règles absolues
 
-- **Jamais de hex hardcodé** dans le JSX — uniquement classes Tailwind
-- **Jamais de inline style** (`style={{`) — uniquement classes Tailwind
-- **Jamais de bg-[#...]** — utiliser les tokens nommés
-- **Jamais de `<img>`** — utiliser `next/image` avec `fill` + `sizes`
-- **Jamais de `pl-4` / `mr-2`** — utiliser les propriétés logiques CSS (`ps-4`, `me-2`) pour le RTL
-- **Chaque couleur DOIT avoir son équivalent dark:** (`bg-white dark:bg-zinc-900`, `text-zinc-900 dark:text-zinc-50`)
+**JAMAIS** de hex hardcodé dans le JSX — uniquement classes Tailwind.
+**JAMAIS** de inline style `style={{` — uniquement classes Tailwind.
+**JAMAIS** de `bg-[#...]` ou `text-[#...]` — utiliser les tokens nommés.
+**JAMAIS** de `<img>` — utiliser `next/image` avec `fill` + `sizes`.
+**JAMAIS** de `pl-` / `pr-` / `ml-` / `mr-` — utiliser `ps-` / `pe-` / `ms-` / `me-` pour le RTL.
+**JAMAIS** de texte hardcodé en français — utiliser `useTranslations()` (client) ou `getTranslations()` (server).
+**JAMAIS** de couleur sans son équivalent `dark:` — chaque classe a sa paire.
+**JAMAIS** d’appel DB direct depuis un composant React.
+**JAMAIS** de logique métier dans les composants UI.
+**JAMAIS** de membership check manuel — utiliser `withAgencyAuth`.
+**JAMAIS** de `any` — typer strictement (MapLibre, erreurs, retours API).
 
-### Métriques de dette (état actuel)
+-----
 
-| Métrique | Valeur | Objectif |
-|----------|--------|----------|
-| Hex hardcodés dans .tsx | 183 | 0 |
-| Inline styles dans .tsx | 406 | 0 |
-| Patterns bg-[#...] | 26 | 0 |
-| Backward compat colors dans tailwind.config | Présents (onyx, ivoire, etc.) | Supprimés |
+## État actuel — Dette technique connue
 
----
+### Code mort à supprimer (Phase 0)
 
-## 7. Règles strictes
+5 fichiers à 0 imports : `hooks/useScrollReveal.ts`, `features/auth/hooks/use-auth.ts`, `features/auth/services/auth.service.ts`, `features/agencies/hooks/use-current-agency.ts`, `features/messaging/hooks/use-realtime-messages.ts`.
 
-- **JAMAIS** appeler la DB directement depuis un composant React
-- **JAMAIS** de logique métier dans les composants UI
-- **JAMAIS** de localStorage pour la session (cookies uniquement via Supabase SSR)
-- **JAMAIS** enforcer les rôles côté frontend uniquement — toujours vérifier côté serveur
-- **JAMAIS** de `left`/`right`/`pl`/`mr` — utiliser les propriétés logiques CSS pour le RTL
-- **JAMAIS** de membership checks manuels — utiliser `withAgencyAuth`
-- **JAMAIS** de admin checks manuels — utiliser `withSuperAdminAuth`
-- **JAMAIS** de dates Stripe hardcodées — laisser `customer.subscription.created` les remplir
-- **JAMAIS** de `defaultProps` avec texte UI hardcodé dans ErrorBoundary — passer via `useTranslations()`
-- Tous les inputs validés via Zod ; champs texte libre avec `.transform(sanitizeInput)`
-- Tous les outputs typés avec des DTOs explicites
+Chaîne DeposerWizard v1 (remplacée par V2) : `features/listings/components/DeposerWizard.tsx` (29 Ko) + `features/listings/actions/create-individual-listing.action.ts` + `features/listings/schemas/individual-listing.schema.ts`.
 
----
+6 packages monorepo vides à supprimer : domain, database, ui, security, analytics, feature-flags. Seul `packages/config` est actif.
 
-## 8. i18n et SEO
+Fichier `lib/actions/auth.ts` à supprimer (duplique `withAgencyAuth`). Migrer les 6 fichiers importateurs.
 
-- Toutes les routes préfixées par `[locale]`
-- Chaîne de fallback : locale demandée → fr → en
-- Les composants ne hardcodent jamais de texte — toujours `useTranslations()` (client) ou `getTranslations()` (server)
-- Nouvelles clés ajoutées dans les 4 fichiers : `messages/fr.json`, `ar.json`, `en.json`, `es.json`
-- `generateMetadata` sur chaque page dynamique
-- ISR pour les pages catégorie (`revalidate: 3600`), SSR pour le détail annonce
+Bloc backward compat colors dans `tailwind.config.ts` à supprimer (onyx, ivoire, or, charcoal, warm, coral, aqar, text-dark, text-body, text-muted, text-faint).
 
----
+Références mortes dans `next.config.ts` : `@aqarvision/domain` et `@aqarvision/security` dans `transpilePackages`. Images `picsum.photos` dans `remotePatterns`. Routes CSRF inexistantes dans middleware.
 
-## 9. Architecture IA — Migration vers Python
+### Dette design (946 violations)
 
-### Situation actuelle
+183 hex hardcodés, 406 inline styles, 26 patterns `bg-[#...]`, 331 lignes sans variante `dark:`. Table de correspondance : `#FAFAFA`→`zinc-50`, `#F4F4F5`→`zinc-100`, `#E4E4E7`→`zinc-200`, `#D4D4D8`→`zinc-300`, `#A1A1AA`→`zinc-400`, `#71717A`→`zinc-500`, `#52525B`→`zinc-600`, `#3F3F46`→`zinc-700`, `#27272A`→`zinc-800`, `#18181B`→`zinc-900`, `#09090B`→`zinc-950`, `#F59E0B`→`amber-500`, `#FBBF24`→`amber-400`, `#D97706`→`amber-600`.
 
-Le module `features/ai/` utilise `@anthropic-ai/sdk` (SDK TypeScript Anthropic) directement dans `ai.service.ts`. Trois opérations : `generate_description`, `translate`, `enrich`. Les jobs IA sont trackés dans la table `ai_jobs` avec quotas par plan.
+### Textes i18n hardcodés
 
-### Architecture cible
+DashboardSidebar : 8 chaînes (“Paramètres”, “Apparence”, “Branding”, “Vérification”, “Retour au portail”, “Voir ma vitrine”, “Se déconnecter”, section label). Dashboard layout : 2 chaînes. ProLoginForm : 3 chaînes. Homepage wilayas : tableau hardcodé.
 
-Remplacer `@anthropic-ai/sdk` par des appels HTTP vers un backend Python (FastAPI). Le backend Python centralisera tous les appels à l'API Claude d'Anthropic.
+### Sentry mismatch
 
-```
-┌─────────────┐    HTTP/JSON    ┌──────────────┐    SDK Python    ┌─────────────┐
-│  Next.js     │ ──────────────→│  FastAPI      │ ──────────────→│  Anthropic   │
-│  (frontend)  │ ←──────────────│  (backend IA) │ ←──────────────│  Claude API  │
-└─────────────┘                 └──────────────┘                 └─────────────┘
-```
+`@sentry/core` v10.43 vs `@sentry/nextjs` v8.0 — versions incompatibles. `next.config.ts` contient un try/catch qui avale silencieusement l’erreur. Aligner les versions et supprimer le workaround.
 
-**Fichiers à modifier :**
+### CSP permissive
 
-`features/ai/services/ai.service.ts` — Remplacer l'import `Anthropic` et les appels directs par des `fetch()` vers le backend Python. Le reste de la logique (quotas, CRUD jobs dans Supabase) reste en TypeScript.
+`unsafe-inline` + `unsafe-eval` dans la CSP scripts du middleware. Acceptable en dev, risque XSS en prod. Implémenter CSP par environnement avec nonces.
 
-**Backend Python (nouveau dossier `services/ai-backend/`) :**
+### SearchMap types any
+
+3 types `any` explicites (MapLibreMap, MapLibreMarker, MapLibrePopup). Remplacer par les types natifs de `maplibre-gl`.
+
+-----
+
+## Composants dashboard manquants
+
+Le dashboard AqarPro est fonctionnel mais incomplet par rapport aux spécifications du design system (`references/aqarpro-ux.md`). Il manque : **DashboardTopBar** (h-14, ⌘K, notifications, theme toggle, user dropdown), **sidebar collapsible** (240→64px, raccourci `[`, badges compteurs, drawer mobile), **CommandPalette** (⌘K/Ctrl+K, recherche fuzzy), **Overview enrichi** (activity feed, quick actions, bar chart, date range), **ListingDrawer** (side panel au clic sur une annonce), **bulk actions bar** (sticky bottom dans la table listings).
+
+-----
+
+## Architecture IA — Migration Python
+
+**Situation actuelle :** Le module `features/ai/` utilise `@anthropic-ai/sdk` (TypeScript) dans `ai.service.ts`. 3 opérations : generate_description, translate, enrich. Jobs trackés dans la table `ai_jobs` avec quotas par plan.
+
+**Cible :** Remplacer par des appels HTTP vers un backend Python FastAPI. Le backend centralise tous les appels Claude API via le SDK Python `anthropic`. Le TypeScript ne fait plus que `fetch()` vers les endpoints Python. La logique de quotas et CRUD jobs reste en TypeScript/Supabase.
 
 ```
-services/ai-backend/
-├── main.py                 # FastAPI app, CORS, health check
-├── routers/
-│   ├── generate.py         # POST /generate-description
-│   ├── translate.py        # POST /translate
-│   └── enrich.py           # POST /enrich
-├── services/
-│   └── claude_client.py    # Wrapper anthropic Python SDK
-├── schemas/
-│   └── requests.py         # Pydantic models
-├── requirements.txt        # anthropic, fastapi, uvicorn, pydantic
-└── Dockerfile
+Next.js (frontend) → HTTP/JSON → FastAPI (backend IA) → SDK Python → Claude API
 ```
 
-**Supprimer de `package.json` :** La dépendance `@anthropic-ai/sdk`.
+**Nouveau dossier :** `services/ai-backend/` avec `main.py`, `routers/`, `services/claude_client.py`, `schemas/requests.py`, `requirements.txt`, `Dockerfile`.
 
----
+**Supprimer :** La dépendance `@anthropic-ai/sdk` de `package.json` après migration.
 
-## 10. Plan d'exécution — Directives Claude Code
+-----
 
-### Phase 0 — Nettoyage (PRIORITÉ CRITIQUE)
+## Direction design — Homepage
 
-Exécuter avant toute autre modification.
+La homepage doit basculer de l’ancien thème dark-hero-overlay vers un design lumineux, tech, avec une identité tricolore algérienne. Fond clair (#fafafa), barre de recherche structurée, photos dans les cards et la mosaïque (pas en background), animations GSAP au scroll, trois régions visuellement distinctes (Sahara or, Méditerranée bleu, Montagnes vert), section IA mise en avant, métriques avec compteurs animés. Les inspirations sont Stripe (précision, data), Linear (densité), Apple (fluidité, espaces), Zillow (photos immersives) — sans copier le template générique de portail immobilier.
 
-#### 0.1 — Supprimer le code mort
+-----
 
-**Fichiers à supprimer (0 imports confirmés) :**
+## Plan d’exécution séquentiel
 
-```
-src/hooks/useScrollReveal.ts
-src/features/auth/hooks/use-auth.ts
-src/features/auth/services/auth.service.ts
-src/features/agencies/hooks/use-current-agency.ts
-src/features/messaging/hooks/use-realtime-messages.ts
-```
+**Phase 0 — Nettoyage (1-2 jours) :** Supprimer tout le code mort listé ci-dessus, consolider l’auth, nettoyer les configs. Validation : `pnpm typecheck && pnpm build && pnpm test`.
 
-**Chaîne DeposerWizard v1 (remplacée par v2) :**
+**Phase 1 — Stabilisation technique (1 semaine) :** Corriger Sentry, typer SearchMap, externaliser les textes FR hardcodés dans next-intl, ajouter 10 tests unitaires critiques, créer `.env.example`.
 
-```
-src/features/listings/components/DeposerWizard.tsx          (28 970 octets — MORT)
-src/features/listings/actions/create-individual-listing.action.ts  (importé uniquement par DeposerWizard.tsx)
-src/features/listings/schemas/individual-listing.schema.ts         (importé uniquement par les deux ci-dessus)
-```
+**Phase 2 — Éradication dette design (2-3 semaines) :** Éliminer les 946 violations (183 hex + 406 inline + 26 bg-[#] + 331 sans dark:). Validation : les 4 compteurs grep retournent 0.
 
-**Note :** Mettre à jour `features/listings/components/index.ts` pour retirer les exports de `DeposerWizard`. Vérifier que `__tests__/unit/features/listings/listing-schemas.test.ts` est mis à jour pour ne référencer que `individual-listing-v2.schema.ts`.
+**Phase 3 — Dashboard AqarPro complet (3-4 semaines) :** TopBar, sidebar collapsible, CommandPalette, Overview enrichi, ListingDrawer.
 
-#### 0.2 — Supprimer les fichiers racine obsolètes
+**Phase 4 — Refonte homepage + surfaces publiques (2-3 semaines) :** Nouveau design tricolore lumineux avec GSAP.
 
-```
-aqarsearch-refonte.jsx              (76 KB — ancien prototype)
-aqarvision-zinc-design-system.md    (143 KB — doublonne avec le skill UX/UI)
-AqarVision-claude-code-v4.txt       (129 KB — ancien plan)
-PLAN-REFONTE-CLAUDE-CODE.md         (24 KB — remplacé par ce fichier)
-```
+**Phase 5 — Sécurité et qualité (continu) :** CSP durcie, CI gates, tests E2E dashboard.
 
-#### 0.3 — Supprimer les packages monorepo vides
+**Phase 6 — Backend Python IA (2-3 semaines) :** Microservice FastAPI, migration des 3 endpoints.
 
-Supprimer les dossiers suivants (0 imports dans l'app web) :
+-----
 
-```
-packages/domain/
-packages/database/
-packages/ui/
-packages/security/
-packages/analytics/
-packages/feature-flags/
-```
+## i18n et SEO
 
-**Conserver uniquement** `packages/config/` (2 imports actifs).
+Toutes les routes sont préfixées par `[locale]`. Chaîne de fallback : locale demandée → fr → en. Les composants ne hardcodent jamais de texte (utiliser `useTranslations()` client ou `getTranslations()` server). Les nouvelles clés doivent être ajoutées dans les 4 fichiers `messages/`. Chaque page dynamique a `generateMetadata`. ISR pour les pages catégorie (`revalidate: 3600`), SSR pour le détail annonce. JSON-LD `RealEstateListing` sur les fiches.
 
-Mettre à jour `pnpm-workspace.yaml` pour ne référencer que `apps/*` et `packages/config`.
+-----
 
-Mettre à jour `package.json` de `apps/web` : retirer `@aqarvision/domain` et `@aqarvision/security` des dépendances (ils sont listés mais les packages sont vides).
+## Schéma base de données
 
-#### 0.4 — Consolider l'auth (supprimer la duplication)
+44 fichiers de migration dans `supabase/migrations/`. Extensions PostGIS et btree_gist. Enums (user_role, agency_role, listing_status, listing_type, property_type, listing_owner_type). Tables principales : profiles, agencies, branches, memberships, invites, listings, translations, media, favorites, notes, saved_searches, leads, conversations, messages, plans, subscriptions, ai_jobs, entitlements, domain_events, listing_views, agency_stats_daily, wilayas, communes. RLS deny-by-default sur toutes les tables. Fonctions RPC : is_agency_member, is_agency_admin, is_super_admin, handle_new_user.
 
-**Supprimer :** `src/lib/actions/auth.ts` — ce fichier fournit `getAgencyForCurrentUser()` et `getAnyAgencyForCurrentUser()`, qui dupliquent la logique de `withAgencyAuth`.
+-----
 
-**Migrer les 6 fichiers qui l'importent :**
+## Conventions
 
-| Fichier | Import actuel | Migration |
-|---------|---------------|-----------|
-| `agency-settings/actions/submit-verification.action.ts` | `getAgencyForCurrentUser, isAuthError` | Utiliser `withAgencyAuth(agencyId, "settings", "update", ...)` |
-| `agency-settings/actions/upload-branding.action.ts` | `getAgencyForCurrentUser, isAuthError` | Utiliser `withAgencyAuth(agencyId, "settings", "update", ...)` |
-| `agency-settings/actions/update-agency-theme.action.ts` | `getAgencyForCurrentUser, isAuthError` | Utiliser `withAgencyAuth(agencyId, "settings", "update", ...)` |
-| `AqarPro/dashboard/onboarding/page.tsx` | `getAgencyForCurrentUser, isAuthError` | Résoudre l'agencyId via la query membership déjà présente dans le layout parent |
-| `AqarPro/dashboard/settings/appearance/page.tsx` | `getAgencyForCurrentUser, isAuthError` | Idem |
-| `AqarPro/dashboard/settings/verification/page.tsx` | `getAgencyForCurrentUser, isAuthError` | Idem |
+Utilitaires : `kebab-case.ts`. Composants : `PascalCase.tsx`. Suffixes obligatoires : `*.service.ts`, `*.action.ts`, `*.schema.ts`, `*.types.ts`. Server Components par défaut — `"use client"` uniquement si interactivité requise. Imports absolus avec `@/` prefix. Toute validation input passe par Zod avec `sanitizeInput` sur les champs texte libre.
 
-**Stratégie pour les Server Components (pages) :** Les pages dashboard n'effectuent pas de mutations, elles lisent des données. Pour celles-ci, créer un helper léger dans `lib/auth/` :
+-----
 
-```typescript
-// lib/auth/get-agency-context.ts
-export async function getAgencyContext(): Promise<{ userId: string; agencyId: string; role: string } | null> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("agency_id, role")
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .limit(1)
-    .single();
-  if (!membership) return null;
-  return { userId: user.id, agencyId: membership.agency_id, role: membership.role };
-}
-```
+## Références design
 
-#### 0.5 — Nettoyer tailwind.config.ts
+|Référence                                   |Quand consulter                          |
+|--------------------------------------------|-----------------------------------------|
+|`/mnt/skills/user/aqarvision-ux-ui/SKILL.md`|Toujours                                 |
+|`references/design-tokens.md`               |Couleurs, fonts, spacing, shadows, motion|
+|`references/component-library.md`           |Avant de créer un composant              |
+|`references/aqarpro-ux.md`                  |Dashboard, CRM                           |
+|`references/aqarsearch-ux.md`               |Marketplace, recherche                   |
+|`references/aqarchaab-ux.md`                |Espace particulier                       |
+|`references/editorial-immersive.md`         |Homepage, vitrines, marketing            |
+|`references/product-vision.md`              |Décisions fonctionnelles majeures        |
 
-Supprimer le bloc entier "Backward compat" dans `tailwind.config.ts` (les alias `onyx`, `ivoire`, `or`, `blue-night`, `gold`, `off-white`, `charcoal`, `warm`, `coral`, `aqar`, `text-dark`, `text-body`, `text-muted`, `text-faint`).
+-----
 
-#### 0.6 — Validation post-nettoyage
+## Commandes d’audit
 
 ```bash
-pnpm typecheck    # Doit passer sans erreur
-pnpm build        # Doit compiler
-pnpm test         # Les tests existants doivent passer
-```
-
----
-
-### Phase 1 — Migration des tokens
-
-Éradiquer les 183 hex hardcodés, 406 inline styles, et 26 patterns bg-[#] dans les fichiers .tsx.
-
-**Skill obligatoire :** Lire `/mnt/skills/user/aqarvision-ux-ui/SKILL.md` section "Migration from Current Design" et `references/design-tokens.md`.
-
-**Table de correspondance :**
-
-```
-#FAFAFA → zinc-50       #F4F4F5 → zinc-100     #E4E4E7 → zinc-200
-#D4D4D8 → zinc-300      #A1A1AA → zinc-400     #71717A → zinc-500
-#52525B → zinc-600      #3F3F46 → zinc-700     #27272A → zinc-800
-#18181B → zinc-900      #09090B → zinc-950     #FFFFFF → white
-#F59E0B → amber-500     #FBBF24 → amber-400    #D97706 → amber-600
-#22C55E → success       #EF4444 → danger       #3B82F6 → info
-```
-
-**Procédure :** Fichier par fichier, remplacer les valeurs hardcodées par les classes Tailwind correspondantes. Pour chaque inline style, trouver l'équivalent Tailwind. Pour chaque `bg-[#...]`, remplacer par le token nommé. Ajouter systématiquement les variantes `dark:`.
-
-**Validation :**
-
-```bash
+# Dette design
 grep -rn '#[0-9a-fA-F]\{6\}' apps/web/src --include="*.tsx" | grep -v tailwind.config | wc -l  # → 0
 grep -rn 'style={{' apps/web/src --include="*.tsx" | wc -l                                      # → 0
 grep -rn "bg-\[#" apps/web/src --include="*.tsx" | wc -l                                        # → 0
+grep -rn "bg-white\|bg-zinc-50\|text-zinc-900" apps/web/src --include="*.tsx" | grep -v "dark:" | wc -l  # → 0
+
+# Code mort
+grep -rn "useScrollReveal\|use-auth\|use-current-agency\|use-realtime-messages" apps/web/src --include="*.tsx" --include="*.ts" | grep -v "hooks/" | wc -l  # → 0
+
+# Textes hardcodés
+grep -rn "Paramètres\|Retour au portail\|Voir ma vitrine\|Accéder à AqarPro\|Terminez la config" apps/web/src --include="*.tsx" | wc -l  # → 0
 ```
-
----
-
-### Phase 2 — Refonte design : AqarPro (Dashboard)
-
-**Skills obligatoires :** `references/aqarpro-ux.md` et `references/component-library.md`.
-
-**Inspirations :** Stripe (data tables, side panel, command palette), Linear (sidebar collapsible, keyboard shortcuts, densité).
-
-#### 2.1 — Dashboard Shell
-
-**DashboardSidebar** (`components/dashboard/DashboardSidebar.tsx`) :
-- Ajouter collapse (toggle entre 240px et 64px, raccourci `[`, persisté localStorage)
-- En mode collapsed : icônes seules + tooltip
-- Séparer les groupes nav avec des dividers visuels
-- Ajouter badges de compteur (leads non lus, messages)
-- Dark mode complet
-- Responsive : drawer mobile sur écrans < lg
-
-**DashboardTopBar** (nouveau `components/dashboard/DashboardTopBar.tsx`) :
-- Barre `h-14` en haut de la zone principale
-- Slots : hamburger mobile, titre page, bouton ⌘K, notifications, theme toggle, user dropdown
-- Classes : `border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900`
-
-**Dashboard layout** (`AqarPro/dashboard/layout.tsx`) : Intégrer TopBar entre sidebar et contenu.
-
-#### 2.2 — Dashboard Overview
-
-**Page** (`AqarPro/dashboard/page.tsx`) — enrichir avec :
-- Salutation personnalisée + sélecteur de période (7j/30j/90j)
-- 4 StatCards améliorés (icône, mini sparkline SVG, trend badge)
-- Activity Feed (5 derniers événements, chronologie inversée)
-- Quick Actions (4 boutons ghost : nouvelle annonce, inviter membre, voir stats, configurer vitrine)
-- Graphique de vues par jour (bar chart CSS-only, barres zinc-800 + highlight amber pour aujourd'hui)
-
-#### 2.3 — Command Palette (⌘K)
-
-Nouveau composant `components/dashboard/CommandPalette.tsx` :
-- Trigger : ⌘K / Ctrl+K global
-- Modal centrée, backdrop blur, max-w-lg
-- Input de recherche en haut, résultats groupés (Navigation, Annonces, Actions)
-- Navigation clavier (flèches, Enter, Escape)
-- Recherche fuzzy client-side
-
-#### 2.4 — Side Panel (Drawer) pour les annonces
-
-Nouveau composant `components/ui/Drawer.tsx` (réutilisable) + `features/listings/components/ListingDrawer.tsx` (spécifique). Au clic sur une ligne de la table listings, un panneau latéral s'ouvre avec photo, prix, statut, leads associés, actions rapides.
-
----
-
-### Phase 3 — Refonte design : Page de connexion AqarPro
-
-**Inspiration :** Page de connexion Stripe — formulaire centré sur carte blanche, arrière-plan dégradé dynamique animé.
-
-**Layout** (`AqarPro/auth/layout.tsx`) : Abandonner le split layout dark. Nouveau pattern : plein écran avec fond zinc-50 + dégradé animé (blobs amber/rose/violet en animation lente) + carte formulaire centrée avec backdrop-blur.
-
-**ProLoginForm** (`features/auth/components/ProLoginForm.tsx`) : Inputs sur fond blanc (plus zinc-900), checkbox "Se souvenir de moi", séparateur "OU", bouton Google OAuth (via `supabase.auth.signInWithOAuth({ provider: 'google' })`), messages d'erreur avec tokens danger.
-
----
-
-### Phase 4 — Refonte design : AqarSearch (Marketplace)
-
-**Skills obligatoires :** `references/aqarsearch-ux.md` et `references/editorial-immersive.md`.
-
-**Inspirations :** Zillow (split-view search, photo gallery hero), Apple (fluidité animations), Airbnb (photos immersives).
-
-#### 4.1 — Homepage
-
-- Hero section full-bleed avec HomeSearchBar centré sur fond immersif
-- Wilayas populaires en scroll horizontal (WilayaScroller amélioré)
-- Annonces mises en avant (grille photo-first)
-- Sections alternées (Editorial mode : typographie statement, parallax subtil)
-- CTA sections avec fond amber accent
-
-#### 4.2 — Page de recherche
-
-- Split view : liste à gauche (60%) + carte MapLibre à droite (40%)
-- ListingCard photo-first avec prix overlay, badges statut, hover avec shadow-card-hover
-- Filtres en panel latéral ou barre horizontale sticky
-- Pagination ou infinite scroll
-
-#### 4.3 — Détail annonce
-
-- Photo gallery hero (full-bleed, carousel)
-- Sidebar sticky avec CTA (contacter, demander visite, favori)
-- Sections structurées : caractéristiques, description, localisation (carte), estimation IA, annonces similaires
-- JSON-LD RealEstateListing pour SEO
-
----
-
-### Phase 5 — Refonte design : AqarChaab (Espace particulier)
-
-**Skill obligatoire :** `references/aqarchaab-ux.md`.
-
-**Inspiration :** Airbnb (espace hôte), Apple (simplicité, chaleur).
-
-- Sidebar navigation avec ChaabSidebarNav (existant, à améliorer)
-- Page d'accueil : carte de bienvenue + résumé d'activité + actions rapides
-- Mes annonces : tableau avec statuts, actions inline
-- Favoris/Collections : grille visuelle
-- Messagerie : interface chat avec indicateurs temps réel
-- Profil : formulaire propre avec avatar upload
-
----
-
-### Phase 6 — Refonte design : Marketing
-
-**Skill obligatoire :** `references/editorial-immersive.md`.
-
-**Inspiration :** Apple (immersion, espaces blancs), Stripe (clarté pricing).
-
-- MarketingHeader : sticky, transparent sur hero, solid au scroll
-- MarketingFooter : fond dark, 4 colonnes liens, locale switcher
-- Page /pricing : grille de plans Stripe avec toggle mensuel/annuel
-- Page /pro : features showcase avec animations au scroll
-- Page /vendre : CTA clair pour les deux parcours (agence vs particulier)
-- Vitrines agences : 10 thèmes existants, améliorer la qualité visuelle
-
----
-
-### Phase 7 — Backend Python IA
-
-Créer le microservice FastAPI dans `services/ai-backend/`. Implémenter les 3 endpoints (generate-description, translate, enrich). Modifier `features/ai/services/ai.service.ts` pour appeler le backend Python via `fetch()` au lieu de `@anthropic-ai/sdk`. Supprimer `@anthropic-ai/sdk` de `package.json`.
-
----
-
-## 11. Références design
-
-| Référence | Fichier | Quand consulter |
-|-----------|---------|-----------------|
-| Design system complet | `/mnt/skills/user/aqarvision-ux-ui/SKILL.md` | Toujours |
-| Tokens (couleurs, fonts, spacing) | `references/design-tokens.md` | Toujours |
-| Bibliothèque de composants | `references/component-library.md` | Avant de créer un composant |
-| UX AqarPro | `references/aqarpro-ux.md` | Dashboard, CRM |
-| UX AqarSearch | `references/aqarsearch-ux.md` | Marketplace, recherche |
-| UX AqarChaab | `references/aqarchaab-ux.md` | Espace particulier |
-| Mode éditorial | `references/editorial-immersive.md` | Homepage, vitrines, marketing |
-| Vision produit | `references/product-vision.md` | Décisions fonctionnelles majeures |
-
----
-
-## 12. Schéma base de données (résumé)
-
-Migrations dans `supabase/migrations/` (00000–00182) :
-
-- `00000` Extensions (PostGIS, btree_gist)
-- `00001` Enums (user_role, agency_role, listing_status, listing_type, property_type, listing_owner_type)
-- `00010` Identités (users, profiles)
-- `00020` Organisations (agencies, branches, memberships, invites)
-- `00030` Annonces (listings, translations, media, documents)
-- `00031` Historique (price_versions, status_versions, revisions)
-- `00040` Marketplace (favorites, notes, saved_searches, view_history, leads, conversations, messages)
-- `00050` Billing/AI/Analytics (plans, subscriptions, ai_jobs, entitlements, domain_events, listing_views, agency_stats_daily)
-- `00060-00090` Indexes, Functions, RLS, Triggers
-- `00100` Géographie (wilayas, communes)
-- `00111` Annonces individuelles (owner_type, individual_owner_id, RLS)
-- `00120+` Billing Stripe, AqarChaab features
-
----
-
-## 13. Naming conventions
-
-- Utilitaires : `kebab-case.ts` (ex: `create-listing.action.ts`)
-- Composants : `PascalCase.tsx` (ex: `ListingCard.tsx`)
-- Suffixes obligatoires : `*.service.ts`, `*.action.ts`, `*.schema.ts`, `*.types.ts`
-- Server Components par défaut. `"use client"` uniquement si interactivité requise (onClick, useState, useEffect)
-- Imports absolus : `@/` prefix systématique
