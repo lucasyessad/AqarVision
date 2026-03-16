@@ -277,4 +277,45 @@ M00 Foundations → M01 Auth → M02 Agencies → M03 Listings → M04 Media →
 
 ## Parent Workspace
 
-This project lives in `projects/AqarVision/` within a PersoDev workspace. Library resources (skills, subagents, workflows) in `../../library/` can be referenced in prompts.
+This project lives in `projects/AqarVision/` within a PersoDev workspace. Library resources in `../../library/` MUST be consulted before developing.
+
+## Library Resources (OBLIGATOIRE)
+
+Les ressources ci-dessous DOIVENT être lues/appliquées selon le contexte de la tâche. Ne jamais développer sans vérifier s'il existe un skill ou workflow pertinent.
+
+### Avant chaque tâche
+- **Planification** : Lire `../../library/workflows/planning/manus-style/` pour les tâches complexes (3+ fichiers)
+- **Vérification** : Appliquer `../../library/workflows/verification-before-completion/SKILL.md` avant de déclarer terminé — "Evidence before claims, always"
+- **Debugging** : Suivre `../../library/workflows/debugging/systematic-debugging/` — 4 phases obligatoires, jamais de "quick fix"
+
+### Développement frontend
+- **Design UI** : Lire `../../library/skills/design/frontend-design/SKILL.md` — éviter l'esthétique générique AI, choisir une direction audacieuse
+- **Composants** : Consulter `../../library/generators/ui-components/ui-ux-pro/` pour générer des composants
+- **Design system Zinc** : Référence complète dans `aqarvision-zinc-design-system.md` (tokens, composants, surfaces)
+- **Thèmes agence** : `../../library/skills/design/theme-factory/SKILL.md`
+
+### Subagents spécialisés (invoquer via Agent tool avec le prompt du fichier)
+- **Next.js** : `../../library/subagents/languages/nextjs-developer.md` — App Router, Server Actions, SEO, Core Web Vitals
+- **React** : `../../library/subagents/languages/react-specialist.md` — state management, performance, hooks avancés
+- **TypeScript** : `../../library/subagents/languages/typescript-pro.md` — types stricts, generics, monorepo
+- **Code review** : `../../library/subagents/testing/code-reviewer.md` — sécurité, performance, SOLID
+- **Debugging** : `../../library/subagents/testing/debugger.md` — root cause analysis, postmortem
+
+### Workflows de qualité
+- **Code review automatisé** : `../../library/workflows/code-review/automated-code-review/` — review multi-agent avant merge
+- **Agents parallèles** : `../../library/workflows/dispatching-parallel-agents/SKILL.md` — quand 3+ tâches indépendantes
+- **Dev par subagents** : `../../library/workflows/subagent-driven-development/SKILL.md` — spec → impl → quality review
+
+### Tests
+- **Webapp testing** : `../../library/skills/development/webapp-testing/SKILL.md` — Playwright, pattern reconnaissance-then-action
+- **Claude API** : `../../library/skills/development/claude-api/SKILL.md` — pour les features IA (Anthropic SDK)
+
+### Stratégie produit & specs
+- **Vision produit** : `../../docs/NeoAqar/` — roadmap 24 mois, positionnement marché, analyses concurrentielles (Zillow, SeLoger, Bayut, PropertyFinder)
+- **Spec déposer annonce** : `spec-deposer-annonce-refonte.md` — wizard 7 étapes individuel
+- **Architecture patterns** : `ARCHITECTURE-PATTERNS.md` — patterns de référence issus de 10 repos production
+
+### Création de skills/prompts
+- **Skill creator** : `../../library/skills/development/skill-creator/SKILL.md`
+- **Best practices** : `../../library/generators/templates/skill-templates/anthropic-best-practices.md`
+- **Writing skills** : `../../library/workflows/writing-skills/SKILL.md` — TDD pour documentation

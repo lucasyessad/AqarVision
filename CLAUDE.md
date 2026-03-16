@@ -65,4 +65,5 @@ Activate the Python specialist subagent from library/subagents/languages/python
 
 - **`resources/` is read-only** — always modify the `library/` copy.
 - **Projects are independent** — each has its own stack, deps, and potentially its own git repo.
+- **Library resources are mandatory** — Before developing, always check `library/` for relevant skills, subagents, and workflows. Read their SKILL.md files for methodology. Each project's CLAUDE.md lists the specific resources to use.
 - **Language** — The user works primarily in French. Documentation mixes French and English.
