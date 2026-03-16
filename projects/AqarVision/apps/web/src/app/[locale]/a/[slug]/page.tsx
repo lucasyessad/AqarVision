@@ -9,8 +9,9 @@ import {
 import { resolveManifest, resolveThemeColors } from "@/lib/themes";
 import { SectionRenderer } from "@/components/agency/ThemeRenderer";
 import { Link } from "@/lib/i18n/navigation";
+import NextImage from "next/image";
 import {
-  Image,
+  Image as ImageIcon,
   Phone as PhoneIcon,
   Mail,
   MapPin,
@@ -114,16 +115,18 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                     href={`/annonce/${listing.slug}`}
                     className="group block overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
                   >
-                    <div className="aspect-[16/10] overflow-hidden bg-zinc-200 dark:bg-zinc-800">
+                    <div className="relative aspect-[16/10] overflow-hidden bg-zinc-200 dark:bg-zinc-800">
                       {listing.cover_url ? (
-                        <img
+                        <NextImage
                           src={listing.cover_url}
                           alt={listing.title}
-                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover transition-transform group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center text-zinc-400 dark:text-zinc-600">
-                          <Image className="h-10 w-10" />
+                        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 text-zinc-300 dark:from-zinc-800 dark:to-zinc-900 dark:text-zinc-600">
+                          <ImageIcon className="h-10 w-10" />
                         </div>
                       )}
                     </div>
