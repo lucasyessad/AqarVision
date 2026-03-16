@@ -1,790 +1,322 @@
-# Refonte complète — Système de dépôt d'annonce AqarChaab
+# AqarVision — Audit complet & Plan d’action
 
-> **Spec à passer à Claude Code pour implémentation.**
-> Couvre : bug fix RLS, migration DB, nouveau wizard 7 étapes, upload photos,
-> description IA, localisation carte, design system Zinc.
+> Basé sur une revue de code fichier par fichier des 377 fichiers source du projet.
+> Date : 16 mars 2026
 
----
+-----
 
-## 1. BUG CRITIQUE — RLS manquant pour les particuliers
+## 0. Résumé exécutif
 
-### Problème
+Le projet AqarVision possède une architecture solide (Server Actions + auth guards RBAC + RLS Supabase + rate limiting + sanitization) mais souffre de trois problèmes structurants qui freinent sa progression : un volume significatif de code mort et de duplication architecturale, une dette design massive non traitée (615+ violations de tokens), et un écart fonctionnel important entre l’état actuel du dashboard AqarPro et le standard attendu d’un SaaS productivité (pas de TopBar, pas de ⌘K, pas de sidebar collapsible, pas de side panel). Ce document quantifie chaque problème et fournit un plan d’action exécutable phase par phase.
 
-L'erreur visible sur le récapitulatif :
-```
-new row violates row-level security policy for table "listing_translations"
-```
+-----
 
-**Cause racine :** La migration `00178_individual_listings.sql` ajoute une policy RLS
-pour que les particuliers puissent insérer dans `listings`, mais **oublie** les tables
-enfants : `listing_translations`, `price_versions`, `status_versions`.
+## 1. Code mort et poids superflu
 
-Le listing s'insère correctement (la policy `listings_insert_individual` fonctionne),
-mais l'insertion de la traduction française échoue → le listing est ensuite soft-deleted
-par le catch, et l'utilisateur voit l'erreur brute.
+### 1.1 Fichiers à 0 imports (vérifiés par grep exhaustif)
 
-### Fix — Nouvelle migration `00183_individual_rls_children.sql`
+Ces fichiers ne sont importés nulle part dans les 377 fichiers source du projet. Ils peuvent être supprimés sans aucun impact.
 
-```sql
--- Fix: Allow individual owners to insert/select/update translations, media, and
--- version records for their own listings.
+|Fichier                                                |Taille                                             |Raison                                                           |
+|-------------------------------------------------------|---------------------------------------------------|-----------------------------------------------------------------|
+|`src/hooks/useScrollReveal.ts`                         |hook                                               |Jamais importé                                                   |
+|`src/features/auth/hooks/use-auth.ts`                  |hook                                               |Jamais importé                                                   |
+|`src/features/auth/services/auth.service.ts`           |service (getCurrentUser, getProfile, updateProfile)|Jamais importé — toute l’auth passe par les actions et les guards|
+|`src/features/agencies/hooks/use-current-agency.ts`    |hook                                               |Jamais importé                                                   |
+|`src/features/messaging/hooks/use-realtime-messages.ts`|hook                                               |Jamais importé                                                   |
 
--- ── listing_translations ──────────────────────────────────────────────
+### 1.2 Chaîne DeposerWizard v1 (remplacée par v2)
 
--- Individual owners can insert translations for their listings
-CREATE POLICY listing_translations_insert_individual
-  ON public.listing_translations
-  FOR INSERT
-  TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+L’ancien wizard de dépôt d’annonce individuel a été remplacé par `DeposerWizardV2.tsx` mais n’a pas été nettoyé. Seul V2 est importé par `/deposer/page.tsx`.
 
--- Individual owners can update translations for their listings
-CREATE POLICY listing_translations_update_individual
-  ON public.listing_translations
-  FOR UPDATE
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+|Fichier                                                        |Taille       |Statut                                              |
+|---------------------------------------------------------------|-------------|----------------------------------------------------|
+|`features/listings/components/DeposerWizard.tsx`               |28 970 octets|MORT — remplacé par V2                              |
+|`features/listings/actions/create-individual-listing.action.ts`|~4 Ko        |Importé uniquement par le wizard mort               |
+|`features/listings/schemas/individual-listing.schema.ts`       |~3 Ko        |Importé par l’action morte + un test à mettre à jour|
 
--- Individual owners can view translations for their listings (draft included)
-CREATE POLICY listing_translations_select_individual
-  ON public.listing_translations
-  FOR SELECT
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+Le test `__tests__/unit/features/listings/listing-schemas.test.ts` importe encore l’ancien schema et doit être migré vers `individual-listing-v2.schema.ts`.
 
--- ── listing_media ─────────────────────────────────────────────────────
+### 1.3 Packages monorepo vides
 
-CREATE POLICY listing_media_insert_individual
-  ON public.listing_media
-  FOR INSERT
-  TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+Six des sept packages du monorepo ont exactement 0 imports dans l’application web. Ce sont des dossiers scaffoldés mais jamais implémentés.
 
-CREATE POLICY listing_media_select_individual
-  ON public.listing_media
-  FOR SELECT
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+|Package                 |Imports dans apps/web      |Verdict  |
+|------------------------|---------------------------|---------|
+|`packages/config`       |2 (middleware.ts + 1 autre)|GARDER   |
+|`packages/domain`       |0                          |SUPPRIMER|
+|`packages/database`     |0                          |SUPPRIMER|
+|`packages/ui`           |0                          |SUPPRIMER|
+|`packages/security`     |0                          |SUPPRIMER|
+|`packages/analytics`    |0                          |SUPPRIMER|
+|`packages/feature-flags`|0                          |SUPPRIMER|
 
-CREATE POLICY listing_media_update_individual
-  ON public.listing_media
-  FOR UPDATE
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+**Impact collatéral :** `next.config.ts` liste `@aqarvision/domain` et `@aqarvision/security` dans `transpilePackages`, et `package.json` les liste dans les dépendances. Ces références doivent être nettoyées en même temps.
 
-CREATE POLICY listing_media_delete_individual
-  ON public.listing_media
-  FOR DELETE
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+### 1.4 Fichiers racine obsolètes
 
--- ── price_versions ────────────────────────────────────────────────────
+Trois fichiers volumineux à la racine du monorepo ne sont référencés par aucun code et doublonnent avec des ressources plus récentes (le skill UX/UI et le CLAUDE.md).
 
-CREATE POLICY price_versions_insert_individual
-  ON public.listing_price_versions
-  FOR INSERT
-  TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+|Fichier                           |Taille               |Contenu                                                |
+|----------------------------------|---------------------|-------------------------------------------------------|
+|`aqarsearch-refonte.jsx`          |76 Ko (995 lignes)   |Ancien prototype JSX monofichier                       |
+|`aqarvision-zinc-design-system.md`|143 Ko (2 981 lignes)|Doublonne le skill `/mnt/skills/user/aqarvision-ux-ui/`|
+|`AqarVision-claude-code-v4.txt`   |129 Ko (3 439 lignes)|Ancien document de planification                       |
 
--- ── status_versions ───────────────────────────────────────────────────
+### 1.5 Incohérence documentation (CLAUDE.md vs réalité)
 
-CREATE POLICY status_versions_insert_individual
-  ON public.listing_status_versions
-  FOR INSERT
-  TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.listings l
-      WHERE l.id = listing_id
-        AND l.owner_type = 'individual'
-        AND l.individual_owner_id = auth.uid()
-    )
-  );
+|Ce que dit CLAUDE.md                         |Réalité dans le code                                                           |
+|---------------------------------------------|-------------------------------------------------------------------------------|
+|Route `/l/[slug]/` pour le détail annonce    |La route réelle est `/annonce/[slug]`                                          |
+|Route `/api/webhooks/stripe/`                |N’existe pas — le webhook est dans `supabase/functions/stripe-webhook`         |
+|Tech stack inclut `shadcn/ui`                |0 imports de shadcn/ui dans tout le projet — l’UI est du Tailwind brut + Lucide|
+|7 packages monorepo actifs                   |6 sont vides, seul `config` est utilisé                                        |
+|Middleware mentionne `/l/` comme route legacy|Correct mais non documenté comme deprecated                                    |
 
--- ── Individual owners can view/update their own listings (any status) ─
+-----
 
-CREATE POLICY listings_select_own_individual
-  ON public.listings
-  FOR SELECT
-  TO authenticated
-  USING (
-    owner_type = 'individual'
-    AND individual_owner_id = auth.uid()
-  );
+## 2. Duplication architecturale
 
-CREATE POLICY listings_update_own_individual
-  ON public.listings
-  FOR UPDATE
-  TO authenticated
-  USING (
-    owner_type = 'individual'
-    AND individual_owner_id = auth.uid()
-  )
-  WITH CHECK (
-    owner_type = 'individual'
-    AND individual_owner_id = auth.uid()
-  );
-```
+### 2.1 Double système d’authentification agence
 
----
+Deux fichiers coexistent pour résoudre le contexte agence de l’utilisateur courant :
 
-## 2. NOUVEAU WIZARD — 7 étapes au lieu de 4
+**Fichier A — `lib/actions/auth.ts`** fournit `getAgencyForCurrentUser()` et `getAnyAgencyForCurrentUser()`. Utilisé par 6 fichiers (3 actions agency-settings + 3 pages dashboard). Pattern : résoudre manuellement le contexte puis passer l’agencyId aux fonctions suivantes.
 
-### Structure des étapes
+**Fichier B — `lib/auth/with-agency-auth.ts`** fournit `withAgencyAuth(agencyId, resource, permission, handler)`. C’est le pattern documenté dans CLAUDE.md avec la matrice RBAC complète (5 rôles × 8 ressources × 4 permissions). Utilisé par toutes les autres actions du projet.
 
-```
-Étape 1 — Type             (type d'annonce + type de bien)
-Étape 2 — Localisation     (wilaya + commune + adresse + carte pin)
-Étape 3 — Prix & Surface   (prix, surface, étage, année)
-Étape 4 — Détails          (pièces, SDB, équipements, orientation)
-Étape 5 — Description      (titre, description, IA suggest)
-Étape 6 — Photos           (upload drag-drop, cover selection, ordre)
-Étape 7 — Récapitulatif    (preview, contact info, publier)
-```
+Ces deux fichiers font essentiellement la même chose (vérifier session + chercher membership + résoudre le rôle) mais avec des APIs incompatibles. Le résultat : un développeur ne sait pas lequel utiliser, et la moitié des actions contournent le système RBAC.
 
-### Pourquoi 7 étapes
+**Action requise :** Supprimer `lib/actions/auth.ts`, créer un helper léger `lib/auth/get-agency-context.ts` pour les Server Components en lecture seule, et migrer les 6 fichiers impactés.
 
-Le wizard actuel à 4 étapes est trop condensé : localisation + prix dans une
-seule page, pas de photos, pas de description, pas d'adresse précise.
-Les benchmarks Zillow/Bayut montrent que les formulaires de dépôt performants
-utilisent 6-8 étapes courtes plutôt que 3-4 étapes longues. Chaque étape doit
-être complétable en <30 secondes.
+-----
 
----
+## 3. Dette design (quantifiée)
 
-## 3. SPEC DÉTAILLÉE PAR ÉTAPE
+### 3.1 Violations de tokens
 
-### Étape 1 — Type d'annonce et type de bien
+|Violation                                             |Nombre |Objectif|
+|------------------------------------------------------|-------|--------|
+|Hex hardcodés `#XXXXXX` dans les .tsx                 |183    |0       |
+|Inline styles `style={{` dans les .tsx                |406    |0       |
+|Patterns `bg-[#...]` arbitraires                      |26     |0       |
+|Lignes avec couleur light-mode sans équivalent `dark:`|331    |0       |
+|**Total violations**                                  |**946**|**0**   |
 
-**Identique à l'actuel** mais avec le design Zinc :
-- Type d'annonce : 3 cards radio (Vente, Location, Vacances)
-- Type de bien : grille 2×4 d'icon cards (Appartement, Villa, Terrain, Local comm., Bureau, Immeuble, Ferme, Entrepôt)
-- Sélection = bordure `amber-500` + fond `amber-50`
-- Card hover = `shadow-sm` + border `zinc-300`
+### 3.2 Backward compat colors dans tailwind.config.ts
 
-### Étape 2 — Localisation (NOUVEAU : carte + adresse)
+Le fichier `tailwind.config.ts` contient un bloc de 45 lignes d’alias obsolètes qui mappent les anciens noms de couleurs (onyx, ivoire, or, charcoal, warm, coral, aqar, text-dark, text-body, text-muted, text-faint) vers les tokens Zinc/Amber. Ces alias ne devraient plus exister — ils entretiennent la possibilité d’utiliser les anciens noms et empêchent un grep propre des violations.
 
-```
-┌─────────────────────────────────────────────────┐
-│ Localisation                                     │
-├─────────────────────────────────────────────────┤
-│                                                  │
-│ Wilaya *                                         │
-│ [04 – Oum El Bouaghi                        ▾]  │
-│                                                  │
-│ Commune                                          │
-│ [Oum El Bouaghi                              ▾]  │
-│                                                  │
-│ Adresse (optionnel)                              │
-│ [Rue des Frères Mehri, Cité 500 logements   ]   │
-│                                                  │
-│ ┌───────────────────────────────────────────┐   │
-│ │                                           │   │
-│ │           CARTE (MapLibre)                │   │
-│ │     📍 Déplacez le pin pour préciser      │   │
-│ │        la localisation exacte             │   │
-│ │                                           │   │
-│ └───────────────────────────────────────────┘   │
-│ Lat: 35.8767  Lng: 7.1134  (auto-filled)        │
-│                                                  │
-└─────────────────────────────────────────────────┘
-```
+### 3.3 Textes hardcodés en français (violation i18n)
 
-**Comportement :**
-- Sélection wilaya → center la carte sur la wilaya
-- Sélection commune → zoom sur la commune
-- Pin draggable sur la carte → met à jour lat/lng
-- Champ adresse : texte libre (pas de geocoding requis)
-- Lat/lng stockés dans le champ `location` (PostGIS POINT)
-- Carte : même composant MapLibre que la recherche, mode "pin unique"
-- Sur mobile : carte en hauteur réduite (200px), extensible au tap
+Le projet utilise `next-intl` avec 4 locales (fr/ar/en/es), mais de nombreux textes UI sont hardcodés en français au lieu de passer par les fichiers de traduction.
 
-**Champs DB à ajouter dans la migration (si pas déjà présent) :**
-```sql
--- Si la colonne address_text n'existe pas sur listings :
-ALTER TABLE public.listings
-  ADD COLUMN IF NOT EXISTS address_text text;
-```
+**DashboardSidebar.tsx** — 8 chaînes en dur : “Paramètres”, “Apparence”, “Branding”, “Vérification”, “Retour au portail”, “Voir ma vitrine”, “Se déconnecter” (title), “Paramètres” (section label).
 
-### Étape 3 — Prix & Surface (séparé de la localisation)
+**Dashboard layout.tsx** — 2 chaînes : “Terminez la configuration de votre agence”, “Commencer →”.
 
-```
-┌─────────────────────────────────────────────────┐
-│ Prix & Surface                                   │
-├─────────────────────────────────────────────────┤
-│                                                  │
-│ Prix *                                           │
-│ [30 000 000                              ] DZD  │
-│ ≈ 300 000 DA/m² (calculé auto si surface)       │
-│                                                  │
-│ Surface (m²)                                     │
-│ [100                                     ] m²   │
-│                                                  │
-│ Étage (pour appartement/bureau)                  │
-│ [    3    ] / [    5    ] étages total           │
-│                                                  │
-│ Année de construction (optionnel)                │
-│ [2015                                    ]       │
-│                                                  │
-│ ── Suggestion IA ──────────────────────────────  │
-│ 💡 Prix moyen à Oum El Bouaghi pour un F3 :     │
-│    28M - 35M DZD (basé sur 12 annonces)          │
-│    Votre prix est dans la fourchette. ✅          │
-│                                                  │
-└─────────────────────────────────────────────────┘
-```
+**ProLoginForm.tsx** — 3 chaînes : “Accéder à AqarPro”, “Pas encore d’agence ?”, “Créer un compte agence”.
 
-**Comportement :**
-- Prix : input number avec formatage en temps réel (séparateurs milliers)
-- Prix/m² : calculé automatiquement quand surface est renseignée
-- Étage : visible seulement si property_type = apartment | office | building
-- Suggestion IA : appel API qui compare avec les listings similaires dans la même zone (optionnel, affiché si disponible). Si l'API n'est pas prête, afficher uniquement le prix/m².
+**Homepage page.tsx** — Noms de wilayas et compteurs hardcodés dans un tableau constant au lieu de venir de la base de données.
 
-**Schema Zod étendu :**
-```typescript
-floor: z.number().int().min(0).max(50).optional(),
-total_floors: z.number().int().min(1).max(50).optional(),
-year_built: z.number().int().min(1900).max(new Date().getFullYear()).optional(),
-address_text: z.string().max(200).optional(),
-latitude: z.number().min(19).max(38).optional(),  // Algérie bounds
-longitude: z.number().min(-9).max(12).optional(),
-```
+-----
 
-### Étape 4 — Détails & Équipements (enrichi)
+## 4. Problèmes techniques confirmés
 
-```
-┌─────────────────────────────────────────────────┐
-│ Détails                                          │
-├─────────────────────────────────────────────────┤
-│                                                  │
-│ Pièces & Salles de bains                         │
-│ Pièces        [–]  4  [+]                        │
-│ Salle de bains [–]  2  [+]                       │
-│                                                  │
-│ Équipements                                      │
-│ [✓ Ascenseur] [✓ Parking] [✓ Balcon]            │
-│ [  Piscine  ] [  Jardin  ] [  Meublé ]           │
-│ [  Climatisation] [  Chauffage] [  Vue mer]      │
-│ [  Terrasse ] [  Cave    ] [  Interphone]        │
-│ [  Gardien  ] [  Digicode]                       │
-│                                                  │
-│ Orientation (optionnel)                          │
-│ [Nord] [Sud] [Est] [Ouest]                       │
-│ (multi-select, ex: "Sud-Est")                    │
-│                                                  │
-│ État du bien                                     │
-│ ( ) Neuf  ( ) Bon état  ( ) À rénover            │
-│ ( ) En construction                              │
-│                                                  │
-└─────────────────────────────────────────────────┘
+### 4.1 Mismatch Sentry (critique en production)
+
+`package.json` déclare `@sentry/core` en v10.43 et `@sentry/nextjs` en v8.0. Ce sont des versions majeures incompatibles. Le `next.config.ts` contient un workaround explicite avec try/catch + require conditionnel qui avale silencieusement l’erreur. En production, si le DSN est configuré mais que les versions ne s’alignent pas, Sentry peut être partiellement ou totalement désactivé sans alerte.
+
+**Action requise :** Aligner sur `@sentry/nextjs` v8.x avec `@sentry/core` v8.x (ou migrer tout vers v10), supprimer le try/catch et le require conditionnel.
+
+### 4.2 CSP permissive (`unsafe-inline` + `unsafe-eval`)
+
+Le middleware applique une Content Security Policy avec `unsafe-inline` et `unsafe-eval` sur les scripts. C’est acceptable en développement mais constitue un risque XSS élevé en production. La CSP autorise aussi `unsafe-inline` pour les styles, ce qui est moins critique mais devrait être durci avec des nonces.
+
+**Action requise :** Implémenter une CSP par environnement (dev permissive, prod avec nonces). Commencer par un mode `report-only` en production avant enforcement.
+
+### 4.3 Types `any` dans SearchMap
+
+Le composant `SearchMap.tsx` déclare 3 alias de type `any` explicites (lignes 12-16) avec un commentaire eslint-disable. Les types `Map`, `Marker` et `Popup` de `maplibre-gl` sont disponibles et devraient être utilisés directement.
+
+### 4.4 Images placeholder en production config
+
+`next.config.ts` autorise `picsum.photos`, `fastly.picsum.photos` et `images.unsplash.com` dans `remotePatterns`. Les deux premiers sont des services de placeholder qui ne devraient pas être en production. Unsplash peut rester si des photos stock sont utilisées, mais les picsum doivent être retirés.
+
+### 4.5 Pas de `.env.example`
+
+Le projet n’a pas de `.env.example` malgré le fait que le middleware et de nombreux services dépendent de variables d’environnement (Supabase URL/key, Stripe keys, Sentry DSN, MapTiler key, Anthropic API key). Cela rend l’onboarding d’un nouveau développeur opaque.
+
+### 4.6 Référence à une route API inexistante dans le middleware
+
+Le middleware déclare `/api/webhooks/stripe` et `/api/whatsapp/webhook` dans `CSRF_EXEMPT_PREFIXES`, mais aucune route API n’existe dans `src/app/api/`. Les webhooks Stripe passent par les Edge Functions Supabase. Ces exemptions CSRF sont du code mort dans le middleware.
+
+-----
+
+## 5. Écarts fonctionnels (UX/UI produit)
+
+### 5.1 Dashboard AqarPro — composants manquants
+
+Le dashboard actuel est fonctionnel mais incomplet par rapport au standard d’un SaaS de productivité (Stripe, Linear, HubSpot). L’analyse compare l’existant avec les spécifications du design system Zinc (`references/aqarpro-ux.md`).
+
+|Composant                                                    |Spécifié dans le design system           |État actuel                       |
+|-------------------------------------------------------------|-----------------------------------------|----------------------------------|
+|TopBar (h-14, ⌘K, notifications, theme toggle, user dropdown)|Oui — détaillé dans aqarpro-ux.md        |**Absent**                        |
+|Sidebar collapsible (240px → 64px, shortcut `[`)             |Oui                                      |**Non implémenté** — fixe à 240px |
+|Sidebar badges compteurs (leads non lus, messages)           |Oui                                      |**Absent**                        |
+|Sidebar responsive mobile (drawer)                           |Oui                                      |**Absent**                        |
+|Command Palette ⌘K                                           |Oui — mentionné dans component-library.md|**Absent**                        |
+|Dashboard Overview : Activity Feed                           |Oui — 5 derniers événements              |**Absent** — seulement 4 StatCards|
+|Dashboard Overview : Quick Actions                           |Oui — 4 boutons ghost                    |**Absent**                        |
+|Dashboard Overview : Bar chart vues/jour                     |Oui                                      |**Absent**                        |
+|Dashboard Overview : Date range selector                     |Oui                                      |**Absent**                        |
+|Listings : Side Panel (Drawer)                               |Oui — au clic sur une ligne              |**Absent**                        |
+|Listings : Bulk actions bar                                  |Oui — sticky bottom                      |**Absent**                        |
+|Dark mode complet                                            |Oui — 331 lignes sans `dark:`            |**Partiel**                       |
+
+### 5.2 Homepage — design obsolète
+
+La homepage utilise encore l’ancien thème “Onyx + Gold” (hero photo plein écran avec overlay noir, accent doré, typographie lourde) au lieu du design system Zinc. C’est la page la plus visible du produit et elle ne reflète pas l’identité visuelle cible.
+
+### 5.3 Couverture de tests
+
+|Catégorie               |Fichiers                                                                       |Verdict                                      |
+|------------------------|-------------------------------------------------------------------------------|---------------------------------------------|
+|Tests unitaires (Vitest)|3 fichiers dans `src/__tests__/unit/`                                          |Très insuffisant pour 377 fichiers source    |
+|Tests E2E (Playwright)  |8 specs (homepage, auth, search, listing, deposer, agences, annonce, subdomain)|Couverture correcte des parcours critiques   |
+|Tests pgTAP (SQL)       |0                                                                              |Non implémentés malgré mention dans CLAUDE.md|
+
+-----
+
+## 6. Plan d’action hiérarchisé
+
+### Phase 0 — Nettoyage (1-2 jours)
+
+**Objectif :** Retirer tout le code mort pour partir sur une base propre. Aucune fonctionnalité nouvelle, seulement de la suppression.
+
+**0.1** Supprimer les 5 fichiers à 0 imports (section 1.1).
+
+**0.2** Supprimer la chaîne DeposerWizard v1 (3 fichiers, section 1.2). Mettre à jour le test et l’index.ts.
+
+**0.3** Supprimer les 6 packages monorepo vides. Mettre à jour `pnpm-workspace.yaml`, `package.json` de apps/web (retirer `@aqarvision/domain` et `@aqarvision/security`), et `next.config.ts` (retirer ces deux packages de `transpilePackages`).
+
+**0.4** Supprimer les 3 fichiers racine obsolètes (section 1.4).
+
+**0.5** Supprimer `lib/actions/auth.ts`. Créer `lib/auth/get-agency-context.ts` (helper léger pour les Server Components). Migrer les 6 fichiers importateurs vers `withAgencyAuth` ou le nouveau helper.
+
+**0.6** Supprimer le bloc backward compat colors dans `tailwind.config.ts`.
+
+**0.7** Retirer les exemptions CSRF pour les routes API inexistantes dans le middleware. Retirer `picsum.photos` et `fastly.picsum.photos` de `remotePatterns`.
+
+**0.8** Créer un `.env.example` documentant toutes les variables requises.
+
+**Validation :** `pnpm typecheck && pnpm build && pnpm test` doivent passer.
+
+### Phase 1 — Stabilisation technique (1 semaine)
+
+**1.1** Aligner les versions Sentry (`@sentry/nextjs` + `@sentry/core` sur la même majeure). Supprimer le try/catch dans next.config.ts.
+
+**1.2** Remplacer les 3 types `any` de SearchMap par les types MapLibre natifs.
+
+**1.3** Externaliser les textes hardcodés français dans `next-intl` (DashboardSidebar : 8 chaînes, dashboard layout : 2, ProLoginForm : 3, wilayas homepage : passer par la DB ou les messages).
+
+**1.4** Ajouter 10 tests unitaires critiques : auth guards (withAgencyAuth, withSuperAdminAuth), schemas Zod (listing, auth, billing), services (analytics, search, billing), rate-limit.
+
+**1.5** Corriger le CLAUDE.md avec l’état réel du code (routes, tech stack, packages, patterns).
+
+### Phase 2 — Éradication dette design (2-3 semaines)
+
+**2.1** Éliminer les 183 hex hardcodés → classes Tailwind.
+
+**2.2** Éliminer les 406 inline styles → classes Tailwind.
+
+**2.3** Éliminer les 26 patterns `bg-[#...]`.
+
+**2.4** Ajouter les variantes `dark:` aux 331 lignes manquantes.
+
+Table de correspondance : `#FAFAFA`→`zinc-50`, `#F4F4F5`→`zinc-100`, `#E4E4E7`→`zinc-200`, `#D4D4D8`→`zinc-300`, `#A1A1AA`→`zinc-400`, `#71717A`→`zinc-500`, `#52525B`→`zinc-600`, `#3F3F46`→`zinc-700`, `#27272A`→`zinc-800`, `#18181B`→`zinc-900`, `#09090B`→`zinc-950`, `#F59E0B`→`amber-500`, `#FBBF24`→`amber-400`, `#D97706`→`amber-600`.
+
+**Validation :** Les 4 compteurs grep doivent retourner 0.
+
+### Phase 3 — Dashboard AqarPro complet (3-4 semaines)
+
+**3.1** Créer `DashboardTopBar.tsx` (h-14, titre page, ⌘K search trigger, notifications, theme toggle, user dropdown).
+
+**3.2** Refactorer `DashboardSidebar.tsx` (collapse 240→64px, shortcut `[`, groupes avec séparateurs, badges compteurs, responsive mobile drawer).
+
+**3.3** Créer `CommandPalette.tsx` (⌘K/Ctrl+K, modal centrée, recherche fuzzy, navigation clavier).
+
+**3.4** Enrichir la page Overview (activity feed, quick actions, bar chart CSS vues/jour, date range selector).
+
+**3.5** Créer `Drawer.tsx` (composant réutilisable) + `ListingDrawer.tsx` (détails annonce au clic dans la table).
+
+### Phase 4 — Refonte homepage + surfaces publiques (2-3 semaines)
+
+Basculer la homepage du paradigme dark-hero-overlay vers un design lumineux, tech, centré sur la recherche, avec les photos dans les cards et la mosaïque, pas en background. Identité visuelle tricolore algérienne (or saharien, bleu méditerranéen, vert montagne). Animations GSAP au scroll. S’applique à la homepage, /search, /annonce/[slug], /pro, /vendre, /estimer, /pricing.
+
+### Phase 5 — Sécurité et qualité (continu)
+
+**5.1** CSP durcie par environnement (nonces en prod, report-only puis enforcement).
+
+**5.2** CI pipeline : bloquer sur `no-explicit-any`, couverture minimale 40%, audit a11y axe-core sur homepage/search/listing.
+
+**5.3** Ajouter tests E2E pour AqarPro dashboard (auth flow pro, création listing, gestion leads).
+
+### Phase 6 — Backend Python IA (2-3 semaines)
+
+Créer le microservice FastAPI dans `services/ai-backend/`. Implémenter les 3 endpoints (generate-description, translate, enrich). Modifier `features/ai/services/ai.service.ts` pour appeler le backend Python via fetch() au lieu de `@anthropic-ai/sdk`. Supprimer la dépendance npm `@anthropic-ai/sdk`.
+
+-----
+
+## 7. Métriques de suivi
+
+|KPI                           |Valeur actuelle         |Cible Phase 0|Cible Phase 2|Cible finale|
+|------------------------------|------------------------|-------------|-------------|------------|
+|Fichiers code mort            |11 fichiers + 6 packages|0            |0            |0           |
+|Hex hardcodés .tsx            |183                     |183          |0            |0           |
+|Inline styles .tsx            |406                     |406          |0            |0           |
+|bg-[#…] .tsx                  |26                      |26           |0            |0           |
+|Lignes sans dark:             |331                     |331          |0            |0           |
+|Tests unitaires               |3                       |3            |13+          |40+         |
+|Textes FR hardcodés           |13+ chaînes             |13+          |0            |0           |
+|Types any explicites          |3+                      |3+           |0            |0           |
+|Composants dashboard manquants|11                      |11           |11           |0           |
+
+-----
+
+## Annexe A — Commandes de validation
+
+```bash
+# Vérifications post-nettoyage
+pnpm typecheck
+pnpm build
+pnpm test
+
+# Audit dette design
+grep -rn '#[0-9a-fA-F]\{6\}' apps/web/src --include="*.tsx" | grep -v tailwind.config | wc -l
+grep -rn 'style={{' apps/web/src --include="*.tsx" | wc -l
+grep -rn "bg-\[#" apps/web/src --include="*.tsx" | wc -l
+grep -rn "bg-white\|bg-zinc-50\|text-zinc-900\|border-zinc-200" apps/web/src --include="*.tsx" | grep -v "dark:" | wc -l
+
+# Code mort
+grep -rn "useScrollReveal\|use-auth\|use-current-agency\|use-realtime-messages" apps/web/src --include="*.tsx" --include="*.ts" | grep -v "hooks/" | wc -l
+
+# Textes hardcodés
+grep -rn "Paramètres\|Apparence\|Retour au portail\|Voir ma vitrine\|Accéder à AqarPro\|Terminez la config\|Commencer →" apps/web/src --include="*.tsx" | wc -l
 ```
 
-**Nouveaux équipements vs actuel :**
-L'actuel n'a que 6 options (ascenseur, parking, balcon, piscine, jardin, meublé).
-Le nouveau en a 14 + orientation + état du bien. C'est ce que Bayut et Zillow montrent.
-
-**Schema Zod étendu pour details :**
-```typescript
-details: z.object({
-  has_elevator: z.boolean().default(false),
-  has_parking: z.boolean().default(false),
-  has_balcony: z.boolean().default(false),
-  has_pool: z.boolean().default(false),
-  has_garden: z.boolean().default(false),
-  furnished: z.boolean().default(false),
-  has_ac: z.boolean().default(false),
-  has_heating: z.boolean().default(false),
-  sea_view: z.boolean().default(false),
-  has_terrace: z.boolean().default(false),
-  has_cave: z.boolean().default(false),
-  has_intercom: z.boolean().default(false),
-  has_guardian: z.boolean().default(false),
-  has_digicode: z.boolean().default(false),
-  orientation: z.array(z.enum(["north", "south", "east", "west"])).default([]),
-  condition: z.enum(["new", "good", "renovation", "construction"]).optional(),
-}).default({}),
-```
-
-### Étape 5 — Titre & Description (NOUVEAU)
+## Annexe B — Arborescence nettoyée cible (post Phase 0)
 
 ```
-┌─────────────────────────────────────────────────┐
-│ Description de votre bien                        │
-├─────────────────────────────────────────────────┤
-│                                                  │
-│ Titre de l'annonce *                             │
-│ [F3 Appartement standing, vue dégagée      ]    │
-│                                          18/120  │
-│                                                  │
-│ Description *                                    │
-│ ┌───────────────────────────────────────────┐   │
-│ │ Bel appartement F3 situé au 3ème étage   │   │
-│ │ d'une résidence calme à Oum El Bouaghi.  │   │
-│ │ Comprend un salon, 2 chambres, cuisine   │   │
-│ │ équipée, 2 salles de bain. Ascenseur,    │   │
-│ │ parking au sous-sol. Vue dégagée...      │   │
-│ │                                           │   │
-│ │                                           │   │
-│ └───────────────────────────────────────────┘   │
-│                                        124/2000  │
-│                                                  │
-│ ┌───────────────────────────────────────────┐   │
-│ │ ✨ Générer avec l'IA                      │   │
-│ │ Claude va rédiger une description         │   │
-│ │ professionnelle basée sur vos infos.      │   │
-│ │ Vous pourrez la modifier ensuite.         │   │
-│ │                                           │   │
-│ │        [Générer la description]           │   │
-│ └───────────────────────────────────────────┘   │
-│                                                  │
-└─────────────────────────────────────────────────┘
+AqarVision/
+├── apps/web/                    # Next.js 15 App Router (377 → ~365 fichiers)
+├── packages/config/             # Seul package actif
+├── supabase/                    # Migrations, Edge Functions, seed
+├── theme/                       # 10 templates vitrines agences
+├── CLAUDE.md                    # Mis à jour — source de vérité
+├── package.json
+├── pnpm-workspace.yaml          # Mis à jour — référence seulement apps/* et packages/config
+├── tsconfig.json
+├── turbo.json
+└── vercel.json
 ```
-
-**Comportement :**
-- Titre : `<input>` (pas textarea), min 10 chars, max 120 chars, compteur live
-- Description : `<textarea>` avec min 50 chars, max 2000 chars, compteur live
-- Bouton IA : appelle Claude API en server action, pré-remplit la description
-  - Input pour l'IA : toutes les données des étapes 1-4 (type, localisation, prix, surface, détails)
-  - Prompt : "Rédige une description immobilière professionnelle en français pour ce bien : [données]. 150-250 mots. Ton professionnel mais chaleureux. Ne pas inventer de caractéristiques non fournies."
-  - Pendant la génération : loading spinner + "Rédaction en cours..."
-  - Résultat injecté dans le textarea, l'utilisateur peut modifier
-- Si l'utilisateur ne veut pas d'IA, il écrit manuellement (la description est requise, pas l'IA)
-- Suggestion : si le titre est court (< 20 chars), afficher une suggestion subtile
-
-### Étape 6 — Photos (NOUVEAU — critique)
-
-```
-┌─────────────────────────────────────────────────┐
-│ Photos de votre bien                             │
-├─────────────────────────────────────────────────┤
-│                                                  │
-│ ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐  │
-│                                                  │
-│   📷 Glissez vos photos ici                     │
-│   ou cliquez pour sélectionner                   │
-│                                                  │
-│   JPG, PNG, WebP — max 10 Mo par photo          │
-│   Minimum 1 photo, maximum 20                    │
-│                                                  │
-│ └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘  │
-│                                                  │
-│ Photos ajoutées (3/20)                           │
-│ ┌──────┐ ┌──────┐ ┌──────┐                     │
-│ │[img1]│ │[img2]│ │[img3]│                      │
-│ │ ⭐📍 │ │  📍  │ │  📍  │   ⭐ = couverture   │
-│ │  ✕   │ │  ✕   │ │  ✕   │   Drag pour réordonner│
-│ └──────┘ └──────┘ └──────┘                      │
-│                                                  │
-│ 💡 La première photo sera la couverture.         │
-│    Glissez pour réordonner.                      │
-│                                                  │
-└─────────────────────────────────────────────────┘
-```
-
-**Comportement :**
-- Drop zone : drag-and-drop + click-to-select (input type="file" hidden)
-- Formats acceptés : JPEG, PNG, WebP, AVIF (définis dans `ALLOWED_MIME_TYPES`)
-- Taille max : 10 MB par photo (défini dans `MAX_UPLOAD_SIZE_BYTES`)
-- Min 1 photo requise pour passer à l'étape suivante
-- Max 20 photos
-- Preview : thumbnails grid (3 colonnes desktop, 2 mobile)
-- Couverture : la première photo par défaut, étoile ⭐ visible
-- Réordonnancement : drag-and-drop entre les thumbnails (ou flèches sur mobile)
-- Suppression : bouton ✕ sur chaque thumbnail
-- Upload : **deux phases** (comme déjà implémenté)
-  1. `getSignedUploadUrlAction` → obtient une URL signée Supabase Storage
-  2. Upload direct du navigateur vers Storage (XHR avec progress bar)
-  3. `finalizeMediaUploadAction` → crée l'entrée dans `listing_media`
-- Progress bar par photo pendant l'upload
-- Erreurs : "Photo trop lourde (max 10 Mo)", "Format non supporté"
-- L'upload se fait à cette étape (pas au submit final) pour que le récapitulatif puisse les afficher
-
-**Note technique :** L'action actuelle `getSignedUploadUrlAction` nécessite un `listing_id`.
-Or à l'étape 6, le listing n'est pas encore créé. Deux options :
-- **Option A (recommandée)** : Créer le listing en `draft` à l'étape 1 (ou au début de l'étape 6), puis uploader les photos sur ce draft. Le publish se fait à l'étape 7.
-- **Option B** : Stocker les photos en local (blob URLs) jusqu'au submit, puis uploader tout d'un coup. Plus simple côté UX mais risque de timeout sur mobile.
-
-**Recommandation : Option A.** Créer le listing en `draft` au moment où l'utilisateur entre dans l'étape 6. Les étapes 1-5 collectent les données côté client (state), l'étape 6 persiste le draft et uploade les photos, l'étape 7 publie.
-
-### Étape 7 — Récapitulatif & Publication (amélioré)
-
-```
-┌─────────────────────────────────────────────────┐
-│ Récapitulatif de votre annonce                   │
-├─────────────────────────────────────────────────┤
-│                                                  │
-│ ┌───────────────────────────────────────────┐   │
-│ │  PREVIEW CARD (comme elle apparaîtra)     │   │
-│ │  ┌────────────────────────────────────┐   │   │
-│ │  │        [Photo couverture]           │   │   │
-│ │  │  VENTE · VILLA                      │   │   │
-│ │  │  F3 Appartement standing, vue dégagée│  │   │
-│ │  │  Oum El Bouaghi                     │   │   │
-│ │  │  30 000 000 DZD · 100 m²           │   │   │
-│ │  └────────────────────────────────────┘   │   │
-│ └───────────────────────────────────────────┘   │
-│                                                  │
-│ Détails                                          │
-│ ┌───────────────────────────────────────────┐   │
-│ │ Type        Vente · Villa                 │   │
-│ │ Localisation Oum El Bouaghi               │   │
-│ │ Prix        30 000 000 DZD                │   │
-│ │ Surface     100 m²                        │   │
-│ │ Pièces      4                             │   │
-│ │ SDB         2                             │   │
-│ │ Étage       3/5                           │   │
-│ │ État        Bon état                      │   │
-│ │ Équipements Ascenseur, Parking, Balcon    │   │
-│ │ Photos      3 photos                      │   │
-│ └───────────────────────────────────────────┘   │
-│                                                  │
-│ Description                                      │
-│ "Bel appartement F3 situé au 3ème étage..."     │
-│                                                  │
-│ Vos coordonnées (visibles sur l'annonce)         │
-│ ┌───────────────────────────────────────────┐   │
-│ │ Téléphone *  [0555 XX XX XX            ]  │   │
-│ │ ☐ Afficher mon numéro sur l'annonce       │   │
-│ │ ☐ Accepter les messages via la plateforme │   │
-│ └───────────────────────────────────────────┘   │
-│                                                  │
-│ ┌───────────────────────────────────────────┐   │
-│ │ ✅ Votre annonce sera publiée             │   │
-│ │ immédiatement. Il vous restera 1          │   │
-│ │ emplacement libre sur 2.                  │   │
-│ └───────────────────────────────────────────┘   │
-│                                                  │
-│ [← Retour]                    [Publier l'annonce]│
-│                                                  │
-└─────────────────────────────────────────────────┘
-```
-
-**Améliorations vs actuel :**
-- **Preview card** : montre le listing exactement comme il apparaîtra sur AqarSearch
-- **Contact info** : téléphone requis pour un particulier (l'agence a déjà le sien)
-- **Toggle message** : choix d'accepter les messages via la plateforme
-- **Erreur RLS corrigée** : le listing est déjà en `draft` (créé à l'étape 6), le publish change juste le status
-- **Erreurs user-friendly** : plus jamais de message RLS brut. Tout passe par `fail()` avec message français.
-
----
-
-## 4. SCHEMA ZOD COMPLET
-
-```typescript
-// schemas/individual-listing-v2.schema.ts
-
-import { z } from "zod";
-import { sanitizeInput } from "@/lib/sanitize";
-import { LOCALES, type Locale } from "@aqarvision/config";
-
-export const LISTING_TYPES = ["sale", "rent", "vacation"] as const;
-export const PROPERTY_TYPES = [
-  "apartment", "villa", "terrain", "commercial",
-  "office", "building", "farm", "warehouse",
-] as const;
-export const CONDITIONS = ["new", "good", "renovation", "construction"] as const;
-export const ORIENTATIONS = ["north", "south", "east", "west"] as const;
-
-export const IndividualListingV2Schema = z.object({
-  // Step 1
-  listing_type: z.enum(LISTING_TYPES),
-  property_type: z.enum(PROPERTY_TYPES),
-
-  // Step 2
-  wilaya_code: z.string().min(1),
-  commune_id: z.number().int().positive().optional(),
-  address_text: z.string().max(200).transform(sanitizeInput).optional(),
-  latitude: z.number().min(19).max(38).optional(),
-  longitude: z.number().min(-9).max(12).optional(),
-
-  // Step 3
-  current_price: z.number().positive("Le prix doit être positif"),
-  surface_m2: z.number().positive("La surface doit être positive").optional(),
-  floor: z.number().int().min(0).max(50).optional(),
-  total_floors: z.number().int().min(1).max(50).optional(),
-  year_built: z.number().int().min(1900).max(new Date().getFullYear()).optional(),
-
-  // Step 4
-  rooms: z.number().int().min(0).optional(),
-  bathrooms: z.number().int().min(0).optional(),
-  details: z.object({
-    has_elevator: z.boolean().default(false),
-    has_parking: z.boolean().default(false),
-    has_balcony: z.boolean().default(false),
-    has_pool: z.boolean().default(false),
-    has_garden: z.boolean().default(false),
-    furnished: z.boolean().default(false),
-    has_ac: z.boolean().default(false),
-    has_heating: z.boolean().default(false),
-    sea_view: z.boolean().default(false),
-    has_terrace: z.boolean().default(false),
-    has_cave: z.boolean().default(false),
-    has_intercom: z.boolean().default(false),
-    has_guardian: z.boolean().default(false),
-    has_digicode: z.boolean().default(false),
-    orientation: z.array(z.enum(ORIENTATIONS)).default([]),
-    condition: z.enum(CONDITIONS).optional(),
-  }).default({}),
-
-  // Step 5
-  title: z.string().min(10, "Min 10 caractères").max(120, "Max 120 caractères").transform(sanitizeInput),
-  description: z.string().min(50, "Min 50 caractères").max(2000, "Max 2000 caractères").transform(sanitizeInput),
-
-  // Step 7
-  contact_phone: z.string().min(9, "Numéro invalide").max(15).optional(),
-  show_phone: z.boolean().default(true),
-  accept_messages: z.boolean().default(true),
-});
-
-export type IndividualListingV2Input = z.infer<typeof IndividualListingV2Schema>;
-```
-
----
-
-## 5. FLOW D'ACTION SERVER-SIDE
-
-### Nouvelle stratégie : Draft → Photos → Publish
-
-```
-Étapes 1-5 : Données collectées côté CLIENT (useState)
-             Aucun appel serveur.
-
-Étape 6 :   "Créer brouillon + uploader photos"
-             1. createDraftListingAction(data steps 1-5) → listing_id
-             2. Pour chaque photo :
-                a. getSignedUploadUrlAction(listing_id, file_name, content_type)
-                b. Upload direct browser → Supabase Storage
-                c. finalizeMediaUploadAction(listing_id, storage_path, ...)
-             3. Toutes les photos sont liées au listing
-
-Étape 7 :   "Publier"
-             1. publishIndividualListingAction(listing_id, contact_phone, show_phone)
-                → UPDATE listings SET current_status = 'published'
-                → INSERT status_versions
-```
-
-### Server Actions requises
-
-```
-1. createDraftIndividualListingAction(formData)
-   → Valide via IndividualListingV2Schema
-   → INSERT listings (status = 'draft')
-   → INSERT listing_translations (fr: title + description)
-   → INSERT price_versions
-   → INSERT status_versions (draft)
-   → Return { listing_id, slug }
-
-2. getSignedUploadUrlAction(input)        ← EXISTANT, adapter pour individual
-3. finalizeMediaUploadAction(input)       ← EXISTANT, adapter pour individual
-
-4. publishIndividualListingAction(listing_id, contact_phone)
-   → Vérifier que le listing a ≥ 1 photo
-   → Vérifier le quota
-   → UPDATE listings SET current_status = 'published', contact_phone, show_phone
-   → INSERT status_versions (published)
-   → Return { success, slug }
-
-5. generateListingDescriptionAction(data)  ← EXISTANT AI action, réutiliser
-```
-
----
-
-## 6. DESIGN SYSTEM ZINC — Composants du Wizard
-
-Utiliser le design system Zinc défini dans la skill `aqarvision-ux-ui`. Points clés :
-
-### Stepper (7 étapes)
-
-```tsx
-// Horizontal sur desktop (avec labels), vertical compacte sur mobile (numéros seuls)
-// Couleurs : completed = zinc-900, current = amber-500, future = zinc-300
-// Check icon pour les étapes complétées
-// Ligne de connexion : complétée = zinc-900, future = zinc-200
-```
-
-### Cards de sélection (type/bien)
-
-```tsx
-// Sélectionné : border-2 border-amber-500 bg-amber-50 dark:bg-amber-950/20
-// Non sélectionné : border border-zinc-200 dark:border-zinc-700
-// Hover : shadow-sm border-zinc-300
-// Icon : 24px, zinc-500 normal, amber-600 selected
-```
-
-### Inputs
-
-```tsx
-// h-10, rounded-md, border border-zinc-200
-// Focus : border-amber-500 ring-2 ring-amber-500/20
-// Suffix (DZD, m²) : bg-zinc-50 text-zinc-500 px-3, arrondi côté end
-```
-
-### Upload zone
-
-```tsx
-// Dashed border 2px, rounded-xl, zinc-200 border, zinc-50 bg
-// Hover : border-amber-400 bg-amber-50/50
-// Drag over : border-amber-500 bg-amber-100/50 scale-[1.01]
-// Thumbnails : rounded-lg, 100px height, object-cover
-// Cover badge : absolute top-1 start-1, amber-500 bg, star icon
-```
-
-### Boutons navigation
-
-```tsx
-// "Retour" : ghost button (outline zinc-200)
-// "Suivant" : solid button (bg-zinc-900 text-zinc-50, dark:bg-zinc-50 dark:text-zinc-900)
-// "Publier" : accent button (bg-amber-500 text-white, hover:bg-amber-600)
-// Disabled : opacity-50 pointer-events-none
-```
-
----
-
-## 7. MIGRATIONS DB REQUISES
-
-```
-00183_individual_rls_children.sql     → Fix RLS (Section 1)
-00184_listing_contact_fields.sql      → Ajouter contact_phone, show_phone, accept_messages
-00185_listing_extended_details.sql    → Ajouter floor, total_floors, year_built, address_text
-                                        (si pas déjà dans le schema)
-```
-
-### Migration 00184
-
-```sql
-ALTER TABLE public.listings
-  ADD COLUMN IF NOT EXISTS contact_phone text,
-  ADD COLUMN IF NOT EXISTS show_phone boolean NOT NULL DEFAULT true,
-  ADD COLUMN IF NOT EXISTS accept_messages boolean NOT NULL DEFAULT true;
-```
-
-### Migration 00185
-
-```sql
-ALTER TABLE public.listings
-  ADD COLUMN IF NOT EXISTS floor integer,
-  ADD COLUMN IF NOT EXISTS total_floors integer,
-  ADD COLUMN IF NOT EXISTS year_built integer,
-  ADD COLUMN IF NOT EXISTS address_text text;
-```
-
----
-
-## 8. FICHIERS À CRÉER / MODIFIER
-
-### Créer
-
-```
-supabase/migrations/00183_individual_rls_children.sql
-supabase/migrations/00184_listing_contact_fields.sql
-supabase/migrations/00185_listing_extended_details.sql
-
-src/features/listings/schemas/individual-listing-v2.schema.ts
-src/features/listings/actions/create-draft-individual.action.ts
-src/features/listings/actions/publish-individual.action.ts
-src/features/listings/components/DeposerWizardV2.tsx
-src/features/listings/components/deposer/StepType.tsx
-src/features/listings/components/deposer/StepLocation.tsx
-src/features/listings/components/deposer/StepPriceSurface.tsx
-src/features/listings/components/deposer/StepDetails.tsx
-src/features/listings/components/deposer/StepDescription.tsx
-src/features/listings/components/deposer/StepPhotos.tsx
-src/features/listings/components/deposer/StepRecap.tsx
-src/features/listings/components/deposer/WizardStepper.tsx
-src/features/listings/components/deposer/PhotoUploader.tsx
-src/features/listings/components/deposer/LocationPicker.tsx
-```
-
-### Modifier
-
-```
-src/app/[locale]/deposer/page.tsx            → importer DeposerWizardV2 au lieu de DeposerWizard
-src/features/media/actions/upload.action.ts  → adapter getSignedUploadUrl pour individual owner
-src/features/ai/actions/ai.action.ts         → adapter generateDescription pour individual (pas agency)
-```
-
-### Supprimer (après migration)
-
-```
-src/features/listings/components/DeposerWizard.tsx  → remplacé par DeposerWizardV2
-```
-
----
-
-## 9. CHECKLIST DE VALIDATION
-
-- [ ] Migration 00183 appliquée → plus d'erreur RLS sur listing_translations
-- [ ] Le wizard a 7 étapes visibles dans le stepper
-- [ ] Étape 2 affiche une carte MapLibre avec pin draggable
-- [ ] Étape 3 calcule le prix/m² automatiquement
-- [ ] Étape 4 a 14 équipements + orientation + état
-- [ ] Étape 5 a un champ description (min 50 chars) + bouton IA
-- [ ] Étape 6 permet d'uploader 1-20 photos avec drag-drop
-- [ ] Les photos montrent une progress bar pendant l'upload
-- [ ] La première photo est marquée comme couverture
-- [ ] Étape 7 montre une preview card réaliste
-- [ ] Étape 7 demande le numéro de téléphone
-- [ ] Le bouton "Publier" fonctionne sans erreur RLS
-- [ ] Le listing publié apparaît dans la recherche
-- [ ] Le listing publié a ses photos visibles
-- [ ] Le compteur de quota se met à jour après publication
-- [ ] RTL : le wizard est correct en arabe
-- [ ] Mobile : toutes les étapes sont utilisables sur petit écran
-- [ ] Dark mode : le wizard respecte le thème Zinc
-- [ ] Erreurs : messages user-friendly, jamais de message technique brut
