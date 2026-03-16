@@ -33,6 +33,7 @@ import {
   ChevronLeft,
   Phone,
   Check,
+  User,
 } from "lucide-react";
 import { formatPrice } from "@/lib/format";
 
@@ -158,28 +159,35 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
               </span>
             </div>
 
-            {/* Agency + Reference */}
+            {/* Publisher + Reference */}
             <div className="mb-3 flex items-center gap-3 text-sm">
-              <Link
-                href={`/a/${listing.agency_slug}`}
-                className="flex items-center gap-2 font-medium text-zinc-600 transition-colors hover:text-amber-500 dark:text-zinc-400 dark:hover:text-amber-400"
-              >
-                {listing.agency_logo_url ? (
-                  <Image
-                    src={listing.agency_logo_url}
-                    alt={listing.agency_name}
-                    width={20}
-                    height={20}
-                    sizes="20px"
-                    className="h-5 w-5 rounded-full object-cover"
-                  />
-                ) : (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-50 text-[9px] font-bold text-amber-500 dark:bg-amber-900/30 dark:text-amber-400">
-                    {listing.agency_name.charAt(0).toUpperCase()}
-                  </span>
-                )}
-                {listing.agency_name}
-              </Link>
+              {listing.owner_type === "agency" && listing.agency_slug ? (
+                <a
+                  href={getAgencyUrl(listing.agency_slug ?? "")}
+                  className="flex items-center gap-2 font-medium text-zinc-600 transition-colors hover:text-amber-500 dark:text-zinc-400 dark:hover:text-amber-400"
+                >
+                  {listing.agency_logo_url ? (
+                    <Image
+                      src={listing.agency_logo_url}
+                      alt={listing.agency_name ?? ""}
+                      width={20}
+                      height={20}
+                      sizes="20px"
+                      className="h-5 w-5 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-50 text-[9px] font-bold text-amber-500 dark:bg-amber-900/30 dark:text-amber-400">
+                      {(listing.agency_name ?? "A").charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  {listing.agency_name}
+                </a>
+              ) : (
+                <span className="flex items-center gap-2 font-medium text-zinc-600 dark:text-zinc-400">
+                  <User className="h-4 w-4 text-zinc-400 dark:text-zinc-500" />
+                  Particulier
+                </span>
+              )}
               <span className="text-zinc-300 dark:text-zinc-600">·</span>
               <span className="font-mono text-xs text-zinc-400 dark:text-zinc-500">
                 {formatListingRef(listing.reference_number)}
@@ -274,23 +282,27 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                   {tListings("details")}
                 </h2>
                 <div className="grid grid-cols-2 gap-3 rounded-xl border border-zinc-200 bg-white p-5 sm:grid-cols-3 dark:border-zinc-700 dark:bg-zinc-900">
-                  {Object.entries(listing.details).map(([key, value]) => (
+                  {Object.entries(listing.details).map(([key, value]) => {
+                    const label = tListings.has(`detail_${key}`) ? tListings(`detail_${key}`) : key.replace(/_/g, " ");
+                    const displayValue = typeof value === "boolean"
+                      ? value ? tListings("yes") : tListings("no")
+                      : String(value);
+                    return (
                     <div key={key} className="flex items-start gap-2">
                       <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-900/30">
                         <Check className="h-2.5 w-2.5 text-amber-500 dark:text-amber-400" />
                       </span>
                       <div>
                         <p className="text-xs capitalize text-zinc-500 dark:text-zinc-400">
-                          {key.replace(/_/g, " ")}
+                          {label}
                         </p>
                         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                          {typeof value === "boolean"
-                            ? value ? "Oui" : "Non"
-                            : String(value)}
+                          {displayValue}
                         </p>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -300,66 +312,95 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
           <div className="w-full shrink-0">
             <div className="sticky top-20 space-y-4">
 
-              {/* Agency contact card */}
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
-                {/* Card header */}
-                <div className="border-b border-zinc-200 px-5 py-4 dark:border-zinc-700">
-                  <div className="flex items-center gap-3">
-                    {listing.agency_logo_url ? (
-                      <Image
-                        src={listing.agency_logo_url}
-                        alt={listing.agency_name}
-                        width={48}
-                        height={48}
-                        sizes="48px"
-                        className="h-12 w-12 rounded-xl object-cover shadow-sm"
-                      />
-                    ) : (
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-lg font-bold text-amber-500 dark:bg-amber-900/30 dark:text-amber-400">
-                        {listing.agency_name.charAt(0).toUpperCase()}
+              {/* Contact card — different for agency vs individual */}
+              {listing.owner_type === "agency" && listing.agency_slug ? (
+                <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+                  {/* Agency header */}
+                  <div className="border-b border-zinc-200 px-5 py-4 dark:border-zinc-700">
+                    <div className="flex items-center gap-3">
+                      {listing.agency_logo_url ? (
+                        <Image
+                          src={listing.agency_logo_url}
+                          alt={listing.agency_name ?? ""}
+                          width={48}
+                          height={48}
+                          sizes="48px"
+                          className="h-12 w-12 rounded-xl object-cover shadow-sm"
+                        />
+                      ) : (
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-lg font-bold text-amber-500 dark:bg-amber-900/30 dark:text-amber-400">
+                          {(listing.agency_name ?? "A").charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="font-display font-semibold text-zinc-900 dark:text-zinc-50">
+                          {listing.agency_name}
+                        </h3>
+                        <a
+                          href={getAgencyUrl(listing.agency_slug ?? "")}
+                          className="text-xs text-amber-500 transition-colors hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300"
+                        >
+                          Voir la vitrine →
+                        </a>
                       </div>
-                    )}
-                    <div>
-                      <h3 className="font-display font-semibold text-zinc-900 dark:text-zinc-50">
-                        {listing.agency_name}
-                      </h3>
-                      <Link
-                        href={`/a/${listing.agency_slug}`}
-                        className="text-xs text-amber-500 transition-colors hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300"
-                      >
-                        Voir la vitrine →
-                      </Link>
                     </div>
                   </div>
-                </div>
 
-                {/* CTA buttons */}
-                <div className="space-y-3 p-5">
-                  {listing.agency_phone ? (
+                  {/* CTA buttons */}
+                  <div className="space-y-3 p-5">
+                    {listing.agency_phone ? (
+                      <a
+                        href={`tel:${listing.agency_phone}`}
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-3 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:text-zinc-950"
+                      >
+                        <Phone className="h-4 w-4" />
+                        {t("contact_agency")}
+                      </a>
+                    ) : (
+                      <a
+                        href={getAgencyUrl(listing.agency_slug ?? "")}
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-3 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:text-zinc-950"
+                      >
+                        {t("contact_agency")}
+                      </a>
+                    )}
+
                     <a
-                      href={`tel:${listing.agency_phone}`}
-                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-3 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:text-zinc-950"
+                      href={getAgencyUrl(listing.agency_slug ?? "")}
+                      className="flex w-full items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                     >
-                      <Phone className="h-4 w-4" />
-                      {t("contact_agency")}
+                      Voir toutes les annonces
                     </a>
-                  ) : (
-                    <Link
-                      href={`/a/${listing.agency_slug}`}
-                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-3 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:text-zinc-950"
-                    >
-                      {t("contact_agency")}
-                    </Link>
-                  )}
-
-                  <Link
-                    href={`/a/${listing.agency_slug}`}
-                    className="flex w-full items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                  >
-                    Voir toutes les annonces
-                  </Link>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* Individual listing — simple contact card */
+                <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+                  <div className="px-5 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800">
+                        <User className="h-6 w-6 text-zinc-400 dark:text-zinc-500" />
+                      </div>
+                      <div>
+                        <h3 className="font-display font-semibold text-zinc-900 dark:text-zinc-50">
+                          Annonce particulier
+                        </h3>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                          Publiée par un particulier
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="border-t border-zinc-200 p-5 dark:border-zinc-700">
+                    <Link
+                      href="/search"
+                      className="flex w-full items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                    >
+                      Voir d&apos;autres annonces
+                    </Link>
+                  </div>
+                </div>
+              )}
 
               {/* Private note */}
               <ListingNoteWidget

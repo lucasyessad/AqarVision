@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 import { searchListingsAction } from "@/features/marketplace/actions/search.action";
 import { getWilayas } from "@/features/marketplace/services/search.service";
@@ -63,6 +63,7 @@ export default async function SearchPage({
   if (sp.price_max) filters.price_max = Number(sp.price_max);
   if (sp.rooms_min) filters.rooms_min = Number(sp.rooms_min);
   if (sp.surface_min) filters.surface_min = Number(sp.surface_min);
+  if (sp.sort) filters.sort = String(sp.sort);
 
   const supabase = await createClient();
   const [result, wilayas, viewedIds] = await Promise.all([

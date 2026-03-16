@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { getAgencyUrl } from "@/lib/agency-url";
 import { Link } from "@/lib/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { signOutAction } from "@/features/auth/actions/auth.action";
@@ -146,7 +147,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
       {agencySlug && (
         <div className="px-3 pb-3">
           <a
-            href={`/fr/a/${agencySlug}`}
+            href={getAgencyUrl(agencySlug)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-medium text-zinc-700 transition-all hover:bg-zinc-100"

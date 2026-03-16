@@ -127,29 +127,7 @@ export default async function HomePage({
               en Algérie
             </h1>
 
-            {/* Transaction pills */}
-            <div className="mb-6 flex gap-2">
-              {[
-                { label: "Acheter", href: "/search?listing_type=sale", active: true },
-                { label: "Louer",   href: "/search?listing_type=rent",    active: false },
-                { label: "Vacances", href: "/search?listing_type=vacation", active: false },
-              ].map(({ label, href, active }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  locale={locale}
-                  className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
-                    active
-                      ? "bg-amber-500 text-white"
-                      : "bg-white/10 text-white/65 backdrop-blur-sm"
-                  }`}
-                >
-                  {label}
-                </Link>
-              ))}
-            </div>
-
-            {/* Search bar */}
+            {/* Transaction pills + Search bar (interactive) */}
             <HomeSearchBar locale={locale} wilayas={wilayas} />
 
             {/* Subtitle */}

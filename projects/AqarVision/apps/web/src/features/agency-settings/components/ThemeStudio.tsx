@@ -2,6 +2,9 @@
 
 import { useActionState, useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { getAgencyUrl } from "@/lib/agency-url";
+import { ThemeLoader } from "@/components/agency/themes/ThemeLoader";
+import type { SearchResultDto } from "@/features/marketplace/types/search.types";
 import { THEME_REGISTRY } from "@/lib/themes/registry";
 import { getThemeById } from "@/lib/themes";
 import { isThemeAvailable } from "@/lib/plan-gating";
@@ -30,6 +33,19 @@ interface ThemeStudioProps {
   agencySlug: string;
   agencyDescription: string | null;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Mock listings for expanded preview
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PREVIEW_LISTINGS: SearchResultDto[] = [
+  { id: "p1", agency_id: "", current_status: "published", current_price: 8500000, currency: "DZD", listing_type: "sale", property_type: "apartment", surface_m2: 95, rooms: 4, bathrooms: 1, wilaya_code: "16", wilaya_name: "Alger", commune_name: "Hydra", commune_id: 1, published_at: null, created_at: "", title: "Appartement F4 lumineux", slug: "demo-1", cover_url: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 1 },
+  { id: "p2", agency_id: "", current_status: "published", current_price: 25000000, currency: "DZD", listing_type: "sale", property_type: "villa", surface_m2: 220, rooms: 6, bathrooms: 2, wilaya_code: "16", wilaya_name: "Alger", commune_name: "El Biar", commune_id: 2, published_at: null, created_at: "", title: "Villa avec piscine", slug: "demo-2", cover_url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 2 },
+  { id: "p3", agency_id: "", current_status: "published", current_price: 45000, currency: "DZD", listing_type: "rent", property_type: "apartment", surface_m2: 65, rooms: 3, bathrooms: 1, wilaya_code: "31", wilaya_name: "Oran", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "F3 meublé centre-ville", slug: "demo-3", cover_url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 3 },
+  { id: "p4", agency_id: "", current_status: "published", current_price: 15000000, currency: "DZD", listing_type: "sale", property_type: "terrain", surface_m2: 500, rooms: null, bathrooms: null, wilaya_code: "09", wilaya_name: "Blida", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "Terrain constructible", slug: "demo-4", cover_url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 4 },
+  { id: "p5", agency_id: "", current_status: "published", current_price: 12000000, currency: "DZD", listing_type: "sale", property_type: "apartment", surface_m2: 110, rooms: 5, bathrooms: 2, wilaya_code: "16", wilaya_name: "Alger", commune_name: "Bir Mourad Raïs", commune_id: 3, published_at: null, created_at: "", title: "Appartement F5 avec balcon", slug: "demo-5", cover_url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 5 },
+  { id: "p6", agency_id: "", current_status: "published", current_price: 35000000, currency: "DZD", listing_type: "sale", property_type: "villa", surface_m2: 350, rooms: 7, bathrooms: 3, wilaya_code: "25", wilaya_name: "Constantine", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "Villa luxe avec jardin", slug: "demo-6", cover_url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 6 },
+];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Live preview — browser-frame mockup
@@ -392,6 +408,7 @@ export function ThemeStudio({
   );
   const [logoUrl, setLogoUrl] = useState<string | null>(currentLogoUrl);
   const [coverUrl, setCoverUrl] = useState<string | null>(currentCoverUrl);
+  const [previewExpanded, setPreviewExpanded] = useState(false);
 
   const pathname = usePathname();
   const locale = pathname.split("/")[1] || "fr";
@@ -401,6 +418,34 @@ export function ThemeStudio({
   >(updateAgencyThemeAction, null);
 
   const manifest = getThemeById(selectedTheme);
+
+  // Preload theme component on mount (avoids lag on first click)
+  useEffect(() => {
+    const loaders: Record<string, () => Promise<unknown>> = {
+      "luxe-noir": () => import("@/components/agency/themes/LuxeNoir"),
+      "mediterranee": () => import("@/components/agency/themes/Mediterranee"),
+      "neo-brutalist": () => import("@/components/agency/themes/NeoBrutalist"),
+      "marocain-contemporain": () => import("@/components/agency/themes/MarocainContemporain"),
+      "pastel-doux": () => import("@/components/agency/themes/PastelDoux"),
+      "corporate-navy": () => import("@/components/agency/themes/CorporateNavy"),
+      "editorial": () => import("@/components/agency/themes/Editorial"),
+      "art-deco": () => import("@/components/agency/themes/ArtDeco"),
+      "organique-eco": () => import("@/components/agency/themes/OrganiqueEco"),
+      "swiss-minimal": () => import("@/components/agency/themes/SwissMinimal"),
+    };
+    const loader = loaders[selectedTheme];
+    if (loader) loader();
+  }, [selectedTheme]);
+
+  // Close expanded preview on Escape
+  useEffect(() => {
+    if (!previewExpanded) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPreviewExpanded(false);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [previewExpanded]);
 
   function selectTheme(id: string) {
     setSelectedTheme(id);
@@ -673,7 +718,7 @@ export function ThemeStudio({
                       )}
                     </button>
                     <a
-                      href={`/${locale}/a/${agencySlug}`}
+                      href={getAgencyUrl(agencySlug)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 px-4 py-3 text-sm font-medium text-zinc-950 transition-colors hover:bg-gray-50"
@@ -725,30 +770,105 @@ export function ThemeStudio({
               <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
                 Aperçu en direct
               </p>
-              <a
-                href={`/${locale}/a/${agencySlug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 text-[10px] text-zinc-400 transition-opacity hover:opacity-60"
+              <button
+                type="button"
+                onClick={() => setPreviewExpanded(true)}
+                className="flex items-center gap-1 text-[10px] font-medium text-amber-500 transition-opacity hover:opacity-70"
               >
                 <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                 </svg>
-                Ouvrir
-              </a>
+                Agrandir
+              </button>
             </div>
-            <LivePreview
-              themeId={selectedTheme}
-              primary={primaryColor}
-              accent={accentColor}
-              secondary={secondaryColor}
-              logoUrl={logoUrl}
-              coverUrl={coverUrl}
-              agencyName={agencyName}
-              description={agencyDescription}
-            />
+            {/* Clickable mini preview */}
+            <button
+              type="button"
+              onClick={() => setPreviewExpanded(true)}
+              className="w-full text-start transition-transform hover:scale-[1.02]"
+            >
+              <LivePreview
+                themeId={selectedTheme}
+                primary={primaryColor}
+                accent={accentColor}
+                secondary={secondaryColor}
+                logoUrl={logoUrl}
+                coverUrl={coverUrl}
+                agencyName={agencyName}
+                description={agencyDescription}
+              />
+            </button>
           </div>
         </div>
+
+        {/* Expanded preview overlay — renders theme component inline */}
+        {previewExpanded && (
+          <div className="fixed inset-0 z-50 bg-black/90">
+            {/* Top bar */}
+            <div className="flex items-center justify-between px-6 py-4">
+              <div className="flex items-center gap-3">
+                <span className="rounded-lg bg-white/10 px-3 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
+                  {manifest?.name ?? selectedTheme}
+                </span>
+                <div className="flex gap-1.5">
+                  <div className="h-5 w-5 rounded-full shadow-sm ring-1 ring-white/20" style={{ background: primaryColor }} />
+                  <div className="h-5 w-5 rounded-full shadow-sm ring-1 ring-white/20" style={{ background: accentColor }} />
+                  <div className="h-5 w-5 rounded-full shadow-sm ring-1 ring-white/20" style={{ background: secondaryColor }} />
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <a
+                  href={getAgencyUrl(agencySlug)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                >
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  </svg>
+                  Ouvrir dans un nouvel onglet
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setPreviewExpanded(false)}
+                  className="rounded-full bg-white/10 p-2.5 text-white transition-colors hover:bg-white/20"
+                  aria-label="Fermer"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable preview content */}
+            <div className="mx-6 h-[calc(100vh-80px)] overflow-y-auto rounded-t-2xl bg-white shadow-2xl">
+              <ThemeLoader
+                themeId={selectedTheme}
+                agency={{
+                  id: "",
+                  name: agencyName,
+                  slug: agencySlug,
+                  description: agencyDescription,
+                  logo_url: logoUrl,
+                  cover_url: coverUrl,
+                  phone: null,
+                  email: null,
+                  is_verified: true,
+                  created_at: new Date().toISOString(),
+                  branches: [],
+                  listing_count: 6,
+                  theme: selectedTheme,
+                  primary_color: primaryColor,
+                  accent_color: accentColor,
+                  secondary_color: secondaryColor,
+                }}
+                listings={PREVIEW_LISTINGS}
+                locale={locale}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

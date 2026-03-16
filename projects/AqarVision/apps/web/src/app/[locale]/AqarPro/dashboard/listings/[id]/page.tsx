@@ -61,6 +61,11 @@ export default async function ListingDetailPage({
   if (!listing) notFound();
   if (listing.agency_id !== membership.agency_id) notFound();
 
+  // Draft listings should be edited via the wizard
+  if (listing.current_status === "draft") {
+    redirect(`/${locale}/AqarPro/dashboard/listings/${id}/edit`);
+  }
+
   const { data: listingMedia } = await supabase
     .from("listing_media")
     .select("id, storage_path, file_name, mime_type, size_bytes, width_px, height_px, position, is_cover, created_at")

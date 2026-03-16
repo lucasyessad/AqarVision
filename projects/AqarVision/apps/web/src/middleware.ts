@@ -43,7 +43,7 @@ const STATIC_ASSET_PATTERN =
 
 // Security headers applied to every non-asset response
 const SECURITY_HEADERS: Record<string, string> = {
-  "X-Frame-Options": "DENY",
+  "X-Frame-Options": "SAMEORIGIN",
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
@@ -55,7 +55,8 @@ const SECURITY_HEADERS: Record<string, string> = {
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob:",
     "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://api.maptiler.com https://*.openstreetmap.org",
-    "frame-src https://js.stripe.com https://hooks.stripe.com",
+    "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
+    "frame-ancestors 'self'",
   ].join("; "),
 };
 

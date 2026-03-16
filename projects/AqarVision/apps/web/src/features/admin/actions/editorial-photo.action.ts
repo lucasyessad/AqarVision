@@ -3,6 +3,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { withSuperAdminAuth } from "@/lib/auth/with-super-admin-auth";
 import { revalidatePath } from "next/cache";
+import { fail } from "@/types/action-result";
+import type { ActionResult } from "@/types/action-result";
 
 const EDITORIAL_KEYS = ["editorial_hero_url", "editorial_split_url", "editorial_fullbleed_url"] as const;
 type EditorialKey = (typeof EDITORIAL_KEYS)[number];
@@ -15,9 +17,9 @@ function isEditorialKey(key: string): key is EditorialKey {
 export async function getEditorialUploadUrlAction(
   key: string,
   fileName: string
-): Promise<{ success: true; signed_url: string; path: string } | { success: false; error: string }> {
+): Promise<ActionResult<{ signed_url: string; path: string }>> {
   if (!isEditorialKey(key)) {
-    return { success: false, error: "Clé invalide" };
+    return fail("INVALID_KEY", "Clé invalide");
   }
 
   return withSuperAdminAuth(async () => {
@@ -41,9 +43,9 @@ export async function getEditorialUploadUrlAction(
 export async function saveEditorialPhotoAction(
   key: string,
   path: string
-): Promise<{ success: true; url: string } | { success: false; error: string }> {
+): Promise<ActionResult<{ url: string }>> {
   if (!isEditorialKey(key)) {
-    return { success: false, error: "Clé invalide" };
+    return fail("INVALID_KEY", "Clé invalide");
   }
 
   return withSuperAdminAuth(async () => {

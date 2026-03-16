@@ -208,7 +208,7 @@ export default async function ListingsPage({
                     </td>
                     <td className="px-6 py-4 text-end">
                       <Link
-                        href={`/AqarPro/dashboard/listings/${listing.id}`}
+                        href={`/AqarPro/dashboard/listings/${listing.id}/edit`}
                         className="text-xs font-medium text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
                       >
                         Modifier →

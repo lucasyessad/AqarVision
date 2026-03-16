@@ -197,6 +197,7 @@ const config: Config = {
         "slide-down": { from: { transform: "translateY(-4px)", opacity: "0" }, to: { transform: "translateY(0)", opacity: "1" } },
         "scale-in":   { from: { transform: "scale(0.97)", opacity: "0" }, to: { transform: "scale(1)", opacity: "1" } },
         "shimmer":    { "0%": { backgroundPosition: "-200% 0" }, "100%": { backgroundPosition: "200% 0" } },
+        "shake":      { "0%, 100%": { transform: "translateX(0)" }, "20%, 60%": { transform: "translateX(-4px)" }, "40%, 80%": { transform: "translateX(4px)" } },
         // Legacy
         "aqar-pulse":   { "0%, 100%": { opacity: "1" }, "50%": { opacity: "0.4" } },
         "aqar-fade-up": { from: { opacity: "0", transform: "translateY(20px)" }, to: { opacity: "1", transform: "translateY(0)" } },
@@ -209,6 +210,7 @@ const config: Config = {
         "slide-down": "slide-down 200ms ease-out",
         "scale-in":   "scale-in 200ms ease-out",
         "shimmer":    "shimmer 2s ease-in-out infinite",
+        "shake":      "shake 400ms ease-in-out",
         // Legacy
         "aqar-pulse":   "aqar-pulse 2.5s infinite",
         "aqar-fade-up": "aqar-fade-up 0.8s ease both",

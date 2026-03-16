@@ -55,7 +55,8 @@ export interface SearchResponse {
 
 export interface ListingDetailPublicDto {
   id: string;
-  agency_id: string;
+  agency_id: string | null;
+  owner_type: "agency" | "individual";
   current_status: ListingStatus;
   current_price: number;
   currency: string;
@@ -76,8 +77,8 @@ export interface ListingDetailPublicDto {
   description: string;
   slug: string;
   media: ListingMediaDto[];
-  agency_name: string;
-  agency_slug: string;
+  agency_name: string | null;
+  agency_slug: string | null;
   agency_logo_url: string | null;
   agency_phone: string | null;
   translations: ListingTranslationPublicDto[];

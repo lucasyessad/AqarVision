@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { createListingAction } from "../actions/create-listing.action";
+import { updateListingAction } from "../actions/update-listing.action";
 import { upsertTranslationAction } from "../actions/upsert-translation.action";
 import {
   getSignedUploadUrlAction,
   finalizeMediaUploadAction,
 } from "@/features/media/actions/upload.action";
 import { getCommunesForWilaya } from "@/features/marketplace/actions/get-communes.action";
+import { generateDescriptionIndividualAction } from "@/features/ai/actions/generate-description-individual.action";
 import { LISTING_TYPES, PROPERTY_TYPES } from "../schemas/listing.schema";
 import type { PropertyType } from "../schemas/listing.schema";
 
@@ -224,7 +226,7 @@ interface PhotoEntry {
   preview: string;
 }
 
-interface WizardData {
+export interface WizardData {
   // Step 1
   listing_type: string;
   property_type: string;
@@ -397,12 +399,21 @@ function AmenityToggle({
 interface CreateListingWizardProps {
   agencyId: string;
   wilayas: { code: string; name: string }[];
+  mode?: "create" | "edit";
+  listingId?: string;
+  expectedVersion?: number;
+  initialData?: Partial<WizardData>;
 }
 
-export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardProps) {
+export function CreateListingWizard({ agencyId, wilayas, mode = "create", listingId, expectedVersion, initialData }: CreateListingWizardProps) {
+  const isEdit = mode === "edit";
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const [data, setData] = useState<WizardData>(() => buildInitialData(agencyId));
+  const [data, setData] = useState<WizardData>(() => {
+    const base = buildInitialData(agencyId);
+    if (!initialData) return base;
+    return { ...base, ...initialData } as WizardData;
+  });
   const [communes, setCommunes] = useState<{ id: number; name_fr: string }[]>([]);
   const [photos, setPhotos] = useState<PhotoEntry[]>([]);
   const [coverIndex, setCoverIndex] = useState(0);
@@ -411,8 +422,54 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
   const [submitProgress, setSubmitProgress] = useState("");
   const [submitError, setSubmitError] = useState("");
   const photoInputRef = useRef<HTMLInputElement>(null);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiError, setAiError] = useState("");
 
   const propertyType = data.property_type as PropertyType | "";
+
+  // ── AI description generation ──────────────────────────────────────────────
+
+  function handleGenerateAiDescription() {
+    setAiError("");
+    setAiGenerating(true);
+    startTransition(async () => {
+      try {
+        // Collect amenity details
+        const details: Record<string, unknown> = {};
+        for (const key of Object.keys(data)) {
+          if (key.startsWith("has_") && data[key as keyof WizardData]) {
+            details[key] = true;
+          }
+        }
+        if (data.furnished) details.furnished = true;
+
+        const result = await generateDescriptionIndividualAction({
+          listing_type: data.listing_type,
+          property_type: data.property_type,
+          current_price: Number(data.current_price) || 0,
+          surface_m2: data.surface_m2 ? Number(data.surface_m2) : undefined,
+          rooms: data.rooms || undefined,
+          bathrooms: data.bathrooms || undefined,
+          floor: data.floor ? Number(data.floor) : undefined,
+          wilaya_code: data.wilaya_code,
+          commune_name: communes.find((c) => String(c.id) === data.commune_id)?.name_fr,
+          details,
+          condition: data.condition || undefined,
+          year_built: data.year_built ? Number(data.year_built) : undefined,
+        });
+
+        if (result.success) {
+          setData((prev) => ({ ...prev, description_fr: result.data.text }));
+        } else {
+          setAiError(result.error.message);
+        }
+      } catch {
+        setAiError("La génération a échoué. Réessayez.");
+      } finally {
+        setAiGenerating(false);
+      }
+    });
+  }
 
   // ── Field helpers ──────────────────────────────────────────────────────────
 
@@ -494,34 +551,60 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
     }
     if (data.furnished) details.furnished = true;
 
-    // 2 — Create listing
-    setSubmitProgress("Création de l'annonce…");
-    const formData = new FormData();
-    formData.set("agency_id", data.agency_id);
-    formData.set("listing_type", data.listing_type);
-    formData.set("property_type", data.property_type);
-    formData.set("current_price", data.current_price);
-    formData.set("wilaya_code", data.wilaya_code);
-    if (data.commune_id) formData.set("commune_id", data.commune_id);
-    if (data.surface_m2) formData.set("surface_m2", data.surface_m2);
-    if (data.rooms > 0) formData.set("rooms", String(data.rooms));
-    if (data.bathrooms > 0) formData.set("bathrooms", String(data.bathrooms));
-    if (Object.keys(details).length > 0) formData.set("details", JSON.stringify(details));
+    // 2 — Create or update listing
+    let resolvedListingId: string;
 
-    const createResult = await createListingAction(null, formData);
-    if (!createResult.success) {
-      setSubmitError(createResult.error.message);
-      setIsSubmitting(false);
-      return;
+    if (isEdit && listingId) {
+      setSubmitProgress("Mise à jour de l'annonce…");
+      const formData = new FormData();
+      formData.set("listing_id", listingId);
+      formData.set("expected_version", String(expectedVersion ?? 1));
+      formData.set("listing_type", data.listing_type);
+      formData.set("property_type", data.property_type);
+      formData.set("current_price", data.current_price);
+      formData.set("wilaya_code", data.wilaya_code);
+      if (data.commune_id) formData.set("commune_id", data.commune_id);
+      if (data.surface_m2) formData.set("surface_m2", data.surface_m2);
+      if (data.rooms > 0) formData.set("rooms", String(data.rooms));
+      if (data.bathrooms > 0) formData.set("bathrooms", String(data.bathrooms));
+      if (Object.keys(details).length > 0) formData.set("details", JSON.stringify(details));
+
+      const updateResult = await updateListingAction(null, formData);
+      if (!updateResult.success) {
+        setSubmitError(updateResult.error.message);
+        setIsSubmitting(false);
+        return;
+      }
+      resolvedListingId = listingId;
+    } else {
+      setSubmitProgress("Création de l'annonce…");
+      const formData = new FormData();
+      formData.set("agency_id", data.agency_id);
+      formData.set("listing_type", data.listing_type);
+      formData.set("property_type", data.property_type);
+      formData.set("current_price", data.current_price);
+      formData.set("wilaya_code", data.wilaya_code);
+      if (data.commune_id) formData.set("commune_id", data.commune_id);
+      if (data.surface_m2) formData.set("surface_m2", data.surface_m2);
+      if (data.rooms > 0) formData.set("rooms", String(data.rooms));
+      if (data.bathrooms > 0) formData.set("bathrooms", String(data.bathrooms));
+      if (Object.keys(details).length > 0) formData.set("details", JSON.stringify(details));
+
+      const createResult = await createListingAction(null, formData);
+      if (!createResult.success) {
+        setSubmitError(createResult.error.message);
+        setIsSubmitting(false);
+        return;
+      }
+      resolvedListingId = createResult.data.listing_id;
     }
-    const listingId = createResult.data.listing_id;
 
     // 3 — Upsert FR translation
     if (data.title_fr && data.description_fr) {
       setSubmitProgress("Enregistrement de la description…");
-      const slug = generateSlug(data.title_fr, listingId.slice(0, 8));
+      const slug = generateSlug(data.title_fr, resolvedListingId.slice(0, 8));
       await upsertTranslationAction({
-        listing_id: listingId,
+        listing_id: resolvedListingId,
         locale: "fr",
         title: data.title_fr.trim(),
         description: data.description_fr.trim(),
@@ -529,7 +612,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
       });
     }
 
-    // 4 — Upload photos
+    // 4 — Upload photos (skip if edit mode with no new photos)
     if (photos.length > 0) {
       const supabase = createClient();
       for (let i = 0; i < photos.length; i++) {
@@ -538,7 +621,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
         setSubmitProgress(`Upload photo ${i + 1} / ${photos.length}…`);
 
         const urlResult = await getSignedUploadUrlAction({
-          listing_id: listingId,
+          listing_id: resolvedListingId,
           file_name: photo.file.name,
           content_type: photo.file.type as "image/jpeg" | "image/png" | "image/webp",
           file_size_bytes: photo.file.size,
@@ -555,7 +638,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
         if (uploadError) continue;
 
         await finalizeMediaUploadAction({
-          listing_id: listingId,
+          listing_id: resolvedListingId,
           storage_path: urlResult.data.storage_path,
           content_type: photo.file.type,
           file_size_bytes: photo.file.size,
@@ -564,7 +647,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
     }
 
     // 5 — Navigate
-    router.push(`/AqarPro/dashboard/listings/${listingId}/edit`);
+    router.push(`/AqarPro/dashboard/listings/${resolvedListingId}`);
   }
 
   // ── Visible amenity categories ─────────────────────────────────────────────
@@ -593,7 +676,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
         </Link>
       </div>
 
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">Nouvelle annonce</h1>
+      <h1 className="mb-6 text-2xl font-bold text-zinc-900">{isEdit ? "Modifier l\u2019annonce" : "Nouvelle annonce"}</h1>
 
       <StepIndicator current={step} total={totalSteps} />
 
@@ -613,6 +696,9 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
         {step === 1 && (
           <div className="space-y-7">
             <h2 className="text-lg font-semibold text-zinc-800">Type d&apos;annonce &amp; de bien</h2>
+            {isEdit && (
+              <p className="text-sm text-amber-600 dark:text-amber-400">Le type de transaction et de bien ne peut pas être modifié.</p>
+            )}
 
             {/* Listing type */}
             <div>
@@ -626,6 +712,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
                     <button
                       key={type}
                       type="button"
+                      disabled={isEdit}
                       onClick={() => set("listing_type", type)}
                       className={[
                         "flex w-full items-center gap-4 rounded-xl border-2 p-4 text-left transition-all",
@@ -660,6 +747,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
                     <button
                       key={type}
                       type="button"
+                      disabled={isEdit}
                       onClick={() => set("property_type", type)}
                       className={[
                         "flex flex-col items-center gap-2 rounded-xl border-2 p-3.5 text-center transition-all",
@@ -682,6 +770,9 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
         {step === 2 && (
           <div className="space-y-5">
             <h2 className="text-lg font-semibold text-zinc-800">Localisation &amp; prix</h2>
+            {isEdit && (
+              <p className="text-sm text-amber-600 dark:text-amber-400">La wilaya ne peut pas être modifiée.</p>
+            )}
 
             {/* Wilaya */}
             <div>
@@ -690,6 +781,7 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
               </label>
               <select
                 value={data.wilaya_code}
+                disabled={isEdit}
                 onChange={(e) => {
                   const code = e.target.value;
                   set("wilaya_code", code);
@@ -995,14 +1087,57 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
               </div>
             </div>
 
+            {/* AI generation panel */}
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100">
+                  <svg className="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-zinc-800">Générer avec l&apos;IA</p>
+                  <p className="mt-0.5 text-xs text-zinc-500">
+                    Claude rédige une description professionnelle à partir de vos informations. Vous pouvez la modifier ensuite.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleGenerateAiDescription}
+                    disabled={aiGenerating || !data.wilaya_code || !data.listing_type}
+                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-xs font-semibold text-zinc-950 transition-opacity hover:opacity-90 disabled:opacity-50"
+                  >
+                    {aiGenerating ? (
+                      <>
+                        <svg className="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Rédaction en cours...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                        </svg>
+                        Générer la description
+                      </>
+                    )}
+                  </button>
+                  {aiError && (
+                    <p className="mt-2 text-xs text-red-500">{aiError}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Tips */}
             <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
-              <p className="mb-2 text-xs font-semibold text-blue-700">💡 Conseils pour une annonce de qualité</p>
+              <p className="mb-2 text-xs font-semibold text-blue-700">Conseils pour une annonce de qualité</p>
               <ul className="space-y-1 text-xs text-blue-600">
-                <li>• Mentionnez le quartier précis et les commodités à proximité</li>
-                <li>• Indiquez la luminosité, l&apos;état et les rénovations récentes</li>
-                <li>• Précisez les charges mensuelles et la disponibilité</li>
-                <li>• Évitez les majuscules excessives et les abréviations</li>
+                <li>- Mentionnez le quartier précis et les commodités à proximité</li>
+                <li>- Indiquez la luminosité, l&apos;état et les rénovations récentes</li>
+                <li>- Précisez les charges mensuelles et la disponibilité</li>
+                <li>- Évitez les majuscules excessives et les abréviations</li>
               </ul>
             </div>
           </div>
@@ -1169,14 +1304,14 @@ export function CreateListingWizard({ agencyId, wilayas }: CreateListingWizardPr
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  {submitProgress || "Création…"}
+                  {submitProgress || (isEdit ? "Enregistrement…" : "Création…")}
                 </>
               ) : (
                 <>
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Créer l&apos;annonce
+                  {isEdit ? "Enregistrer" : "Créer l\u2019annonce"}
                   {photos.length > 0 && (
                     <span className="ms-1 rounded-full bg-white/20 px-2 py-0.5 text-xs">
                       + {photos.length} photo{photos.length > 1 ? "s" : ""}

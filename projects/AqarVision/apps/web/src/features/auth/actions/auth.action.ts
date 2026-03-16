@@ -1,8 +1,15 @@
 "use server";
 
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { rateLimit } from "@/lib/rate-limit";
 import { SignInSchema, SignUpSchema, ResetPasswordSchema } from "../schemas/auth.schema";
+
+async function getClientIp(): Promise<string> {
+  const hdrs = await headers();
+  return hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+}
 
 // ── Sign In ──────────────────────────────────
 
@@ -16,6 +23,15 @@ export async function signInAction(
   _prevState: AuthFormState,
   formData: FormData
 ): Promise<AuthFormState> {
+  const ip = await getClientIp();
+  const rl = await rateLimit(`signIn:${ip}`, 5, 60_000);
+  if (!rl.success) {
+    return {
+      success: false,
+      error: { code: "RATE_LIMITED", message: "Trop de tentatives. Réessayez dans quelques minutes." },
+    };
+  }
+
   const email = formData.get("email") as string;
 
   const parsed = SignInSchema.safeParse({
@@ -74,6 +90,15 @@ export async function signInProAction(
   _prevState: AuthFormState,
   formData: FormData
 ): Promise<AuthFormState> {
+  const ip = await getClientIp();
+  const rl = await rateLimit(`signInPro:${ip}`, 5, 60_000);
+  if (!rl.success) {
+    return {
+      success: false,
+      error: { code: "RATE_LIMITED", message: "Trop de tentatives. Réessayez dans quelques minutes." },
+    };
+  }
+
   const email = formData.get("email") as string;
 
   const parsed = SignInSchema.safeParse({
@@ -140,6 +165,15 @@ export async function signUpAction(
   _prevState: SignUpFormState,
   formData: FormData
 ): Promise<SignUpFormState> {
+  const ip = await getClientIp();
+  const rl = await rateLimit(`signUp:${ip}`, 5, 60_000);
+  if (!rl.success) {
+    return {
+      success: false,
+      error: { code: "RATE_LIMITED", message: "Trop de tentatives. Réessayez dans quelques minutes." },
+    };
+  }
+
   const email = formData.get("email") as string;
   const fullName = formData.get("full_name") as string;
 
@@ -223,6 +257,18 @@ export async function forgotPasswordAction(
 ): Promise<ForgotPasswordFormState> {
   const email = formData.get("email") as string;
   const locale = (formData.get("locale") as string) || "fr";
+
+  // Rate limit by both IP and email to prevent abuse
+  const ip = await getClientIp();
+  const rlIp = await rateLimit(`forgotPwd:${ip}`, 3, 600_000);
+  const rlEmail = email ? await rateLimit(`forgotPwd:${email.toLowerCase()}`, 3, 600_000) : { success: true };
+  if (!rlIp.success || !rlEmail.success) {
+    return {
+      success: false,
+      error: { code: "RATE_LIMITED", message: "Trop de tentatives. Réessayez dans quelques minutes." },
+      email,
+    };
+  }
 
   const parsed = ResetPasswordSchema.safeParse({ email });
 

@@ -190,7 +190,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
             )}
           </div>
 
-          {/* Price range */}
+          {/* Price range cards */}
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="rounded-lg bg-gray-50 p-4">
               <p className="text-xs font-medium text-zinc-400">Prix bas</p>
@@ -212,7 +212,45 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
             </div>
           </div>
 
-          <p className="mt-4 text-center text-xs text-zinc-400">
+          {/* Visual price bar */}
+          <div className="mt-5 px-2">
+            <div className="relative h-3 w-full overflow-hidden rounded-full bg-gradient-to-r from-emerald-200 via-amber-200 to-red-200">
+              <div
+                className="absolute top-0 h-full w-1 rounded-full bg-zinc-900 shadow-sm"
+                style={{
+                  left: `${Math.min(95, Math.max(5, ((state.data.price_median - state.data.price_min) / (state.data.price_max - state.data.price_min || 1)) * 100))}%`,
+                }}
+              />
+            </div>
+            <div className="mt-1.5 flex justify-between text-[10px] text-zinc-400">
+              <span>{formatCurrency(state.data.price_min)}</span>
+              <span>{formatCurrency(state.data.price_max)}</span>
+            </div>
+          </div>
+
+          {/* Price per m² + Comparables */}
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-4 py-3 text-center">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">Prix / m²</p>
+              <p className="mt-1 text-base font-bold text-zinc-800">
+                {state.data.price_per_m2_avg.toLocaleString("fr-DZ")} DZD
+              </p>
+            </div>
+            <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-4 py-3 text-center">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">Comparables</p>
+              <p className="mt-1 text-base font-bold text-zinc-800">
+                {state.data.sample_count} annonce{state.data.sample_count !== 1 ? "s" : ""}
+              </p>
+            </div>
+          </div>
+
+          {state.data.source === "market" && state.data.sample_count > 0 && (
+            <p className="mt-4 text-center text-xs font-medium text-emerald-600">
+              Basé sur {state.data.sample_count} annonces similaires dans la wilaya
+            </p>
+          )}
+
+          <p className="mt-2 text-center text-xs text-zinc-400">
             Fourchette indicative basée sur les données du marché. Les prix réels peuvent varier selon l&apos;état, l&apos;étage, les équipements et la localisation précise.
           </p>
         </div>

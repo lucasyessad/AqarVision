@@ -18,6 +18,7 @@ export interface EstimateResult {
   price_min: number;
   price_max: number;
   price_median: number;
+  price_per_m2_avg: number;
   currency: string;
   sample_count: number;
   source: "market" | "reference";
@@ -89,8 +90,8 @@ export async function estimatePrice(
 
   const supabase = await createClient();
 
-  // Try to find median price from existing listings
-  const { data: listings } = await supabase
+  // Find comparable listings (published, same type, same wilaya, similar surface ±50%)
+  let query = supabase
     .from("listings")
     .select("current_price, surface_m2")
     .eq("wilaya_code", wilaya_code)
@@ -102,7 +103,14 @@ export async function estimatePrice(
     .not("current_price", "is", null)
     .gt("current_price", 0)
     .gt("surface_m2", 0)
-    .limit(50);
+    .gte("surface_m2", surface_m2 * 0.5)
+    .lte("surface_m2", surface_m2 * 1.5);
+
+  if (rooms) {
+    query = query.gte("rooms", Math.max(0, rooms - 1)).lte("rooms", rooms + 1);
+  }
+
+  const { data: listings } = await query.limit(50);
 
   let source: "market" | "reference" = "reference";
   let pricePerM2: number;
@@ -148,6 +156,7 @@ export async function estimatePrice(
       price_min,
       price_max,
       price_median,
+      price_per_m2_avg: Math.round(pricePerM2),
       currency: "DZD",
       sample_count: listings?.length ?? 0,
       source,

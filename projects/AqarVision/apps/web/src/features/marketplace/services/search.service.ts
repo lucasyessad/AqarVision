@@ -50,6 +50,7 @@ interface SearchListingRow {
 interface ListingDetailRow {
   id: string;
   agency_id: string | null;
+  owner_type: string;
   current_status: string;
   current_price: number;
   currency: string;
@@ -191,10 +192,28 @@ export async function searchListings(
     );
   }
 
-  // Ordering & pagination
-  query = query
-    .order("published_at", { ascending: false })
-    .range(offset, offset + page_size - 1);
+  // Ordering
+  const sort = filters.sort ?? "newest";
+  switch (sort) {
+    case "oldest":
+      query = query.order("published_at", { ascending: true });
+      break;
+    case "price_asc":
+      query = query.order("current_price", { ascending: true });
+      break;
+    case "price_desc":
+      query = query.order("current_price", { ascending: false });
+      break;
+    case "surface_asc":
+      query = query.order("surface_m2", { ascending: false });
+      break;
+    default: // "newest"
+      query = query.order("published_at", { ascending: false });
+      break;
+  }
+
+  // Pagination
+  query = query.range(offset, offset + page_size - 1);
 
   const { data, error, count } = await query;
 
@@ -292,7 +311,7 @@ export async function getListingBySlug(
     .from("listings")
     .select(
       `
-      id, agency_id, current_status, current_price, currency,
+      id, agency_id, owner_type, current_status, current_price, currency,
       listing_type, property_type, surface_m2, rooms, bathrooms,
       wilaya_code, commune_id, published_at, created_at, details, reference_number,
       agencies(name, slug, logo_url, phone)
@@ -360,7 +379,8 @@ export async function getListingBySlug(
 
   return {
     id: typedListing.id,
-    agency_id: typedListing.agency_id as string,
+    agency_id: typedListing.agency_id,
+    owner_type: (typedListing.owner_type as "agency" | "individual") ?? "agency",
     current_status: typedListing.current_status as ListingDetailPublicDto["current_status"],
     current_price: typedListing.current_price,
     currency: typedListing.currency ?? "DZD",
@@ -389,8 +409,8 @@ export async function getListingBySlug(
         sort_order: m.sort_order,
       })
     ),
-    agency_name: typedListing.agencies?.name ?? "",
-    agency_slug: typedListing.agencies?.slug ?? "",
+    agency_name: typedListing.agencies?.name ?? null,
+    agency_slug: typedListing.agencies?.slug ?? null,
     agency_logo_url: typedListing.agencies?.logo_url ?? null,
     agency_phone: typedListing.agencies?.phone ?? null,
     translations: typedTranslations.map(

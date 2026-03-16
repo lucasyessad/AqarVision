@@ -33,4 +33,32 @@ test.describe("Page /search", () => {
     expect(pageContent).not.toContain("Application error");
     expect(pageContent).not.toContain("Internal Server Error");
   });
+
+  test("displays listing results", async ({ page }) => {
+    await page.goto("/fr/search");
+    await page.waitForLoadState("networkidle");
+    // Should have at least one listing card
+    const cards = page
+      .locator('[class*="rounded-xl"][class*="border"]')
+      .filter({ has: page.locator('a[href*="/annonce/"]') });
+    await expect(cards.first()).toBeVisible({ timeout: 10000 });
+  });
+
+  test("filters open and close", async ({ page }) => {
+    await page.goto("/fr/search");
+    // Click Type d'annonce filter
+    await page.getByRole("button", { name: /Type d'annonce/i }).click();
+    // Dropdown should appear
+    await expect(page.getByText("Vente")).toBeVisible();
+    // Click outside to close
+    await page.locator("body").click({ position: { x: 10, y: 10 } });
+  });
+
+  test("sort changes order", async ({ page }) => {
+    await page.goto("/fr/search");
+    await page.waitForLoadState("networkidle");
+    const select = page.locator("select");
+    await select.selectOption("price_asc");
+    await expect(page).toHaveURL(/sort=price_asc/);
+  });
 });

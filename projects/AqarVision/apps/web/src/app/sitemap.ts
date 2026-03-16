@@ -4,6 +4,18 @@ import { createClient } from "@/lib/supabase/server";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const LOCALES = ["fr", "ar", "en", "es"] as const;
 
+/** Derive the agency subdomain URL server-side from NEXT_PUBLIC_SITE_URL */
+function getAgencySubdomainUrl(slug: string): string {
+  try {
+    const url = new URL(BASE_URL);
+    const protocol = url.protocol;
+    const host = url.host;
+    return `${protocol}//${slug}.${host}`;
+  } catch {
+    return `http://${slug}.localhost:3000`;
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient();
   const entries: MetadataRoute.Sitemap = [];
@@ -63,12 +75,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   if (agencies) {
     for (const agency of agencies) {
+      const agencyBaseUrl = getAgencySubdomainUrl(agency.slug);
       for (const locale of LOCALES) {
+        // Subdomain URL (primary)
+        entries.push({
+          url: `${agencyBaseUrl}/${locale}`,
+          lastModified: new Date(agency.updated_at as string),
+          changeFrequency: "weekly",
+          priority: 0.7,
+        });
+        // Legacy path-based URL (fallback / canonical alternate)
         entries.push({
           url: `${BASE_URL}/${locale}/a/${agency.slug}`,
           lastModified: new Date(agency.updated_at as string),
           changeFrequency: "weekly",
-          priority: 0.7,
+          priority: 0.5,
         });
       }
     }

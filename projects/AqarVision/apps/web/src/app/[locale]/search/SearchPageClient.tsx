@@ -295,7 +295,7 @@ export function SearchPageClient({
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex h-screen flex-col bg-zinc-50 dark:bg-zinc-950">
 
       {/* ── Sticky filter bar ───────────────────────────────────────────────── */}
       <div className="z-30 shrink-0 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5">
@@ -419,7 +419,10 @@ export function SearchPageClient({
         </div>
 
         {/* Row 2: filter dropdowns + amenity pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-hide">
+        <div className="flex items-center gap-2 pb-0.5">
+
+          {/* Filter dropdowns — no overflow clipping */}
+          <div className="flex shrink-0 items-center gap-2">
 
           {/* Listing type */}
           <FilterDropdown
@@ -598,10 +601,13 @@ export function SearchPageClient({
             </div>
           </FilterDropdown>
 
+          </div>
+
           {/* Divider */}
           <div className="h-5 w-px shrink-0 bg-zinc-200 dark:bg-zinc-700" />
 
-          {/* Amenity pills */}
+          {/* Amenity pills — scrollable */}
+          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto scrollbar-hide">
           {AMENITY_PILLS.map(({ label, icon, key }) => {
             const active = activeAmenities.includes(key);
             return (
@@ -633,6 +639,7 @@ export function SearchPageClient({
               Réinitialiser
             </button>
           )}
+          </div>
         </div>
       </div>
 
@@ -650,6 +657,7 @@ export function SearchPageClient({
         >
           <div className="p-4">
             <SearchResults
+              key={`${totalCount}-${results[0]?.id ?? "empty"}`}
               results={results}
               totalCount={totalCount}
               page={page}
