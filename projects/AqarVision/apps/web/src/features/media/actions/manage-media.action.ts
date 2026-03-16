@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import {
@@ -48,6 +48,7 @@ export async function reorderMediaAction(
   return withAgencyAuth(listing.agency_id as string, "media", "update", async () => {
     const sb = await createClient();
     await reorderMedia(sb, parsed.data.listing_id, parsed.data.ordered_media_ids);
+    revalidatePath("/[locale]/annonce", "page");
     return undefined;
   });
 }
@@ -85,6 +86,7 @@ export async function setCoverAction(
   return withAgencyAuth(listing.agency_id as string, "media", "update", async () => {
     const sb = await createClient();
     await setCover(sb, parsed.data.listing_id, parsed.data.media_id);
+    revalidatePath("/[locale]/annonce", "page");
     return undefined;
   });
 }
@@ -138,6 +140,7 @@ export async function deleteMediaAction(
     const sb = await createClient();
     await deleteMedia(sb, parsed.data.media_id);
     revalidateTag(`listing-media-${listingId}`);
+    revalidatePath("/[locale]/annonce", "page");
     return undefined;
   });
 }

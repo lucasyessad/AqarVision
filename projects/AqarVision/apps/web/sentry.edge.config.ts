@@ -1,6 +1,10 @@
-import * as Sentry from "@sentry/nextjs";
-
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  tracesSampleRate: 0.1,
-});
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  import("@sentry/nextjs").then((Sentry) => {
+    Sentry.init({
+      dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+      tracesSampleRate: 0.1,
+    });
+  }).catch(() => {
+    console.warn("Sentry edge SDK failed to load.");
+  });
+}

@@ -14,8 +14,8 @@ export function useScrollReveal<T extends HTMLElement>(threshold = 0.15) {
     el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
           el.style.opacity = "1";
           el.style.transform = "translateY(0)";
           observer.unobserve(el);

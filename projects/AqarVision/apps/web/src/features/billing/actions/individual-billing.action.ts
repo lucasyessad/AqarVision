@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -50,6 +51,7 @@ export async function startPackCheckoutAction(
 
   try {
     const result = await startPackCheckout(supabase, user.id, parsed.data.pack_slug, user.email!);
+    revalidatePath("/[locale]/AqarPro/dashboard/billing", "page");
     return { success: true, data: result };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur lors du paiement";
@@ -90,6 +92,7 @@ export async function startIndividualSubscriptionAction(
       parsed.data.plan_slug,
       user.email!
     );
+    revalidatePath("/[locale]/AqarPro/dashboard/billing", "page");
     return { success: true, data: result };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur lors du paiement";

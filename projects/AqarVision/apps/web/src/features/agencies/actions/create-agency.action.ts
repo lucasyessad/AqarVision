@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { CreateAgencySchema } from "../schemas/agency.schema";
 import { createAgency } from "../services/agency.service";
@@ -41,6 +42,7 @@ export async function createAgencyAction(
 
   try {
     const agency = await createAgency(supabase, parsed.data);
+    revalidatePath("/[locale]/agences", "page");
     return { success: true, data: agency };
   } catch (err) {
     return {

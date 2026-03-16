@@ -21,6 +21,97 @@ import type {
 } from "../types/search.types";
 
 /* ------------------------------------------------------------------ */
+/*  Supabase row shapes (typed alternatives to Record<string, unknown>) */
+/* ------------------------------------------------------------------ */
+
+/** Row shape returned by searchListings query */
+interface SearchListingRow {
+  id: string;
+  agency_id: string | null;
+  current_status: string;
+  current_price: number;
+  currency: string;
+  listing_type: string;
+  property_type: string;
+  surface_m2: number | null;
+  rooms: number | null;
+  bathrooms: number | null;
+  wilaya_code: string;
+  commune_id: number | null;
+  published_at: string | null;
+  created_at: string;
+  reference_number: number;
+  listing_translations: { title: string; slug: string; search_vector: unknown }[];
+  listing_media: { storage_path: string }[];
+  agencies: { name: string } | null;
+}
+
+/** Row shape returned by getListingBySlug listing query */
+interface ListingDetailRow {
+  id: string;
+  agency_id: string | null;
+  current_status: string;
+  current_price: number;
+  currency: string;
+  listing_type: string;
+  property_type: string;
+  surface_m2: number | null;
+  rooms: number | null;
+  bathrooms: number | null;
+  wilaya_code: string;
+  commune_id: number | null;
+  published_at: string | null;
+  created_at: string;
+  details: Record<string, unknown>;
+  reference_number: number;
+  agencies: { name: string; slug: string; logo_url: string | null; phone: string | null } | null;
+}
+
+/** Row shape for listing_translations query */
+interface TranslationRow {
+  locale: string;
+  title: string;
+  description: string;
+  slug: string;
+}
+
+/** Row shape for listing_media query */
+interface MediaRow {
+  id: string;
+  storage_path: string;
+  content_type: string | null;
+  is_cover: boolean;
+  sort_order: number;
+}
+
+/** Row shape for agency query */
+interface AgencyRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  logo_url: string | null;
+  cover_url: string | null;
+  phone: string | null;
+  email: string | null;
+  is_verified: boolean;
+  created_at: string;
+  theme: string | null;
+  primary_color: string | null;
+  accent_color: string | null;
+  secondary_color: string | null;
+}
+
+/** Row shape for agency_branches query */
+interface AgencyBranchRow {
+  id: string;
+  name: string;
+  wilaya_code: string;
+  commune_id: number | null;
+  address_text: string | null;
+}
+
+/* ------------------------------------------------------------------ */
 /*  searchListings                                                     */
 /* ------------------------------------------------------------------ */
 
@@ -134,36 +225,34 @@ export async function searchListings(
     communeMap = Object.fromEntries((cRows ?? []).map((c) => [c.id as number, c.name_fr as string]));
   }
 
-  const results: SearchResultDto[] = data.map((row) => {
-    const translations = row.listing_translations as unknown as Record<string, unknown>[];
-    const translation = translations?.[0];
-    const mediaRows = (row.listing_media as unknown as Record<string, unknown>[]) ?? [];
-    const coverMedia = mediaRows[0];
-    const agency = row.agencies as unknown as Record<string, unknown> | null;
+  const results: SearchResultDto[] = data.map((raw) => {
+    const row = raw as unknown as SearchListingRow;
+    const translation = row.listing_translations?.[0];
+    const coverMedia = row.listing_media?.[0];
 
     return {
-      id: row.id as string,
+      id: row.id,
       agency_id: row.agency_id as string,
       current_status: row.current_status as SearchResultDto["current_status"],
-      current_price: row.current_price as number,
-      currency: (row.currency as string) ?? "DZD",
+      current_price: row.current_price,
+      currency: row.currency ?? "DZD",
       listing_type: row.listing_type as SearchResultDto["listing_type"],
       property_type: row.property_type as SearchResultDto["property_type"],
-      surface_m2: (row.surface_m2 as number) ?? null,
-      rooms: (row.rooms as number) ?? null,
-      bathrooms: (row.bathrooms as number) ?? null,
-      wilaya_code: row.wilaya_code as string,
-      wilaya_name: wilayaMap[row.wilaya_code as string] ?? `Wilaya ${row.wilaya_code}`,
-      commune_name: communeMap[row.commune_id as number] ?? null,
-      commune_id: (row.commune_id as number) ?? null,
-      published_at: (row.published_at as string) ?? null,
-      created_at: row.created_at as string,
-      title: (translation?.title as string) ?? "",
-      slug: (translation?.slug as string) ?? "",
-      cover_url: storageUrl((coverMedia?.storage_path as string) ?? null),
-      agency_name: (agency?.name as string) ?? "",
+      surface_m2: row.surface_m2 ?? null,
+      rooms: row.rooms ?? null,
+      bathrooms: row.bathrooms ?? null,
+      wilaya_code: row.wilaya_code,
+      wilaya_name: wilayaMap[row.wilaya_code] ?? `Wilaya ${row.wilaya_code}`,
+      commune_name: row.commune_id != null ? (communeMap[row.commune_id] ?? null) : null,
+      commune_id: row.commune_id ?? null,
+      published_at: row.published_at ?? null,
+      created_at: row.created_at,
+      title: translation?.title ?? "",
+      slug: translation?.slug ?? "",
+      cover_url: storageUrl(coverMedia?.storage_path ?? null),
+      agency_name: row.agencies?.name ?? "",
       relevance_score: null,
-      reference_number: row.reference_number as number,
+      reference_number: row.reference_number,
     };
   });
 
@@ -231,31 +320,35 @@ export async function getListingBySlug(
     .eq("listing_id", listingId)
     .order("sort_order", { ascending: true });
 
-  // Resolve wilaya and commune names
+  // Resolve wilaya and commune names in parallel
   let wilayaName = `Wilaya ${listing.wilaya_code}`;
   let communeName: string | null = null;
 
-  if (listing.wilaya_code) {
-    const { data: wRow } = await supabase
-      .from("wilayas")
-      .select("name_fr")
-      .eq("code", listing.wilaya_code)
-      .single();
-    if (wRow) wilayaName = wRow.name_fr as string;
-  }
-  if (listing.commune_id) {
-    const { data: cRow } = await supabase
-      .from("communes")
-      .select("name_fr")
-      .eq("id", listing.commune_id)
-      .single();
-    if (cRow) communeName = cRow.name_fr as string;
-  }
+  const [wilayaResult, communeResult] = await Promise.all([
+    listing.wilaya_code
+      ? supabase
+          .from("wilayas")
+          .select("name_fr")
+          .eq("code", listing.wilaya_code)
+          .single()
+      : Promise.resolve({ data: null }),
+    listing.commune_id
+      ? supabase
+          .from("communes")
+          .select("name_fr")
+          .eq("id", listing.commune_id)
+          .single()
+      : Promise.resolve({ data: null }),
+  ]);
 
-  const agency = listing.agencies as unknown as Record<string, unknown> | null;
-  const currentTranslation = (
-    (allTranslations ?? []) as Record<string, unknown>[]
-  ).find((t) => t.locale === locale);
+  if (wilayaResult.data) wilayaName = wilayaResult.data.name_fr as string;
+  if (communeResult.data) communeName = communeResult.data.name_fr as string;
+
+  const typedListing = listing as unknown as ListingDetailRow;
+  const typedTranslations = (allTranslations ?? []) as unknown as TranslationRow[];
+  const typedMedia = (media ?? []) as unknown as MediaRow[];
+
+  const currentTranslation = typedTranslations.find((t) => t.locale === locale);
 
   // Increment view count (fire and forget)
   supabase
@@ -266,46 +359,46 @@ export async function getListingBySlug(
     });
 
   return {
-    id: listing.id as string,
-    agency_id: listing.agency_id as string,
-    current_status: listing.current_status as ListingDetailPublicDto["current_status"],
-    current_price: listing.current_price as number,
-    currency: (listing.currency as string) ?? "DZD",
-    listing_type: listing.listing_type as ListingDetailPublicDto["listing_type"],
-    property_type: listing.property_type as ListingDetailPublicDto["property_type"],
-    surface_m2: (listing.surface_m2 as number) ?? null,
-    rooms: (listing.rooms as number) ?? null,
-    bathrooms: (listing.bathrooms as number) ?? null,
-    wilaya_code: listing.wilaya_code as string,
+    id: typedListing.id,
+    agency_id: typedListing.agency_id as string,
+    current_status: typedListing.current_status as ListingDetailPublicDto["current_status"],
+    current_price: typedListing.current_price,
+    currency: typedListing.currency ?? "DZD",
+    listing_type: typedListing.listing_type as ListingDetailPublicDto["listing_type"],
+    property_type: typedListing.property_type as ListingDetailPublicDto["property_type"],
+    surface_m2: typedListing.surface_m2 ?? null,
+    rooms: typedListing.rooms ?? null,
+    bathrooms: typedListing.bathrooms ?? null,
+    wilaya_code: typedListing.wilaya_code,
     wilaya_name: wilayaName,
     commune_name: communeName,
-    commune_id: (listing.commune_id as number) ?? null,
-    published_at: (listing.published_at as string) ?? null,
-    created_at: listing.created_at as string,
-    details: (listing.details as Record<string, unknown>) ?? {},
-    reference_number: listing.reference_number as number,
-    title: (currentTranslation?.title as string) ?? "",
-    description: (currentTranslation?.description as string) ?? "",
-    slug: (currentTranslation?.slug as string) ?? slug,
-    media: ((media ?? []) as Record<string, unknown>[]).map(
+    commune_id: typedListing.commune_id ?? null,
+    published_at: typedListing.published_at ?? null,
+    created_at: typedListing.created_at,
+    details: typedListing.details ?? {},
+    reference_number: typedListing.reference_number,
+    title: currentTranslation?.title ?? "",
+    description: currentTranslation?.description ?? "",
+    slug: currentTranslation?.slug ?? slug,
+    media: typedMedia.map(
       (m): ListingMediaDto => ({
-        id: m.id as string,
-        storage_path: storageUrl(m.storage_path as string) ?? (m.storage_path as string),
-        content_type: (m.content_type as string) ?? null,
-        is_cover: m.is_cover as boolean,
-        sort_order: m.sort_order as number,
+        id: m.id,
+        storage_path: storageUrl(m.storage_path) ?? m.storage_path,
+        content_type: m.content_type ?? null,
+        is_cover: m.is_cover,
+        sort_order: m.sort_order,
       })
     ),
-    agency_name: (agency?.name as string) ?? "",
-    agency_slug: (agency?.slug as string) ?? "",
-    agency_logo_url: (agency?.logo_url as string) ?? null,
-    agency_phone: (agency?.phone as string) ?? null,
-    translations: ((allTranslations ?? []) as Record<string, unknown>[]).map(
+    agency_name: typedListing.agencies?.name ?? "",
+    agency_slug: typedListing.agencies?.slug ?? "",
+    agency_logo_url: typedListing.agencies?.logo_url ?? null,
+    agency_phone: typedListing.agencies?.phone ?? null,
+    translations: typedTranslations.map(
       (t): ListingTranslationPublicDto => ({
-        locale: t.locale as string,
-        title: t.title as string,
-        description: t.description as string,
-        slug: t.slug as string,
+        locale: t.locale,
+        title: t.title,
+        description: t.description,
+        slug: t.slug,
       })
     ),
   };
@@ -346,13 +439,16 @@ export async function getAgencyPublic(
     return null;
   }
 
-  const agencyId = agency.id as string;
+  const typedAgency = agency as unknown as AgencyRow;
+  const agencyId = typedAgency.id;
 
   // Fetch branches
   const { data: branches } = await supabase
     .from("agency_branches")
     .select("id, name, wilaya_code, commune_id, address_text")
     .eq("agency_id", agencyId);
+
+  const typedBranches = (branches ?? []) as unknown as AgencyBranchRow[];
 
   // Fetch listing count
   const { count } = await supabase
@@ -364,28 +460,28 @@ export async function getAgencyPublic(
 
   return {
     id: agencyId,
-    name: agency.name as string,
-    slug: agency.slug as string,
-    description: (agency.description as string) ?? null,
-    logo_url: (agency.logo_url as string) ?? null,
-    cover_url: (agency.cover_url as string) ?? null,
-    phone: (agency.phone as string) ?? null,
-    email: (agency.email as string) ?? null,
-    is_verified: (agency.is_verified as boolean) ?? false,
-    created_at: agency.created_at as string,
-    branches: ((branches ?? []) as Record<string, unknown>[]).map(
+    name: typedAgency.name,
+    slug: typedAgency.slug,
+    description: typedAgency.description ?? null,
+    logo_url: typedAgency.logo_url ?? null,
+    cover_url: typedAgency.cover_url ?? null,
+    phone: typedAgency.phone ?? null,
+    email: typedAgency.email ?? null,
+    is_verified: typedAgency.is_verified ?? false,
+    created_at: typedAgency.created_at,
+    branches: typedBranches.map(
       (b): AgencyBranchPublicDto => ({
-        id: b.id as string,
-        name: b.name as string,
-        wilaya_code: b.wilaya_code as string,
-        commune_id: (b.commune_id as number) ?? null,
-        address_text: (b.address_text as string) ?? null,
+        id: b.id,
+        name: b.name,
+        wilaya_code: b.wilaya_code,
+        commune_id: b.commune_id ?? null,
+        address_text: b.address_text ?? null,
       })
     ),
     listing_count: count ?? 0,
-    theme: (agency.theme as string) ?? "minimal",
-    primary_color: (agency.primary_color as string) ?? null,
-    accent_color: (agency.accent_color as string) ?? null,
-    secondary_color: (agency.secondary_color as string) ?? null,
+    theme: typedAgency.theme ?? "minimal",
+    primary_color: typedAgency.primary_color ?? null,
+    accent_color: typedAgency.accent_color ?? null,
+    secondary_color: typedAgency.secondary_color ?? null,
   };
 }

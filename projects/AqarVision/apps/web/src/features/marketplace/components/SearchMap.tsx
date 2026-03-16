@@ -2,7 +2,9 @@
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import type { MapBounds } from "../schemas/search.schema";
+import { formatPrice } from "@/lib/format";
 
 // Minimal type declarations for maplibre-gl so the file compiles without the package installed
 // Once maplibre-gl is installed, these types are provided by the package itself.
@@ -33,16 +35,8 @@ interface SearchMapProps {
   onListingHover?: (id: string | null) => void;
 }
 
-function formatPrice(price: number, currency: string): string {
-  return new Intl.NumberFormat("fr-DZ", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-}
-
 export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContainer, onListingHover }: SearchMapProps) {
+  const t = useTranslations("search");
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap>(null);
   const markersRef = useRef<MapLibreMarker[]>([]);
@@ -128,7 +122,7 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
         console.warn("MapLibre: WebGL context creation failed", err);
         if (containerRef.current) {
           containerRef.current.innerHTML =
-            '<div class="flex h-full items-center justify-center text-gray-400 text-sm">Carte non disponible dans cet environnement</div>';
+            `<div class="flex h-full items-center justify-center text-gray-400 text-sm">${t("map_unavailable")}</div>`;
         }
       }
     });
@@ -183,7 +177,7 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
               href="/${locale}/annonce/${listing.slug}"
               class="block w-full rounded bg-zinc-900 px-3 py-1 text-center text-xs font-medium text-white hover:bg-amber-500 transition-colors"
             >
-              Voir l'annonce
+              ${t("view_listing")}
             </a>
           </div>
         `;

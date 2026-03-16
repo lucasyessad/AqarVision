@@ -49,7 +49,9 @@ export async function getAdvancedAnalytics(
       supabase
         .from("listing_views")
         .select("listing_id, listings!inner(agency_id, listing_translations(title, locale))")
-        .eq("listings.agency_id", agencyId),
+        .eq("listings.agency_id", agencyId)
+        .gte("created_at", new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString())
+        .limit(1000),
 
       // Leads by source
       supabase

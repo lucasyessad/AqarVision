@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { PublishListingSchema } from "../schemas/listing.schema";
@@ -56,6 +57,8 @@ export async function submitForReviewAction(
   return withAgencyAuth(listing.agency_id as string, "listing", "update", async (ctx) => {
     const supabaseAuth = await createClient();
     await submitForReview(supabaseAuth, ctx.userId, parsed.data.listing_id);
+    revalidatePath("/[locale]/search", "page");
+    revalidatePath("/[locale]/AqarPro/dashboard/listings", "page");
     return { submitted: true as const };
   });
 }

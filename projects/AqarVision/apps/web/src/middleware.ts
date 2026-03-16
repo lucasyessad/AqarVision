@@ -145,6 +145,11 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const host = request.headers.get("host") ?? "localhost:3000";
 
   // ------------------------------------------------------------------
+  // Supabase Auth SSR — refresh session ONCE for all paths
+  // ------------------------------------------------------------------
+  const supabaseResponse = await updateSession(request);
+
+  // ------------------------------------------------------------------
   // Agency subdomain detection
   // slug.aqarvision.dz → rewrite to /[locale]/a/[slug]/...
   // slug.localhost:3000 → same in dev
@@ -187,8 +192,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     // Pass agency slug as header for downstream use
     response.headers.set("x-agency-slug", agencySlug);
 
-    // Supabase session refresh
-    const supabaseResponse = await updateSession(request);
+    // Copy Supabase session cookies to the rewrite response
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       response.cookies.set(cookie.name, cookie.value, { ...cookie });
     });
@@ -240,11 +244,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // ------------------------------------------------------------------
-  // Supabase Auth SSR — rafraîchir la session
-  // ------------------------------------------------------------------
-  const supabaseResponse = await updateSession(request);
-
-  // ------------------------------------------------------------------
   // next-intl — routing i18n
   // ------------------------------------------------------------------
   const intlResponse = intlMiddleware(request);
@@ -258,6 +257,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   // ------------------------------------------------------------------
   // Vérification d'authentification pour les routes protégées
+  // Session was already refreshed by updateSession() above, so we
+  // only need a lightweight cookie check via getUser().
   // ------------------------------------------------------------------
   if (!isPublicRoute(pathname)) {
     const supabase = createServerClient(

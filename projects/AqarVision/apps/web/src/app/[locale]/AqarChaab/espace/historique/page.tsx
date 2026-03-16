@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { clearViewHistory } from "@/features/marketplace/actions/view-history.action";
 import { Link } from "@/lib/i18n/navigation";
+import { formatPrice } from "@/lib/format";
 
 interface HistoriquePageProps {
   params: Promise<{ locale: string }>;
@@ -61,15 +62,6 @@ function groupByDate(entries: HistoryEntry[]): Record<string, HistoryEntry[]> {
   }
 
   return groups;
-}
-
-function formatPrice(price: number, currency: string): string {
-  return new Intl.NumberFormat("fr-DZ", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
 }
 
 export default async function HistoriquePage({ params }: HistoriquePageProps) {

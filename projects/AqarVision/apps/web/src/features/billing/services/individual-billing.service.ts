@@ -219,7 +219,8 @@ export async function getEffectiveQuota(
       .from("individual_listing_packs")
       .select("extra_slots")
       .eq("user_id", userId)
-      .in("payment_status", ["confirmed", null as unknown as string]), // confirmed or legacy (no status col)
+      .in("payment_status", ["confirmed", null as unknown as string]) // confirmed or legacy (no status col)
+      .limit(100),
     supabase
       .from("individual_subscriptions")
       .select("max_listings")

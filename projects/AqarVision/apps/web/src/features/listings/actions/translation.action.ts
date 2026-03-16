@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { UpsertTranslationSchema } from "../schemas/listing.schema";
 import { upsertTranslation } from "../services/listing.service";
@@ -43,6 +44,8 @@ export async function upsertTranslationAction(
 
   try {
     const translation = await upsertTranslation(supabase, listing_id, translationData);
+    revalidatePath("/[locale]/search", "page");
+    revalidatePath("/[locale]/AqarPro/dashboard/listings", "page");
     return { success: true, data: translation };
   } catch (err) {
     return {

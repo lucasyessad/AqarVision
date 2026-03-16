@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
 import { ok, fail } from "@/types/action-result";
@@ -123,6 +123,7 @@ export async function finalizeIndividualMediaUploadAction(
     .createSignedUrl(storage_path, 3600);
 
   revalidateTag(`listing-media-${listing_id}`);
+  revalidatePath("/[locale]/annonce", "page");
 
   const m = media as Record<string, unknown>;
   return ok({
@@ -167,5 +168,6 @@ export async function deleteIndividualMediaAction(
   await supabase.from("listing_media").delete().eq("id", parsed.data.media_id);
 
   revalidateTag(`listing-media-${media.listing_id}`);
+  revalidatePath("/[locale]/annonce", "page");
   return ok(undefined);
 }

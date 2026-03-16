@@ -110,13 +110,19 @@ export async function getAllAgencies(
   const countMap = new Map<string, number>();
 
   if (agencyIds.length > 0) {
-    const { data: listingRows } = await supabase
-      .from("listings")
-      .select("agency_id")
-      .in("agency_id", agencyIds);
+    // Use individual count queries per agency instead of fetching all rows
+    const countResults = await Promise.all(
+      agencyIds.map((id) =>
+        supabase
+          .from("listings")
+          .select("id", { count: "exact", head: true })
+          .eq("agency_id", id)
+          .then((res) => ({ id, count: res.count ?? 0 }))
+      )
+    );
 
-    listingRows?.forEach((r) => {
-      countMap.set(r.agency_id, (countMap.get(r.agency_id) ?? 0) + 1);
+    countResults.forEach((r) => {
+      countMap.set(r.id, r.count);
     });
   }
 

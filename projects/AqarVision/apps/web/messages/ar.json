@@ -95,7 +95,14 @@
     "mode_pro": "الفضاء المهني (وكالة)",
     "mode_visitor_hint": "سجل الدخول للوصول إلى مفضلاتك وتنبيهاتك.",
     "mode_pro_hint": "سجل الدخول لإدارة إعلاناتك وعملائك.",
-    "pro_no_account_hint": "ليس لديك وكالة بعد؟"
+    "pro_no_account_hint": "ليس لديك وكالة بعد؟",
+    "hero_line1": "المنصة",
+    "hero_line2": "للوكالات",
+    "hero_line3": "العقارية",
+    "hero_subtitle": "أدر إعلاناتك وعملاءك المحتملين وأداءك من مساحة مهنية واحدة.",
+    "feature_listings": "نشر غير محدود للإعلانات",
+    "feature_crm": "إدارة العملاء والرسائل",
+    "feature_analytics": "تحليلات وإحصائيات السوق"
   },
   "espace": {
     "page_title": "مساحتي",
@@ -144,6 +151,19 @@
       "billing": "الفوترة"
     },
     "save": "حفظ",
+    "settings_title": "إعدادات الحساب",
+    "settings_subtitle": "إدارة معلوماتك الشخصية وتفضيلاتك.",
+    "email_label": "البريد الإلكتروني",
+    "email_hint": "عنوان تسجيل الدخول الخاص بك. تواصل مع الدعم لتغييره.",
+    "personal_info": "المعلومات الشخصية",
+    "full_name_hint": "يظهر في ملفك الشخصي وفي الاتصالات.",
+    "full_name_placeholder": "اسمك الكامل",
+    "phone_hint": "رقم الاتصال (اختياري).",
+    "locale_hint": "لغة واجهة لوحة التحكم.",
+    "locale_fr": "Français",
+    "locale_ar": "العربية",
+    "locale_en": "English",
+    "locale_es": "Español",
     "stats": {
       "activeListings": "الإعلانات النشطة",
       "totalLeads": "إجمالي العملاء",
@@ -189,7 +209,9 @@
     "price_min": "السعر الأدنى",
     "property_type": "نوع العقار",
     "q": "بحث",
-    "wilaya_code": "رمز الولاية"
+    "wilaya_code": "رمز الولاية",
+    "map_unavailable": "الخريطة غير متاحة في هذه البيئة",
+    "view_listing": "عرض الإعلان"
   },
   "listings": {
     "title": "إعلاناتي",
@@ -274,7 +296,15 @@
     "tab_translations": "الترجمات",
     "translation_saved": "تم حفظ الترجمة بنجاح",
     "untitled": "بدون عنوان",
-    "wilaya_code": "رمز الولاية"
+    "wilaya_code": "رمز الولاية",
+    "status_available": "متاح",
+    "status_under_offer": "تحت العرض",
+    "badge_new": "جديد",
+    "badge_viewed": "تمت المشاهدة",
+    "contact_button": "اتصال",
+    "view_button": "عرض",
+    "call_name": "الاتصال بـ {name}",
+    "no_results_hint": "حاول توسيع معايير البحث"
   },
   "media": {
     "title": "الصور",
@@ -464,7 +494,10 @@
     "last_30_days": "آخر 30 يوماً",
     "daily_views": "المشاهدات اليومية",
     "daily_leads": "العملاء المحتملون يومياً",
-    "no_data": "لا توجد بيانات متاحة"
+    "no_data": "لا توجد بيانات متاحة",
+    "subtitle": "أداء وكالتك خلال آخر 30 يوماً.",
+    "daily_chart": "التطور اليومي",
+    "advanced": "تحليلات متقدمة"
   },
   "billing": {
     "pricing_title": "خطط الاشتراك",

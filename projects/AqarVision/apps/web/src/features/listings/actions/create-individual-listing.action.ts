@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { IndividualListingSchema } from "../schemas/individual-listing.schema";
 import { getEffectiveQuota } from "@/features/billing/services/individual-billing.service";
@@ -150,18 +151,21 @@ export async function createIndividualListingAction(
 
   // Record initial price and status versions
   await Promise.all([
-    supabase.from("price_versions").insert({
+    supabase.from("listing_price_versions").insert({
       listing_id: listingId,
       price: d.current_price,
       currency: "DZD",
       changed_by: user.id,
     }),
-    supabase.from("status_versions").insert({
+    supabase.from("listing_status_versions").insert({
       listing_id: listingId,
       status: "published",
       changed_by: user.id,
     }),
   ]);
+
+  revalidatePath("/[locale]/search", "page");
+  revalidatePath("/[locale]/AqarPro/dashboard/listings", "page");
 
   return { success: true, data: { listing_id: listingId, slug } };
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { UpdateListingSchema } from "../schemas/listing.schema";
@@ -42,6 +43,9 @@ export async function updateListingAction(
 
   return withAgencyAuth(listing.agency_id as string, "listing", "update", async ({ userId }) => {
     const sb = await createClient();
-    return update(sb, userId, listing_id, expected_version, fields);
+    const result = await update(sb, userId, listing_id, expected_version, fields);
+    revalidatePath("/[locale]/search", "page");
+    revalidatePath("/[locale]/AqarPro/dashboard/listings", "page");
+    return result;
   });
 }

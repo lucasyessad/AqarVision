@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { ChangeMemberRoleSchema } from "../schemas/agency.schema";
@@ -34,6 +35,7 @@ export async function changeMemberRoleAction(
       parsed.data.user_id,
       parsed.data.new_role
     );
+    revalidatePath("/[locale]/agences", "page");
     return { updated: true };
   });
 }
@@ -55,6 +57,7 @@ export async function deactivateMemberAction(
   return withAgencyAuth(agencyId, "team_member", "update", async () => {
     const supabase = await createClient();
     await deactivateMember(supabase, agencyId, targetUserId);
+    revalidatePath("/[locale]/agences", "page");
     return { deactivated: true };
   });
 }

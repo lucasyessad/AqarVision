@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
 import { ok, fail } from "@/types/action-result";
@@ -92,7 +93,7 @@ export async function publishIndividualListingAction(
   }
 
   // Record status version
-  await supabase.from("status_versions").insert({
+  await supabase.from("listing_status_versions").insert({
     listing_id,
     status: "published",
     changed_by: user.id,
@@ -105,6 +106,9 @@ export async function publishIndividualListingAction(
     .eq("listing_id", listing_id)
     .eq("locale", "fr")
     .single();
+
+  revalidatePath("/[locale]/search", "page");
+  revalidatePath("/[locale]/AqarPro/dashboard/listings", "page");
 
   return ok({ listing_id, slug: trans?.slug ?? listing_id });
 }

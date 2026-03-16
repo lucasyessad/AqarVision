@@ -7,13 +7,17 @@ interface Props {
 
 export async function MarketingHeaderWrapper({ locale }: Props) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
-  if (!user) {
+  // Quick cookie-based check — no network call
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
     return <MarketingHeader locale={locale} user={null} />;
   }
+
+  const user = session.user;
 
   const [{ data: profile }, { data: membership }] = await Promise.all([
     supabase.from("profiles").select("full_name").eq("user_id", user.id).single(),

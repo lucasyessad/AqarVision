@@ -116,7 +116,7 @@ export async function getDashboardStats(
       .from("listings")
       .select("id", { count: "exact", head: true })
       .eq("agency_id", agencyId)
-      .eq("status", "published"),
+      .eq("current_status", "published"),
 
     // Count leads this month
     supabase

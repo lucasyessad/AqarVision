@@ -54,10 +54,10 @@ export default async function SettingsPage() {
       {/* Page header */}
       <div className="mb-8">
         <h1 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
-          Paramètres du compte
+          {tDashboard("settings_title")}
         </h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Gérez vos informations personnelles et vos préférences.
+          {tDashboard("settings_subtitle")}
         </p>
       </div>
 
@@ -66,10 +66,10 @@ export default async function SettingsPage() {
         <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-[240px_1fr]">
           <div>
             <h3 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-              Adresse e-mail
+              {tDashboard("email_label")}
             </h3>
             <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-              Votre adresse de connexion. Contactez le support pour la modifier.
+              {tDashboard("email_hint")}
             </p>
           </div>
           <div>
@@ -89,7 +89,7 @@ export default async function SettingsPage() {
           {/* Card header */}
           <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-              Informations personnelles
+              {tDashboard("personal_info")}
             </h2>
           </div>
 
@@ -100,7 +100,7 @@ export default async function SettingsPage() {
                 {t("full_name")}
               </label>
               <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                Affiché sur votre profil et dans les communications.
+                {tDashboard("full_name_hint")}
               </p>
             </div>
             <div>
@@ -109,7 +109,7 @@ export default async function SettingsPage() {
                 type="text"
                 name="full_name"
                 defaultValue={profile?.full_name ?? ""}
-                placeholder="Votre nom complet"
+                placeholder={tDashboard("full_name_placeholder")}
                 className="h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-950 transition-shadow focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
               />
             </div>
@@ -122,7 +122,7 @@ export default async function SettingsPage() {
                 {t("phone")}
               </label>
               <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                Numéro de contact (optionnel).
+                {tDashboard("phone_hint")}
               </p>
             </div>
             <div>
@@ -144,7 +144,7 @@ export default async function SettingsPage() {
                 {t("preferred_locale")}
               </label>
               <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                Langue de l&apos;interface du dashboard.
+                {tDashboard("locale_hint")}
               </p>
             </div>
             <div>
@@ -156,7 +156,7 @@ export default async function SettingsPage() {
               >
                 {SUPPORTED_LOCALES.map((locale) => (
                   <option key={locale} value={locale}>
-                    {locale === "fr" ? "Français" : locale === "ar" ? "العربية" : locale === "en" ? "English" : "Español"}
+                    {tDashboard(`locale_${locale}`)}
                   </option>
                 ))}
               </select>

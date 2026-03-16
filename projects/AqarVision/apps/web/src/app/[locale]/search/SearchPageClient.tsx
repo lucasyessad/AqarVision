@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { SearchResults } from "@/features/marketplace/components/SearchResults";
@@ -147,21 +147,61 @@ export function SearchPageClient({
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
 
   // ── Map listings ───────────────────────────────────────────────────────────
-  const mapListings: MapListing[] = results.flatMap((r) => {
-    const rAny = r as SearchResultDto & { lat?: number; lng?: number };
-    if (typeof rAny.lat === "number" && typeof rAny.lng === "number") {
-      return [{ id: r.id, lat: rAny.lat, lng: rAny.lng, price: r.current_price, currency: r.currency, title: r.title, slug: r.slug }];
-    }
-    return [];
-  });
+  const mapListings: MapListing[] = useMemo(
+    () =>
+      results.flatMap((r) => {
+        const rAny = r as SearchResultDto & { lat?: number; lng?: number };
+        if (typeof rAny.lat === "number" && typeof rAny.lng === "number") {
+          return [{ id: r.id, lat: rAny.lat, lng: rAny.lng, price: r.current_price, currency: r.currency, title: r.title, slug: r.slug }];
+        }
+        return [];
+      }),
+    [results]
+  );
 
   const handleBoundsChange = useCallback((bounds: MapBounds) => { void bounds; }, []);
+
+  // ── Autocomplete state ─────────────────────────────────────────────────────
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchBoxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  const suggestions = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (q.length < 2) return { wilayas: [], propertyTypes: [], listingTypes: [] };
+
+    const matchedWilayas = wilayas
+      .filter((w) => w.name.toLowerCase().includes(q) || w.code.includes(q))
+      .slice(0, 5);
+
+    const matchedPropertyTypes = Object.entries(PROPERTY_TYPE_LABELS)
+      .filter(([, label]) => label.toLowerCase().includes(q))
+      .map(([key, label]) => ({ key, label }));
+
+    const matchedListingTypes = Object.entries(LISTING_TYPE_LABELS)
+      .filter(([, label]) => label.toLowerCase().includes(q))
+      .map(([key, label]) => ({ key, label }));
+
+    return { wilayas: matchedWilayas, propertyTypes: matchedPropertyTypes, listingTypes: matchedListingTypes };
+  }, [query, wilayas]);
+
+  const hasSuggestions = suggestions.wilayas.length > 0 || suggestions.propertyTypes.length > 0 || suggestions.listingTypes.length > 0;
 
   // ── Filter helpers ─────────────────────────────────────────────────────────
   const queryDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function handleQueryChange(value: string) {
     setQuery(value);
+    setShowSuggestions(true);
     if (queryDebounceRef.current) clearTimeout(queryDebounceRef.current);
     queryDebounceRef.current = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
@@ -169,6 +209,31 @@ export function SearchPageClient({
       params.delete("page");
       router.push(`${pathname}?${params.toString()}`);
     }, 350);
+  }
+
+  function applySuggestion(overrides: Record<string, string>) {
+    setShowSuggestions(false);
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(overrides).forEach(([k, v]) => {
+      if (v) params.set(k, v); else params.delete(k);
+    });
+    if ("wilaya_code" in overrides) {
+      setWilayaCode(overrides.wilaya_code ?? "");
+      setQuery("");
+      params.delete("q");
+    }
+    if ("property_type" in overrides) {
+      setPropertyType(overrides.property_type ?? "");
+      setQuery("");
+      params.delete("q");
+    }
+    if ("listing_type" in overrides) {
+      setListingType(overrides.listing_type ?? "");
+      setQuery("");
+      params.delete("q");
+    }
+    params.delete("page");
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   function applyFilters(overrides?: Record<string, string | null>) {
@@ -236,16 +301,81 @@ export function SearchPageClient({
       <div className="z-30 shrink-0 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5">
         {/* Row 1 */}
         <div className="mb-2.5 flex items-center gap-3">
-          {/* Search input */}
-          <div className="relative max-w-sm flex-1">
+          {/* Search input with autocomplete */}
+          <div ref={searchBoxRef} className="relative max-w-sm flex-1">
             <Search className="pointer-events-none absolute inset-y-0 start-3 my-auto h-4 w-4 text-zinc-400 dark:text-zinc-500" />
             <input
               type="text"
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
+              onFocus={() => query.trim().length >= 2 && setShowSuggestions(true)}
               placeholder="Ville, quartier ou type de bien…"
               className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 py-2 pe-4 ps-9 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
+
+            {/* Autocomplete suggestions dropdown */}
+            {showSuggestions && hasSuggestions && (
+              <div className="absolute start-0 top-full z-50 mt-1.5 w-full overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-xl">
+
+                {/* Wilayas section */}
+                {suggestions.wilayas.length > 0 && (
+                  <div>
+                    <p className="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                      Wilayas
+                    </p>
+                    {suggestions.wilayas.map(({ code, name }) => (
+                      <button
+                        key={code}
+                        type="button"
+                        onClick={() => applySuggestion({ wilaya_code: code })}
+                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                      >
+                        <span className="w-5 shrink-0 font-mono text-[10px] text-zinc-400 dark:text-zinc-500">{code}</span>
+                        <span className="text-zinc-800 dark:text-zinc-200">{name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Property types section */}
+                {suggestions.propertyTypes.length > 0 && (
+                  <div className={suggestions.wilayas.length > 0 ? "border-t border-zinc-100 dark:border-zinc-800" : ""}>
+                    <p className="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                      Types de bien
+                    </p>
+                    {suggestions.propertyTypes.map(({ key, label }) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => applySuggestion({ property_type: key })}
+                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Listing types section */}
+                {suggestions.listingTypes.length > 0 && (
+                  <div className={(suggestions.wilayas.length > 0 || suggestions.propertyTypes.length > 0) ? "border-t border-zinc-100 dark:border-zinc-800" : ""}>
+                    <p className="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                      Types d&apos;annonce
+                    </p>
+                    {suggestions.listingTypes.map(({ key, label }) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => applySuggestion({ listing_type: key })}
+                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* View toggle [Annonces | Carte] */}

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { ReportListingSchema, ReviewListingSchema } from "../schemas/moderation.schema";
 import { reportListing, reviewListing } from "../services/moderation.service";
@@ -106,6 +107,8 @@ export async function reviewListingAction(
       parsed.data.action,
       parsed.data.reason
     );
+    revalidatePath("/[locale]/search", "page");
+    revalidatePath("/[locale]/AqarPro/dashboard/listings", "page");
     return { success: true, data: { reviewed: true } };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to review listing";

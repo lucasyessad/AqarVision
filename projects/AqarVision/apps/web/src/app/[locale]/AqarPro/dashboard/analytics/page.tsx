@@ -57,7 +57,7 @@ export default async function AnalyticsDashboardPage({
           {t("title")}
         </h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Performances de votre agence sur les 30 derniers jours.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -77,7 +77,7 @@ export default async function AnalyticsDashboardPage({
       <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
         <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-            Évolution quotidienne
+            {t("daily_chart")}
           </h2>
         </div>
         <div className="p-6">
@@ -89,7 +89,7 @@ export default async function AnalyticsDashboardPage({
       <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
         <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-            Analyses avancées
+            {t("advanced")}
           </h2>
         </div>
         <div className="p-6">

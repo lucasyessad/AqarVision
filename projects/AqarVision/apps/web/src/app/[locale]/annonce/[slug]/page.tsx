@@ -12,7 +12,17 @@ import { getAgencyUrl } from "@/lib/agency-url";
 import { recordView } from "@/features/marketplace/actions/view-history.action";
 import { getListingNote } from "@/features/marketplace/actions/listing-notes.action";
 import { ListingNoteWidget } from "@/features/marketplace/components/ListingNoteWidget";
-import { MortgageCalculator } from "@/features/marketplace/components/MortgageCalculator";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const MortgageCalculator = dynamic(
+  () => import("@/features/marketplace/components/MortgageCalculator").then((m) => m.MortgageCalculator),
+  {
+    loading: () => (
+      <div className="h-48 animate-pulse rounded-xl border border-zinc-200 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800" />
+    ),
+  }
+);
 import { PhotoGallery } from "@/features/marketplace/components/PhotoGallery";
 import { ListingAISummary } from "@/features/listings/components/ListingAISummary";
 import { Suspense } from "react";
@@ -24,6 +34,7 @@ import {
   Phone,
   Check,
 } from "lucide-react";
+import { formatPrice } from "@/lib/format";
 
 const getCachedListing = cache(async (locale: string, slug: string) => {
   const supabase = await createClient();
@@ -55,18 +66,11 @@ export async function generateMetadata({ params }: ListingPageProps) {
       title: listing.title,
       description: listing.description?.slice(0, 160) ?? "",
       type: "website",
-      images: listing.media.filter((m) => m.is_cover).map((m) => ({ url: m.storage_path })),
+      images: listing.media.filter((m) => m.is_cover).map((m) => ({
+        url: m.storage_path.startsWith("http") ? m.storage_path : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/listing-media/${m.storage_path}`,
+      })),
     },
   };
-}
-
-function formatPrice(price: number, currency: string): string {
-  return new Intl.NumberFormat("fr-DZ", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
 }
 
 export default async function ListingDetailPage({ params }: ListingPageProps) {
@@ -161,9 +165,12 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                 className="flex items-center gap-2 font-medium text-zinc-600 transition-colors hover:text-amber-500 dark:text-zinc-400 dark:hover:text-amber-400"
               >
                 {listing.agency_logo_url ? (
-                  <img
+                  <Image
                     src={listing.agency_logo_url}
                     alt={listing.agency_name}
+                    width={20}
+                    height={20}
+                    sizes="20px"
                     className="h-5 w-5 rounded-full object-cover"
                   />
                 ) : (
@@ -299,9 +306,12 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
                 <div className="border-b border-zinc-200 px-5 py-4 dark:border-zinc-700">
                   <div className="flex items-center gap-3">
                     {listing.agency_logo_url ? (
-                      <img
+                      <Image
                         src={listing.agency_logo_url}
                         alt={listing.agency_name}
+                        width={48}
+                        height={48}
+                        sizes="48px"
                         className="h-12 w-12 rounded-xl object-cover shadow-sm"
                       />
                     ) : (

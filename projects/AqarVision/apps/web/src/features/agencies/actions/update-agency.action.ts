@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { UpdateAgencySchema } from "../schemas/agency.schema";
@@ -31,6 +32,8 @@ export async function updateAgencyAction(
   return withAgencyAuth(parsed.data.agency_id, "settings", "update", async () => {
     const supabase = await createClient();
     const { agency_id, ...updateData } = parsed.data;
-    return updateAgency(supabase, agency_id, updateData);
+    const result = await updateAgency(supabase, agency_id, updateData);
+    revalidatePath("/[locale]/agences", "page");
+    return result;
   });
 }

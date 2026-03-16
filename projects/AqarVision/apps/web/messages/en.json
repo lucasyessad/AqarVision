@@ -95,7 +95,14 @@
     "mode_pro": "Pro Space (Agency)",
     "mode_visitor_hint": "Log in to access your favorites and alerts.",
     "mode_pro_hint": "Log in to manage your listings and leads.",
-    "pro_no_account_hint": "No agency yet?"
+    "pro_no_account_hint": "No agency yet?",
+    "hero_line1": "The platform",
+    "hero_line2": "for real estate",
+    "hero_line3": "agencies",
+    "hero_subtitle": "Manage your listings, leads, and performance from a single professional space.",
+    "feature_listings": "Unlimited listing publication",
+    "feature_crm": "Leads CRM & messaging",
+    "feature_analytics": "Analytics & market statistics"
   },
   "espace": {
     "page_title": "My space",
@@ -144,6 +151,19 @@
       "billing": "Billing"
     },
     "save": "Save",
+    "settings_title": "Account settings",
+    "settings_subtitle": "Manage your personal information and preferences.",
+    "email_label": "Email address",
+    "email_hint": "Your login address. Contact support to change it.",
+    "personal_info": "Personal information",
+    "full_name_hint": "Displayed on your profile and in communications.",
+    "full_name_placeholder": "Your full name",
+    "phone_hint": "Contact number (optional).",
+    "locale_hint": "Dashboard interface language.",
+    "locale_fr": "Français",
+    "locale_ar": "العربية",
+    "locale_en": "English",
+    "locale_es": "Español",
     "stats": {
       "activeListings": "Active listings",
       "totalLeads": "Total leads",
@@ -189,7 +209,9 @@
     "price_min": "Minimum price",
     "property_type": "Property type",
     "q": "Search",
-    "wilaya_code": "Wilaya code"
+    "wilaya_code": "Wilaya code",
+    "map_unavailable": "Map unavailable in this environment",
+    "view_listing": "View listing"
   },
   "listings": {
     "title": "My listings",
@@ -274,7 +296,15 @@
     "tab_translations": "Translations",
     "translation_saved": "Translation saved successfully",
     "untitled": "Untitled",
-    "wilaya_code": "Wilaya code"
+    "wilaya_code": "Wilaya code",
+    "status_available": "Available",
+    "status_under_offer": "Under offer",
+    "badge_new": "New",
+    "badge_viewed": "Viewed",
+    "contact_button": "Contact",
+    "view_button": "View",
+    "call_name": "Call {name}",
+    "no_results_hint": "Try broadening your search criteria"
   },
   "media": {
     "title": "Photos",
@@ -464,7 +494,10 @@
     "last_30_days": "Last 30 days",
     "daily_views": "Daily views",
     "daily_leads": "Daily leads",
-    "no_data": "No data available"
+    "no_data": "No data available",
+    "subtitle": "Your agency performance over the last 30 days.",
+    "daily_chart": "Daily evolution",
+    "advanced": "Advanced analytics"
   },
   "billing": {
     "pricing_title": "Pricing Plans",

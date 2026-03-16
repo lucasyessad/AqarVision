@@ -83,7 +83,7 @@ export async function createJob(
       target_locale: (inputPayload.target_locale as string) ?? null,
       input_payload: inputPayload,
     })
-    .select("*")
+    .select("id, job_type, status, created_at")
     .single();
 
   if (error || !data) {
@@ -315,7 +315,7 @@ export async function getJobHistory(
 ): Promise<AiJobDto[]> {
   const { data, error } = await supabase
     .from("ai_jobs")
-    .select("*")
+    .select("id, listing_id, job_type, status, created_at, completed_at, error_message")
     .eq("agency_id", agencyId)
     .order("created_at", { ascending: false })
     .limit(50);

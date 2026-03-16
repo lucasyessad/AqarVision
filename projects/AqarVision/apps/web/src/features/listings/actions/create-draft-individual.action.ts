@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
 import { ok, fail } from "@/types/action-result";
@@ -133,18 +134,21 @@ export async function createDraftIndividualListingAction(
 
   // Record initial price and status versions
   await Promise.all([
-    supabase.from("price_versions").insert({
+    supabase.from("listing_price_versions").insert({
       listing_id: listingId,
       price: d.current_price,
       currency: "DZD",
       changed_by: user.id,
     }),
-    supabase.from("status_versions").insert({
+    supabase.from("listing_status_versions").insert({
       listing_id: listingId,
       status: "draft",
       changed_by: user.id,
     }),
   ]);
+
+  revalidatePath("/[locale]/search", "page");
+  revalidatePath("/[locale]/AqarPro/dashboard/listings", "page");
 
   return ok({ listing_id: listingId, slug });
 }

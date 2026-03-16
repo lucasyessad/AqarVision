@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import {
@@ -87,6 +87,7 @@ export async function finalizeMediaUploadAction(
       parsed.data.file_size_bytes
     );
     revalidateTag(`listing-media-${parsed.data.listing_id}`);
+    revalidatePath("/[locale]/annonce", "page");
     return result;
   });
 }

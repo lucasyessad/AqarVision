@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { InviteMemberSchema } from "../schemas/agency.schema";
@@ -28,6 +29,8 @@ export async function inviteMemberAction(
 
   return withAgencyAuth(parsed.data.agency_id, "invitation", "create", async () => {
     const supabase = await createClient();
-    return inviteMember(supabase, parsed.data);
+    const result = await inviteMember(supabase, parsed.data);
+    revalidatePath("/[locale]/agences", "page");
+    return result;
   });
 }

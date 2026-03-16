@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { StartCheckoutSchema, OpenPortalSchema } from "../schemas/billing.schema";
 import { startCheckout, openBillingPortal } from "../services/billing.service";
@@ -29,7 +30,9 @@ export async function startCheckoutAction(
   return withAgencyAuth(parsed.data.agency_id, "billing", "read", async (ctx) => {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    return startCheckout(supabase, ctx.agencyId, parsed.data.plan_code, user!.email!);
+    const result = await startCheckout(supabase, ctx.agencyId, parsed.data.plan_code, user!.email!);
+    revalidatePath("/[locale]/AqarPro/dashboard/billing", "page");
+    return result;
   });
 }
 
@@ -54,6 +57,8 @@ export async function openBillingPortalAction(
   return withAgencyAuth(parsed.data.agency_id, "billing", "read", async (ctx) => {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    return openBillingPortal(supabase, ctx.agencyId, user!.email!);
+    const result = await openBillingPortal(supabase, ctx.agencyId, user!.email!);
+    revalidatePath("/[locale]/AqarPro/dashboard/billing", "page");
+    return result;
   });
 }

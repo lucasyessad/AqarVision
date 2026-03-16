@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { AcceptInviteSchema } from "../schemas/agency.schema";
 import { acceptInvite } from "../services/agency.service";
@@ -37,6 +38,7 @@ export async function acceptInviteAction(
 
   try {
     const membership = await acceptInvite(supabase, user.id, parsed.data.token);
+    revalidatePath("/[locale]/agences", "page");
     return { success: true, data: membership };
   } catch (err) {
     return {

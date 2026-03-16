@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { CreateBranchSchema } from "../schemas/agency.schema";
@@ -32,6 +33,8 @@ export async function createBranchAction(
 
   return withAgencyAuth(parsed.data.agency_id, "settings", "update", async () => {
     const supabase = await createClient();
-    return createBranch(supabase, parsed.data);
+    const result = await createBranch(supabase, parsed.data);
+    revalidatePath("/[locale]/agences", "page");
+    return result;
   });
 }

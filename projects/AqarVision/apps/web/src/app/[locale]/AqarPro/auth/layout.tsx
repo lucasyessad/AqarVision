@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { AqarBrandLogo } from "@/components/brand/AqarBrandLogo";
 import { Link } from "@/lib/i18n/navigation";
 
@@ -8,6 +9,7 @@ interface LayoutProps {
 
 export default async function AqarProAuthLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
+  const t = await getTranslations("auth");
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
@@ -38,26 +40,22 @@ export default async function AqarProAuthLayout({ children, params }: LayoutProp
           <div>
             <AqarBrandLogo product="Pro" size="lg" onDark className="mb-16" />
             <h2 className="font-display text-4xl font-light leading-snug text-zinc-50">
-              <span className="italic">La plateforme</span>
+              <span className="italic">{t("hero_line1")}</span>
               <br />
-              <span className="font-semibold">des agences</span>
+              <span className="font-semibold">{t("hero_line2")}</span>
               <br />
-              immobilières
+              {t("hero_line3")}
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-zinc-400">
-              Gérez vos annonces, vos leads et vos performances depuis un seul espace professionnel.
+              {t("hero_subtitle")}
             </p>
           </div>
 
           <div className="space-y-3">
-            {[
-              "Publication illimitée d'annonces",
-              "CRM leads & messagerie",
-              "Analytiques & statistiques marché",
-            ].map((item) => (
-              <div key={item} className="flex items-center gap-3">
+            {(["feature_listings", "feature_crm", "feature_analytics"] as const).map((key) => (
+              <div key={key} className="flex items-center gap-3">
                 <div className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                <p className="text-sm text-zinc-500">{item}</p>
+                <p className="text-sm text-zinc-500">{t(key)}</p>
               </div>
             ))}
           </div>

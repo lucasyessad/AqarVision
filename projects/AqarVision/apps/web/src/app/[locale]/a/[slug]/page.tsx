@@ -15,6 +15,7 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
+import { formatPrice } from "@/lib/format";
 
 const getCachedAgency = cache(async (slug: string) => {
   const supabase = await createClient();
@@ -43,15 +44,6 @@ export async function generateMetadata({ params }: AgencyPageProps) {
       },
     },
   };
-}
-
-function formatPrice(price: number, currency: string): string {
-  return new Intl.NumberFormat("fr-DZ", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
 }
 
 export default async function AgencyPublicPage({ params }: AgencyPageProps) {

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import { ChangePriceSchema } from "../schemas/listing.schema";
@@ -49,6 +50,8 @@ export async function changePriceAction(
       parsed.data.expected_version,
       parsed.data.reason
     );
+    revalidatePath("/[locale]/search", "page");
+    revalidatePath("/[locale]/AqarPro/dashboard/listings", "page");
     return { updated: true as const };
   });
 }

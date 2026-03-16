@@ -7,6 +7,7 @@ import {
   Image,
   ArrowLeft,
 } from "lucide-react";
+import { formatPrice } from "@/lib/format";
 
 interface ComparerPageProps {
   params: Promise<{ locale: string }>;
@@ -32,15 +33,6 @@ interface ListingForCompare {
   slug: string;
   cover_url: string | null;
   agency_name: string;
-}
-
-function formatPrice(price: number, currency: string): string {
-  return new Intl.NumberFormat("fr-DZ", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
 }
 
 const COMPARE_ROWS: { label: string; key: keyof ListingForCompare | "equipments" }[] = [

@@ -36,10 +36,10 @@ export type UpdateAgencyInput = z.infer<typeof UpdateAgencySchema>;
 
 export const CreateBranchSchema = z.object({
   agency_id: z.string().uuid(),
-  name: z.string().min(2).max(100),
+  name: z.string().min(2).max(100).transform(sanitizeInput),
   wilaya_code: z.string().min(1).max(10),
   commune_id: z.number().optional(),
-  address_text: z.string().max(500).optional(),
+  address_text: z.string().max(500).transform(sanitizeInput).optional(),
 });
 
 export type CreateBranchInput = z.infer<typeof CreateBranchSchema>;

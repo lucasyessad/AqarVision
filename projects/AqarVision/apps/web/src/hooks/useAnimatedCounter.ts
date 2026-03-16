@@ -11,8 +11,8 @@ export function useAnimatedCounter(value: number, duration = 1500) {
     if (!el) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
           let start = 0;
           const step = (timestamp: number) => {
             if (!start) start = timestamp;

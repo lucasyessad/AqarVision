@@ -6,15 +6,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { ListingStatusBadge } from "./ListingStatusBadge";
 import { Bed, Ruler, MapPin, Camera } from "lucide-react";
 import type { ListingDto } from "../types/listing.types";
-
-function formatPrice(price: number, currency: string): string {
-  return new Intl.NumberFormat("fr-DZ", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-}
+import { formatPrice } from "@/lib/format";
 
 interface ListingCardProps {
   listing: ListingDto;

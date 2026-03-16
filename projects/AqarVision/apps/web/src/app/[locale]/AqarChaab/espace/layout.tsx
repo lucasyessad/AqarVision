@@ -27,24 +27,26 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
     redirect(`/${locale}/AqarChaab/auth/login`);
   }
 
-  // Pro users (agency members) must use AqarPro dashboard
-  const { data: membership } = await supabase
-    .from("agency_memberships")
-    .select("agency_id")
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .limit(1)
-    .maybeSingle();
+  // Fetch membership and profile in parallel
+  const [{ data: membership }, { data: profile }] = await Promise.all([
+    supabase
+      .from("agency_memberships")
+      .select("agency_id")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("user_id", user.id)
+      .single(),
+  ]);
 
+  // Pro users (agency members) must use AqarPro dashboard
   if (membership) {
     redirect(`/${locale}/AqarPro/dashboard`);
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("user_id", user.id)
-    .single();
 
   const displayName = profile?.full_name || user.email?.split("@")[0] || "—";
   const initial = displayName.charAt(0).toUpperCase();

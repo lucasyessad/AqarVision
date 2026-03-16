@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { sanitizeInput } from "@/lib/sanitize";
 
 export const ToggleFavoriteSchema = z.object({
   listing_id: z.string().uuid(),
@@ -10,7 +11,7 @@ export const SaveNoteSchema = z.object({
 });
 
 export const SaveSearchSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1).transform(sanitizeInput),
   filters: z.record(z.unknown()),
 });
 

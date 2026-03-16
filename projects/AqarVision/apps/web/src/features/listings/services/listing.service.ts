@@ -28,50 +28,94 @@ const LISTING_SELECT = `
 const TRANSLATION_SELECT = "id, locale, title, description, slug";
 
 /* ------------------------------------------------------------------ */
+/*  Supabase row shapes                                                */
+/* ------------------------------------------------------------------ */
+
+interface ListingRow {
+  id: string;
+  agency_id: string;
+  current_status: string;
+  current_price: number;
+  currency: string;
+  listing_type: string;
+  property_type: string;
+  surface_m2: number | null;
+  rooms: number | null;
+  bathrooms: number | null;
+  wilaya_code: string;
+  commune_id: number | null;
+  version: number;
+  published_at: string | null;
+  created_at: string;
+}
+
+interface ListingWithRelationsRow extends ListingRow {
+  agencies: { name: string; slug: string } | null;
+  listing_translations?: TranslationRow[];
+  listing_media?: MediaRow[];
+}
+
+interface TranslationRow {
+  id: string;
+  locale: string;
+  title: string;
+  description: string;
+  slug: string;
+}
+
+interface MediaRow {
+  id: string;
+  storage_path: string;
+  content_type: string;
+  is_cover: boolean;
+  sort_order: number;
+}
+
+/* ------------------------------------------------------------------ */
 /*  Mappers                                                            */
 /* ------------------------------------------------------------------ */
 
-function mapTranslation(row: Record<string, unknown>): TranslationDto {
+function mapTranslation(row: TranslationRow): TranslationDto {
   return {
-    id: row.id as string,
+    id: row.id,
     locale: row.locale as Locale,
-    title: row.title as string,
-    description: row.description as string,
-    slug: row.slug as string,
+    title: row.title,
+    description: row.description,
+    slug: row.slug,
   };
 }
 
-function mapMedia(row: Record<string, unknown>): MediaDto {
+function mapMedia(row: MediaRow): MediaDto {
   return {
-    id: row.id as string,
-    storage_path: row.storage_path as string,
-    content_type: row.content_type as string,
-    is_cover: row.is_cover as boolean,
-    sort_order: row.sort_order as number,
+    id: row.id,
+    storage_path: row.storage_path,
+    content_type: row.content_type,
+    is_cover: row.is_cover,
+    sort_order: row.sort_order,
   };
 }
 
 function mapListing(
-  row: Record<string, unknown>,
+  row: ListingRow,
   translations: TranslationDto[] = [],
   coverUrl: string | null = null
 ): ListingDto {
   return {
-    id: row.id as string,
-    agency_id: row.agency_id as string,
+    id: row.id,
+    agency_id: row.agency_id,
     current_status: row.current_status as ListingStatus,
-    current_price: row.current_price as number,
-    currency: (row.currency as string) ?? "DZD",
+    current_price: row.current_price,
+    currency: row.currency ?? "DZD",
     listing_type: row.listing_type as ListingDto["listing_type"],
     property_type: row.property_type as ListingDto["property_type"],
-    surface_m2: (row.surface_m2 as number) ?? null,
-    rooms: (row.rooms as number) ?? null,
-    bathrooms: (row.bathrooms as number) ?? null,
-    wilaya_code: row.wilaya_code as string,
-    commune_id: (row.commune_id as number) ?? null,
-    version: row.version as number,
-    published_at: (row.published_at as string) ?? null,
-    created_at: row.created_at as string,
+    surface_m2: row.surface_m2 ?? null,
+    rooms: row.rooms ?? null,
+    bathrooms: row.bathrooms ?? null,
+    wilaya_code: row.wilaya_code,
+    commune_id: row.commune_id ?? null,
+    version: row.version,
+    published_at: row.published_at ?? null,
+    created_at: row.created_at,
     translations,
     cover_url: coverUrl,
   };
@@ -112,7 +156,7 @@ export async function create(
   }
 
   // Insert initial price version
-  await supabase.from("price_versions").insert({
+  await supabase.from("listing_price_versions").insert({
     listing_id: listing.id,
     price: data.current_price,
     currency: "DZD",
@@ -120,15 +164,16 @@ export async function create(
   });
 
   // Insert initial status version
-  await supabase.from("status_versions").insert({
+  await supabase.from("listing_status_versions").insert({
     listing_id: listing.id,
     status: "draft",
     changed_by: userId,
   });
 
+  const created = listing as unknown as { id: string; current_status: string };
   return {
-    listing_id: listing.id as string,
-    status: listing.current_status as ListingStatus,
+    listing_id: created.id,
+    status: created.current_status as ListingStatus,
   };
 }
 
@@ -150,7 +195,8 @@ export async function update(
     throw new Error("Listing not found");
   }
 
-  if ((current.version as number) !== expectedVersion) {
+  const currentRow = current as unknown as { version: number };
+  if (currentRow.version !== expectedVersion) {
     const err = new Error("Version conflict — listing was modified by another user");
     err.name = "OPTIMISTIC_LOCK_CONFLICT";
     throw err;
@@ -191,7 +237,7 @@ export async function update(
     changes: updatePayload,
   });
 
-  return mapListing(updated);
+  return mapListing(updated as unknown as ListingRow);
 }
 
 export async function getById(
@@ -220,26 +266,24 @@ export async function getById(
     .eq("listing_id", listingId)
     .order("sort_order", { ascending: true });
 
-  const mappedTranslations = (translations ?? []).map((t) =>
-    mapTranslation(t as unknown as Record<string, unknown>)
-  );
+  const typedListing = listing as unknown as ListingWithRelationsRow;
+  const typedTranslations = (translations ?? []) as unknown as TranslationRow[];
+  const typedMedia = (media ?? []) as unknown as MediaRow[];
 
-  const mappedMedia = (media ?? []).map((m) =>
-    mapMedia(m as unknown as Record<string, unknown>)
-  );
+  const mappedTranslations = typedTranslations.map(mapTranslation);
+  const mappedMedia = typedMedia.map(mapMedia);
 
   const coverMedia = mappedMedia.find((m) => m.is_cover);
-  const agency = listing.agencies as unknown as Record<string, unknown> | null;
 
   return {
     ...mapListing(
-      listing as unknown as Record<string, unknown>,
+      typedListing,
       mappedTranslations,
       coverMedia?.storage_path ?? null
     ),
     media: mappedMedia,
-    agency_name: (agency?.name as string) ?? "",
-    agency_slug: (agency?.slug as string) ?? "",
+    agency_name: typedListing.agencies?.name ?? "",
+    agency_slug: typedListing.agencies?.slug ?? "",
   };
 }
 
@@ -271,20 +315,19 @@ export async function getByAgency(
     return [];
   }
 
-  return data.map((row) => {
-    const translations = (
-      (row.listing_translations as Record<string, unknown>[]) ?? []
-    )
+  return data.map((raw) => {
+    const row = raw as unknown as ListingWithRelationsRow;
+    const translations = (row.listing_translations ?? [])
       .filter((t) => t.locale === "fr")
       .map(mapTranslation);
 
-    const mediaRows = (row.listing_media as Record<string, unknown>[]) ?? [];
+    const mediaRows = row.listing_media ?? [];
     const cover = mediaRows.find((m) => m.is_cover === true);
 
     return mapListing(
-      row as unknown as Record<string, unknown>,
+      row,
       translations,
-      (cover?.storage_path as string) ?? null
+      cover?.storage_path ?? null
     );
   });
 }
@@ -313,7 +356,7 @@ export async function upsertTranslation(
     throw new Error(error?.message ?? "Failed to upsert translation");
   }
 
-  return mapTranslation(translation as unknown as Record<string, unknown>);
+  return mapTranslation(translation as unknown as TranslationRow);
 }
 
 export async function getTranslations(
@@ -329,7 +372,7 @@ export async function getTranslations(
     return [];
   }
 
-  return data.map((t) => mapTranslation(t as unknown as Record<string, unknown>));
+  return (data as unknown as TranslationRow[]).map(mapTranslation);
 }
 
 export async function canPublish(
@@ -344,7 +387,7 @@ export async function canPublish(
     .select("locale")
     .eq("listing_id", listingId);
 
-  const locales = (translations ?? []).map((t) => t.locale as string);
+  const locales = (translations ?? []).map((t) => (t as unknown as { locale: string }).locale);
   if (!locales.includes("fr")) missing.push("french_translation");
   if (!locales.includes("ar")) missing.push("arabic_translation");
 
@@ -367,7 +410,8 @@ export async function canPublish(
     .eq("id", listingId)
     .single();
 
-  if (!listing || (listing.current_price as number) <= 0) {
+  const priceRow = listing as unknown as { current_price: number } | null;
+  if (!priceRow || priceRow.current_price <= 0) {
     missing.push("price_set");
   }
 
@@ -393,7 +437,7 @@ export async function submitForReview(
     throw new Error(error.message);
   }
 
-  await supabase.from("status_versions").insert({
+  await supabase.from("listing_status_versions").insert({
     listing_id: listingId,
     status: "pending_review",
     changed_by: userId,

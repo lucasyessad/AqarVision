@@ -198,8 +198,7 @@ export function UpgradePricingClient({
                 )}
                 {isActive && (
                   <span
-                    className="absolute left-4 top-4 rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                    className="bg-green-500/10 text-green-700 dark:text-green-400"
+                    className="absolute left-4 top-4 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-green-500/10 text-green-700 dark:text-green-400"
                   >
                     Actif
                   </span>
@@ -235,9 +234,8 @@ export function UpgradePricingClient({
                     type="submit"
                     disabled={isLoading || isActive}
                     className={`w-full rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-85 disabled:opacity-50 ${
-                      isActive ? "text-green-700 dark:text-green-400" : "bg-zinc-950 dark:bg-amber-500 text-zinc-50 dark:text-zinc-950"
+                      isActive ? "bg-green-500/10 text-green-700 dark:text-green-400" : "bg-zinc-950 dark:bg-amber-500 text-zinc-50 dark:text-zinc-950"
                     }`}
-                    className={isActive ? "bg-green-500/10" : ""}
                   >
                     {isActive ? "Plan actuel" : subPending ? "Chargement…" : "S'abonner"}
                   </button>

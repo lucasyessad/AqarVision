@@ -95,7 +95,14 @@
     "mode_pro": "Espacio Pro (Agencia)",
     "mode_visitor_hint": "Inicia sesion para acceder a tus favoritos y alertas.",
     "mode_pro_hint": "Inicia sesion para gestionar tus anuncios y clientes.",
-    "pro_no_account_hint": "¿Aun no tienes agencia?"
+    "pro_no_account_hint": "¿Aun no tienes agencia?",
+    "hero_line1": "La plataforma",
+    "hero_line2": "de las agencias",
+    "hero_line3": "inmobiliarias",
+    "hero_subtitle": "Gestiona tus anuncios, tus prospectos y tu rendimiento desde un unico espacio profesional.",
+    "feature_listings": "Publicacion ilimitada de anuncios",
+    "feature_crm": "CRM de prospectos y mensajeria",
+    "feature_analytics": "Analiticas y estadisticas de mercado"
   },
   "espace": {
     "page_title": "Mi espacio",
@@ -144,6 +151,19 @@
       "billing": "Facturacion"
     },
     "save": "Guardar",
+    "settings_title": "Configuracion de la cuenta",
+    "settings_subtitle": "Gestiona tu informacion personal y preferencias.",
+    "email_label": "Correo electronico",
+    "email_hint": "Tu direccion de inicio de sesion. Contacta soporte para cambiarla.",
+    "personal_info": "Informacion personal",
+    "full_name_hint": "Se muestra en tu perfil y en las comunicaciones.",
+    "full_name_placeholder": "Tu nombre completo",
+    "phone_hint": "Numero de contacto (opcional).",
+    "locale_hint": "Idioma de la interfaz del panel.",
+    "locale_fr": "Français",
+    "locale_ar": "العربية",
+    "locale_en": "English",
+    "locale_es": "Español",
     "stats": {
       "activeListings": "Anuncios activos",
       "totalLeads": "Total prospectos",
@@ -189,7 +209,9 @@
     "price_min": "Precio minimo",
     "property_type": "Tipo de propiedad",
     "q": "Busqueda",
-    "wilaya_code": "Codigo de wilaya"
+    "wilaya_code": "Codigo de wilaya",
+    "map_unavailable": "Mapa no disponible en este entorno",
+    "view_listing": "Ver anuncio"
   },
   "listings": {
     "title": "Mis anuncios",
@@ -274,7 +296,15 @@
     "tab_translations": "Traducciones",
     "translation_saved": "Traduccion guardada exitosamente",
     "untitled": "Sin titulo",
-    "wilaya_code": "Codigo de wilaya"
+    "wilaya_code": "Codigo de wilaya",
+    "status_available": "Disponible",
+    "status_under_offer": "Bajo oferta",
+    "badge_new": "Nuevo",
+    "badge_viewed": "Visto",
+    "contact_button": "Contactar",
+    "view_button": "Ver",
+    "call_name": "Llamar a {name}",
+    "no_results_hint": "Intenta ampliar tus criterios de busqueda"
   },
   "media": {
     "title": "Fotos",
@@ -464,7 +494,10 @@
     "last_30_days": "Ultimos 30 dias",
     "daily_views": "Vistas diarias",
     "daily_leads": "Prospectos diarios",
-    "no_data": "No hay datos disponibles"
+    "no_data": "No hay datos disponibles",
+    "subtitle": "Rendimiento de tu agencia en los ultimos 30 dias.",
+    "daily_chart": "Evolucion diaria",
+    "advanced": "Analisis avanzados"
   },
   "billing": {
     "pricing_title": "Planes de precios",

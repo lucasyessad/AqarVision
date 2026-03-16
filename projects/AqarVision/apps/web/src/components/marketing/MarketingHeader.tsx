@@ -84,7 +84,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
         {/* Nav */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map(({ href, label }) => {
-            const isActive = pathname.includes(href.split("?")[0]);
+            const isActive = pathname.includes(href.split("?")[0] ?? href);
             return (
               <Link
                 key={href}

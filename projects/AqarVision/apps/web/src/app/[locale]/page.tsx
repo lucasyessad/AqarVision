@@ -13,15 +13,7 @@ import { getWilayas } from "@/features/marketplace/services/search.service";
 import { createClient } from "@/lib/supabase/server";
 import type { SearchResultDto } from "@/features/marketplace/types/search.types";
 import { ChevronDown, ArrowRight, Home } from "lucide-react";
-
-function formatPrice(price: number, currency: string): string {
-  return new Intl.NumberFormat("fr-DZ", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-}
+import { formatPrice } from "@/lib/format";
 
 const POPULAR_WILAYAS = [
   { code: "16", name: "Alger",       count: "4 200+" },
