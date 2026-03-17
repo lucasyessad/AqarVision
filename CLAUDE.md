@@ -13,9 +13,9 @@ The repository follows a **dual-structure approach**:
 - **`resources/`** — 26 upstream git repositories (read-only, update via `./scripts/update-all.sh`). Never modify files here directly.
 - **`library/`** — Curated copies organized by use case. All customizations go here, not in `resources/`.
 - **`projects/`** — Independent development projects, each with its own stack and dependencies. Reference library resources via `../../library/...`.
-- **`templates/`** — Starter templates + `clone-template.sh` (supports: nextjs, saas, saas-nextjs, api-node, api-fastapi, mobile, ds).
+- **`templates/`** — Starter templates + `clone-template.sh` (directories: `web-app`, `api`, `mobile`, `data-science`) + `fetch-all-templates.sh` to pull GitHub templates listed in `GITHUB_TEMPLATES.md`.
 - **`scripts/`** — Automation scripts for maintenance.
-- **`docs/`** — Guides (`quick-start.md`, `maintenance.md`, `resource-management.md`) and `references/quick-reference.md`.
+- **`docs/`** — `guides/`, `best-practices/`, `references/`.
 
 ## Key Commands
 
@@ -48,7 +48,7 @@ Activate the Python specialist subagent from library/subagents/languages/python
 
 ## Active Projects
 
-- **`projects/AqarVision/`** — Algerian proptech ecosystem (marketplace + agency CRM). See `projects/AqarVision/CLAUDE.md` for full stack details, architecture, and conventions.
+- **`projects/AqarVision/`** — Algerian proptech ecosystem (marketplace + agency CRM). Has its own comprehensive `CLAUDE.md` with stack, architecture, conventions, DB schema, and design system. **When working inside this project, that nested CLAUDE.md is the primary guide.**
 
 ## MCP Configuration
 

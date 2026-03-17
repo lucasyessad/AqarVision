@@ -1,7 +1,31 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 > Dernière mise à jour : 17 mars 2026.
 > Ce fichier est lu automatiquement par Claude Code à chaque session. C'est la **source de vérité unique** du projet. Lire intégralement avant toute modification.
+
+-----
+
+## État actuel vs. spécification
+
+> **CRITIQUE** : Ce fichier décrit à la fois l'état actuel ET la cible. `apps/web/` N'EXISTE PAS ENCORE. Voici ce qui existe réellement :
+
+### Code existant (implémenté)
+
+- **`packages/config/`** — `env.ts` (validation Zod des variables d'env), `constants.ts` (locales, currencies, image variants)
+- **`supabase/migrations/`** — 10 fichiers SQL (`001` → `010`) : extensions/enums, profiles, organisations, listings core, history, marketplace, leads/messaging, billing/analytics, geography, functions/triggers/indexes/RLS
+- **`supabase/functions/stripe-webhook/`** — Edge Function webhook Stripe (index.ts)
+- **`supabase/seed.sql`** — Données de démonstration
+- **`apps/mobile/`** — Spike Expo non actif (13 fichiers : auth, tabs, listing detail, composants Button/ListingCard)
+- **Configs** — turbo.json, pnpm-workspace.yaml, vercel.json, .mcp.json, tsconfig.json, .github/workflows/
+- **`references/`** — 7 documents de design/UX (design-tokens, component-library, aqarpro-ux, aqarsearch-ux, aqarchaab-ux, editorial-immersive, product-vision)
+
+### Pas encore implémenté (spécification ci-dessous)
+
+- **`apps/web/`** — L'intégralité de l'app Next.js (54 pages, 15 feature modules, 38 composants, middleware, i18n, tests). Les sections "Structure du monorepo", "Routes par surface", "Patterns d'architecture", "Design System", "i18n et SEO", "Dette technique" décrivent la **cible à construire**.
+
+Quand on te demande de construire des fonctionnalités, réfère-toi aux sections de spec ci-dessous. Quand on te demande l'état actuel, réfère-toi à cette section.
 
 -----
 
@@ -56,11 +80,21 @@ pnpm lint                 # Lint
 pnpm typecheck            # Vérification TypeScript
 pnpm test                 # Tests Vitest
 pnpm test:e2e             # Tests Playwright (nécessite build)
+pnpm format               # Prettier (ts, tsx, md, json)
+```
+
+Supabase (nécessite Supabase CLI installé) :
+
+```bash
+supabase start            # Démarrer Supabase local (Docker)
+supabase db reset          # Rejouer toutes les migrations + seed
+supabase migration new <name>  # Créer une nouvelle migration
+supabase functions serve   # Servir les Edge Functions localement
 ```
 
 -----
 
-## Structure du monorepo
+## Structure du monorepo (SPEC — `apps/web/` n'existe pas encore)
 
 ```
 AqarVision/
@@ -160,7 +194,7 @@ AqarVision/
 ├── apps/mobile/                              # Expo early-stage (13 fichiers, non actif)
 ├── packages/config/                          # Seul package actif : env.ts (Zod), constants.ts
 ├── supabase/
-│   ├── migrations/                           # 47 fichiers SQL (00000 → 00210)
+│   ├── migrations/                           # 10 fichiers SQL (001 → 010)
 │   ├── functions/stripe-webhook/             # Edge Function webhook Stripe
 │   ├── seed.sql                              # Données démo (27 KB)
 │   └── config.toml
@@ -170,7 +204,7 @@ AqarVision/
 └── .env.example                              # Template variables d'environnement
 ```
 
-**Statistiques :** 54 pages, 9 layouts, 26 loading skeletons, 15 modules features (183 fichiers), 38 composants partagés, 23 fichiers lib, 47 migrations SQL, 4 locales, 10 thèmes agences.
+**Statistiques cible :** 54 pages, 9 layouts, 26 loading skeletons, 15 modules features (183 fichiers), 38 composants partagés, 23 fichiers lib, 4 locales, 10 thèmes agences. **Existant :** 10 migrations SQL, 1 Edge Function, 1 package config, 1 spike mobile.
 
 -----
 
@@ -230,9 +264,9 @@ Flux : intlMiddleware (i18n) → updateSession (Supabase SSR) → extractAgencyS
 
 ## Schéma base de données
 
-47 migrations SQL (`00000` → `00210`). Extensions : PostGIS, btree_gist.
+10 migrations SQL (`001` → `010`). Extensions : PostGIS, btree_gist, pg_trgm.
 
-> **Attention :** Deux migrations portent le même numéro `00200` (`00200_sprint1_features.sql` et `00200_search_spatial_rpc.sql`). À résoudre en renommant l'une d'elles.
+Fichiers : `001_extensions_and_enums`, `002_identity_and_profiles`, `003_organizations`, `004_listings_core`, `005_listings_history`, `006_marketplace`, `007_leads_messaging`, `008_billing_analytics`, `009_geography`, `010_functions_triggers_indexes_rls`.
 
 ### Enums
 
@@ -375,45 +409,29 @@ Validation Zod dans `packages/config/src/env.ts`. Déclarées dans `turbo.json` 
 
 -----
 
-## État actuel — Dette technique connue
+## État actuel — Ce qui reste à construire
 
-### Code mort à supprimer
+> Les sections "Dette technique" ci-dessous s'appliqueront quand `apps/web/` existera. Pour l'instant, le travail principal est de **construire l'app web** en suivant la spec ci-dessus.
 
-- 1 hook inutilisé restant : `features/messaging/hooks/use-realtime-messages.ts`.
-- Bloc backward-compat colors dans `tailwind.config.ts` (onyx, ivoire, or, charcoal, warm, coral, aqar, text-dark, text-body, text-muted, text-faint).
+### Hex → Tailwind token mapping (à respecter dès le départ)
 
-> **Déjà nettoyé :** 4 hooks morts (useScrollReveal, use-auth, auth.service, use-current-agency), DeposerWizard v1, 6 packages vides, lib/actions/auth.ts, références mortes next.config.ts.
-
-### Dette design
-
-183 hex hardcodés, 406 inline styles, 26 patterns `bg-[#...]`, 331 lignes sans variante `dark:`. Correspondances : `#FAFAFA`→`zinc-50`, `#F4F4F5`→`zinc-100`, `#E4E4E7`→`zinc-200`, `#D4D4D8`→`zinc-300`, `#A1A1AA`→`zinc-400`, `#71717A`→`zinc-500`, `#52525B`→`zinc-600`, `#3F3F46`→`zinc-700`, `#27272A`→`zinc-800`, `#18181B`→`zinc-900`, `#09090B`→`zinc-950`, `#F59E0B`→`amber-500`, `#FBBF24`→`amber-400`, `#D97706`→`amber-600`.
-
-### Textes i18n hardcodés
-
-DashboardSidebar (8 chaînes), Dashboard layout (2), ProLoginForm (3), Homepage wilayas (tableau hardcodé).
-
-### Autres dettes
-
-- **Sentry :** `@sentry/nextjs@^9.5.0` installé mais non initialisé dans le code — décider si on configure ou on retire la dépendance.
-- **CSP :** `unsafe-inline` + `unsafe-eval` dans le middleware. Implémenter CSP par environnement avec nonces.
-- **SearchMap :** 3 types `any` (MapLibreMap, MapLibreMarker, MapLibrePopup).
-- **Mobile :** `apps/mobile/` est un spike Expo non actif (13 fichiers).
+`#FAFAFA`→`zinc-50`, `#F4F4F5`→`zinc-100`, `#E4E4E7`→`zinc-200`, `#D4D4D8`→`zinc-300`, `#A1A1AA`→`zinc-400`, `#71717A`→`zinc-500`, `#52525B`→`zinc-600`, `#3F3F46`→`zinc-700`, `#27272A`→`zinc-800`, `#18181B`→`zinc-900`, `#09090B`→`zinc-950`, `#F59E0B`→`amber-500`, `#FBBF24`→`amber-400`, `#D97706`→`amber-600`.
 
 -----
 
 ## Plan d'exécution séquentiel
 
-**Phase 0 — Nettoyage (1-2 jours) :** Supprimer le code mort, consolider l'auth, nettoyer les configs. Validation : `pnpm typecheck && pnpm build && pnpm test`.
+**Phase 0 — Scaffolding `apps/web/` :** Créer l'app Next.js 15 avec App Router, Tailwind, next-intl, Supabase SSR, middleware i18n/auth. Validation : `pnpm dev` démarre sans erreur.
 
-**Phase 1 — Stabilisation technique (1 semaine) :** Corriger Sentry, typer SearchMap, externaliser les textes FR hardcodés, ajouter 10 tests unitaires critiques.
+**Phase 1 — Fondations :** Auth (login/signup Pro + Chaab), layout dashboard, layout marketing, composants partagés (sidebar, header, footer).
 
-**Phase 2 — Éradication dette design (2-3 semaines) :** Éliminer les violations (183 hex + 406 inline + 26 bg-[#] + 331 sans dark:).
+**Phase 2 — AqarPro CRM :** Dashboard overview, CRUD annonces, leads, demandes de visite, analytics, team, billing Stripe, settings.
 
-**Phase 3 — Dashboard AqarPro complet (3-4 semaines) :** TopBar enrichie, sidebar collapsible, CommandPalette, Overview enrichi, ListingDrawer.
+**Phase 3 — AqarSearch Marketplace :** Recherche multicritère, carte MapLibre, détail annonce, favoris, comparaison, estimation.
 
-**Phase 4 — Refonte homepage + surfaces publiques (2-3 semaines) :** Design tricolore lumineux avec GSAP.
+**Phase 4 — AqarChaab Espace particulier :** Dépôt annonce wizard, messagerie, alertes, collections, profil, upgrade.
 
-**Phase 5 — Sécurité et qualité (continu) :** CSP durcie, CI gates, tests E2E dashboard.
+**Phase 5 — Marketing & Polish :** Homepage éditoriale, landing pages, vitrines agences thématisées, SEO, tests E2E.
 
 -----
 
@@ -487,6 +505,8 @@ Utilise ../../library/generators/ui-components/ui-ux-pro/ pour generer les compo
 -----
 
 ## Commandes d'audit
+
+> Ces commandes ciblent `apps/web/src` qui n'existe pas encore. À utiliser une fois l'app web créée.
 
 ```bash
 # Dette design
