@@ -1,8 +1,13 @@
-"""Listing description generation endpoint."""
+"""Listing description generation endpoints — agency and individual."""
 
 from fastapi import APIRouter, Depends
 
-from schemas.requests import GenerateDescriptionRequest, GenerateDescriptionResponse
+from schemas.requests import (
+    GenerateDescriptionIndividualRequest,
+    GenerateDescriptionIndividualResponse,
+    GenerateDescriptionRequest,
+    GenerateDescriptionResponse,
+)
 from services.claude_client import complete
 from services.errors import safe_api_error
 from routers._auth import verify_service_key
@@ -56,5 +61,91 @@ async def generate_description(
             temperature=0.7,
         )
         return GenerateDescriptionResponse(description=description, locale=req.locale)
+    except Exception as e:
+        raise safe_api_error(e) from e
+
+
+# ------------------------------------------------------------------ #
+#  Individual listing description (AqarChaab — no agency context)     #
+# ------------------------------------------------------------------ #
+
+_TYPE_LABELS = {
+    "sale": "Vente",
+    "rent": "Location",
+    "vacation": "Location vacances",
+    "apartment": "Appartement",
+    "villa": "Villa",
+    "terrain": "Terrain",
+    "commercial": "Local commercial",
+    "office": "Bureau",
+    "building": "Immeuble",
+    "farm": "Ferme",
+    "warehouse": "Entrepôt",
+    "studio": "Studio",
+    "land": "Terrain",
+    "garage": "Garage",
+}
+
+_INDIVIDUAL_SYSTEM = (
+    "Tu es un rédacteur immobilier professionnel spécialisé dans le marché algérien. "
+    "Tu génères des descriptions d'annonces immobilières claires, précises et attrayantes."
+)
+
+
+def _build_individual_user_message(
+    req: GenerateDescriptionIndividualRequest, lang: str
+) -> str:
+    details_list = ", ".join(
+        k.replace("has_", "").replace("_", " ")
+        for k, v in req.details.items()
+        if v is True
+    )
+
+    parts = [
+        f"Rédige une description immobilière professionnelle en {lang} pour ce bien :",
+        f"- Type d'annonce : {_TYPE_LABELS.get(req.listing_type, req.listing_type)}",
+        f"- Type de bien : {_TYPE_LABELS.get(req.property_type, req.property_type)}",
+        f"- Prix : {req.current_price:,} DZD".replace(",", " "),
+        f"- Surface : {req.surface_m2 or 'non précisée'} m²",
+        f"- Pièces : {req.rooms or 'non précisées'}",
+        f"- Salles de bain : {req.bathrooms or 'non précisées'}",
+    ]
+    if req.floor is not None:
+        parts.append(f"- Étage : {req.floor}")
+    parts.append(f"- Localisation : wilaya {req.wilaya_code}")
+    if req.commune_name:
+        parts[-1] += f", {req.commune_name}"
+    if req.condition:
+        parts.append(f"- État : {req.condition}")
+    if req.year_built:
+        parts.append(f"- Année de construction : {req.year_built}")
+    if details_list:
+        parts.append(f"- Équipements : {details_list}")
+
+    parts.append(
+        "\nInstructions : 150 à 250 mots. Ton professionnel mais chaleureux. "
+        "Ne pas inventer de caractéristiques non fournies. "
+        "Commence directement par la description, sans titre ni label."
+    )
+    return "\n".join(parts)
+
+
+@router.post(
+    "/generate/description/individual",
+    response_model=GenerateDescriptionIndividualResponse,
+)
+async def generate_description_individual(
+    req: GenerateDescriptionIndividualRequest,
+) -> GenerateDescriptionIndividualResponse:
+    lang = _LOCALE_NAMES.get(req.locale, "français")
+    try:
+        text = await complete(
+            system=_INDIVIDUAL_SYSTEM,
+            user_message=_build_individual_user_message(req, lang),
+            temperature=0.7,
+        )
+        return GenerateDescriptionIndividualResponse(
+            text=text.strip(), locale=req.locale
+        )
     except Exception as e:
         raise safe_api_error(e) from e

@@ -121,6 +121,51 @@ def test_analyze_photos(authed_client, mock_complete_vision):
     assert data["quality_score"] == 75
 
 
+def test_generate_description_individual(authed_client, mock_complete):
+    mock_complete.return_value = "Superbe appartement F3 au cœur d'Alger."
+    response = authed_client.post(
+        "/api/v1/generate/description/individual",
+        json={
+            "listing_type": "sale",
+            "property_type": "apartment",
+            "current_price": 8_000_000,
+            "surface_m2": 75.0,
+            "rooms": 3,
+            "wilaya_code": "16",
+            "commune_name": "Bab El Oued",
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "Superbe" in data["text"]
+    assert data["locale"] == "fr"
+    mock_complete.assert_awaited_once()
+
+
+def test_translate_batch(authed_client, mock_complete):
+    mock_complete.return_value = json.dumps(
+        {"title": "شقة F3 للبيع", "description": "شقة رائعة في وسط المدينة"}
+    )
+    response = authed_client.post(
+        "/api/v1/translate/batch",
+        json={
+            "texts": {
+                "title": "Appartement F3 à vendre",
+                "description": "Superbe appartement en centre-ville",
+            },
+            "source_locale": "fr",
+            "target_locale": "ar",
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "title" in data["translations"]
+    assert "description" in data["translations"]
+    assert data["target_locale"] == "ar"
+    # Only 1 Claude call for both fields
+    mock_complete.assert_awaited_once()
+
+
 def test_generate_description_claude_error(authed_client, mock_complete):
     """When Claude fails, return a safe 502 without leaking internals."""
     mock_complete.side_effect = RuntimeError("connection refused")

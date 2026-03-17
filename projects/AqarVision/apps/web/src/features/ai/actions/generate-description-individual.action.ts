@@ -4,8 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { logger } from "@/lib/logger";
 import { ok, fail } from "@/types/action-result";
 import { z } from "zod";
-import Anthropic from "@anthropic-ai/sdk";
 import type { ActionResult } from "@/types/action-result";
+
+const AI_BACKEND_URL = process.env.AI_BACKEND_URL ?? "http://localhost:8000";
+const AI_SERVICE_KEY = process.env.AI_SERVICE_KEY ?? "";
 
 const InputSchema = z.object({
   listing_type: z.string(),
@@ -36,55 +38,44 @@ export async function generateDescriptionIndividualAction(
 
   const d = parsed.data;
 
-  const typeLabels: Record<string, string> = {
-    sale: "Vente",
-    rent: "Location",
-    vacation: "Location vacances",
-    apartment: "Appartement",
-    villa: "Villa",
-    terrain: "Terrain",
-    commercial: "Local commercial",
-    office: "Bureau",
-    building: "Immeuble",
-    farm: "Ferme",
-    warehouse: "Entrepôt",
-  };
-
-  const detailsList = Object.entries(d.details ?? {})
-    .filter(([, v]) => v === true)
-    .map(([k]) => k.replace("has_", "").replace("_", " "))
-    .join(", ");
-
-  const userPrompt = `Rédige une description immobilière professionnelle en français pour ce bien :
-- Type d'annonce : ${typeLabels[d.listing_type] ?? d.listing_type}
-- Type de bien : ${typeLabels[d.property_type] ?? d.property_type}
-- Prix : ${d.current_price.toLocaleString("fr-DZ")} DZD
-- Surface : ${d.surface_m2 ?? "non précisée"} m²
-- Pièces : ${d.rooms ?? "non précisées"}
-- Salles de bain : ${d.bathrooms ?? "non précisées"}
-${d.floor !== undefined ? `- Étage : ${d.floor}` : ""}
-- Localisation : wilaya ${d.wilaya_code}${d.commune_name ? `, ${d.commune_name}` : ""}
-${d.condition ? `- État : ${d.condition}` : ""}
-${d.year_built ? `- Année de construction : ${d.year_built}` : ""}
-${detailsList ? `- Équipements : ${detailsList}` : ""}
-
-Instructions : 150 à 250 mots. Ton professionnel mais chaleureux. Ne pas inventer de caractéristiques non fournies. Commence directement par la description, sans titre ni label.`;
-
   try {
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1024,
-      system: "Tu es un rédacteur immobilier professionnel spécialisé dans le marché algérien. Tu génères des descriptions d'annonces immobilières claires, précises et attrayantes.",
-      messages: [{ role: "user", content: userPrompt }],
-    });
+    const response = await fetch(
+      `${AI_BACKEND_URL}/api/v1/generate/description/individual`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Service-Key": AI_SERVICE_KEY,
+        },
+        body: JSON.stringify({
+          listing_type: d.listing_type,
+          property_type: d.property_type,
+          current_price: d.current_price,
+          surface_m2: d.surface_m2 ?? null,
+          rooms: d.rooms ?? null,
+          bathrooms: d.bathrooms ?? null,
+          floor: d.floor ?? null,
+          wilaya_code: d.wilaya_code,
+          commune_name: d.commune_name ?? null,
+          details: d.details ?? {},
+          condition: d.condition ?? null,
+          year_built: d.year_built ?? null,
+          locale: "fr",
+        }),
+      }
+    );
 
-    const textBlock = response.content.find((b) => b.type === "text");
-    if (!textBlock || textBlock.type !== "text") {
+    if (!response.ok) {
+      const errorText = await response.text();
+      logger.error(
+        { status: response.status, error: errorText, userId: user.id },
+        "AI backend error for individual description"
+      );
       return fail("AI_ERROR", "La génération a échoué. Réessayez.");
     }
 
-    return ok({ text: textBlock.text.trim() });
+    const result = (await response.json()) as { text: string; locale: string };
+    return ok({ text: result.text });
   } catch (err) {
     logger.error({ err, userId: user.id }, "generateDescriptionIndividual failed");
     return fail("AI_ERROR", "La génération a échoué. Vérifiez votre connexion et réessayez.");

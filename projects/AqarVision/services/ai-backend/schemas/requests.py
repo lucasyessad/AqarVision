@@ -81,6 +81,48 @@ class EstimatePriceResponse(BaseModel):
     confidence: float = Field(ge=0, le=1)
 
 
+# --- Translate Batch ---
+
+
+class TranslateBatchRequest(BaseModel):
+    texts: dict[str, str] = Field(
+        min_length=1,
+        max_length=10,
+        description="Map of field_name → text to translate (e.g. {'title': '...', 'description': '...'})",
+    )
+    source_locale: Locale
+    target_locale: Locale
+
+
+class TranslateBatchResponse(BaseModel):
+    translations: dict[str, str]
+    target_locale: str
+
+
+# --- Generate Individual Description ---
+
+
+class GenerateDescriptionIndividualRequest(BaseModel):
+    listing_type: str = Field(min_length=1, max_length=50)
+    property_type: str = Field(min_length=1, max_length=50)
+    current_price: int = Field(ge=0)
+    surface_m2: float | None = Field(default=None, gt=0, le=100_000)
+    rooms: int | None = Field(default=None, ge=1, le=100)
+    bathrooms: int | None = Field(default=None, ge=0, le=50)
+    floor: int | None = Field(default=None, ge=-5, le=200)
+    wilaya_code: str = Field(min_length=1, max_length=10)
+    commune_name: str | None = Field(default=None, max_length=100)
+    details: dict[str, object] = Field(default_factory=dict)
+    condition: str | None = Field(default=None, max_length=50)
+    year_built: int | None = Field(default=None, ge=1800, le=2100)
+    locale: Locale = "fr"
+
+
+class GenerateDescriptionIndividualResponse(BaseModel):
+    text: str
+    locale: str
+
+
 # --- Search Intent ---
 
 

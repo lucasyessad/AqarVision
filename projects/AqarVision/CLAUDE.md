@@ -224,19 +224,26 @@ Le dashboard AqarPro est fonctionnel mais incomplet par rapport aux spécificati
 
 -----
 
-## Architecture IA — Migration Python
+## Architecture IA — Backend Python (MIGRATION TERMINÉE)
 
-**Situation actuelle :** Le module `features/ai/` utilise `@anthropic-ai/sdk` (TypeScript) dans `ai.service.ts`. 3 opérations : generate_description, translate, enrich. Jobs trackés dans la table `ai_jobs` avec quotas par plan.
-
-**Cible :** Remplacer par des appels HTTP vers un backend Python FastAPI. Le backend centralise tous les appels Claude API via le SDK Python `anthropic`. Le TypeScript ne fait plus que `fetch()` vers les endpoints Python. La logique de quotas et CRUD jobs reste en TypeScript/Supabase.
+**Architecture :** Tous les appels Claude API passent par le backend Python FastAPI. Le TypeScript ne fait que `fetch()` vers les endpoints Python. La logique de quotas et CRUD jobs reste en TypeScript/Supabase. La dépendance `@anthropic-ai/sdk` a été supprimée du `package.json`.
 
 ```
 Next.js (frontend) → HTTP/JSON → FastAPI (backend IA) → SDK Python → Claude API
 ```
 
-**Nouveau dossier :** `services/ai-backend/` avec `main.py`, `routers/`, `services/claude_client.py`, `schemas/requests.py`, `requirements.txt`, `Dockerfile`.
+**Dossier :** `services/ai-backend/` — FastAPI async, Anthropic SDK Python, Pydantic v2, structured logging, retry+timeout.
 
-**Supprimer :** La dépendance `@anthropic-ai/sdk` de `package.json` après migration.
+**Endpoints disponibles :**
+- `POST /api/v1/generate/description` — Description agence (4 locales)
+- `POST /api/v1/generate/description/individual` — Description particulier (AqarChaab)
+- `POST /api/v1/translate` — Traduction single field
+- `POST /api/v1/translate/batch` — Traduction multi-champs en 1 appel Claude (titre + description)
+- `POST /api/v1/analyze/photos` — Analyse photo Vision (opt-in, coûteux)
+- `POST /api/v1/estimate/price` — Estimation prix par wilaya
+- `POST /api/v1/search/intent` — Parsing NLP recherche naturelle
+
+**Env vars Next.js :** `AI_BACKEND_URL` + `AI_SERVICE_KEY` (plus besoin de `ANTHROPIC_API_KEY` côté Next.js).
 
 -----
 

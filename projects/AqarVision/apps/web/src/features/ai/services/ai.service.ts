@@ -259,29 +259,22 @@ export async function translateListing(
   });
 
   try {
-    // Translate title
-    const titleResult = await callAIBackend<{ translated_text: string }>(
-      "/translate",
-      {
-        text: sourceTranslation.title,
-        source_locale: sourceLocale,
-        target_locale: targetLocale,
-      }
-    );
-
-    // Translate description
-    const descResult = await callAIBackend<{ translated_text: string }>(
-      "/translate",
-      {
-        text: sourceTranslation.description,
-        source_locale: sourceLocale,
-        target_locale: targetLocale,
-      }
-    );
+    // Batch translate title + description in a single Claude call
+    const batchResult = await callAIBackend<{
+      translations: Record<string, string>;
+      target_locale: string;
+    }>("/translate/batch", {
+      texts: {
+        title: sourceTranslation.title,
+        description: sourceTranslation.description,
+      },
+      source_locale: sourceLocale,
+      target_locale: targetLocale,
+    });
 
     const translation = {
-      title: titleResult.translated_text,
-      description: descResult.translated_text,
+      title: batchResult.translations.title ?? sourceTranslation.title,
+      description: batchResult.translations.description ?? sourceTranslation.description,
     };
 
     await completeJob(supabase, job.id, {
