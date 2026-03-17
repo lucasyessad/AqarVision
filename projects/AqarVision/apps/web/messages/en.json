@@ -463,7 +463,12 @@
     "bulk_publish": "Publish",
     "bulk_pause": "Pause",
     "bulk_archive": "Archive",
-    "bulk_delete": "Delete"
+    "bulk_delete": "Delete",
+    "price_history_title": "Price history",
+    "freshness_recent": "Recently updated",
+    "freshness_moderate": "Updated this month",
+    "freshness_old": "Not recently updated",
+    "freshness_confirmed": "verified"
   },
   "media": {
     "title": "Photos",
@@ -607,7 +612,14 @@
     "source_whatsapp": "WhatsApp",
     "source_phone": "Phone",
     "body": "Message",
-    "conversation_id": "Conversation"
+    "conversation_id": "Conversation",
+    "heat_cold": "Cold",
+    "heat_warm": "Warm",
+    "heat_hot": "Hot",
+    "heat_score": "Heat score",
+    "lead_type_label": "Type",
+    "next_action": "Next action",
+    "next_action_date": "Next action date"
   },
   "favorites": {
     "title": "Favorites & Saved Searches",
