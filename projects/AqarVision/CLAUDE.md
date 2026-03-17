@@ -232,9 +232,11 @@ Flux : intlMiddleware (i18n) → updateSession (Supabase SSR) → extractAgencyS
 
 47 migrations SQL (`00000` → `00210`). Extensions : PostGIS, btree_gist.
 
+> **Attention :** Deux migrations portent le même numéro `00200` (`00200_sprint1_features.sql` et `00200_search_spatial_rpc.sql`). À résoudre en renommant l'une d'elles.
+
 ### Enums
 
-`user_role` (user, admin), `agency_role` (owner, admin, agent, editor, viewer), `listing_status` (draft, pending_review, published, paused, rejected, sold, rented, expired), `listing_type` (sale, rent, vacation), `property_type` (apartment, villa, terrain, commercial, office, building, farm, warehouse), `listing_owner_type` (agency, individual).
+`user_role` (end_user, super_admin), `agency_role` (owner, admin, agent, editor, viewer), `listing_status` (draft, pending_review, published, paused, rejected, sold, rented, expired, archived), `listing_type` (sale, rent, vacation), `property_type` (apartment, villa, terrain, commercial, office, building, farm, warehouse), `listing_owner_type` (agency, individual), `document_type` (acte, livret_foncier, promesse, cc), `lead_status` (new, contacted, qualified, closed), `subscription_status` (trialing, active, past_due, canceled, incomplete), `moderation_action` (approved, rejected, hidden, restored).
 
 ### Tables principales
 
@@ -245,28 +247,33 @@ Flux : intlMiddleware (i18n) → updateSession (Supabase SSR) → extractAgencyS
 | `branches` | Succursales agences |
 | `agency_memberships` | Liens user ↔ agence + rôle |
 | `invitations` | Invitations équipe (token, email, role) |
-| `listings` | Annonces (owner_type agency/individual, PostGIS geography, details JSONB) |
+| `listings` | Annonces (owner_type agency/individual, PostGIS geography, details JSONB: rooms, bathrooms, area_m2, floor, has_parking, has_elevator, furnished, year_built, etc.) |
 | `listing_translations` | Traductions (locale, title, description, slug) |
 | `listing_media` | Photos (storage_path, position, is_cover) |
-| `listing_history` | Audit trail (changements prix, statut) |
-| `listing_views` | Compteur vues |
-| `listing_notes` | Notes internes agence |
+| `listing_documents` | Documents légaux (acte, livret_foncier, promesse, cc) |
+| `listing_price_history` | Historique prix (old_price, new_price, trigger auto) |
+| `listing_views` | Compteur vues (viewer_id, session_id, referrer) |
+| `listing_notes` | Notes internes agence (1 par user/listing) |
 | `favorites` | Favoris utilisateurs |
 | `favorite_collections` | Collections de favoris |
-| `saved_searches` | Recherches sauvegardées / alertes |
-| `leads` | Prospects (source, score, notes) |
+| `saved_searches` | Recherches sauvegardées / alertes (V1) |
+| `search_alerts` | Alertes V2 (filters JSONB, frequency instant/daily/weekly) |
+| `leads` | Prospects (source platform/whatsapp/phone, score 0-100, heat_score, lead_type, notes JSONB) |
 | `conversations` | Fils de discussion |
 | `messages` | Messages (user ↔ agence) |
 | `visit_requests` | Demandes de visite |
 | `plans` | Plans tarifaires agences (max_listings, stripe_price_id) |
 | `subscriptions` | Abonnements agences actifs |
 | `entitlements` | Droits par agence (feature_key, metadata) |
-| `individual_listing_packs` | Packs annonces ponctuels (AqarChaab) |
-| `individual_subscriptions` | Abonnements particuliers (AqarChaab) |
+| `individual_listing_packs` | Packs annonces ponctuels AqarChaab (pack_3, pack_7, pack_15) |
+| `individual_subscriptions` | Abonnements particuliers AqarChaab (chaab_plus, chaab_pro) |
+| `individual_payments` | Paiements particuliers (provider: stripe, cib, dahabia, baridimob, virement) |
 | `agency_stats_daily` | Stats agence agrégées par jour |
 | `domain_events` | Événements métier |
 | `wilayas` | 58 wilayas algériennes |
 | `communes` | 1 541 communes |
+| `audit_logs` | Trail d'audit admin (action, actor, target, metadata) |
+| `verifications` | Badges confiance agence (level 1-4, type, status, expires_at) |
 | `platform_settings` | Paramètres admin plateforme |
 
 ### RPC
@@ -276,6 +283,12 @@ Flux : intlMiddleware (i18n) → updateSession (Supabase SSR) → extractAgencyS
 ### RLS
 
 Deny-by-default sur toutes les tables. Politiques par rôle et ownership. Annonces individuelles : l'owner peut CRUD ses propres annonces.
+
+### Facturation
+
+**Agences (Stripe) :** 3 plans (Starter, Pro, Enterprise) avec `max_listings`, Stripe Checkout + Customer Portal + Webhooks via Edge Function. Table `plans` → `subscriptions` → `entitlements`.
+
+**Particuliers (AqarChaab) :** Packs ponctuels (pack_3, pack_7, pack_15 annonces) + abonnements mensuels (chaab_plus, chaab_pro). Providers de paiement : Stripe, CIB, Dahabia, BaridiMob, virement bancaire. Tables `individual_listing_packs` → `individual_subscriptions` → `individual_payments`.
 
 -----
 
