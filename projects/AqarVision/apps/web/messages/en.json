@@ -178,6 +178,26 @@
       "totalLeads": "Total leads",
       "views": "Views",
       "conversionRate": "Conversion rate"
+    },
+    "overview_subtitle": "Overview of your activity over the last 30 days.",
+    "section_action_required": "Action required",
+    "section_hot_leads": "Hot leads",
+    "section_recent_activity": "Recent activity",
+    "no_actions_required": "All up to date — no action required.",
+    "unanswered_leads": "{count, plural, one {# lead} other {# leads}} unanswered",
+    "expiring_listings": "{count, plural, one {# listing} other {# listings}} expiring soon",
+    "view_all": "View all",
+    "lead_from": "Lead for",
+    "listing_published": "Listing published",
+    "listing_viewed": "Listing viewed",
+    "quick_actions": "Quick actions",
+    "new_listing": "New listing",
+    "invite_member": "Invite member",
+    "view_analytics": "View analytics",
+    "onboarding_banner": {
+      "title": "Finish setting up your agency",
+      "description": "add your logo, publish your first listing and invite your team.",
+      "cta": "Get started →"
     }
   },
   "search": {

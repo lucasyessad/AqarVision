@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
 export default async function DashboardLayout({
   children,
@@ -12,8 +12,7 @@ export default async function DashboardLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  // getTranslations kept for onboarding banner
-  await getTranslations("dashboard");
+  const t = await getTranslations("dashboard");
 
   const supabase = await createClient();
   const {
@@ -54,35 +53,35 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-zinc-900 dark:bg-zinc-950">
-      <DashboardSidebar
+    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <DashboardShell
         agencySlug={agencySlug}
         userEmail={user.email ?? ""}
         fullName={profile?.full_name}
-      />
-
-      <div className="flex flex-1 flex-col">
+        locale={locale}
+        pageTitle={t("nav.overview")}
+      >
         {/* Onboarding banner */}
         {showOnboardingBanner && (
           <div className="border-b border-amber-200 bg-amber-50 px-8 py-3 dark:border-amber-800 dark:bg-amber-950">
             <div className="flex items-center justify-between">
               <p className="text-sm text-zinc-600 dark:text-zinc-300">
                 <span className="font-semibold text-amber-700 dark:text-amber-400">
-                  Terminez la configuration de votre agence
+                  {t("onboarding_banner.title")}
                 </span>{" "}
-                — ajoutez votre logo, publiez votre première annonce et invitez votre équipe.
+                — {t("onboarding_banner.description")}
               </p>
               <Link
                 href="/AqarPro/dashboard/onboarding"
                 className="ms-4 flex-shrink-0 rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
               >
-                Commencer →
+                {t("onboarding_banner.cta")}
               </Link>
             </div>
           </div>
         )}
-        <main className="flex-1 bg-zinc-50 dark:bg-zinc-800 p-8 dark:bg-zinc-950">{children}</main>
-      </div>
+        <main className="flex-1 bg-zinc-50 dark:bg-zinc-950 p-8">{children}</main>
+      </DashboardShell>
     </div>
   );
 }

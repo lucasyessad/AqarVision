@@ -178,6 +178,26 @@
       "totalLeads": "Total prospects",
       "views": "Vues",
       "conversionRate": "Taux de conversion"
+    },
+    "overview_subtitle": "Vue d'ensemble de votre activité sur les 30 derniers jours.",
+    "section_action_required": "À traiter maintenant",
+    "section_hot_leads": "Prospects chauds",
+    "section_recent_activity": "Activité récente",
+    "no_actions_required": "Tout est à jour — aucune action requise.",
+    "unanswered_leads": "{count, plural, one {# prospect} other {# prospects}} sans réponse",
+    "expiring_listings": "{count, plural, one {# annonce} other {# annonces}} expire bientôt",
+    "view_all": "Voir tout",
+    "lead_from": "Prospect pour",
+    "listing_published": "Annonce publiée",
+    "listing_viewed": "Annonce consultée",
+    "quick_actions": "Actions rapides",
+    "new_listing": "Nouvelle annonce",
+    "invite_member": "Inviter un membre",
+    "view_analytics": "Voir les stats",
+    "onboarding_banner": {
+      "title": "Terminez la configuration de votre agence",
+      "description": "ajoutez votre logo, publiez votre première annonce et invitez votre équipe.",
+      "cta": "Commencer →"
     }
   },
   "search": {

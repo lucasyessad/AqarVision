@@ -178,6 +178,26 @@
       "totalLeads": "إجمالي العملاء",
       "views": "المشاهدات",
       "conversionRate": "معدل التحويل"
+    },
+    "overview_subtitle": "نظرة عامة على نشاطك خلال الـ 30 يومًا الأخيرة.",
+    "section_action_required": "يتطلب إجراء",
+    "section_hot_leads": "عملاء محتملون مهمون",
+    "section_recent_activity": "النشاط الأخير",
+    "no_actions_required": "كل شيء محدّث — لا يوجد إجراء مطلوب.",
+    "unanswered_leads": "{count, plural, one {عميل محتمل #} other {# عملاء محتملين}} بدون رد",
+    "expiring_listings": "{count, plural, one {إعلان #} other {# إعلانات}} تنتهي قريبًا",
+    "view_all": "عرض الكل",
+    "lead_from": "عميل محتمل لـ",
+    "listing_published": "تم نشر الإعلان",
+    "listing_viewed": "تم عرض الإعلان",
+    "quick_actions": "إجراءات سريعة",
+    "new_listing": "إعلان جديد",
+    "invite_member": "دعوة عضو",
+    "view_analytics": "عرض الإحصائيات",
+    "onboarding_banner": {
+      "title": "أكمل إعداد وكالتك",
+      "description": "أضف شعارك، انشر إعلانك الأول وادعُ فريقك.",
+      "cta": "ابدأ ←"
     }
   },
   "search": {

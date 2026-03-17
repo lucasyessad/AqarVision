@@ -1,11 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { getAgencyUrl } from "@/lib/agency-url";
 import { Link } from "@/lib/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { signOutAction } from "@/features/auth/actions/auth.action";
 import { AqarBrandLogo } from "@/components/brand/AqarBrandLogo";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 interface DashboardSidebarProps {
   agencySlug: string | null;
@@ -67,6 +69,20 @@ const SETTINGS_ITEMS = [
 export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardSidebarProps) {
   const t = useTranslations("dashboard");
   const pathname = usePathname();
+  const [collapsed, setCollapsed] = useState(false);
+
+  // Keyboard shortcut: [ to toggle sidebar
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "[" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        const target = e.target as HTMLElement;
+        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) return;
+        setCollapsed((prev) => !prev);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   function isActive(href: string, exact = false): boolean {
     const normalized = pathname.replace(/^\/[a-z]{2}/, "");
@@ -77,34 +93,52 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
   const initial = (fullName ?? userEmail).charAt(0).toUpperCase();
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col border-e border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800">
-      {/* Logo */}
-      <div className="flex flex-col gap-2 border-b border-zinc-200 dark:border-zinc-700 px-5 py-5">
-        <AqarBrandLogo product="Pro" size="sm" onDark={false} />
-        <Link
-          href="/"
-          className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-400 transition-opacity hover:opacity-70"
-        >
-          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          {t("back_to_portal")}
-        </Link>
+    <aside
+      className={`flex shrink-0 flex-col border-e border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 transition-all duration-200 ${
+        collapsed ? "w-16" : "w-60"
+      }`}
+    >
+      {/* Logo + collapse toggle */}
+      <div className="flex flex-col gap-2 border-b border-zinc-200 dark:border-zinc-700 px-3 py-4">
+        <div className="flex items-center justify-between">
+          {!collapsed && <AqarBrandLogo product="Pro" size="sm" onDark={false} />}
+          <button
+            type="button"
+            onClick={() => setCollapsed((prev) => !prev)}
+            className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-600"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
+          </button>
+        </div>
+        {!collapsed && (
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-400 transition-opacity hover:opacity-70"
+          >
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            {t("back_to_portal")}
+          </Link>
+        )}
       </div>
 
       {/* Main nav */}
-      <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
+      <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-4">
         {NAV_ITEMS.map((item) => {
           const active = isActive(item.href, item.exact);
           return (
             <Link
               key={item.key}
               href={item.href as `/${string}`}
+              title={collapsed ? t(`nav.${item.key}` as Parameters<typeof t>[0]) : undefined}
               className={[
-                "flex items-center gap-3 rounded-lg border-s-2 px-3 py-2.5 text-sm font-medium transition-all",
+                "flex items-center rounded-lg border-s-2 transition-all",
+                collapsed ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5 text-sm font-medium",
                 active
                   ? "border-amber-500 bg-amber-500/10 text-amber-700"
-                  : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900 dark:text-zinc-100",
+                  : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-100",
               ].join(" ")}
             >
               <svg
@@ -113,44 +147,46 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d={item.d} />
               </svg>
-              {t(`nav.${item.key}` as Parameters<typeof t>[0])}
+              {!collapsed && t(`nav.${item.key}` as Parameters<typeof t>[0])}
             </Link>
           );
         })}
 
         {/* Settings group */}
-        <div className="pt-4">
-          <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
-            {t("nav.settings")}
-          </p>
-          {SETTINGS_ITEMS.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.key}
-                href={item.href as `/${string}`}
-                className={[
-                  "flex items-center rounded-lg border-s-2 px-3 py-2 text-sm transition-all",
-                  active
-                    ? "border-amber-500 bg-amber-500/10 font-medium text-amber-700"
-                    : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900 dark:text-zinc-100",
-                ].join(" ")}
-              >
-                {t(`settings_nav.${item.key}` as Parameters<typeof t>[0])}
-              </Link>
-            );
-          })}
-        </div>
+        {!collapsed && (
+          <div className="pt-4">
+            <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
+              {t("nav.settings")}
+            </p>
+            {SETTINGS_ITEMS.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.key}
+                  href={item.href as `/${string}`}
+                  className={[
+                    "flex items-center rounded-lg border-s-2 px-3 py-2 text-sm transition-all",
+                    active
+                      ? "border-amber-500 bg-amber-500/10 font-medium text-amber-700"
+                      : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-100",
+                  ].join(" ")}
+                >
+                  {t(`settings_nav.${item.key}` as Parameters<typeof t>[0])}
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </nav>
 
       {/* Voir ma vitrine */}
-      {agencySlug && (
+      {agencySlug && !collapsed && (
         <div className="px-3 pb-3">
           <a
             href={getAgencyUrl(agencySlug)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-xs font-medium text-zinc-700 transition-all hover:bg-zinc-100 dark:bg-zinc-800"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-all hover:bg-zinc-100 dark:hover:bg-zinc-700"
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -161,31 +197,35 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
       )}
 
       {/* User footer */}
-      <div className="flex items-center gap-3 border-t border-zinc-200 dark:border-zinc-700 px-4 py-3">
+      <div className={`flex items-center border-t border-zinc-200 dark:border-zinc-700 ${collapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"}`}>
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-zinc-50">
           {initial}
         </div>
-        <div className="min-w-0 flex-1">
-          {fullName && (
-            <p className="truncate text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-              {fullName}
-            </p>
-          )}
-          <p className="truncate text-[10px] text-zinc-400">{userEmail}</p>
-        </div>
-        <form action={signOutAction}>
-          <input type="hidden" name="locale" value={pathname.split("/")[1] || "fr"} />
-          <input type="hidden" name="origin" value={pathname} />
-          <button
-            type="submit"
-            title={t("logout")}
-            className="shrink-0 rounded-md p-1 text-zinc-400 transition-opacity hover:opacity-60"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-            </svg>
-          </button>
-        </form>
+        {!collapsed && (
+          <>
+            <div className="min-w-0 flex-1">
+              {fullName && (
+                <p className="truncate text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+                  {fullName}
+                </p>
+              )}
+              <p className="truncate text-[10px] text-zinc-400">{userEmail}</p>
+            </div>
+            <form action={signOutAction}>
+              <input type="hidden" name="locale" value={pathname.split("/")[1] || "fr"} />
+              <input type="hidden" name="origin" value={pathname} />
+              <button
+                type="submit"
+                title={t("logout")}
+                className="shrink-0 rounded-md p-1 text-zinc-400 transition-opacity hover:opacity-60"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                </svg>
+              </button>
+            </form>
+          </>
+        )}
       </div>
     </aside>
   );
