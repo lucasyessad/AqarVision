@@ -153,10 +153,6 @@
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── Legacy animation utilities ──────────────────────────────── */
-.aqar-pulse    { animation: aqar-pulse 2.5s infinite; }
-.aqar-fade-up  { animation: aqar-fade-up 0.8s ease both; }
-
 /* ── Font utility classes ────────────────────────────────────── */
 .font-serif { font-family: var(--font-display) !important; }
 .font-sans  { font-family: var(--font-sans) !important; }
