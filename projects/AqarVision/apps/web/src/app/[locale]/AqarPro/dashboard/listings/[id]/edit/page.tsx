@@ -50,7 +50,7 @@ export default async function EditListingPage({
     .single();
 
   // Fetch wilayas
-  const wilayas = await getWilayas(supabase);
+  const wilayas = getWilayas(supabase, locale);
 
   // Build initialData from listing + translation
   const details = (listing.details as Record<string, unknown>) ?? {};

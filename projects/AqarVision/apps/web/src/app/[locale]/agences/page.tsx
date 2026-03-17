@@ -31,7 +31,7 @@ export default async function AgencesPage({ params }: PageProps) {
       .from("agency_branches")
       .select("agency_id, wilaya_code")
       .order("agency_id"),
-    getWilayas(supabase),
+    getWilayas(supabase, locale),
   ]);
 
   // Build a map: agency_id -> wilaya_codes[]

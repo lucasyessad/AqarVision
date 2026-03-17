@@ -26,7 +26,7 @@ export default async function DeposerPage({
   }
 
   const [wilayas, { count: activeCount }, effectiveQuota] = await Promise.all([
-    getWilayas(supabase),
+    getWilayas(supabase, locale),
     supabase
       .from("listings")
       .select("id", { count: "exact", head: true })

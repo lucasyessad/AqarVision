@@ -14,16 +14,18 @@ import { createClient } from "@/lib/supabase/server";
 import type { SearchResultDto } from "@/features/marketplace/types/search.types";
 import { ChevronDown, ArrowRight, Home, Shield, Clock, Lock, Headphones } from "lucide-react";
 import { formatPrice } from "@/lib/format";
+import { getWilayaName, type Locale } from "@/lib/geodata";
 
-const POPULAR_WILAYAS = [
-  { code: "16", name: "Alger", count: "4 200+" },
-  { code: "31", name: "Oran", count: "1 800+" },
-  { code: "25", name: "Constantine", count: "950+" },
-  { code: "23", name: "Annaba", count: "620+" },
-  { code: "15", name: "Tizi-Ouzou", count: "480+" },
-  { code: "19", name: "Sétif", count: "390+" },
-  { code: "09", name: "Blida", count: "310+" },
-  { code: "06", name: "Béjaïa", count: "280+" },
+/** Popular wilayas for the homepage scroller — counts are approximate. */
+const POPULAR_WILAYA_CODES = [
+  { code: "16", count: "4 200+" },
+  { code: "31", count: "1 800+" },
+  { code: "25", count: "950+" },
+  { code: "23", count: "620+" },
+  { code: "15", count: "480+" },
+  { code: "19", count: "390+" },
+  { code: "09", count: "310+" },
+  { code: "06", count: "280+" },
 ];
 
 const REGIONS = [
@@ -77,7 +79,7 @@ export default async function HomePage({
   const [saleResult, rentResult, wilayas, { data: editorialRows }] = await Promise.all([
     searchListingsAction({ locale, page: 1, page_size: 9 }),
     searchListingsAction({ locale, page: 1, page_size: 5, listing_type: "rent" }),
-    getWilayas(supabase),
+    getWilayas(supabase, locale),
     supabase
       .from("platform_settings")
       .select("key, value")
@@ -252,7 +254,7 @@ export default async function HomePage({
             <p className="mb-7 text-sm text-zinc-400 dark:text-zinc-500">{t("cities.subtitle")}</p>
           </div>
           <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-hide px-4 pb-4 sm:px-6 lg:px-8">
-            {POPULAR_WILAYAS.map((city) => (
+            {POPULAR_WILAYA_CODES.map((city) => (
               <Link
                 key={city.code}
                 href={`/search?wilaya_code=${city.code}`}
@@ -263,7 +265,7 @@ export default async function HomePage({
                   <Home className="h-8 w-8 text-zinc-400 dark:text-zinc-500" />
                 </div>
                 <div className="p-3">
-                  <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{city.name}</p>
+                  <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{getWilayaName(city.code, locale as Locale)}</p>
                   <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">{city.count} {t("stats.listings")}</p>
                 </div>
               </Link>

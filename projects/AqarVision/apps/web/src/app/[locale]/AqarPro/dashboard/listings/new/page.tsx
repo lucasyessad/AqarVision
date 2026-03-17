@@ -28,7 +28,7 @@ export default async function NewListingPage({
 
   if (!membership) redirect(`/${locale}/agency/new`);
 
-  const wilayas = await getWilayas(supabase);
+  const wilayas = getWilayas(supabase, locale);
 
   return (
     <CreateListingWizard

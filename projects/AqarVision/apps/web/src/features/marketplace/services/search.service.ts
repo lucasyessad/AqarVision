@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { WILAYAS as GEODATA_WILAYAS } from "@/lib/geodata";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 
@@ -428,14 +429,14 @@ export async function getListingBySlug(
 /*  getWilayas                                                         */
 /* ------------------------------------------------------------------ */
 
-export async function getWilayas(
-  supabase: SupabaseClient
-): Promise<WilayaDto[]> {
-  const { data } = await supabase
-    .from("wilayas")
-    .select("code, name_fr")
-    .order("code");
-  return (data ?? []).map((w) => ({ code: w.code as string, name: w.name_fr as string }));
+export function getWilayas(
+  _supabase?: SupabaseClient,
+  locale: string = "fr"
+): WilayaDto[] {
+  return GEODATA_WILAYAS.map((w) => ({
+    code: w.code,
+    name: locale === "ar" ? w.name_ar : locale === "en" ? w.name_en : locale === "es" ? w.name_es : w.name_fr,
+  }));
 }
 
 /* ------------------------------------------------------------------ */
