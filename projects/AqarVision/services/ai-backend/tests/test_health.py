@@ -1,13 +1,9 @@
 """Tests for the health endpoint."""
 
-from fastapi.testclient import TestClient
 
-from main import app
-
-client = TestClient(app)
-
-
-def test_healthz_returns_ok():
+def test_healthz_returns_ok(client):
     response = client.get("/healthz")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    data = response.json()
+    assert data["status"] == "ok"
+    assert "uptime_seconds" in data

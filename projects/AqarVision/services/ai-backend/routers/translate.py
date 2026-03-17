@@ -1,19 +1,15 @@
 """Translation endpoint."""
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from schemas.requests import TranslateRequest, TranslateResponse
 from services.claude_client import complete
+from services.errors import safe_api_error
 from routers._auth import verify_service_key
 
 router = APIRouter(tags=["translate"], dependencies=[Depends(verify_service_key)])
 
-_LOCALE_NAMES = {
-    "fr": "français",
-    "ar": "arabe",
-    "en": "anglais",
-    "es": "espagnol",
-}
+_LOCALE_NAMES = {"fr": "français", "ar": "arabe", "en": "anglais", "es": "espagnol"}
 
 
 @router.post("/translate", response_model=TranslateResponse)
@@ -36,4 +32,4 @@ async def translate(req: TranslateRequest) -> TranslateResponse:
             translated_text=translated, target_locale=req.target_locale
         )
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Claude API error: {e}") from e
+        raise safe_api_error(e) from e

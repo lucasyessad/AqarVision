@@ -1,18 +1,7 @@
 """Tests for service-to-service auth."""
 
-import os
 
-os.environ.setdefault("ANTHROPIC_API_KEY", "test-key")
-os.environ.setdefault("SERVICE_KEY", "test-service-key")
-
-from fastapi.testclient import TestClient
-
-from main import app
-
-client = TestClient(app)
-
-
-def test_missing_service_key_returns_422():
+def test_missing_service_key_returns_422(client):
     response = client.post(
         "/api/v1/generate/description",
         json={
@@ -26,7 +15,7 @@ def test_missing_service_key_returns_422():
     assert response.status_code == 422
 
 
-def test_invalid_service_key_returns_401():
+def test_invalid_service_key_returns_401(client):
     response = client.post(
         "/api/v1/generate/description",
         json={

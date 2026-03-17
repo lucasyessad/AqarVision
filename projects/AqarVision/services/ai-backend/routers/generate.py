@@ -1,18 +1,19 @@
 """Listing description generation endpoint."""
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from schemas.requests import GenerateDescriptionRequest, GenerateDescriptionResponse
 from services.claude_client import complete
+from services.errors import safe_api_error
 from routers._auth import verify_service_key
 
 router = APIRouter(tags=["generate"], dependencies=[Depends(verify_service_key)])
 
+_LOCALE_NAMES = {"fr": "français", "ar": "arabe", "en": "anglais", "es": "espagnol"}
+
 
 def _build_system_prompt(locale: str) -> str:
-    lang = {"fr": "français", "ar": "arabe", "en": "anglais", "es": "espagnol"}.get(
-        locale, "français"
-    )
+    lang = _LOCALE_NAMES.get(locale, "français")
     return (
         f"Tu es un rédacteur immobilier expert en Algérie. "
         f"Rédige une description d'annonce immobilière en {lang}. "
@@ -56,4 +57,4 @@ async def generate_description(
         )
         return GenerateDescriptionResponse(description=description, locale=req.locale)
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Claude API error: {e}") from e
+        raise safe_api_error(e) from e

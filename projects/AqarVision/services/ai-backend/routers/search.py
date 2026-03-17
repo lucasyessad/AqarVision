@@ -1,32 +1,13 @@
 """Search intent NLP endpoint."""
 
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends
 
+from schemas.requests import SearchIntentRequest, SearchIntentResponse
 from services.claude_client import complete
+from services.errors import extract_json, safe_api_error
 from routers._auth import verify_service_key
 
 router = APIRouter(tags=["search"], dependencies=[Depends(verify_service_key)])
-
-
-class SearchIntentRequest(BaseModel):
-    query: str
-    locale: str = "fr"
-
-
-class SearchIntentResponse(BaseModel):
-    property_type: str | None = None
-    listing_type: str | None = None
-    wilaya: str | None = None
-    commune: str | None = None
-    min_price: int | None = None
-    max_price: int | None = None
-    min_surface: int | None = None
-    max_surface: int | None = None
-    rooms: int | None = None
-    keywords: list[str] = []
-    confidence: float = 0.0
-
 
 _SYSTEM = (
     "Tu es un assistant spécialisé dans la recherche immobilière en Algérie. "
@@ -45,14 +26,12 @@ _SYSTEM = (
 @router.post("/search/intent", response_model=SearchIntentResponse)
 async def parse_search_intent(req: SearchIntentRequest) -> SearchIntentResponse:
     try:
-        import json
-
         text = await complete(
             system=_SYSTEM,
             user_message=f"Langue: {req.locale}\nRecherche: {req.query}",
             temperature=0.2,
         )
-        data = json.loads(text)
+        data = extract_json(text)
         return SearchIntentResponse(
             property_type=data.get("property_type"),
             listing_type=data.get("listing_type"),
@@ -64,9 +43,7 @@ async def parse_search_intent(req: SearchIntentRequest) -> SearchIntentResponse:
             max_surface=data.get("max_surface"),
             rooms=data.get("rooms"),
             keywords=data.get("keywords", []),
-            confidence=data.get("confidence", 0.5),
+            confidence=max(0.0, min(1.0, data.get("confidence", 0.5))),
         )
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=502, detail="Failed to parse Claude response")
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Claude API error: {e}") from e
+        raise safe_api_error(e) from e
