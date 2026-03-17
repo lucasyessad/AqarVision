@@ -1,7 +1,12 @@
 {
   "homepage": {
     "title": "Encuentra tu propiedad en Argelia",
-    "subtitle": "La plataforma inmobiliaria inteligente para busqueda, gestion y analisis",
+    "subtitle": "La plataforma inmobiliaria inteligente para búsqueda, gestión y análisis",
+    "eyebrow": "Portal Inmobiliario · Argelia",
+    "hero_headline_1": "Encuentra tu",
+    "hero_headline_2": "hogar",
+    "hero_headline_3": "en Argelia",
+    "hero_subtitle": "Apartamentos, villas, terrenos — explora el mercado inmobiliario de 58 wilayas en tiempo real.",
     "cta": {
       "search": "Buscar propiedades",
       "login": "Espacio profesional"
@@ -11,12 +16,48 @@
       "type_placeholder": "Tipo de propiedad",
       "button": "Buscar"
     },
+    "explore_eyebrow": "Explorar",
+    "explore_title_1": "Más de 15.000 propiedades",
+    "explore_title_2": "en {count} wilayas",
+    "explore_desc": "Desde apartamentos en el corazón de Argel hasta villas frente al mar en Tipaza, encuentra la propiedad que se adapta a tu proyecto de vida.",
+    "explore_cta": "Explorar anuncios",
+    "regions_title": "Explorar por región",
+    "regions_subtitle": "Las wilayas más buscadas",
+    "listings_count": "{count} anuncios",
+    "confidence_verified": "Anuncios verificados",
+    "confidence_response": "Respuesta rápida",
+    "confidence_secure": "Pago seguro",
+    "confidence_support": "Soporte 24/7",
+    "selection_eyebrow": "Selección",
+    "selection_title": "Destacados",
+    "see_all_listings": "Ver todos los anuncios",
+    "market_eyebrow": "Mercado",
+    "market_title": "Tendencia",
+    "market_desc": "Las propiedades que captan atención en el mercado argelino ahora mismo.",
+    "see_all": "Ver todo",
+    "rent_eyebrow": "Alquiler",
+    "rent_title": "Nuevos anuncios",
+    "badge_new": "Nuevo",
+    "neighborhood_title_1": "Cada barrio",
+    "neighborhood_title_2": "tiene su ",
+    "neighborhood_accent": "carácter",
+    "neighborhood_cta": "Buscar por barrio",
     "stats": {
       "listings": "anuncios",
       "agencies": "agencias asociadas",
       "wilayas": "wilayas cubiertas",
       "transactions": "transacciones realizadas"
     },
+    "trust_title_1": "La confianza de miles",
+    "trust_title_2": "de familias argelinas",
+    "stats_listings": "15.000+",
+    "stats_wilayas": "58",
+    "stats_agencies": "2.500+",
+    "stats_satisfaction": "98%",
+    "stats_listings_label": "anuncios",
+    "stats_wilayas_label": "wilayas",
+    "stats_agencies_label": "agencias verificadas",
+    "stats_satisfaction_label": "satisfacción",
     "cities": {
       "title": "Ciudades populares",
       "subtitle": "Los mercados inmobiliarios más activos de Argelia"
@@ -30,11 +71,23 @@
       "agencies_title": "Agencias certificadas",
       "agencies_desc": "Todas las agencias asociadas están certificadas y valoradas por nuestros usuarios."
     },
+    "pro_eyebrow": "Para profesionales",
+    "pro_title_1": "Gestiona tu agencia",
+    "pro_title_2": "con ",
+    "pro_accent": "AqarPro",
+    "pro_desc": "Dashboard, CRM, analíticas, escaparate personalizado, IA integrada. Todo lo que tu agencia necesita.",
+    "pro_cta": "Descubrir AqarPro",
     "pro_banner": {
       "title": "¿Eres una agencia?",
       "subtitle": "Publica tus anuncios, gestiona tus leads y haz crecer tu negocio con AqarPro.",
       "cta": "Empezar gratis"
-    }
+    },
+    "region_sahara": "Sahara",
+    "region_sahara_desc": "Oro del desierto, tradiciones y amplios espacios",
+    "region_littoral": "Litoral",
+    "region_littoral_desc": "Mediterráneo, puertos y playas",
+    "region_montagne": "Montañas",
+    "region_montagne_desc": "Atlas, bosques y aire puro"
   },
   "nav": {
     "home": "Inicio",

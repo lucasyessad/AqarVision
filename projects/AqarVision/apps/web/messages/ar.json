@@ -2,6 +2,11 @@
   "homepage": {
     "title": "ابحث عن عقارك في الجزائر",
     "subtitle": "المنصة العقارية الذكية للبحث والإدارة والتحليل",
+    "eyebrow": "بوابة العقارات · الجزائر",
+    "hero_headline_1": "ابحث عن",
+    "hero_headline_2": "منزلك",
+    "hero_headline_3": "في الجزائر",
+    "hero_subtitle": "شقق، فلل، أراضٍ — استكشف العقارات في 58 ولاية جزائرية في الوقت الفعلي.",
     "cta": {
       "search": "البحث عن عقار",
       "login": "الفضاء المهني"
@@ -11,12 +16,48 @@
       "type_placeholder": "نوع العقار",
       "button": "بحث"
     },
+    "explore_eyebrow": "استكشاف",
+    "explore_title_1": "أكثر من 15,000 عقار",
+    "explore_title_2": "في {count} ولاية",
+    "explore_desc": "من شقق في قلب الجزائر العاصمة إلى فلل مطلة على البحر في تيبازة، اعثر على العقار الذي يناسب مشروع حياتك.",
+    "explore_cta": "استكشف الإعلانات",
+    "regions_title": "استكشف حسب المنطقة",
+    "regions_subtitle": "الولايات الأكثر بحثًا",
+    "listings_count": "{count} إعلان",
+    "confidence_verified": "إعلانات موثّقة",
+    "confidence_response": "ردود سريعة",
+    "confidence_secure": "دفع آمن",
+    "confidence_support": "دعم 7/7",
+    "selection_eyebrow": "اختيار",
+    "selection_title": "مميزة",
+    "see_all_listings": "عرض جميع الإعلانات",
+    "market_eyebrow": "السوق",
+    "market_title": "رائجة",
+    "market_desc": "العقارات التي تجذب الانتباه في السوق الجزائرية الآن.",
+    "see_all": "عرض الكل",
+    "rent_eyebrow": "إيجار",
+    "rent_title": "إعلانات جديدة",
+    "badge_new": "جديد",
+    "neighborhood_title_1": "كل حي",
+    "neighborhood_title_2": "له ",
+    "neighborhood_accent": "طابعه",
+    "neighborhood_cta": "ابحث حسب الحي",
     "stats": {
       "listings": "إعلان",
       "agencies": "وكالة شريكة",
       "wilayas": "ولاية مغطاة",
       "transactions": "صفقة منجزة"
     },
+    "trust_title_1": "موثوق من آلاف",
+    "trust_title_2": "العائلات الجزائرية",
+    "stats_listings": "+15,000",
+    "stats_wilayas": "58",
+    "stats_agencies": "+2,500",
+    "stats_satisfaction": "98%",
+    "stats_listings_label": "إعلان",
+    "stats_wilayas_label": "ولاية",
+    "stats_agencies_label": "وكالة موثّقة",
+    "stats_satisfaction_label": "رضا",
     "cities": {
       "title": "المدن الأكثر طلباً",
       "subtitle": "أكثر أسواق العقارات نشاطاً في الجزائر"
@@ -30,11 +71,23 @@
       "agencies_title": "وكالات معتمدة",
       "agencies_desc": "جميع الوكالات الشريكة معتمدة ومُقيَّمة من قِبَل مستخدمينا."
     },
+    "pro_eyebrow": "للمحترفين",
+    "pro_title_1": "أدر وكالتك",
+    "pro_title_2": "مع ",
+    "pro_accent": "AqarPro",
+    "pro_desc": "لوحة تحكم، إدارة العملاء، تحليلات، واجهة مخصصة، ذكاء اصطناعي مدمج. كل ما تحتاجه وكالتك.",
+    "pro_cta": "اكتشف AqarPro",
     "pro_banner": {
       "title": "هل أنت وكالة عقارية؟",
       "subtitle": "انشر إعلاناتك، أدر عملاءك المحتملين، وطوّر أعمالك مع AqarPro.",
       "cta": "ابدأ مجاناً"
-    }
+    },
+    "region_sahara": "الصحراء",
+    "region_sahara_desc": "ذهب الصحراء، تقاليد ومساحات واسعة",
+    "region_littoral": "الساحل",
+    "region_littoral_desc": "البحر الأبيض المتوسط، موانئ وشواطئ",
+    "region_montagne": "الجبال",
+    "region_montagne_desc": "الأطلس، غابات وهواء نقي"
   },
   "nav": {
     "home": "الرئيسية",

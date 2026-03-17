@@ -55,6 +55,11 @@ const config: Config = {
         danger:  { DEFAULT: "#EF4444", ghost: "rgba(239,68,68,0.08)" },
         info:    { DEFAULT: "#3B82F6", ghost: "rgba(59,130,246,0.08)" },
 
+        // ── Tricolore algérien (Atlas Pulse) ─────────────────────
+        sahara:  { DEFAULT: "#E8920A", 50: "#FEF7E8", 100: "#FDECC5", 500: "#E8920A", 600: "#C67A08", 700: "#9D6106" },
+        med:     { DEFAULT: "#1A7FA8", 50: "#E8F5FA", 100: "#C5E8F3", 500: "#1A7FA8", 600: "#156B8E", 700: "#105674" },
+        atlas:   { DEFAULT: "#2A8A4A", 50: "#EAF5EE", 100: "#C8E6D2", 500: "#2A8A4A", 600: "#22733D", 700: "#1A5C30" },
+
         // ── Real estate specific ──────────────────────────────────
         "listing-sale":     "#3B82F6",
         "listing-rent":     "#8B5CF6",

@@ -12,18 +12,39 @@ import { searchListingsAction } from "@/features/marketplace/actions/search.acti
 import { getWilayas } from "@/features/marketplace/services/search.service";
 import { createClient } from "@/lib/supabase/server";
 import type { SearchResultDto } from "@/features/marketplace/types/search.types";
-import { ChevronDown, ArrowRight, Home } from "lucide-react";
+import { ChevronDown, ArrowRight, Home, Shield, Clock, Lock, Headphones } from "lucide-react";
 import { formatPrice } from "@/lib/format";
 
 const POPULAR_WILAYAS = [
-  { code: "16", name: "Alger",       count: "4 200+" },
-  { code: "31", name: "Oran",        count: "1 800+" },
-  { code: "25", name: "Constantine", count: "950+"   },
-  { code: "23", name: "Annaba",      count: "620+"   },
-  { code: "15", name: "Tizi-Ouzou", count: "480+"   },
-  { code: "19", name: "Sétif",       count: "390+"   },
-  { code: "09", name: "Blida",       count: "310+"   },
-  { code: "06", name: "Béjaïa",      count: "280+"   },
+  { code: "16", name: "Alger", count: "4 200+" },
+  { code: "31", name: "Oran", count: "1 800+" },
+  { code: "25", name: "Constantine", count: "950+" },
+  { code: "23", name: "Annaba", count: "620+" },
+  { code: "15", name: "Tizi-Ouzou", count: "480+" },
+  { code: "19", name: "Sétif", count: "390+" },
+  { code: "09", name: "Blida", count: "310+" },
+  { code: "06", name: "Béjaïa", count: "280+" },
+];
+
+const REGIONS = [
+  {
+    key: "sahara",
+    gradient: "from-amber-600 to-amber-800",
+    accent: "text-amber-400",
+    wilayas: ["47", "30", "39"],
+  },
+  {
+    key: "littoral",
+    gradient: "from-sky-600 to-blue-800",
+    accent: "text-sky-300",
+    wilayas: ["16", "31", "23"],
+  },
+  {
+    key: "montagne",
+    gradient: "from-green-600 to-emerald-800",
+    accent: "text-green-300",
+    wilayas: ["15", "06", "26"],
+  },
 ];
 
 export async function generateMetadata({
@@ -50,6 +71,7 @@ export default async function HomePage({
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const t = await getTranslations({ locale, namespace: "homepage" });
   const supabase = await createClient();
 
   const [saleResult, rentResult, wilayas, { data: editorialRows }] = await Promise.all([
@@ -69,11 +91,11 @@ export default async function HomePage({
     ])
   );
   const heroUrl = (editorialUrls.editorial_hero_url as string | null)
-    ?? "https://picsum.photos/seed/aqar-hero/1600/900";
+    ?? "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80";
   const splitUrl = (editorialUrls.editorial_split_url as string | null)
-    ?? "https://picsum.photos/seed/aqar-interior/900/700";
+    ?? "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=80";
   const fullbleedUrl = (editorialUrls.editorial_fullbleed_url as string | null)
-    ?? "https://picsum.photos/seed/aqar-city/1400/700";
+    ?? "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1400&q=80";
 
   const listings: SearchResultDto[] = saleResult.success ? saleResult.data.results : [];
   const rentListings: SearchResultDto[] = rentResult.success ? rentResult.data.results : [];
@@ -91,7 +113,6 @@ export default async function HomePage({
       <main>
         {/* ─────────────────────────────────────────── HERO ─── */}
         <section className="relative -mt-16 flex min-h-screen flex-col items-center justify-center overflow-hidden">
-          {/* Background photo -- full-bleed */}
           <Image
             src={heroUrl}
             alt=""
@@ -101,76 +122,86 @@ export default async function HomePage({
             aria-hidden="true"
             className="pointer-events-none object-cover"
           />
-          {/* Gradient overlay */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/65 via-black/25 to-black/70"
           />
 
-          {/* Content */}
           <div className="relative z-10 mx-auto flex w-full max-w-[1320px] flex-col items-center px-4 pb-12 pt-24 text-center sm:px-6 lg:px-8">
-            {/* Eyebrow */}
             <div className="mb-6 flex items-center gap-3">
               <span className="inline-block h-px w-8 bg-amber-500" />
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
-                Portail Immobilier · Algérie
+                {t("eyebrow")}
               </p>
               <span className="inline-block h-px w-8 bg-amber-500" />
             </div>
 
-            {/* Headline */}
             <h1 className="mb-8 max-w-[750px] text-5xl font-bold leading-[1.05] tracking-tight text-zinc-50 sm:text-6xl lg:text-7xl">
-              Trouvez votre
+              {t("hero_headline_1")}
               <br />
-              <span className="text-amber-400">chez-vous</span>
+              <span className="text-amber-400">{t("hero_headline_2")}</span>
               <br />
-              en Algérie
+              {t("hero_headline_3")}
             </h1>
 
-            {/* Transaction pills + Search bar (interactive) */}
             <HomeSearchBar locale={locale} wilayas={wilayas} />
 
-            {/* Subtitle */}
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-zinc-50/45">
-              Appartements, villas, terrains — explorez l&apos;immobilier des 58
-              wilayas d&apos;Algérie en temps réel.
+              {t("hero_subtitle")}
             </p>
           </div>
 
-          {/* Scroll indicator -- bouncing chevron */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
             <ChevronDown className="h-5 w-5 animate-bounce text-white/40" />
           </div>
         </section>
 
+        {/* ──────────────────── CONFIDENCE LAYER ─── */}
+        <section className="border-b border-zinc-200 dark:border-zinc-700 bg-sky-50 dark:bg-zinc-900">
+          <div className="mx-auto grid max-w-[1320px] grid-cols-2 gap-4 px-4 py-5 sm:grid-cols-4 sm:px-6 lg:px-8">
+            {[
+              { icon: <Shield className="h-4 w-4 text-sky-600 dark:text-sky-400" />, label: t("confidence_verified") },
+              { icon: <Clock className="h-4 w-4 text-sky-600 dark:text-sky-400" />, label: t("confidence_response") },
+              { icon: <Lock className="h-4 w-4 text-sky-600 dark:text-sky-400" />, label: t("confidence_secure") },
+              { icon: <Headphones className="h-4 w-4 text-sky-600 dark:text-sky-400" />, label: t("confidence_support") },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center gap-2">
+                {item.icon}
+                <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ─────────────────────── SPLIT EDITORIAL ─── */}
         <section className="grid min-h-[70vh] grid-cols-1 lg:grid-cols-2">
-          <div className="flex flex-col justify-center bg-zinc-50 dark:bg-zinc-800 px-8 py-16 dark:bg-zinc-900 lg:px-16">
+          <div className="flex flex-col justify-center bg-zinc-50 dark:bg-zinc-900 px-8 py-16 lg:px-16">
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
-              Explorer
+              {t("explore_eyebrow")}
             </p>
             <h2 className="text-4xl font-bold leading-[1.08] tracking-tight text-zinc-950 dark:text-zinc-50 lg:text-5xl">
-              Plus de 15 000 biens
+              {t("explore_title_1")}
               <br />
-              dans <span className="text-amber-500">58 wilayas</span>
+              {t("explore_title_2", { count: 58 }).split("58").map((part, i) =>
+                i === 0 ? part : <span key={i}><span className="text-amber-500">58</span>{part}</span>
+              )}
             </h2>
             <p className="mt-5 max-w-[420px] text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
-              Des appartements au cœur d&apos;Alger aux villas de bord de mer à Tipaza,
-              trouvez le bien qui correspond à votre projet de vie.
+              {t("explore_desc")}
             </p>
             <Link
               href="/search"
               locale={locale}
               className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-semibold text-amber-500 transition-opacity hover:opacity-70"
             >
-              Explorer les annonces
+              {t("explore_cta")}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           <div className="relative min-h-[400px] overflow-hidden">
             <Image
               src={splitUrl}
-              alt="Bel intérieur"
+              alt=""
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
@@ -178,13 +209,47 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* ──────────────────────── WILAYAS SCROLL ─── */}
-        <section className="border-t border-zinc-100 bg-zinc-50 dark:bg-zinc-800 py-16 dark:border-zinc-800 dark:bg-zinc-900">
+        {/* ──────────────────── 3 REGION CARDS ─── */}
+        <section className="border-t border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 py-20">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
             <h2 className="mb-2 text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">
-              Explorez par région
+              {t("regions_title")}
             </h2>
-            <p className="mb-7 text-sm text-zinc-400 dark:text-zinc-500">Les wilayas les plus recherchées</p>
+            <p className="mb-8 text-sm text-zinc-400 dark:text-zinc-500">{t("regions_subtitle")}</p>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {REGIONS.map((region) => (
+                <Link
+                  key={region.key}
+                  href={`/search?wilaya_code=${region.wilayas[0]}`}
+                  locale={locale}
+                  className="group relative overflow-hidden rounded-2xl"
+                >
+                  <div className={`flex h-[220px] flex-col justify-end bg-gradient-to-br ${region.gradient} p-6`}>
+                    <h3 className="text-2xl font-bold text-white">
+                      {t(`region_${region.key}`)}
+                    </h3>
+                    <p className={`mt-1 text-sm ${region.accent}`}>
+                      {t(`region_${region.key}_desc`)}
+                    </p>
+                    <div className="mt-3 flex items-center gap-1 text-xs font-medium text-white/70 transition-colors group-hover:text-white">
+                      {t("explore_cta")}
+                      <ArrowRight className="h-3 w-3" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ──────────────────────── WILAYAS SCROLL ─── */}
+        <section className="border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 py-16">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <h2 className="mb-2 text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">
+              {t("cities.title")}
+            </h2>
+            <p className="mb-7 text-sm text-zinc-400 dark:text-zinc-500">{t("cities.subtitle")}</p>
           </div>
           <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-hide px-4 pb-4 sm:px-6 lg:px-8">
             {POPULAR_WILAYAS.map((city) => (
@@ -192,14 +257,14 @@ export default async function HomePage({
                 key={city.code}
                 href={`/search?wilaya_code=${city.code}`}
                 locale={locale}
-                className="group w-[200px] shrink-0 snap-start overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 transition-all hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
+                className="group w-[200px] shrink-0 snap-start overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 transition-all hover:-translate-y-1 hover:shadow-lg"
               >
-                <div className="flex h-[130px] items-center justify-center bg-zinc-100 dark:bg-zinc-800 text-3xl dark:bg-zinc-700">
+                <div className="flex h-[130px] items-center justify-center bg-zinc-100 dark:bg-zinc-700">
                   <Home className="h-8 w-8 text-zinc-400 dark:text-zinc-500" />
                 </div>
                 <div className="p-3">
                   <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{city.name}</p>
-                  <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">{city.count} annonces</p>
+                  <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">{city.count} {t("stats.listings")}</p>
                 </div>
               </Link>
             ))}
@@ -208,15 +273,15 @@ export default async function HomePage({
 
         {/* ──────────────────────────────── FEATURED GRID ─── */}
         {(featured || secondary) && (
-          <section className="border-t border-zinc-100 bg-white dark:bg-zinc-900 py-20 dark:border-zinc-800 dark:bg-zinc-950">
+          <section className="border-t border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-20">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="mb-10 flex items-end justify-between">
                 <div>
                   <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
-                    Sélection
+                    {t("selection_eyebrow")}
                   </p>
                   <h2 className="font-display text-3xl font-light italic text-zinc-950 dark:text-zinc-50 sm:text-4xl">
-                    À la une
+                    {t("selection_title")}
                   </h2>
                 </div>
                 <Link
@@ -224,7 +289,7 @@ export default async function HomePage({
                   locale={locale}
                   className="hidden items-center gap-1.5 text-sm font-medium text-zinc-500 transition-opacity hover:opacity-70 dark:text-zinc-400 sm:inline-flex"
                 >
-                  Voir toutes les annonces
+                  {t("see_all_listings")}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
@@ -234,15 +299,13 @@ export default async function HomePage({
                   <Link href={`/annonce/${featured.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
                     <div className="relative aspect-[16/10] overflow-hidden bg-zinc-900">
                       {featured.cover_url ? (
-                        <div className="relative h-full w-full">
-                          <Image
-                            src={featured.cover_url}
-                            alt={featured.title}
-                            fill
-                            sizes="(min-width: 1024px) 60vw, 100vw"
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                        </div>
+                        <Image
+                          src={featured.cover_url}
+                          alt={featured.title}
+                          fill
+                          sizes="(min-width: 1024px) 60vw, 100vw"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-zinc-800">
                           <Home className="h-16 w-16 text-white opacity-20" />
@@ -296,32 +359,32 @@ export default async function HomePage({
 
         {/* ──────────────────────────────────────── TENDANCE ─── */}
         {trending.length > 0 && (
-          <section className="border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 py-20 dark:border-zinc-800 dark:bg-zinc-900">
+          <section className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 py-20">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="flex gap-10 lg:gap-20">
                 <div className="hidden w-[220px] shrink-0 flex-col justify-between lg:flex">
                   <div>
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">Marché</p>
-                    <h2 className="mb-4 font-display text-4xl font-light leading-tight text-zinc-950 dark:text-zinc-50">Tendance</h2>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">{t("market_eyebrow")}</p>
+                    <h2 className="mb-4 font-display text-4xl font-light leading-tight text-zinc-950 dark:text-zinc-50">{t("market_title")}</h2>
                     <p className="text-sm leading-relaxed text-zinc-400 dark:text-zinc-500">
-                      Les biens qui retiennent l&apos;attention sur le marché algérien en ce moment.
+                      {t("market_desc")}
                     </p>
                   </div>
                   <Link
                     href="/search"
                     locale={locale}
-                    className="inline-flex w-fit items-center gap-1.5 border-b border-zinc-950 pb-0.5 text-xs font-semibold text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-60 dark:border-zinc-50 dark:text-zinc-50"
+                    className="inline-flex w-fit items-center gap-1.5 border-b border-zinc-950 dark:border-zinc-50 pb-0.5 text-xs font-semibold text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-60"
                   >
-                    Voir tout
+                    {t("see_all")}
                     <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
 
                 <div className="min-w-0 flex-1">
                   <div className="mb-6 flex items-center justify-between lg:hidden">
-                    <h2 className="font-display text-2xl font-light text-zinc-950 dark:text-zinc-50">Tendance</h2>
+                    <h2 className="font-display text-2xl font-light text-zinc-950 dark:text-zinc-50">{t("market_title")}</h2>
                     <Link href="/search" locale={locale} className="inline-flex items-center gap-1 text-xs text-amber-500">
-                      Voir tout
+                      {t("see_all")}
                       <ArrowRight className="h-3 w-3" />
                     </Link>
                   </div>
@@ -361,15 +424,15 @@ export default async function HomePage({
 
         {/* ─────────────────────────── NOUVELLES ANNONCES ─── */}
         {newest.length > 0 && (
-          <section className="border-t border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 py-20 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <section className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/50 py-20">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="mb-8 flex items-end justify-between">
                 <div>
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">Location</p>
-                  <h2 className="font-display text-3xl font-light text-zinc-950 dark:text-zinc-50">Nouvelles annonces</h2>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">{t("rent_eyebrow")}</p>
+                  <h2 className="font-display text-3xl font-light text-zinc-950 dark:text-zinc-50">{t("rent_title")}</h2>
                 </div>
                 <Link href="/search?listing_type=rent&sort=newest" locale={locale} className="inline-flex items-center gap-1 text-xs font-medium text-amber-500">
-                  Voir tout
+                  {t("see_all")}
                   <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
@@ -390,8 +453,8 @@ export default async function HomePage({
                           <Home className="h-10 w-10" />
                         </div>
                       )}
-                      <span className="absolute start-2 top-2 rounded-lg bg-amber-500 px-2 py-0.5 text-[10px] font-semibold text-zinc-950 dark:text-zinc-50">
-                        Nouveau
+                      <span className="absolute start-2 top-2 rounded-lg bg-amber-500 px-2 py-0.5 text-[10px] font-semibold text-zinc-950">
+                        {t("badge_new")}
                       </span>
                     </div>
                     <p className="font-display text-base font-semibold text-zinc-950 dark:text-zinc-50">
@@ -418,16 +481,17 @@ export default async function HomePage({
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
           <div className="absolute bottom-0 start-0 p-8 lg:p-16">
             <h2 className="max-w-[550px] text-3xl font-bold leading-[1.1] tracking-tight text-zinc-50 sm:text-4xl lg:text-5xl">
-              Chaque quartier
+              {t("neighborhood_title_1")}
               <br />
-              a son <span className="text-amber-400">caractère</span>
+              {t("neighborhood_title_2", { accent: "" })}
+              <span className="text-amber-400">{t("neighborhood_accent")}</span>
             </h2>
             <Link
               href="/search"
               locale={locale}
               className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-amber-400"
             >
-              Rechercher par quartier
+              {t("neighborhood_cta")}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -437,16 +501,16 @@ export default async function HomePage({
         <section className="bg-zinc-950 py-20 dark:bg-zinc-900">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
             <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
-              La confiance de milliers
+              {t("trust_title_1")}
               <br />
-              de familles algériennes
+              {t("trust_title_2")}
             </h2>
             <div className="mx-auto grid max-w-[800px] grid-cols-2 gap-8 sm:grid-cols-4">
               {[
-                { value: "15 000+", label: "annonces" },
-                { value: "58",      label: "wilayas" },
-                { value: "2 500+", label: "agences vérifiées" },
-                { value: "98%",     label: "satisfaction" },
+                { value: t("stats_listings"), label: t("stats_listings_label") },
+                { value: t("stats_wilayas"), label: t("stats_wilayas_label") },
+                { value: t("stats_agencies"), label: t("stats_agencies_label") },
+                { value: t("stats_satisfaction"), label: t("stats_satisfaction_label") },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <p className="tabular-nums text-3xl font-bold text-amber-400 sm:text-4xl">
@@ -460,25 +524,25 @@ export default async function HomePage({
         </section>
 
         {/* ──────────────────────────────── CTA PRO ─── */}
-        <section className="bg-zinc-50 dark:bg-zinc-800 py-20 text-center dark:bg-zinc-900">
+        <section className="bg-zinc-50 dark:bg-zinc-900 py-20 text-center">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
-            Pour les professionnels
+            {t("pro_eyebrow")}
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
-            Gérez votre agence
+            {t("pro_title_1")}
             <br />
-            avec <span className="text-amber-500">AqarPro</span>
+            {t("pro_title_2", { accent: "" })}
+            <span className="text-amber-500">{t("pro_accent")}</span>
           </h2>
           <p className="mx-auto mt-4 max-w-[480px] text-base text-zinc-500 dark:text-zinc-400">
-            Dashboard, CRM, analytics, vitrine personnalisée, IA intégrée.
-            Tout ce dont votre agence a besoin.
+            {t("pro_desc")}
           </p>
           <Link
             href="/AqarPro/dashboard"
             locale={locale}
             className="mt-8 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-amber-600"
           >
-            Découvrir AqarPro
+            {t("pro_cta")}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </section>

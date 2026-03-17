@@ -2,6 +2,11 @@
   "homepage": {
     "title": "Trouvez votre bien immobilier en Algérie",
     "subtitle": "La plateforme immobilière intelligente pour la recherche, la gestion et l'analyse",
+    "eyebrow": "Portail Immobilier · Algérie",
+    "hero_headline_1": "Trouvez votre",
+    "hero_headline_2": "chez-vous",
+    "hero_headline_3": "en Algérie",
+    "hero_subtitle": "Appartements, villas, terrains — explorez l'immobilier des 58 wilayas d'Algérie en temps réel.",
     "cta": {
       "search": "Rechercher un bien",
       "login": "Espace professionnel"
@@ -11,12 +16,48 @@
       "type_placeholder": "Type de bien",
       "button": "Rechercher"
     },
+    "explore_eyebrow": "Explorer",
+    "explore_title_1": "Plus de 15 000 biens",
+    "explore_title_2": "dans {count} wilayas",
+    "explore_desc": "Des appartements au cœur d'Alger aux villas de bord de mer à Tipaza, trouvez le bien qui correspond à votre projet de vie.",
+    "explore_cta": "Explorer les annonces",
+    "regions_title": "Explorez par région",
+    "regions_subtitle": "Les wilayas les plus recherchées",
+    "listings_count": "{count} annonces",
+    "confidence_verified": "Annonces vérifiées",
+    "confidence_response": "Réponse rapide",
+    "confidence_secure": "Paiement sécurisé",
+    "confidence_support": "Support 7j/7",
+    "selection_eyebrow": "Sélection",
+    "selection_title": "À la une",
+    "see_all_listings": "Voir toutes les annonces",
+    "market_eyebrow": "Marché",
+    "market_title": "Tendance",
+    "market_desc": "Les biens qui retiennent l'attention sur le marché algérien en ce moment.",
+    "see_all": "Voir tout",
+    "rent_eyebrow": "Location",
+    "rent_title": "Nouvelles annonces",
+    "badge_new": "Nouveau",
+    "neighborhood_title_1": "Chaque quartier",
+    "neighborhood_title_2": "a son {accent}",
+    "neighborhood_accent": "caractère",
+    "neighborhood_cta": "Rechercher par quartier",
     "stats": {
       "listings": "annonces",
       "agencies": "agences partenaires",
       "wilayas": "wilayas couvertes",
       "transactions": "transactions réalisées"
     },
+    "trust_title_1": "La confiance de milliers",
+    "trust_title_2": "de familles algériennes",
+    "stats_listings": "15 000+",
+    "stats_wilayas": "58",
+    "stats_agencies": "2 500+",
+    "stats_satisfaction": "98%",
+    "stats_listings_label": "annonces",
+    "stats_wilayas_label": "wilayas",
+    "stats_agencies_label": "agences vérifiées",
+    "stats_satisfaction_label": "satisfaction",
     "cities": {
       "title": "Villes populaires",
       "subtitle": "Les marchés immobiliers les plus actifs d'Algérie"
@@ -30,11 +71,23 @@
       "agencies_title": "Agences certifiées",
       "agencies_desc": "Toutes les agences partenaires sont certifiées et évaluées par nos utilisateurs."
     },
+    "pro_eyebrow": "Pour les professionnels",
+    "pro_title_1": "Gérez votre agence",
+    "pro_title_2": "avec {accent}",
+    "pro_accent": "AqarPro",
+    "pro_desc": "Dashboard, CRM, analytics, vitrine personnalisée, IA intégrée. Tout ce dont votre agence a besoin.",
+    "pro_cta": "Découvrir AqarPro",
     "pro_banner": {
       "title": "Vous êtes une agence ?",
       "subtitle": "Publiez vos annonces, gérez vos leads et boostez vos ventes avec AqarPro.",
       "cta": "Commencer gratuitement"
-    }
+    },
+    "region_sahara": "Sahara",
+    "region_sahara_desc": "Or du désert, traditions et grand espace",
+    "region_littoral": "Littoral",
+    "region_littoral_desc": "Méditerranée, ports et plages",
+    "region_montagne": "Montagnes",
+    "region_montagne_desc": "Atlas, forêts et air pur"
   },
   "nav": {
     "home": "Accueil",

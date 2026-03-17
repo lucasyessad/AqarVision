@@ -2,6 +2,11 @@
   "homepage": {
     "title": "Find your property in Algeria",
     "subtitle": "The intelligent real estate platform for search, management and analytics",
+    "eyebrow": "Real Estate Portal · Algeria",
+    "hero_headline_1": "Find your",
+    "hero_headline_2": "home",
+    "hero_headline_3": "in Algeria",
+    "hero_subtitle": "Apartments, villas, land — explore real estate across 58 wilayas in real time.",
     "cta": {
       "search": "Search properties",
       "login": "Professional space"
@@ -11,12 +16,48 @@
       "type_placeholder": "Property type",
       "button": "Search"
     },
+    "explore_eyebrow": "Explore",
+    "explore_title_1": "Over 15,000 properties",
+    "explore_title_2": "across {count} wilayas",
+    "explore_desc": "From apartments in the heart of Algiers to seaside villas in Tipaza, find the property that matches your life project.",
+    "explore_cta": "Explore listings",
+    "regions_title": "Explore by region",
+    "regions_subtitle": "The most searched wilayas",
+    "listings_count": "{count} listings",
+    "confidence_verified": "Verified listings",
+    "confidence_response": "Fast response",
+    "confidence_secure": "Secure payment",
+    "confidence_support": "24/7 support",
+    "selection_eyebrow": "Selection",
+    "selection_title": "Featured",
+    "see_all_listings": "View all listings",
+    "market_eyebrow": "Market",
+    "market_title": "Trending",
+    "market_desc": "Properties catching attention on the Algerian market right now.",
+    "see_all": "View all",
+    "rent_eyebrow": "Rental",
+    "rent_title": "New listings",
+    "badge_new": "New",
+    "neighborhood_title_1": "Every neighborhood",
+    "neighborhood_title_2": "has its ",
+    "neighborhood_accent": "character",
+    "neighborhood_cta": "Search by neighborhood",
     "stats": {
       "listings": "listings",
       "agencies": "partner agencies",
       "wilayas": "wilayas covered",
       "transactions": "transactions completed"
     },
+    "trust_title_1": "Trusted by thousands",
+    "trust_title_2": "of Algerian families",
+    "stats_listings": "15,000+",
+    "stats_wilayas": "58",
+    "stats_agencies": "2,500+",
+    "stats_satisfaction": "98%",
+    "stats_listings_label": "listings",
+    "stats_wilayas_label": "wilayas",
+    "stats_agencies_label": "verified agencies",
+    "stats_satisfaction_label": "satisfaction",
     "cities": {
       "title": "Popular cities",
       "subtitle": "The most active real estate markets in Algeria"
@@ -30,11 +71,23 @@
       "agencies_title": "Certified agencies",
       "agencies_desc": "All partner agencies are certified and rated by our users."
     },
+    "pro_eyebrow": "For professionals",
+    "pro_title_1": "Manage your agency",
+    "pro_title_2": "with ",
+    "pro_accent": "AqarPro",
+    "pro_desc": "Dashboard, CRM, analytics, custom storefront, integrated AI. Everything your agency needs.",
+    "pro_cta": "Discover AqarPro",
     "pro_banner": {
       "title": "Are you an agency?",
       "subtitle": "Publish your listings, manage your leads, and grow your business with AqarPro.",
       "cta": "Get started for free"
-    }
+    },
+    "region_sahara": "Sahara",
+    "region_sahara_desc": "Desert gold, traditions and wide spaces",
+    "region_littoral": "Coast",
+    "region_littoral_desc": "Mediterranean, ports and beaches",
+    "region_montagne": "Mountains",
+    "region_montagne_desc": "Atlas, forests and fresh air"
   },
   "nav": {
     "home": "Home",
