@@ -306,7 +306,12 @@
     "no_saved_searches": "Aucune recherche sauvegardée",
     "select_wilayas": "Sélectionnez des wilayas",
     "search_wilaya": "Chercher une wilaya...",
-    "zones_selected": "{count}/{max} zones sélectionnées"
+    "zones_selected": "{count}/{max} zones sélectionnées",
+    "draw_zone": "Dessiner une zone",
+    "draw_cancel": "Annuler le dessin",
+    "draw_confirm": "Rechercher dans cette zone",
+    "draw_clear": "Effacer la zone",
+    "draw_points_needed": "{count, plural, one {Encore # point nécessaire} other {Encore # points nécessaires}}"
   },
   "compare": {
     "page_title": "Comparer des annonces",

@@ -146,20 +146,36 @@ export function SearchPageClient({
   const [viewMode, setViewMode] = useState<"listings" | "map">("listings");
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
 
-  // ── Map listings ───────────────────────────────────────────────────────────
+  // ── Map listings — now properly typed with lat/lng from PostGIS ───────────
   const mapListings: MapListing[] = useMemo(
     () =>
       results.flatMap((r) => {
-        const rAny = r as SearchResultDto & { lat?: number; lng?: number };
-        if (typeof rAny.lat === "number" && typeof rAny.lng === "number") {
-          return [{ id: r.id, lat: rAny.lat, lng: rAny.lng, price: r.current_price, currency: r.currency, title: r.title, slug: r.slug }];
+        if (typeof r.lat === "number" && typeof r.lng === "number") {
+          return [{ id: r.id, lat: r.lat, lng: r.lng, price: r.current_price, currency: r.currency, title: r.title, slug: r.slug }];
         }
         return [];
       }),
     [results]
   );
 
+  // Active wilaya codes for map fly-to
+  const activeWilayas = useMemo(() => {
+    const code = searchParams.get("wilaya_code");
+    return code ? [code] : [];
+  }, [searchParams]);
+
   const handleBoundsChange = useCallback((bounds: MapBounds) => { void bounds; }, []);
+
+  // Draw-to-search handler
+  const handleDrawPolygon = useCallback((polygonWkt: string | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (polygonWkt) {
+      params.set("polygon_wkt", polygonWkt);
+    } else {
+      params.delete("polygon_wkt");
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  }, [searchParams, pathname, router]);
 
   // ── Autocomplete state ─────────────────────────────────────────────────────
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -682,6 +698,9 @@ export function SearchPageClient({
             onListingHover={setHighlightedId}
             locale={locale}
             fillContainer
+            activeWilayas={activeWilayas}
+            highlightedListingId={highlightedId}
+            onDrawPolygon={handleDrawPolygon}
           />
 
           {/* Floating result count on map */}

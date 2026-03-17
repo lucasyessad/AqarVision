@@ -40,6 +40,10 @@ export interface SearchResultDto {
   agency_name: string;
   relevance_score: number | null;
   reference_number: number;
+  /** Latitude from PostGIS location column (null if not geocoded) */
+  lat: number | null;
+  /** Longitude from PostGIS location column (null if not geocoded) */
+  lng: number | null;
 }
 
 export function formatListingRef(referenceNumber: number): string {

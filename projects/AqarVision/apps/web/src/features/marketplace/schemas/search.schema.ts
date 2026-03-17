@@ -24,6 +24,8 @@ export const SearchFiltersSchema = z.object({
   agency_id: z.string().uuid().optional(),
   sort: z.enum(["newest", "oldest", "price_asc", "price_desc", "surface_asc"]).optional(),
   map_bounds: MapBoundsSchema.optional(),
+  /** WKT polygon for draw-to-search (e.g. "POLYGON((lng lat, ...))") */
+  polygon_wkt: z.string().max(5000).optional(),
   page: z.coerce.number().int().positive().default(1),
   page_size: z.coerce.number().int().positive().max(100).default(20),
 });

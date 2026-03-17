@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { WILAYAS as GEODATA_WILAYAS } from "@/lib/geodata";
+import { WILAYAS as GEODATA_WILAYAS, getWilayaName, getCommuneName, type Locale } from "@/lib/geodata";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 
@@ -179,18 +179,36 @@ export async function searchListings(
     query = query.eq("agency_id", filters.agency_id);
   }
 
-  // PostGIS map bounds filter via RPC would be ideal, but we use a
-  // bounding-box approach with the geography column.
-  // Supabase JS client doesn't natively support ST_Within, so we use
-  // an RPC call for map bounds filtering.
-  if (filters.map_bounds) {
+  // Spatial filters: polygon (draw-to-search) or bounding box.
+  // We collect listing IDs from the RPC, then filter the main query.
+  let spatialListingIds: string[] | null = null;
+
+  if (filters.polygon_wkt) {
+    // Draw-to-search: user drew a polygon on the map
+    const { data: spatialRows } = await supabase.rpc("search_listings_in_polygon", {
+      polygon_wkt: filters.polygon_wkt,
+      p_status: "published",
+      p_limit: 500,
+    });
+    spatialListingIds = (spatialRows ?? []).map((r: { id: string }) => r.id);
+    if (spatialListingIds.length === 0) {
+      return { results: [], total_count: 0, page, page_size };
+    }
+    query = query.in("id", spatialListingIds);
+  } else if (filters.map_bounds) {
+    // Bounding box: convert to WKT polygon and use the same RPC
     const { north, south, east, west } = filters.map_bounds;
-    // Use PostGIS filter via raw filter
-    query = query.filter(
-      "location",
-      "cd",
-      `SRID=4326;POLYGON((${west} ${south},${east} ${south},${east} ${north},${west} ${north},${west} ${south}))`
-    );
+    const wkt = `POLYGON((${west} ${south},${east} ${south},${east} ${north},${west} ${north},${west} ${south}))`;
+    const { data: spatialRows } = await supabase.rpc("search_listings_in_polygon", {
+      polygon_wkt: wkt,
+      p_status: "published",
+      p_limit: 500,
+    });
+    spatialListingIds = (spatialRows ?? []).map((r: { id: string }) => r.id);
+    if (spatialListingIds.length === 0) {
+      return { results: [], total_count: 0, page, page_size };
+    }
+    query = query.in("id", spatialListingIds);
   }
 
   // Ordering
@@ -222,27 +240,20 @@ export async function searchListings(
     return { results: [], total_count: 0, page, page_size };
   }
 
-  // Resolve wilaya names from codes
-  const wilayaCodes = [...new Set(data.map((r) => r.wilaya_code as string).filter(Boolean))];
-  const communeIds = [...new Set(data.map((r) => r.commune_id as number).filter(Boolean))];
+  // Resolve wilaya/commune names from geodata (no DB queries needed)
+  // Also fetch coordinates for listings via RPC
+  const listingIds = data.map((r) => r.id as string);
+  let coordMap: Record<string, { lat: number; lng: number }> = {};
 
-  let wilayaMap: Record<string, string> = {};
-  let communeMap: Record<number, string> = {};
-
-  if (wilayaCodes.length > 0) {
-    const { data: wRows } = await supabase
-      .from("wilayas")
-      .select("code, name_fr")
-      .in("code", wilayaCodes);
-    wilayaMap = Object.fromEntries((wRows ?? []).map((w) => [w.code as string, w.name_fr as string]));
-  }
-
-  if (communeIds.length > 0) {
-    const { data: cRows } = await supabase
-      .from("communes")
-      .select("id, name_fr")
-      .in("id", communeIds);
-    communeMap = Object.fromEntries((cRows ?? []).map((c) => [c.id as number, c.name_fr as string]));
+  if (listingIds.length > 0) {
+    const { data: coordRows } = await supabase.rpc("get_listing_coordinates", {
+      listing_ids: listingIds,
+    });
+    if (coordRows) {
+      for (const row of coordRows as Array<{ id: string; lat: number; lng: number }>) {
+        coordMap[row.id] = { lat: row.lat, lng: row.lng };
+      }
+    }
   }
 
   const results: SearchResultDto[] = data.map((raw) => {
@@ -262,8 +273,8 @@ export async function searchListings(
       rooms: row.rooms ?? null,
       bathrooms: row.bathrooms ?? null,
       wilaya_code: row.wilaya_code,
-      wilaya_name: wilayaMap[row.wilaya_code] ?? `Wilaya ${row.wilaya_code}`,
-      commune_name: row.commune_id != null ? (communeMap[row.commune_id] ?? null) : null,
+      wilaya_name: getWilayaName(row.wilaya_code, locale as Locale),
+      commune_name: row.commune_id != null ? getCommuneName(row.commune_id, locale as Locale) : null,
       commune_id: row.commune_id ?? null,
       published_at: row.published_at ?? null,
       created_at: row.created_at,
@@ -273,6 +284,8 @@ export async function searchListings(
       agency_name: row.agencies?.name ?? "",
       relevance_score: null,
       reference_number: row.reference_number,
+      lat: coordMap[row.id]?.lat ?? null,
+      lng: coordMap[row.id]?.lng ?? null,
     };
   });
 

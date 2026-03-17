@@ -306,7 +306,12 @@
     "no_saved_searches": "لا توجد عمليات بحث محفوظة",
     "select_wilayas": "اختر الولايات",
     "search_wilaya": "ابحث عن ولاية...",
-    "zones_selected": "{count}/{max} مناطق مختارة"
+    "zones_selected": "{count}/{max} مناطق مختارة",
+    "draw_zone": "رسم منطقة",
+    "draw_cancel": "إلغاء الرسم",
+    "draw_confirm": "البحث في هذه المنطقة",
+    "draw_clear": "مسح المنطقة",
+    "draw_points_needed": "{count, plural, one {نقطة واحدة متبقية} other {# نقاط متبقية}}"
   },
   "compare": {
     "page_title": "مقارنة الإعلانات",

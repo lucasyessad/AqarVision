@@ -306,7 +306,12 @@
     "no_saved_searches": "No saved searches",
     "select_wilayas": "Select wilayas",
     "search_wilaya": "Search a wilaya...",
-    "zones_selected": "{count}/{max} zones selected"
+    "zones_selected": "{count}/{max} zones selected",
+    "draw_zone": "Draw a zone",
+    "draw_cancel": "Cancel drawing",
+    "draw_confirm": "Search in this zone",
+    "draw_clear": "Clear zone",
+    "draw_points_needed": "{count, plural, one {# more point needed} other {# more points needed}}"
   },
   "compare": {
     "page_title": "Compare listings",
