@@ -21,7 +21,7 @@ export function ForgotPasswordForm() {
         </p>
         <Link
           href="/AqarChaab/auth/login"
-          className="mt-4 inline-block text-sm font-medium text-gold hover:underline"
+          className="mt-4 inline-block text-sm font-medium text-amber-500 hover:underline"
         >
           {t("back_to_login")}
         </Link>
@@ -52,13 +52,13 @@ export function ForgotPasswordForm() {
           name="email"
           required
           defaultValue={state?.email ?? ""}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-night focus:outline-none focus:ring-2 focus:ring-blue-night/20"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-night/20"
         />
       </div>
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-lg bg-blue-night px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-night/90 disabled:opacity-50"
+        className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
       >
         {isPending ? t("sending") : t("send_reset_link")}
       </button>

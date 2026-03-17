@@ -40,18 +40,18 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
   return (
     <div className="space-y-6">
       {/* Form */}
-      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-gray-100 bg-white dark:bg-zinc-900 p-6 shadow-sm">
         <form action={formAction} className="space-y-5">
           {/* Listing type */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-800">
+            <label className="mb-2 block text-sm font-medium text-zinc-800 dark:text-zinc-200">
               Type d&apos;opération <span className="text-red-500">*</span>
             </label>
             <div className="flex gap-3">
               {LISTING_TYPES.map((lt) => (
                 <label
                   key={lt.value}
-                  className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-zinc-800 transition-colors has-[:checked]:border-zinc-900 has-[:checked]:bg-zinc-900/5 has-[:checked]:text-zinc-900"
+                  className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-zinc-800 dark:text-zinc-200 transition-colors has-[:checked]:border-zinc-900 has-[:checked]:bg-zinc-900/5 has-[:checked]:text-zinc-900 dark:text-zinc-100"
                 >
                   <input
                     type="radio"
@@ -68,13 +68,13 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
 
           {/* Property type */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-800">
+            <label className="mb-2 block text-sm font-medium text-zinc-800 dark:text-zinc-200">
               Type de bien <span className="text-red-500">*</span>
             </label>
             <select
               name="property_type"
               required
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-zinc-800 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+              className="w-full rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 px-3 py-2.5 text-sm text-zinc-800 dark:text-zinc-200 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
             >
               <option value="">Choisir un type</option>
               {PROPERTY_TYPES.map((pt) => (
@@ -87,13 +87,13 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
 
           {/* Wilaya */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-800">
+            <label className="mb-2 block text-sm font-medium text-zinc-800 dark:text-zinc-200">
               Wilaya <span className="text-red-500">*</span>
             </label>
             <select
               name="wilaya_code"
               required
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-zinc-800 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+              className="w-full rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 px-3 py-2.5 text-sm text-zinc-800 dark:text-zinc-200 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
             >
               <option value="">Sélectionner une wilaya</option>
               {wilayas.map((w) => (
@@ -106,7 +106,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
 
           {/* Surface */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-800">
+            <label className="mb-2 block text-sm font-medium text-zinc-800 dark:text-zinc-200">
               Surface (m²) <span className="text-red-500">*</span>
             </label>
             <input
@@ -116,13 +116,13 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
               max={10000}
               required
               placeholder="Ex : 120"
-              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-zinc-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 placeholder:text-zinc-400"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-zinc-800 dark:text-zinc-200 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 placeholder:text-zinc-400"
             />
           </div>
 
           {/* Rooms */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-800">
+            <label className="mb-2 block text-sm font-medium text-zinc-800 dark:text-zinc-200">
               Nombre de pièces (facultatif)
             </label>
             <input
@@ -131,7 +131,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
               min={1}
               max={20}
               placeholder="Ex : 4"
-              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-zinc-800 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 placeholder:text-zinc-400"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-zinc-800 dark:text-zinc-200 outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 placeholder:text-zinc-400"
             />
           </div>
 
@@ -146,7 +146,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
           <button
             type="submit"
             disabled={isPending}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-60"
           >
             {isPending ? (
               <>
@@ -170,12 +170,12 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
 
       {/* Result */}
       {state?.success && (
-        <div className="animate-in fade-in slide-in-from-bottom-4 rounded-xl border border-amber-500/30 bg-white p-6 shadow-sm duration-300">
+        <div className="animate-in fade-in slide-in-from-bottom-4 rounded-xl border border-amber-500/30 bg-white dark:bg-zinc-900 p-6 shadow-sm duration-300">
           <div className="mb-4 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 text-amber-500">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h2 className="text-base font-semibold text-zinc-900">
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
               Résultat de l&apos;estimation
             </h2>
             {state.data.source === "market" && (
@@ -194,7 +194,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="rounded-lg bg-gray-50 p-4">
               <p className="text-xs font-medium text-zinc-400">Prix bas</p>
-              <p className="mt-1 text-lg font-bold text-zinc-800">
+              <p className="mt-1 text-lg font-bold text-zinc-800 dark:text-zinc-200">
                 {formatCurrency(state.data.price_min)}
               </p>
             </div>
@@ -206,7 +206,7 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
             </div>
             <div className="rounded-lg bg-gray-50 p-4">
               <p className="text-xs font-medium text-zinc-400">Prix haut</p>
-              <p className="mt-1 text-lg font-bold text-zinc-800">
+              <p className="mt-1 text-lg font-bold text-zinc-800 dark:text-zinc-200">
                 {formatCurrency(state.data.price_max)}
               </p>
             </div>
@@ -230,15 +230,15 @@ export function EstimatorForm({ wilayas }: EstimatorFormProps) {
 
           {/* Price per m² + Comparables */}
           <div className="mt-5 grid grid-cols-2 gap-3">
-            <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-4 py-3 text-center">
+            <div className="rounded-lg border border-zinc-100 bg-zinc-50 dark:bg-zinc-800 px-4 py-3 text-center">
               <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">Prix / m²</p>
-              <p className="mt-1 text-base font-bold text-zinc-800">
+              <p className="mt-1 text-base font-bold text-zinc-800 dark:text-zinc-200">
                 {state.data.price_per_m2_avg.toLocaleString("fr-DZ")} DZD
               </p>
             </div>
-            <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-4 py-3 text-center">
+            <div className="rounded-lg border border-zinc-100 bg-zinc-50 dark:bg-zinc-800 px-4 py-3 text-center">
               <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">Comparables</p>
-              <p className="mt-1 text-base font-bold text-zinc-800">
+              <p className="mt-1 text-base font-bold text-zinc-800 dark:text-zinc-200">
                 {state.data.sample_count} annonce{state.data.sample_count !== 1 ? "s" : ""}
               </p>
             </div>

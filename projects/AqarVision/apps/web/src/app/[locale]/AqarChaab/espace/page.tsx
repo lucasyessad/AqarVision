@@ -92,7 +92,7 @@ export default async function EspacePage({ params }: EspacePageProps) {
           <Link
             key={card.href}
             href={card.href}
-            className="group flex flex-col gap-3 rounded-xl p-4 transition-all hover:-translate-y-0.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm"
+            className="group flex flex-col gap-3 rounded-xl p-4 transition-all hover:-translate-y-0.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 shadow-sm"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-950 dark:bg-amber-500/10">
               <svg className="h-4 w-4 text-zinc-50 dark:text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -144,10 +144,10 @@ export default async function EspacePage({ params }: EspacePageProps) {
         {/* Rechercher */}
         <Link
           href="/search"
-          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm"
+          className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:-translate-y-0.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 shadow-sm"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-50">
-            <svg className="h-5 w-5 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-50 dark:bg-zinc-800">
+            <svg className="h-5 w-5 text-zinc-950 dark:text-zinc-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
           </div>

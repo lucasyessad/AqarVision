@@ -61,7 +61,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
         "sticky top-0 z-50 transition-all duration-300",
         transparent
           ? "bg-transparent"
-          : "bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800 shadow-xs",
+          : "bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 shadow-xs",
       ].join(" ")}
     >
       <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -125,8 +125,8 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                   className={[
                     "flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold text-zinc-50",
                     user.profileType === "pro"
-                      ? "bg-zinc-900 dark:bg-zinc-100 dark:text-zinc-900"
-                      : "bg-zinc-800 dark:bg-zinc-200 dark:text-zinc-800",
+                      ? "bg-zinc-900 dark:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-900 dark:text-zinc-100"
+                      : "bg-zinc-800 dark:bg-zinc-200 dark:text-zinc-800 dark:text-zinc-200",
                   ].join(" ")}
                 >
                   {user.initial}
@@ -178,7 +178,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                   <Link
                     href={user.espaceHref as "/"}
                     onClick={() => setAvatarOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                    className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
                   >
                     <Home className="h-4 w-4 shrink-0" strokeWidth={1.5} />
                     Mon espace
@@ -191,7 +191,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                       <input type="hidden" name="origin" value={user.espaceHref} />
                       <button
                         type="submit"
-                        className="flex w-full items-center gap-2.5 px-4 py-3 text-sm text-zinc-400 dark:text-zinc-500 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                        className="flex w-full items-center gap-2.5 px-4 py-3 text-sm text-zinc-400 dark:text-zinc-500 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
                       >
                         <LogOut className="h-4 w-4 shrink-0" strokeWidth={1.5} />
                         Se déconnecter
@@ -212,7 +212,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                   "flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition-all",
                   transparent
                     ? "border border-zinc-50/20 text-zinc-50/85 hover:border-zinc-50/40 hover:bg-zinc-50/8 hover:text-zinc-50"
-                    : "border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100",
+                    : "border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-100",
                 ].join(" ")}
               >
                 <User className="h-3.5 w-3.5 shrink-0" strokeWidth={1.5} />

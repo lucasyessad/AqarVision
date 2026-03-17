@@ -80,7 +80,7 @@ function FilterDropdown({
         className={[
           "flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all",
           active
-            ? "border-zinc-950 dark:border-zinc-50 bg-zinc-950 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-950"
+            ? "border-zinc-950 dark:border-zinc-50 bg-zinc-950 dark:bg-zinc-50 dark:bg-zinc-800 text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
             : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-500",
         ].join(" ")}
       >
@@ -295,10 +295,10 @@ export function SearchPageClient({
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="flex h-screen flex-col bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex h-screen flex-col bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
 
       {/* ── Sticky filter bar ───────────────────────────────────────────────── */}
-      <div className="z-30 shrink-0 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5">
+      <div className="z-30 shrink-0 border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5">
         {/* Row 1 */}
         <div className="mb-2.5 flex items-center gap-3">
           {/* Search input with autocomplete */}
@@ -328,7 +328,7 @@ export function SearchPageClient({
                         key={code}
                         type="button"
                         onClick={() => applySuggestion({ wilaya_code: code })}
-                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
                       >
                         <span className="w-5 shrink-0 font-mono text-[10px] text-zinc-400 dark:text-zinc-500">{code}</span>
                         <span className="text-zinc-800 dark:text-zinc-200">{name}</span>
@@ -348,7 +348,7 @@ export function SearchPageClient({
                         key={key}
                         type="button"
                         onClick={() => applySuggestion({ property_type: key })}
-                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
                       >
                         {label}
                       </button>
@@ -367,7 +367,7 @@ export function SearchPageClient({
                         key={key}
                         type="button"
                         onClick={() => applySuggestion({ listing_type: key })}
-                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                        className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
                       >
                         {label}
                       </button>
@@ -379,7 +379,7 @@ export function SearchPageClient({
           </div>
 
           {/* View toggle [Annonces | Carte] */}
-          <div className="flex overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
+          <div className="flex overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800">
             {(["listings", "map"] as const).map((mode) => (
               <button
                 key={mode}
@@ -388,7 +388,7 @@ export function SearchPageClient({
                 className={[
                   "flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold transition-colors",
                   viewMode === mode
-                    ? "bg-zinc-950 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-950"
+                    ? "bg-zinc-950 dark:bg-zinc-50 dark:bg-zinc-800 text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
                     : "bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300",
                 ].join(" ")}
               >
@@ -446,7 +446,7 @@ export function SearchPageClient({
                     "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
                     listingType === t
                       ? "bg-amber-500/10 font-semibold text-amber-600 dark:text-amber-400"
-                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800",
+                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800",
                   ].join(" ")}
                 >
                   {listingType === t && (
@@ -479,7 +479,7 @@ export function SearchPageClient({
                   className={[
                     "rounded-lg px-2.5 py-1.5 text-start text-xs font-medium transition-colors",
                     propertyType === t
-                      ? "bg-zinc-950 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-950"
+                      ? "bg-zinc-950 dark:bg-zinc-50 dark:bg-zinc-800 text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
                       : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700",
                   ].join(" ")}
                 >
@@ -511,7 +511,7 @@ export function SearchPageClient({
                     "flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors",
                     wilayaCode === code
                       ? "bg-amber-500/10 font-semibold text-amber-600 dark:text-amber-400"
-                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800",
+                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800",
                   ].join(" ")}
                 >
                   <span className="w-5 shrink-0 font-mono text-xs text-zinc-400 dark:text-zinc-500">{code}</span>
@@ -548,7 +548,7 @@ export function SearchPageClient({
               <button
                 type="button"
                 onClick={() => applyFilters()}
-                className="w-full rounded-lg bg-zinc-950 dark:bg-zinc-50 py-2 text-sm font-semibold text-zinc-50 dark:text-zinc-950"
+                className="w-full rounded-lg bg-zinc-950 dark:bg-zinc-50 dark:bg-zinc-800 py-2 text-sm font-semibold text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
               >
                 Appliquer
               </button>
@@ -572,7 +572,7 @@ export function SearchPageClient({
                       className={[
                         "flex-1 rounded-lg py-1.5 text-sm font-medium transition-colors",
                         roomsMin === n
-                          ? "bg-zinc-950 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-950"
+                          ? "bg-zinc-950 dark:bg-zinc-50 dark:bg-zinc-800 text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
                           : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700",
                       ].join(" ")}
                     >
@@ -594,7 +594,7 @@ export function SearchPageClient({
               <button
                 type="button"
                 onClick={() => applyFilters()}
-                className="w-full rounded-lg bg-zinc-950 dark:bg-zinc-50 py-2 text-sm font-semibold text-zinc-50 dark:text-zinc-950"
+                className="w-full rounded-lg bg-zinc-950 dark:bg-zinc-50 dark:bg-zinc-800 py-2 text-sm font-semibold text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
               >
                 Appliquer
               </button>
@@ -649,7 +649,7 @@ export function SearchPageClient({
         {/* Listings panel */}
         <div
           className={[
-            "shrink-0 overflow-y-auto border-e border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-all duration-300 ease-in-out",
+            "shrink-0 overflow-y-auto border-e border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 dark:bg-zinc-950 transition-all duration-300 ease-in-out",
             viewMode === "listings" ? "w-[70%]" : "w-[30%]",
             // Hide on mobile when map is focused
             viewMode === "map" ? "hidden lg:block" : "",

@@ -43,7 +43,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
   const agencyPhone = (listing as SearchResultDto & { agency_phone?: string }).agency_phone;
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-card transition-all duration-200 hover:-translate-y-[3px] hover:border-zinc-300 hover:shadow-card-hover dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-card transition-all duration-200 hover:-translate-y-[3px] hover:border-zinc-300 hover:shadow-card-hover dark:border-zinc-800 dark:bg-zinc-900">
       {/* ── Image area ─────────────────────────────────────────── */}
       <Link href={`/annonce/${listing.slug}`} className="relative block aspect-[16/10] overflow-hidden">
         {listing.cover_url ? (
@@ -51,11 +51,11 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
             src={listing.cover_url}
             alt={listing.title}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105 bg-zinc-50"
+            className="object-cover transition-transform duration-500 group-hover:scale-105 bg-zinc-50 dark:bg-zinc-800"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-zinc-50 text-zinc-200">
+          <div className="flex h-full w-full items-center justify-center bg-zinc-50 dark:bg-zinc-800 text-zinc-200">
             <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
             </svg>
@@ -65,7 +65,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
         {/* Top-left: badges */}
         <div className="absolute start-2 top-2 flex flex-wrap gap-1">
           {isNew && (
-            <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-[11px] font-semibold text-zinc-950">
+            <span className="rounded-full bg-amber-500 px-2.5 py-0.5 text-[11px] font-semibold text-zinc-950 dark:text-zinc-50">
               {tListings("badge_new")}
             </span>
           )}
@@ -110,7 +110,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
         {/* Title */}
         <Link href={`/annonce/${listing.slug}`}>
           <h3
-            className="mb-2 line-clamp-2 text-sm font-semibold leading-snug text-zinc-900 transition-colors font-display hover:text-amber-600"
+            className="mb-2 line-clamp-2 text-sm font-semibold leading-snug text-zinc-900 dark:text-zinc-100 transition-colors font-display hover:text-amber-600"
           >
             {listing.title}
           </h3>
@@ -138,7 +138,7 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
 
         {/* Price */}
         <div className="mb-3">
-          <p className="text-lg font-semibold tracking-tight text-zinc-900 font-display">
+          <p className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 font-display">
             {formatPrice(listing.current_price, listing.currency)}
           </p>
           {listing.surface_m2 !== null && listing.surface_m2 > 0 && listing.current_price > 0 && (
@@ -151,19 +151,19 @@ function SearchResultCard({ listing, isViewed }: SearchResultCardProps) {
         {/* Meta pills */}
         <div className="mb-4 flex flex-wrap gap-1.5">
           {listing.rooms !== null && (
-            <span className="rounded-full bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-600">
+            <span className="rounded-full bg-zinc-50 dark:bg-zinc-800 px-2.5 py-0.5 text-xs text-zinc-600">
               {listing.rooms} {tListings("rooms")}
             </span>
           )}
           {listing.surface_m2 !== null && (
-            <span className="rounded-full bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-600">
+            <span className="rounded-full bg-zinc-50 dark:bg-zinc-800 px-2.5 py-0.5 text-xs text-zinc-600">
               {listing.surface_m2} m²
             </span>
           )}
         </div>
 
         {/* Footer: agency + contact button */}
-        <div className="mt-auto flex items-center justify-between border-t border-zinc-200 pt-3">
+        <div className="mt-auto flex items-center justify-between border-t border-zinc-200 dark:border-zinc-700 pt-3">
           <div className="flex items-center gap-2 min-w-0">
             {agencyLogo ? (
               <Image src={agencyLogo} alt={listing.agency_name} width={20} height={20} className="rounded-full object-cover shrink-0" />
@@ -303,7 +303,7 @@ export function SearchResults({
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803M10.5 7.5v6m3-3h-6" />
           </svg>
         </div>
-        <p className="text-sm font-medium text-zinc-900">{t("no_results")}</p>
+        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t("no_results")}</p>
         <p className="mt-1 text-sm text-zinc-500">{tListings("no_results_hint")}</p>
       </div>
     );
@@ -314,13 +314,13 @@ export function SearchResults({
       {/* Header: count + sort */}
       <div className="mb-5 flex items-center justify-between">
         <p className="text-sm text-zinc-600">
-          <span className="font-semibold text-zinc-900">{totalCount.toLocaleString("fr-DZ")}</span>{" "}
+          <span className="font-semibold text-zinc-900 dark:text-zinc-100">{totalCount.toLocaleString("fr-DZ")}</span>{" "}
           {t("results_count", { count: totalCount })}
         </p>
         <select
           value={searchParams.get("sort") ?? "newest"}
           onChange={(e) => handleSortChange(e.target.value)}
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-sm text-zinc-600 outline-none font-sans"
+          className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-1.5 text-sm text-zinc-600 outline-none font-sans"
         >
           <option value="newest">{t("newest")}</option>
           <option value="oldest">{t("oldest")}</option>

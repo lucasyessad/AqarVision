@@ -84,13 +84,13 @@ function AlertRow({
   const searchUrl = buildSearchUrl(item.filters, locale);
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           {item.notify && (
             <span className="flex h-2 w-2 shrink-0 rounded-full bg-emerald-500" aria-label="Alerte active" />
           )}
-          <p className="truncate font-medium text-zinc-800">{item.name}</p>
+          <p className="truncate font-medium text-zinc-800 dark:text-zinc-200">{item.name}</p>
         </div>
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5">
           <span className="text-xs text-zinc-400">
@@ -108,7 +108,7 @@ function AlertRow({
         {/* View results link */}
         <a
           href={searchUrl}
-          className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+          className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           Voir les annonces
         </a>
@@ -214,17 +214,17 @@ export function AlertesClient({
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-900">Alertes de recherche</h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Alertes de recherche</h1>
         <a
           href={`/${locale}/search`}
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
+          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
         >
           Nouvelle recherche
         </a>
       </div>
 
       {isEmpty ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white py-20 text-center">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white dark:bg-zinc-900 py-20 text-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -247,7 +247,7 @@ export function AlertesClient({
           </p>
           <a
             href={`/${locale}/search`}
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-900/90"
+            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
           >
             Lancer une recherche
           </a>

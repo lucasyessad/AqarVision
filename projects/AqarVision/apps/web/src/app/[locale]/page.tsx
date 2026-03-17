@@ -145,7 +145,7 @@ export default async function HomePage({
 
         {/* ─────────────────────── SPLIT EDITORIAL ─── */}
         <section className="grid min-h-[70vh] grid-cols-1 lg:grid-cols-2">
-          <div className="flex flex-col justify-center bg-zinc-50 px-8 py-16 dark:bg-zinc-900 lg:px-16">
+          <div className="flex flex-col justify-center bg-zinc-50 dark:bg-zinc-800 px-8 py-16 dark:bg-zinc-900 lg:px-16">
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
               Explorer
             </p>
@@ -179,7 +179,7 @@ export default async function HomePage({
         </section>
 
         {/* ──────────────────────── WILAYAS SCROLL ─── */}
-        <section className="border-t border-zinc-100 bg-zinc-50 py-16 dark:border-zinc-800 dark:bg-zinc-900">
+        <section className="border-t border-zinc-100 bg-zinc-50 dark:bg-zinc-800 py-16 dark:border-zinc-800 dark:bg-zinc-900">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
             <h2 className="mb-2 text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">
               Explorez par région
@@ -192,9 +192,9 @@ export default async function HomePage({
                 key={city.code}
                 href={`/search?wilaya_code=${city.code}`}
                 locale={locale}
-                className="group w-[200px] shrink-0 snap-start overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
+                className="group w-[200px] shrink-0 snap-start overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 transition-all hover:-translate-y-1 hover:shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
               >
-                <div className="flex h-[130px] items-center justify-center bg-zinc-100 text-3xl dark:bg-zinc-700">
+                <div className="flex h-[130px] items-center justify-center bg-zinc-100 dark:bg-zinc-800 text-3xl dark:bg-zinc-700">
                   <Home className="h-8 w-8 text-zinc-400 dark:text-zinc-500" />
                 </div>
                 <div className="p-3">
@@ -208,7 +208,7 @@ export default async function HomePage({
 
         {/* ──────────────────────────────── FEATURED GRID ─── */}
         {(featured || secondary) && (
-          <section className="border-t border-zinc-100 bg-white py-20 dark:border-zinc-800 dark:bg-zinc-950">
+          <section className="border-t border-zinc-100 bg-white dark:bg-zinc-900 py-20 dark:border-zinc-800 dark:bg-zinc-950">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="mb-10 flex items-end justify-between">
                 <div>
@@ -296,7 +296,7 @@ export default async function HomePage({
 
         {/* ──────────────────────────────────────── TENDANCE ─── */}
         {trending.length > 0 && (
-          <section className="border-t border-zinc-200 bg-zinc-50 py-20 dark:border-zinc-800 dark:bg-zinc-900">
+          <section className="border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 py-20 dark:border-zinc-800 dark:bg-zinc-900">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="flex gap-10 lg:gap-20">
                 <div className="hidden w-[220px] shrink-0 flex-col justify-between lg:flex">
@@ -310,7 +310,7 @@ export default async function HomePage({
                   <Link
                     href="/search"
                     locale={locale}
-                    className="inline-flex w-fit items-center gap-1.5 border-b border-zinc-950 pb-0.5 text-xs font-semibold text-zinc-950 transition-opacity hover:opacity-60 dark:border-zinc-50 dark:text-zinc-50"
+                    className="inline-flex w-fit items-center gap-1.5 border-b border-zinc-950 pb-0.5 text-xs font-semibold text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-60 dark:border-zinc-50 dark:text-zinc-50"
                   >
                     Voir tout
                     <ArrowRight className="h-3 w-3" />
@@ -361,7 +361,7 @@ export default async function HomePage({
 
         {/* ─────────────────────────── NOUVELLES ANNONCES ─── */}
         {newest.length > 0 && (
-          <section className="border-t border-zinc-200 bg-zinc-100 py-20 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <section className="border-t border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 py-20 dark:border-zinc-800 dark:bg-zinc-900/50">
             <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <div className="mb-8 flex items-end justify-between">
                 <div>
@@ -390,7 +390,7 @@ export default async function HomePage({
                           <Home className="h-10 w-10" />
                         </div>
                       )}
-                      <span className="absolute start-2 top-2 rounded-lg bg-amber-500 px-2 py-0.5 text-[10px] font-semibold text-zinc-950">
+                      <span className="absolute start-2 top-2 rounded-lg bg-amber-500 px-2 py-0.5 text-[10px] font-semibold text-zinc-950 dark:text-zinc-50">
                         Nouveau
                       </span>
                     </div>
@@ -460,7 +460,7 @@ export default async function HomePage({
         </section>
 
         {/* ──────────────────────────────── CTA PRO ─── */}
-        <section className="bg-zinc-50 py-20 text-center dark:bg-zinc-900">
+        <section className="bg-zinc-50 dark:bg-zinc-800 py-20 text-center dark:bg-zinc-900">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
             Pour les professionnels
           </p>

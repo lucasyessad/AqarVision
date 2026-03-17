@@ -127,7 +127,7 @@ export function VerificationForm({ initialStatus }: VerificationFormProps) {
                   name="legal_name"
                   required
                   placeholder="Ex : Agence Baraka SARL"
-                  className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-950 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-950 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                 />
               </div>
             </div>
@@ -149,7 +149,7 @@ export function VerificationForm({ initialStatus }: VerificationFormProps) {
                   name="rc_number"
                   required
                   placeholder="16/00-1234567 B 15"
-                  className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-950 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                  className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-950 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                 />
               </div>
             </div>
@@ -186,7 +186,7 @@ export function VerificationForm({ initialStatus }: VerificationFormProps) {
               <button
                 type="submit"
                 disabled={isPending}
-                className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-zinc-950 shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-zinc-950 dark:text-zinc-50 shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 {isPending ? (
                   <>

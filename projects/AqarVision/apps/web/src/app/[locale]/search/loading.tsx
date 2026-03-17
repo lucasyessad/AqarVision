@@ -1,15 +1,15 @@
 export default function SearchLoading() {
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex h-screen flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
 
       {/* Sticky filter bar skeleton */}
-      <div className="z-30 shrink-0 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5">
+      <div className="z-30 shrink-0 border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5">
         {/* Row 1: search input + toggle + count */}
         <div className="mb-2.5 flex items-center gap-3">
           <div className="h-9 max-w-sm flex-1 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
           <div className="flex overflow-hidden rounded-lg">
             <div className="h-9 w-[100px] animate-pulse rounded-s-lg bg-zinc-200 dark:bg-zinc-800" />
-            <div className="h-9 w-[80px] animate-pulse rounded-e-lg bg-zinc-100 dark:bg-zinc-700" />
+            <div className="h-9 w-[80px] animate-pulse rounded-e-lg bg-zinc-100 dark:bg-zinc-800 dark:bg-zinc-700" />
           </div>
           <div className="hidden sm:block h-4 w-24 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
           <div className="ms-auto h-9 w-9 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
@@ -39,12 +39,12 @@ export default function SearchLoading() {
       <div className="flex flex-1 overflow-hidden">
 
         {/* Listings panel 70% */}
-        <div className="w-[70%] shrink-0 overflow-hidden border-e border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+        <div className="w-[70%] shrink-0 overflow-hidden border-e border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 dark:bg-zinc-950">
           <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 9 }).map((_, i) => (
               <div
                 key={i}
-                className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+                className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900"
               >
                 {/* Image 16:10 */}
                 <div className="aspect-[16/10] w-full animate-pulse bg-zinc-200 dark:bg-zinc-800" />

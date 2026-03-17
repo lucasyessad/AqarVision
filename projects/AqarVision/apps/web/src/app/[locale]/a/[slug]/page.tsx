@@ -90,7 +90,7 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
     .sort((a, b) => a.order - b.order);
 
   return (
-    <div className="bg-zinc-50 dark:bg-zinc-950">
+    <div className="bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
       {beforeSections.map((section) => (
         <SectionRenderer key={section.id} section={section} agency={agency} />
       ))}
@@ -98,7 +98,7 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
       <section className="mx-auto max-w-7xl px-4 py-10">
         <div className="flex flex-col gap-8 lg:flex-row">
           <div className="flex-1">
-            <h2 className="mb-5 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="mb-5 text-lg font-semibold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">
               Mes annonces
             </h2>
             {agencyListings.length > 0 ? (
@@ -107,7 +107,7 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                   <Link
                     key={listing.id}
                     href={`/annonce/${listing.slug}`}
-                    className="group block overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
+                    className="group block overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
                   >
                     <div className="relative aspect-[16/10] overflow-hidden bg-zinc-200 dark:bg-zinc-800">
                       {listing.cover_url ? (
@@ -123,7 +123,7 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
                         {listing.property_type}
                       </span>
                       <h3 className="mb-1 truncate text-sm font-semibold text-zinc-700 dark:text-zinc-200">{listing.title}</h3>
-                      <p className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{formatPrice(listing.current_price, listing.currency)}</p>
+                      <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">{formatPrice(listing.current_price, listing.currency)}</p>
                     </div>
                   </Link>
                 ))}
@@ -135,22 +135,22 @@ export default async function AgencyPublicPage({ params }: AgencyPageProps) {
 
           <div className="w-full shrink-0 lg:w-80">
             <div className="sticky top-20 space-y-4">
-              <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-                <h3 className="mb-4 text-sm font-semibold text-zinc-900 dark:text-zinc-50">Contacter l&apos;agence</h3>
+              <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 dark:border-zinc-700 dark:bg-zinc-900">
+                <h3 className="mb-4 text-sm font-semibold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">Contacter l&apos;agence</h3>
                 {agency.phone && (
-                  <a href={`tel:${agency.phone}`} className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-3 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:text-zinc-950">
+                  <a href={`tel:${agency.phone}`} className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-950 px-4 py-3 text-sm font-semibold text-zinc-50 transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-950 dark:text-zinc-50">
                     <PhoneIcon className="h-4 w-4" /> {agency.phone}
                   </a>
                 )}
                 {agency.email && (
-                  <a href={`mailto:${agency.email}`} className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 px-4 py-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300">
+                  <a href={`mailto:${agency.email}`} className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 px-4 py-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-300">
                     <Mail className="h-4 w-4" /> {agency.email}
                   </a>
                 )}
               </div>
               {agency.branches.length > 0 && (
-                <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-                  <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-50">Succursales</h3>
+                <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 dark:border-zinc-700 dark:bg-zinc-900">
+                  <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">Succursales</h3>
                   <div className="space-y-3">
                     {agency.branches.map((b) => (
                       <div key={b.id}>

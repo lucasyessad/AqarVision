@@ -6,14 +6,7 @@ import { useTranslations } from "next-intl";
 import type { MapBounds } from "../schemas/search.schema";
 import { formatPrice } from "@/lib/format";
 
-// Minimal type declarations for maplibre-gl so the file compiles without the package installed
-// Once maplibre-gl is installed, these types are provided by the package itself.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MapLibreMap = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MapLibreMarker = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MapLibrePopup = any;
+import type { Map as MapLibreMap, Marker as MapLibreMarker, Popup as MapLibrePopup } from "maplibre-gl";
 
 export interface MapListing {
   id: string;
@@ -171,11 +164,11 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
         // Popup content
         const popupHtml = `
           <div class="p-2 min-w-[160px]">
-            <p class="text-xs font-semibold text-zinc-800 truncate mb-1">${listing.title}</p>
-            <p class="text-sm font-bold text-zinc-900 mb-2">${formatPrice(listing.price, listing.currency)}</p>
+            <p class="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate mb-1">${listing.title}</p>
+            <p class="text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-2">${formatPrice(listing.price, listing.currency)}</p>
             <a
               href="/${locale}/annonce/${listing.slug}"
-              class="block w-full rounded bg-zinc-900 px-3 py-1 text-center text-xs font-medium text-white hover:bg-amber-500 transition-colors"
+              class="block w-full rounded bg-zinc-900 px-3 py-1 text-center text-xs font-medium text-white hover:bg-amber-600 transition-colors"
             >
               ${t("view_listing")}
             </a>
@@ -211,7 +204,7 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
   }
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl bg-white dark:bg-zinc-900 shadow-sm">
       <div
         ref={containerRef}
         className="h-64 w-full lg:h-80"

@@ -28,7 +28,7 @@ export function BranchList({ branches, agencyId, canCreate }: BranchListProps) {
           <button
             type="button"
             onClick={() => setShowForm(!showForm)}
-            className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
+            className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
           >
             {showForm ? t("cancel") : t("add_branch")}
           </button>
@@ -104,7 +104,7 @@ export function BranchList({ branches, agencyId, canCreate }: BranchListProps) {
             <button
               type="submit"
               disabled={isPending}
-              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
+              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
             >
               {isPending ? t("creating") : t("create_branch")}
             </button>
@@ -117,7 +117,7 @@ export function BranchList({ branches, agencyId, canCreate }: BranchListProps) {
           {branches.map((branch) => (
             <li
               key={branch.id}
-              className="rounded-xl border border-gray-200 bg-white p-4"
+              className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 p-4"
             >
               <div className="flex items-start justify-between">
                 <div>

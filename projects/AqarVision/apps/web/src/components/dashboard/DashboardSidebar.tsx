@@ -58,10 +58,10 @@ const NAV_ITEMS = [
 ];
 
 const SETTINGS_ITEMS = [
-  { key: "settings", href: "/AqarPro/dashboard/settings", label: "Paramètres" },
-  { key: "appearance", href: "/AqarPro/dashboard/settings/appearance", label: "Apparence" },
-  { key: "branding", href: "/AqarPro/dashboard/settings/branding", label: "Branding" },
-  { key: "verification", href: "/AqarPro/dashboard/settings/verification", label: "Vérification" },
+  { key: "settings", href: "/AqarPro/dashboard/settings" },
+  { key: "appearance", href: "/AqarPro/dashboard/settings/appearance" },
+  { key: "branding", href: "/AqarPro/dashboard/settings/branding" },
+  { key: "verification", href: "/AqarPro/dashboard/settings/verification" },
 ];
 
 export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardSidebarProps) {
@@ -77,9 +77,9 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
   const initial = (fullName ?? userEmail).charAt(0).toUpperCase();
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col border-e border-zinc-200 bg-zinc-100">
+    <aside className="flex w-60 shrink-0 flex-col border-e border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800">
       {/* Logo */}
-      <div className="flex flex-col gap-2 border-b border-zinc-200 px-5 py-5">
+      <div className="flex flex-col gap-2 border-b border-zinc-200 dark:border-zinc-700 px-5 py-5">
         <AqarBrandLogo product="Pro" size="sm" onDark={false} />
         <Link
           href="/"
@@ -88,7 +88,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          Retour au portail
+          {t("back_to_portal")}
         </Link>
       </div>
 
@@ -104,7 +104,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
                 "flex items-center gap-3 rounded-lg border-s-2 px-3 py-2.5 text-sm font-medium transition-all",
                 active
                   ? "border-amber-500 bg-amber-500/10 text-amber-700"
-                  : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900",
+                  : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900 dark:text-zinc-100",
               ].join(" ")}
             >
               <svg
@@ -121,7 +121,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
         {/* Settings group */}
         <div className="pt-4">
           <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
-            Paramètres
+            {t("nav.settings")}
           </p>
           {SETTINGS_ITEMS.map((item) => {
             const active = isActive(item.href);
@@ -133,10 +133,10 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
                   "flex items-center rounded-lg border-s-2 px-3 py-2 text-sm transition-all",
                   active
                     ? "border-amber-500 bg-amber-500/10 font-medium text-amber-700"
-                    : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900",
+                    : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900 dark:text-zinc-100",
                 ].join(" ")}
               >
-                {item.label}
+                {t(`settings_nav.${item.key}` as Parameters<typeof t>[0])}
               </Link>
             );
           })}
@@ -150,24 +150,24 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
             href={getAgencyUrl(agencySlug)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs font-medium text-zinc-700 transition-all hover:bg-zinc-100"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-xs font-medium text-zinc-700 transition-all hover:bg-zinc-100 dark:bg-zinc-800"
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
             </svg>
-            Voir ma vitrine
+            {t("view_storefront")}
           </a>
         </div>
       )}
 
       {/* User footer */}
-      <div className="flex items-center gap-3 border-t border-zinc-200 px-4 py-3">
+      <div className="flex items-center gap-3 border-t border-zinc-200 dark:border-zinc-700 px-4 py-3">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-zinc-50">
           {initial}
         </div>
         <div className="min-w-0 flex-1">
           {fullName && (
-            <p className="truncate text-xs font-semibold text-zinc-800">
+            <p className="truncate text-xs font-semibold text-zinc-800 dark:text-zinc-200">
               {fullName}
             </p>
           )}
@@ -178,7 +178,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
           <input type="hidden" name="origin" value={pathname} />
           <button
             type="submit"
-            title="Se déconnecter"
+            title={t("logout")}
             className="shrink-0 rounded-md p-1 text-zinc-400 transition-opacity hover:opacity-60"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

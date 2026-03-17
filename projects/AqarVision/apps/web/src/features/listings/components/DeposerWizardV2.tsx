@@ -18,7 +18,7 @@ interface DeposerWizardV2Props {
   locale: string;
 }
 
-const SECTION = "rounded-xl border border-zinc-200 bg-white p-6 shadow-xs";
+const SECTION = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6 shadow-xs";
 
 export function DeposerWizardV2({ wilayas, activeCount, quota, locale }: DeposerWizardV2Props) {
   const [step, setStep] = useState(0);

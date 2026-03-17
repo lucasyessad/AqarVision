@@ -79,7 +79,7 @@ export function VisitRequestForm({ listingId, agencyId }: VisitRequestFormProps)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h3 className="text-base font-semibold text-blue-night">
+      <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
         Demander une visite
       </h3>
 
@@ -102,7 +102,7 @@ export function VisitRequestForm({ listingId, agencyId }: VisitRequestFormProps)
           value={form.visitorName}
           onChange={handleChange}
           placeholder="Votre nom"
-          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-night focus:outline-none focus:ring-1 focus:ring-blue-night/20"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-blue-night/20"
         />
       </div>
 
@@ -119,7 +119,7 @@ export function VisitRequestForm({ listingId, agencyId }: VisitRequestFormProps)
           value={form.visitorPhone}
           onChange={handleChange}
           placeholder="0555 00 00 00"
-          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-night focus:outline-none focus:ring-1 focus:ring-blue-night/20"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-blue-night/20"
         />
       </div>
 
@@ -136,7 +136,7 @@ export function VisitRequestForm({ listingId, agencyId }: VisitRequestFormProps)
           value={form.visitorEmail}
           onChange={handleChange}
           placeholder="votre@email.com"
-          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-night focus:outline-none focus:ring-1 focus:ring-blue-night/20"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-blue-night/20"
         />
       </div>
 
@@ -153,7 +153,7 @@ export function VisitRequestForm({ listingId, agencyId }: VisitRequestFormProps)
           value={form.requestedDate}
           onChange={handleChange}
           min={new Date().toISOString().split("T")[0]}
-          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-night focus:outline-none focus:ring-1 focus:ring-blue-night/20"
+          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-blue-night/20"
         />
       </div>
 
@@ -170,14 +170,14 @@ export function VisitRequestForm({ listingId, agencyId }: VisitRequestFormProps)
           value={form.message}
           onChange={handleChange}
           placeholder="Précisions sur la visite..."
-          className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-night focus:outline-none focus:ring-1 focus:ring-blue-night/20"
+          className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm placeholder-gray-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-blue-night/20"
         />
       </div>
 
       <button
         type="submit"
         disabled={submitting}
-        className="w-full rounded-lg bg-blue-night px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-night/90 disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {submitting ? "Envoi en cours..." : "Envoyer la demande"}
       </button>

@@ -372,7 +372,7 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
               <a
                 key={agency.id}
                 href={getAgencyUrl(agency.slug)}
-                className="group flex items-center gap-5 rounded-xl border border-zinc-200 bg-white px-6 py-5 transition-all hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+                className="group flex items-center gap-5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-5 transition-all hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
               >
                 {/* Logo */}
                 <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-zinc-100 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:border-zinc-700 dark:from-zinc-800 dark:to-zinc-700">

@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   getAgencyForCurrentUser,
   isAuthError,
-} from "@/lib/actions/auth";
+} from "@/lib/auth/get-agency-for-user";
 import { ThemeStudio } from "@/features/agency-settings/components/ThemeStudio";
 
 export default async function AppearancePage({

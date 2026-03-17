@@ -81,7 +81,7 @@ export default function SocialFeed({ instagramUrl, facebookUrl, tiktokUrl }: Soc
       label: 'TikTok',
       url: tiktokUrl,
       Icon: TikTokIcon,
-      className: 'bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200',
+      className: 'bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-200',
     })
   }
 

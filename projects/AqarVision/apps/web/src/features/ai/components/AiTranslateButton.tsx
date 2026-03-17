@@ -155,7 +155,7 @@ export function AiTranslateButton({
             <button
               type="button"
               onClick={handleAccept}
-              className="rounded bg-amber-400 px-4 py-2 text-sm font-medium text-zinc-950 transition-colors hover:bg-amber-400/90"
+              className="rounded bg-amber-400 px-4 py-2 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-amber-400/90"
             >
               {t("accept")}
             </button>

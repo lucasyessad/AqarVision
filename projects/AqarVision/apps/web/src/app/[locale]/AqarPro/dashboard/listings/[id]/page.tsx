@@ -12,13 +12,13 @@ type Tab = (typeof TABS)[number];
 
 const STATUS_CLS: Record<string, string> = {
   published:      "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400",
-  draft:          "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
+  draft:          "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
   paused:         "bg-yellow-50 text-yellow-600 dark:bg-yellow-950 dark:text-yellow-400",
   pending_review: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400",
   rejected:       "bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-400",
 };
 
-const inputCls = "h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-950 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50";
+const inputCls = "h-10 w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-sm text-zinc-950 dark:text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50";
 const labelCls = "mb-1.5 block text-xs font-medium text-zinc-700 dark:text-zinc-300";
 
 export default async function ListingDetailPage({
@@ -146,7 +146,7 @@ export default async function ListingDetailPage({
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-0 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="flex gap-0 border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800">
         {TABS.map((tab) => {
           const isActive = currentTab === tab;
           return (
@@ -172,8 +172,8 @@ export default async function ListingDetailPage({
           {currentTab === "details" && (
             <>
               {/* Type card */}
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+              <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
                   <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                     {t("listing_type")}
                   </h2>
@@ -204,8 +204,8 @@ export default async function ListingDetailPage({
               </div>
 
               {/* Details card */}
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+              <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
                   <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                     {t("step_location")}
                   </h2>
@@ -228,7 +228,7 @@ export default async function ListingDetailPage({
                     <input type="number" defaultValue={listing.bathrooms ?? ""} className={inputCls} />
                   </div>
                 </div>
-                <div className="flex justify-end bg-zinc-50 px-6 py-4 dark:bg-zinc-900/50">
+                <div className="flex justify-end bg-zinc-50 dark:bg-zinc-800 px-6 py-4 dark:bg-zinc-900/50">
                   <button className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-amber-600">
                     {t("save")}
                   </button>
@@ -240,8 +240,8 @@ export default async function ListingDetailPage({
           {currentTab === "translations" && (
             <>
               {/* FR */}
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+              <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
                   <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                     {t("translation_fr")}
                   </h2>
@@ -263,8 +263,8 @@ export default async function ListingDetailPage({
               </div>
 
               {/* AR */}
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900" dir="rtl">
-                <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+              <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900" dir="rtl">
+                <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
                   <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                     {t("translation_ar")}
                   </h2>
@@ -295,8 +295,8 @@ export default async function ListingDetailPage({
 
           {currentTab === "media" && (
             <>
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+              <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
                   <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                     Ajouter des photos
                   </h2>
@@ -305,8 +305,8 @@ export default async function ListingDetailPage({
                   <MediaUploader listingId={id} />
                 </div>
               </div>
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+              <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
                   <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                     Galerie ({mediaItems.length} photo{mediaItems.length !== 1 ? "s" : ""})
                   </h2>
@@ -319,8 +319,8 @@ export default async function ListingDetailPage({
           )}
 
           {currentTab === "preview" && (
-            <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-              <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+            <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+              <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
                 <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                   {t("preview")}
                 </h2>
@@ -345,14 +345,14 @@ export default async function ListingDetailPage({
                   </p>
                 )}
                 {frTranslation && (
-                  <div className="border-t border-zinc-200 pt-4 dark:border-zinc-800">
+                  <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4 dark:border-zinc-800">
                     <p className="text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">{t("translation_fr")}</p>
                     <p className="mt-1 font-semibold text-zinc-950 dark:text-zinc-50">{frTranslation.title}</p>
                     <p className="mt-1 text-zinc-500 dark:text-zinc-400">{frTranslation.description}</p>
                   </div>
                 )}
                 {arTranslation && (
-                  <div className="border-t border-zinc-200 pt-4 dark:border-zinc-800" dir="rtl">
+                  <div className="border-t border-zinc-200 dark:border-zinc-700 pt-4 dark:border-zinc-800" dir="rtl">
                     <p className="text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">{t("translation_ar")}</p>
                     <p className="mt-1 font-semibold text-zinc-950 dark:text-zinc-50">{arTranslation.title}</p>
                     <p className="mt-1 text-zinc-500 dark:text-zinc-400">{arTranslation.description}</p>
@@ -365,8 +365,8 @@ export default async function ListingDetailPage({
 
         {/* Sidebar: Publish checklist */}
         <div className="lg:col-span-1">
-          <div className="sticky top-6 overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
+          <div className="sticky top-6 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="border-b border-zinc-200 dark:border-zinc-700 px-5 py-4 dark:border-zinc-800">
               <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                 {t("publish_checklist")}
               </h2>
@@ -390,7 +390,7 @@ export default async function ListingDetailPage({
               ))}
             </ul>
             {allMet && (
-              <div className="border-t border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <div className="border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-900/50">
                 <p className="text-xs text-green-600 dark:text-green-400">
                   ✓ Annonce prête à publier
                 </p>

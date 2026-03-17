@@ -50,7 +50,7 @@ export function AiGenerateButton({
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-night px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-night/90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
         >
           {isPending ? (
             <>
@@ -107,7 +107,7 @@ export function AiGenerateButton({
       )}
 
       {showResult && state?.success && (
-        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 p-4 shadow-sm">
           {currentDescription && (
             <div className="mb-4">
               <p className="mb-1 text-xs font-semibold uppercase text-gray-400">
@@ -130,14 +130,14 @@ export function AiGenerateButton({
             <button
               type="button"
               onClick={handleAccept}
-              className="rounded-lg bg-gold px-4 py-2 text-sm font-medium text-blue-night transition-colors hover:bg-gold/90"
+              className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-amber-600/90"
             >
               {t("accept")}
             </button>
             <button
               type="button"
               onClick={handleReject}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              className="rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
             >
               {t("reject")}
             </button>

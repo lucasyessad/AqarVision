@@ -4,7 +4,6 @@ const config: Config = {
   darkMode: ["class", '[data-theme="dark"]'],
   content: [
     "./src/**/*.{ts,tsx}",
-    "../../packages/ui/src/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
@@ -67,63 +66,6 @@ const config: Config = {
         "status-rejected":  "#EF4444",
         "status-sold":      "#3B82F6",
 
-        // ── Backward compat — old names → Zinc/Amber ─────────────
-        onyx: {
-          DEFAULT: "#09090B",  // zinc-950
-          light:   "#18181B",  // zinc-900
-          mid:     "#27272A",  // zinc-800
-          soft:    "#3F3F46",  // zinc-700
-        },
-        ivoire: {
-          DEFAULT: "#FAFAFA",  // zinc-50
-          warm:    "#F4F4F5",  // zinc-100
-          deep:    "#E4E4E7",  // zinc-200
-          border:  "#D4D4D8",  // zinc-300
-        },
-        or: {
-          DEFAULT: "#F59E0B",  // amber-500
-          light:   "#FBBF24",  // amber-400
-          deep:    "#D97706",  // amber-600
-        },
-        "blue-night": "#18181B",  // zinc-900
-        gold:         "#F59E0B",  // amber-500
-        "off-white":  "#FAFAFA",  // zinc-50
-        charcoal: {
-          950: "#09090B",
-          900: "#18181B",
-          800: "#27272A",
-          700: "#3F3F46",
-          600: "#52525B",
-          500: "#71717A",
-          400: "#A1A1AA",
-          300: "#D4D4D8",
-          200: "#E4E4E7",
-          100: "#F4F4F5",
-        },
-        warm: {
-          50:  "#FAFAFA",
-          100: "#F4F4F5",
-          200: "#E4E4E7",
-          300: "#D4D4D8",
-        },
-        coral: {
-          DEFAULT: "#F59E0B",
-          hover:   "#D97706",
-          light:   "#FBBF24",
-        },
-        aqar: {
-          page:    "#FAFAFA",
-          surface: "#FFFFFF",
-          sunken:  "#F4F4F5",
-          coral:   "#F59E0B",
-          amber:   "#F59E0B",
-          red:     "#EF4444",
-          success: "#22C55E",
-        },
-        "text-dark":  "#09090B",
-        "text-body":  "#71717A",
-        "text-muted": "#A1A1AA",
-        "text-faint": "#D4D4D8",
       },
 
       fontFamily: {

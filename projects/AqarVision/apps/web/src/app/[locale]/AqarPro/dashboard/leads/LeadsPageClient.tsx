@@ -52,7 +52,7 @@ export function LeadsPageClient({
         <h1 className="text-xl font-bold text-gray-700">{t("leads_title")}</h1>
       </div>
 
-      <div className="flex flex-1 overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div className="flex flex-1 overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-zinc-900">
         {/* Conversation list — hidden on mobile when chat is open */}
         <div
           className={`w-full shrink-0 border-e border-gray-200 md:block md:w-80 lg:w-96 ${
@@ -79,7 +79,7 @@ export function LeadsPageClient({
             <button
               type="button"
               onClick={handleBack}
-              className="flex items-center gap-1 border-b border-gray-200 px-4 py-2 text-sm text-zinc-900 md:hidden"
+              className="flex items-center gap-1 border-b border-gray-200 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100 md:hidden"
             >
               <svg
                 className="h-4 w-4 rtl:rotate-180"

@@ -73,31 +73,31 @@ export default async function AdminDashboardPage() {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Link
             href="/admin/verifications"
-            className="rounded-xl border border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-amber-500/10 dark:hover:bg-amber-500/20"
+            className="rounded-xl border border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-amber-600/10 dark:hover:bg-amber-600/20"
           >
             Examiner les demandes de vérification →
           </Link>
           <Link
             href="/admin/payments"
-            className="rounded-xl border border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-amber-500/10 dark:hover:bg-amber-500/20"
+            className="rounded-xl border border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-amber-600/10 dark:hover:bg-amber-600/20"
           >
             Paiements en attente →
           </Link>
           <Link
             href="/admin/agencies"
-            className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+            className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
           >
             Gérer les agences →
           </Link>
           <Link
             href="/admin/users"
-            className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+            className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
           >
             Gérer les utilisateurs →
           </Link>
           <Link
             href="/admin/settings"
-            className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
+            className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-4 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
           >
             Paramètres plateforme →
           </Link>

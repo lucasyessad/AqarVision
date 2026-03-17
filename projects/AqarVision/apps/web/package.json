@@ -16,10 +16,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@aqarvision/config": "workspace:*",
-    "@aqarvision/domain": "workspace:*",
-    "@aqarvision/security": "workspace:*",
-    "@sentry/core": "^10.43.0",
-    "@sentry/nextjs": "^8.0.0",
+    "@sentry/nextjs": "^9.5.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.10",
     "lucide-react": "^0.577.0",

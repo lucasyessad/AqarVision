@@ -105,14 +105,14 @@ function LeadNotePanel({
           onChange={(e) => setNoteText(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleAddNote()}
           placeholder="Ajouter une note..."
-          className="min-w-0 flex-1 rounded border border-gray-200 bg-white px-2 py-1 text-xs placeholder-gray-400 focus:border-blue-night focus:outline-none"
+          className="min-w-0 flex-1 rounded border border-gray-200 bg-white dark:bg-zinc-900 px-2 py-1 text-xs placeholder-gray-400 focus:border-zinc-900 focus:outline-none"
           disabled={saving}
         />
         <button
           type="button"
           onClick={handleAddNote}
           disabled={saving || !noteText.trim()}
-          className="rounded bg-blue-night px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-night/90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded bg-zinc-900 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saving ? "..." : "OK"}
         </button>
@@ -149,7 +149,7 @@ function LeadCard({ lead, agencyId, onNotesUpdated, onDragStart }: LeadCardProps
     <div
       draggable
       onDragStart={(e) => onDragStart(e, lead.id, lead.status)}
-      className="cursor-grab rounded-lg border border-gray-100 bg-white p-3 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing"
+      className="cursor-grab rounded-lg border border-gray-100 bg-white dark:bg-zinc-900 p-3 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing"
     >
       {/* Header */}
       <div className="mb-1.5 flex items-start justify-between gap-2">
@@ -167,7 +167,7 @@ function LeadCard({ lead, agencyId, onNotesUpdated, onDragStart }: LeadCardProps
       )}
 
       {/* Listing */}
-      <p className="mb-1.5 truncate text-xs text-blue-night/80" title={lead.listing_title}>
+      <p className="mb-1.5 truncate text-xs text-zinc-900/80" title={lead.listing_title}>
         {lead.listing_title}
       </p>
 
@@ -188,7 +188,7 @@ function LeadCard({ lead, agencyId, onNotesUpdated, onDragStart }: LeadCardProps
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="mt-2 flex w-full items-center gap-1 text-[10px] font-medium text-gray-400 hover:text-blue-night transition-colors"
+        className="mt-2 flex w-full items-center gap-1 text-[10px] font-medium text-gray-400 hover:text-zinc-900 dark:text-zinc-100 transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -151,6 +151,15 @@
       "billing": "Facturacion"
     },
     "save": "Guardar",
+    "back_to_portal": "Volver al portal",
+    "view_storefront": "Ver mi escaparate",
+    "logout": "Cerrar sesión",
+    "settings_nav": {
+      "settings": "Configuración",
+      "appearance": "Apariencia",
+      "branding": "Branding",
+      "verification": "Verificación"
+    },
     "settings_title": "Configuracion de la cuenta",
     "settings_subtitle": "Gestiona tu informacion personal y preferencias.",
     "email_label": "Correo electronico",

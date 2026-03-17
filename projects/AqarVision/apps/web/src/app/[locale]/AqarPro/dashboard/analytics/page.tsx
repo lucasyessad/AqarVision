@@ -30,7 +30,7 @@ export default async function AnalyticsDashboardPage({
 
   if (!membership) {
     return (
-      <div className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white py-16 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 py-16 dark:border-zinc-800 dark:bg-zinc-900">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">{t("no_data")}</p>
       </div>
     );
@@ -62,8 +62,8 @@ export default async function AnalyticsDashboardPage({
       </div>
 
       {/* Overview section */}
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             {t("overview")}
           </h2>
@@ -74,8 +74,8 @@ export default async function AnalyticsDashboardPage({
       </div>
 
       {/* Chart section */}
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             {t("daily_chart")}
           </h2>
@@ -86,8 +86,8 @@ export default async function AnalyticsDashboardPage({
       </div>
 
       {/* Advanced analytics section */}
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             {t("advanced")}
           </h2>

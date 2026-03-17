@@ -117,7 +117,7 @@ export function MediaGallery({
 
   if (items.length === 0) {
     return (
-      <div className="flex items-center justify-center rounded-xl bg-zinc-50 p-8">
+      <div className="flex items-center justify-center rounded-xl bg-zinc-50 dark:bg-zinc-800 p-8">
         <p className="text-sm text-zinc-400">{t("no_media")}</p>
       </div>
     );
@@ -179,7 +179,7 @@ export function MediaGallery({
                     e.stopPropagation();
                     handleSetCover(item.id);
                   }}
-                  className="rounded bg-white/90 px-2 py-1 text-[10px] font-medium text-zinc-800 transition-colors hover:bg-white"
+                  className="rounded bg-white/90 px-2 py-1 text-[10px] font-medium text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-white dark:bg-zinc-900"
                 >
                   {t("set_as_cover")}
                 </button>
@@ -217,8 +217,8 @@ export function MediaGallery({
       {/* Delete confirmation modal */}
       {confirmDeleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="mx-4 w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="mb-2 text-base font-semibold text-zinc-800">
+          <div className="mx-4 w-full max-w-sm rounded-xl bg-white dark:bg-zinc-900 p-6 shadow-xl">
+            <h3 className="mb-2 text-base font-semibold text-zinc-800 dark:text-zinc-200">
               {t("delete_confirm_title")}
             </h3>
             <p className="mb-4 text-sm text-zinc-400">
@@ -228,7 +228,7 @@ export function MediaGallery({
               <button
                 type="button"
                 onClick={() => setConfirmDeleteId(null)}
-                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-800 transition-colors hover:bg-gray-100"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-gray-100"
               >
                 {t("cancel")}
               </button>

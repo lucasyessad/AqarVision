@@ -54,7 +54,7 @@ export function PhotoGallery({ media, title }: PhotoGalleryProps) {
   // ── Empty state ──────────────────────────────────────────────
   if (sorted.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center bg-zinc-100 dark:bg-zinc-900">
+      <div className="flex h-full items-center justify-center bg-zinc-100 dark:bg-zinc-800 dark:bg-zinc-900">
         <div className="text-center">
           <ImageIcon className="mx-auto h-16 w-16 text-zinc-300 dark:text-zinc-700" />
           <p className="mt-2 text-sm text-zinc-400 dark:text-zinc-600">Aucune photo</p>
@@ -160,7 +160,7 @@ export function PhotoGallery({ media, title }: PhotoGalleryProps) {
           <button
             type="button"
             onClick={() => openLightbox(0)}
-            className="absolute bottom-4 end-4 z-10 flex items-center gap-2 rounded-lg bg-white/90 px-4 py-2 text-sm font-semibold text-zinc-900 shadow-lg backdrop-blur-sm transition-all hover:bg-white dark:bg-zinc-900/90 dark:text-zinc-100 dark:hover:bg-zinc-900"
+            className="absolute bottom-4 end-4 z-10 flex items-center gap-2 rounded-lg bg-white/90 px-4 py-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100 shadow-lg backdrop-blur-sm transition-all hover:bg-white dark:bg-zinc-900/90 dark:text-zinc-100 dark:hover:bg-zinc-900"
           >
             <Grid className="h-4 w-4" />
             {sorted.length} photos

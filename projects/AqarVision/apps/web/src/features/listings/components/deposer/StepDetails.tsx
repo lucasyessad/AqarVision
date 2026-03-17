@@ -60,15 +60,15 @@ function Counter({
         <button
           type="button"
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-zinc-200 text-zinc-600 transition-colors hover:bg-zinc-50"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-zinc-200 dark:border-zinc-700 text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           –
         </button>
-        <span className="w-8 text-center text-sm font-semibold text-zinc-900">{value}</span>
+        <span className="w-8 text-center text-sm font-semibold text-zinc-900 dark:text-zinc-100">{value}</span>
         <button
           type="button"
           onClick={() => onChange(Math.min(20, value + 1))}
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-zinc-200 text-zinc-600 transition-colors hover:bg-zinc-50"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-zinc-200 dark:border-zinc-700 text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           +
         </button>
@@ -128,7 +128,7 @@ export function StepDetails({ state, onChange, onNext, onBack }: StepDetailsProp
                   "flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-all",
                   on
                     ? "border-amber-500 bg-amber-50 text-amber-700"
-                    : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300",
+                    : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 hover:border-zinc-300",
                 ].join(" ")}
               >
                 <svg className={["h-4 w-4 shrink-0", on ? "text-amber-600" : "text-zinc-400"].join(" ")} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -156,7 +156,7 @@ export function StepDetails({ state, onChange, onNext, onBack }: StepDetailsProp
                   "rounded-lg border px-4 py-2 text-sm font-medium transition-all",
                   on
                     ? "border-amber-500 bg-amber-50 text-amber-700"
-                    : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300",
+                    : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 hover:border-zinc-300",
                 ].join(" ")}
               >
                 {label}
@@ -188,7 +188,7 @@ export function StepDetails({ state, onChange, onNext, onBack }: StepDetailsProp
                   "rounded-lg border px-3 py-2.5 text-sm font-medium transition-all",
                   on
                     ? "border-amber-500 bg-amber-50 text-amber-700"
-                    : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300",
+                    : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 hover:border-zinc-300",
                 ].join(" ")}
               >
                 {label}
@@ -202,7 +202,7 @@ export function StepDetails({ state, onChange, onNext, onBack }: StepDetailsProp
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
+          className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           ← Retour
         </button>

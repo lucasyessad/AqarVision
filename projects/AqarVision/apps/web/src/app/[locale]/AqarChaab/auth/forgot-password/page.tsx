@@ -24,7 +24,7 @@ export default async function ChaabForgotPasswordPage({ params }: PageProps) {
       </div>
 
       <div
-        className="[&_p]:text-zinc-50/40 [&_label]:text-zinc-50/40 [&_input]:bg-zinc-50/[0.06] [&_input]:border-zinc-50/[0.12] [&_input]:text-white [&_button[type=submit]]:bg-zinc-50 [&_button[type=submit]]:text-zinc-950"
+        className="[&_p]:text-zinc-50/40 [&_label]:text-zinc-50/40 [&_input]:bg-zinc-50/[0.06] [&_input]:border-zinc-50/[0.12] [&_input]:text-white [&_button[type=submit]]:bg-zinc-50 dark:bg-zinc-800 [&_button[type=submit]]:text-zinc-950 dark:text-zinc-50"
       >
         <ForgotPasswordForm />
       </div>

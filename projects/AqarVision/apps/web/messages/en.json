@@ -151,6 +151,15 @@
       "billing": "Billing"
     },
     "save": "Save",
+    "back_to_portal": "Back to portal",
+    "view_storefront": "View my storefront",
+    "logout": "Sign out",
+    "settings_nav": {
+      "settings": "Settings",
+      "appearance": "Appearance",
+      "branding": "Branding",
+      "verification": "Verification"
+    },
     "settings_title": "Account settings",
     "settings_subtitle": "Manage your personal information and preferences.",
     "email_label": "Email address",

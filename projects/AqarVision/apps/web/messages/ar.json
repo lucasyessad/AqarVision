@@ -151,6 +151,15 @@
       "billing": "الفوترة"
     },
     "save": "حفظ",
+    "back_to_portal": "العودة إلى البوابة",
+    "view_storefront": "عرض واجهتي",
+    "logout": "تسجيل الخروج",
+    "settings_nav": {
+      "settings": "الإعدادات",
+      "appearance": "المظهر",
+      "branding": "العلامة التجارية",
+      "verification": "التحقق"
+    },
     "settings_title": "إعدادات الحساب",
     "settings_subtitle": "إدارة معلوماتك الشخصية وتفضيلاتك.",
     "email_label": "البريد الإلكتروني",

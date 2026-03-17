@@ -52,11 +52,11 @@ function VerificationCard({ agency }: { agency: PendingVerification }) {
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 p-5 shadow-sm">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-semibold text-blue-night">{agency.name}</h3>
+          <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">{agency.name}</h3>
           <p className="text-xs text-gray-400">Slug: {agency.slug}</p>
           <p className="mt-0.5 text-xs text-gray-400">
             Soumis le{" "}
@@ -83,7 +83,7 @@ function VerificationCard({ agency }: { agency: PendingVerification }) {
             onChange={(e) => setComment(e.target.value)}
             rows={3}
             placeholder="Motif du rejet..."
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 placeholder-gray-300 focus:border-blue-night focus:outline-none focus:ring-1 focus:ring-blue-night"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 placeholder-gray-300 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-blue-night"
           />
         </div>
       )}
@@ -141,7 +141,7 @@ interface Props {
 export function VerificationQueueClient({ verifications }: Props) {
   if (verifications.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white px-6 py-16 text-center text-sm text-gray-400">
+      <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 px-6 py-16 text-center text-sm text-gray-400">
         Aucune demande de vérification en attente.
       </div>
     );

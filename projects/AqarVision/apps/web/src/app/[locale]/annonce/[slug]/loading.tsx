@@ -1,6 +1,6 @@
 export default function ListingDetailLoading() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
 
       {/* Photo hero skeleton 55vh */}
       <div className="h-[55vh] w-full animate-pulse bg-zinc-200 dark:bg-zinc-800" />
@@ -34,7 +34,7 @@ export default function ListingDetailLoading() {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="flex flex-col items-center gap-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4"
+                  className="flex flex-col items-center gap-2 rounded-xl border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4"
                 >
                   <div className="h-5 w-5 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
                   <div className="h-5 w-12 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
@@ -44,7 +44,7 @@ export default function ListingDetailLoading() {
             </div>
 
             {/* Description */}
-            <div className="space-y-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
+            <div className="space-y-2 rounded-xl border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
               <div className="h-5 w-32 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
               <div className="space-y-2 pt-2">
                 <div className="h-3 w-full animate-pulse rounded bg-zinc-100 dark:bg-zinc-800" />
@@ -58,7 +58,7 @@ export default function ListingDetailLoading() {
           {/* Sidebar 360px */}
           <div className="w-full shrink-0 space-y-4 lg:w-[360px]">
             {/* Agency card */}
-            <div className="space-y-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
+            <div className="space-y-4 rounded-xl border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
                 <div className="flex-1 space-y-2">
@@ -71,7 +71,7 @@ export default function ListingDetailLoading() {
             </div>
 
             {/* Calculator card */}
-            <div className="space-y-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
+            <div className="space-y-3 rounded-xl border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
               <div className="h-5 w-40 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
               <div className="h-10 w-full animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />
               <div className="h-10 w-full animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />

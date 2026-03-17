@@ -31,8 +31,9 @@ const PUBLIC_PATTERNS = [
   /^\/$/, // bare root
 ];
 
-// Routes exempt from CSRF validation (external webhooks)
-const CSRF_EXEMPT_PREFIXES = ["/api/webhooks/stripe", "/api/whatsapp/webhook"];
+// Routes exempt from CSRF validation
+// Note: Stripe webhooks are handled by Supabase Edge Functions, not Next.js API routes
+const CSRF_EXEMPT_PREFIXES: string[] = [];
 
 // Mutative HTTP methods that require CSRF validation
 const CSRF_METHODS = new Set(["POST", "PUT", "DELETE", "PATCH"]);

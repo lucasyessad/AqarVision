@@ -36,12 +36,12 @@ function ManualPaymentModal({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6"
+        className="relative w-full max-w-md rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1 text-zinc-500 transition-colors hover:bg-zinc-100"
+          className="absolute right-4 top-4 rounded-lg p-1 text-zinc-500 transition-colors hover:bg-zinc-100 dark:bg-zinc-800"
         >
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -54,43 +54,43 @@ function ManualPaymentModal({
           </svg>
         </div>
 
-        <h3 className="text-lg font-semibold text-zinc-950">
+        <h3 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
           Instructions de paiement
         </h3>
         <p className="mt-1 text-sm text-zinc-500">
-          Montant : <strong className="text-zinc-900">{result.amount_da}</strong>
+          Montant : <strong className="text-zinc-900 dark:text-zinc-100">{result.amount_da}</strong>
         </p>
 
         {result.instructions && (
-          <p className="mt-3 rounded-lg bg-zinc-100 p-3 text-sm text-zinc-600">
+          <p className="mt-3 rounded-lg bg-zinc-100 dark:bg-zinc-800 p-3 text-sm text-zinc-600">
             {result.instructions}
           </p>
         )}
 
         {acc && (acc.rib || acc.ccp || acc.account_number) && (
-          <div className="mt-4 space-y-2 rounded-lg border border-zinc-200 p-4">
+          <div className="mt-4 space-y-2 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
             {acc.bank_name && (
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-500">Banque</span>
-                <span className="font-medium text-zinc-900">{acc.bank_name}</span>
+                <span className="font-medium text-zinc-900 dark:text-zinc-100">{acc.bank_name}</span>
               </div>
             )}
             {acc.account_name && (
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-500">Titulaire</span>
-                <span className="font-medium text-zinc-900">{acc.account_name}</span>
+                <span className="font-medium text-zinc-900 dark:text-zinc-100">{acc.account_name}</span>
               </div>
             )}
             {acc.rib && (
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-500">RIB</span>
-                <span className="font-mono font-medium text-zinc-900">{acc.rib}</span>
+                <span className="font-mono font-medium text-zinc-900 dark:text-zinc-100">{acc.rib}</span>
               </div>
             )}
             {acc.ccp && (
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-500">CCP</span>
-                <span className="font-mono font-medium text-zinc-900">{acc.ccp}</span>
+                <span className="font-mono font-medium text-zinc-900 dark:text-zinc-100">{acc.ccp}</span>
               </div>
             )}
           </div>
@@ -176,7 +176,7 @@ export function UpgradePricingClient({
 
       {/* ── Section 1: Subscriptions ─────────────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="mb-1 text-xl font-semibold text-zinc-950">
+        <h2 className="mb-1 text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           Abonnements mensuels
         </h2>
         <p className="mb-5 text-sm text-zinc-500">
@@ -192,7 +192,7 @@ export function UpgradePricingClient({
                 className={`relative rounded-xl border-[1.5px] p-5 bg-white dark:bg-zinc-900 ${isActive ? "border-zinc-950 dark:border-amber-500" : "border-zinc-200 dark:border-zinc-700"}`}
               >
                 {plan.badge && (
-                  <span className="absolute right-4 top-4 rounded-full bg-zinc-950 dark:bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-zinc-50 dark:text-zinc-950">
+                  <span className="absolute right-4 top-4 rounded-full bg-zinc-950 dark:bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-zinc-50 dark:text-zinc-950 dark:text-zinc-50">
                     {plan.badge}
                   </span>
                 )}
@@ -211,7 +211,7 @@ export function UpgradePricingClient({
                   {plan.description}
                 </p>
                 <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-2xl font-bold text-zinc-950">
+                  <span className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">
                     {provider === "stripe" ? `${plan.price_eur} €` : plan.price_da_display}
                   </span>
                   <span className="text-sm text-zinc-500">/mois</span>
@@ -234,7 +234,7 @@ export function UpgradePricingClient({
                     type="submit"
                     disabled={isLoading || isActive}
                     className={`w-full rounded-lg px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-85 disabled:opacity-50 ${
-                      isActive ? "bg-green-500/10 text-green-700 dark:text-green-400" : "bg-zinc-950 dark:bg-amber-500 text-zinc-50 dark:text-zinc-950"
+                      isActive ? "bg-green-500/10 text-green-700 dark:text-green-400" : "bg-zinc-950 dark:bg-amber-500 text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
                     }`}
                   >
                     {isActive ? "Plan actuel" : subPending ? "Chargement…" : "S'abonner"}
@@ -248,12 +248,12 @@ export function UpgradePricingClient({
 
       {/* ── Section 2: One-time packs ────────────────────────────────────── */}
       <section>
-        <h2 className="mb-1 text-xl font-semibold text-zinc-950">
+        <h2 className="mb-1 text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           Packs d&apos;emplacements supplémentaires
         </h2>
         <p className="mb-5 text-sm text-zinc-500">
           Achat unique — slots permanents qui s&apos;ajoutent à votre quota.
-          Actuellement : <strong className="text-zinc-900">{activeListings}/{currentQuota} annonces actives</strong>.
+          Actuellement : <strong className="text-zinc-900 dark:text-zinc-100">{activeListings}/{currentQuota} annonces actives</strong>.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-3">
@@ -263,19 +263,19 @@ export function UpgradePricingClient({
               className={`relative rounded-xl border-[1.5px] p-5 bg-white dark:bg-zinc-900 ${pack.badge ? "border-zinc-950 dark:border-amber-500" : "border-zinc-200 dark:border-zinc-700"}`}
             >
               {pack.badge && (
-                <span className="absolute right-4 top-4 rounded-full bg-zinc-950 dark:bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-zinc-50 dark:text-zinc-950">
+                <span className="absolute right-4 top-4 rounded-full bg-zinc-950 dark:bg-amber-500 px-2.5 py-0.5 text-xs font-semibold text-zinc-50 dark:text-zinc-950 dark:text-zinc-50">
                   {pack.badge}
                 </span>
               )}
 
-              <p className="font-semibold text-sm text-zinc-900">
+              <p className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
                 {pack.label}
               </p>
               <p className="mt-1 text-sm text-zinc-500">
                 +{pack.extra_slots} emplacements
               </p>
               <div className="mt-3 flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-zinc-950">
+                <span className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">
                   {provider === "stripe" ? `${pack.price_eur} €` : pack.price_da_display}
                 </span>
                 {provider === "stripe" && (

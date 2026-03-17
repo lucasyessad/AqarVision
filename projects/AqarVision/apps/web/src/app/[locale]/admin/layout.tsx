@@ -33,7 +33,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-off-white">
+    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-800">
       <AdminSidebar locale={locale} />
       <main className="flex-1 overflow-auto p-6">{children}</main>
     </div>

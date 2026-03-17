@@ -61,16 +61,16 @@ export default async function ComparerPage({
 
   if (listingIds.length < 2) {
     return (
-      <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <main className="min-h-screen bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center">
           <ArrowUpDown className="mx-auto mb-4 h-12 w-12 text-zinc-400 dark:text-zinc-600" />
-          <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">Sélectionnez au moins 2 annonces</h1>
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">Sélectionnez au moins 2 annonces</h1>
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
             Utilisez le bouton &quot;Comparer&quot; sur les annonces pour les ajouter ici.
           </p>
           <Link
             href="/search"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-200"
           >
             Rechercher des annonces
           </Link>
@@ -185,19 +185,19 @@ export default async function ComparerPage({
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Comparaison</h1>
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">Comparaison</h1>
             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               {listings.length} annonce{listings.length !== 1 ? "s" : ""} comparées
             </p>
           </div>
           <Link
             href="/search"
-            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-800 dark:text-zinc-200 shadow-sm transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
           >
             <ArrowLeft className="h-4 w-4" />
             Retour à la recherche
@@ -205,10 +205,10 @@ export default async function ComparerPage({
         </div>
 
         {/* Comparison table */}
-        <div className="overflow-x-auto rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <table className="min-w-full">
             <thead>
-              <tr className="border-b border-zinc-200 dark:border-zinc-800">
+              <tr className="border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800">
                 <th className="w-40 px-4 py-4 text-start text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                   Critère
                 </th>
@@ -231,7 +231,7 @@ export default async function ComparerPage({
                       </div>
                       <Link
                         href={`/annonce/${listing.slug}`}
-                        className="line-clamp-2 text-sm font-semibold text-zinc-900 hover:underline dark:text-zinc-100"
+                        className="line-clamp-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100 hover:underline dark:text-zinc-100"
                       >
                         {listing.title}
                       </Link>
@@ -301,13 +301,13 @@ export default async function ComparerPage({
               </tr>
 
               {/* Actions row */}
-              <tr className="border-t border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-800/50">
+              <tr className="border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-800 dark:bg-zinc-800/50">
                 <td className="px-4 py-3" />
                 {listings.map((listing) => (
                   <td key={listing.id} className="px-4 py-3">
                     <Link
                       href={`/annonce/${listing.slug}`}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-200"
                     >
                       Voir l&apos;annonce
                     </Link>

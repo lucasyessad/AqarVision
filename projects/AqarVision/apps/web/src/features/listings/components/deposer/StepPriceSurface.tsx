@@ -10,7 +10,7 @@ interface StepPriceSurfaceProps {
 }
 
 const inputClass =
-  "w-full rounded-md border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20";
+  "w-full rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20";
 
 function InputWithSuffix({
   label,
@@ -38,17 +38,17 @@ function InputWithSuffix({
       <label className="mb-1.5 block text-sm font-medium text-zinc-700">
         {label} {required && <span className="text-amber-500">*</span>}
       </label>
-      <div className="flex overflow-hidden rounded-md border border-zinc-200 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/20">
+      <div className="flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-700 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/20">
         <input
           type={type}
-          className="min-w-0 flex-1 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none"
+          className="min-w-0 flex-1 bg-white dark:bg-zinc-900 px-3 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           min={min}
           max={max}
         />
-        <span className="flex items-center border-s border-zinc-200 bg-zinc-50 px-3 text-sm text-zinc-500">
+        <span className="flex items-center border-s border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 text-sm text-zinc-500">
           {suffix}
         </span>
       </div>
@@ -78,7 +78,7 @@ export function StepPriceSurface({ state, onChange, onNext, onBack }: StepPriceS
       />
 
       {pricePerM2 !== null && (
-        <p className="rounded-lg bg-zinc-50 px-3 py-2 text-xs text-zinc-500">
+        <p className="rounded-lg bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-xs text-zinc-500">
           ≈ <span className="font-semibold text-zinc-700">{pricePerM2.toLocaleString("fr-DZ")} DZD/m²</span> (calculé automatiquement)
         </p>
       )}
@@ -129,7 +129,7 @@ export function StepPriceSurface({ state, onChange, onNext, onBack }: StepPriceS
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
+          className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           ← Retour
         </button>

@@ -309,7 +309,7 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
               <div
                 className={[
                   "flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-all",
-                  done ? "bg-green-600 text-white" : active ? "bg-zinc-950 dark:bg-amber-500 text-white dark:text-zinc-950 ring-4 ring-zinc-950/15 dark:ring-amber-500/20" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500",
+                  done ? "bg-green-600 text-white" : active ? "bg-zinc-950 dark:bg-amber-500 text-white dark:text-zinc-950 dark:text-zinc-50 ring-4 ring-zinc-950/15 dark:ring-amber-500/20" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500",
                 ].join(" ")}
               >
                 {done ? (
@@ -353,14 +353,14 @@ function Counter({
           type="button"
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-40"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-zinc-900 hover:text-zinc-900 dark:text-zinc-100 disabled:opacity-40"
         >–</button>
         <span className="w-8 text-center text-lg font-semibold text-gray-800">{value}</span>
         <button
           type="button"
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-40"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-600 transition-colors hover:border-zinc-900 hover:text-zinc-900 dark:text-zinc-100 disabled:opacity-40"
         >+</button>
       </div>
     </div>
@@ -384,7 +384,7 @@ function AmenityToggle({
         {label}
       </span>
       {checked && (
-        <svg className="ms-auto h-4 w-4 shrink-0 text-zinc-900" fill="currentColor" viewBox="0 0 20 20">
+        <svg className="ms-auto h-4 w-4 shrink-0 text-zinc-900 dark:text-zinc-100" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
         </svg>
       )}
@@ -667,7 +667,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
       <div className="mb-5">
         <Link
           href="/AqarPro/dashboard/listings"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 transition-colors hover:text-zinc-900"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 transition-colors hover:text-zinc-900 dark:text-zinc-100"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -676,7 +676,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
         </Link>
       </div>
 
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">{isEdit ? "Modifier l\u2019annonce" : "Nouvelle annonce"}</h1>
+      <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-100">{isEdit ? "Modifier l\u2019annonce" : "Nouvelle annonce"}</h1>
 
       <StepIndicator current={step} total={totalSteps} />
 
@@ -690,12 +690,12 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
         </div>
       )}
 
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-gray-100 bg-white dark:bg-zinc-900 p-6 shadow-sm">
 
         {/* ── STEP 1: Type ── */}
         {step === 1 && (
           <div className="space-y-7">
-            <h2 className="text-lg font-semibold text-zinc-800">Type d&apos;annonce &amp; de bien</h2>
+            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Type d&apos;annonce &amp; de bien</h2>
             {isEdit && (
               <p className="text-sm text-amber-600 dark:text-amber-400">Le type de transaction et de bien ne peut pas être modifié.</p>
             )}
@@ -719,13 +719,13 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                         sel ? "border-zinc-950 dark:border-amber-500 bg-zinc-950/[0.04] dark:bg-amber-500/5" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900",
                       ].join(" ")}
                     >
-                      <span className={sel ? "text-zinc-950 dark:text-amber-500" : "text-zinc-400 dark:text-zinc-500"}>{meta.icon}</span>
+                      <span className={sel ? "text-zinc-950 dark:text-zinc-50 dark:text-amber-500" : "text-zinc-400 dark:text-zinc-500"}>{meta.icon}</span>
                       <div className="flex-1">
                         <p className={`font-semibold ${sel ? "text-zinc-950 dark:text-zinc-50" : "text-zinc-800 dark:text-zinc-200"}`}>{meta.label}</p>
                         <p className="text-xs text-gray-500">{meta.description}</p>
                       </div>
                       {sel && (
-                        <svg className="h-5 w-5 shrink-0 text-zinc-900" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="h-5 w-5 shrink-0 text-zinc-900 dark:text-zinc-100" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -754,7 +754,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                         sel ? "border-zinc-950 dark:border-amber-500 bg-zinc-950/[0.04] dark:bg-amber-500/5" : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900",
                       ].join(" ")}
                     >
-                      <span className={sel ? "text-zinc-950 dark:text-amber-500" : "text-zinc-400 dark:text-zinc-500"}>{meta.icon}</span>
+                      <span className={sel ? "text-zinc-950 dark:text-zinc-50 dark:text-amber-500" : "text-zinc-400 dark:text-zinc-500"}>{meta.icon}</span>
                       <span className={`text-xs font-medium leading-tight ${sel ? "text-zinc-950 dark:text-zinc-50" : "text-zinc-700 dark:text-zinc-300"}`}>
                         {meta.label}
                       </span>
@@ -769,7 +769,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
         {/* ── STEP 2: Location & Price ── */}
         {step === 2 && (
           <div className="space-y-5">
-            <h2 className="text-lg font-semibold text-zinc-800">Localisation &amp; prix</h2>
+            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Localisation &amp; prix</h2>
             {isEdit && (
               <p className="text-sm text-amber-600 dark:text-amber-400">La wilaya ne peut pas être modifiée.</p>
             )}
@@ -794,7 +794,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                     });
                   }
                 }}
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
+                className="w-full rounded-xl border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
               >
                 <option value="">— Sélectionner une wilaya —</option>
                 {wilayas.map((w) => (
@@ -813,7 +813,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                 value={data.commune_id}
                 onChange={(e) => set("commune_id", e.target.value)}
                 disabled={communes.length === 0}
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400"
+                className="w-full rounded-xl border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400"
               >
                 <option value="">
                   {communes.length === 0
@@ -837,7 +837,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                   min="0"
                   value={data.current_price}
                   onChange={(e) => set("current_price", e.target.value)}
-                  className="flex-1 bg-white px-4 py-3 text-sm focus:outline-none"
+                  className="flex-1 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:outline-none"
                   placeholder="Ex: 8 500 000"
                 />
                 <span className="flex items-center border-s border-gray-300 bg-gray-50 px-3 text-sm font-semibold text-gray-600">
@@ -849,7 +849,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                   type="checkbox"
                   checked={data.negotiable}
                   onChange={(e) => set("negotiable", e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300 text-zinc-900"
+                  className="h-4 w-4 rounded border-gray-300 text-zinc-900 dark:text-zinc-100"
                 />
                 <span className="text-sm text-gray-600">Prix négociable</span>
               </label>
@@ -868,7 +868,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                     min="0"
                     value={data.surface_m2}
                     onChange={(e) => set("surface_m2", e.target.value)}
-                    className="flex-1 bg-white px-4 py-3 text-sm focus:outline-none"
+                    className="flex-1 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:outline-none"
                     placeholder="Ex: 85"
                   />
                   <span className="flex items-center border-s border-gray-300 bg-gray-50 px-3 text-sm font-medium text-gray-500">m²</span>
@@ -888,7 +888,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                       min="0"
                       value={data.land_area_m2}
                       onChange={(e) => set("land_area_m2", e.target.value)}
-                      className="flex-1 bg-white px-4 py-3 text-sm focus:outline-none"
+                      className="flex-1 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:outline-none"
                       placeholder="Ex: 300"
                     />
                     <span className="flex items-center border-s border-gray-300 bg-gray-50 px-3 text-sm font-medium text-gray-500">m²</span>
@@ -903,7 +903,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
         {step === 3 && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-zinc-800">Caractéristiques du bien</h2>
+              <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Caractéristiques du bien</h2>
               <p className="mt-0.5 text-sm text-gray-500">Tous les champs sont optionnels mais enrichissent votre annonce.</p>
             </div>
 
@@ -925,7 +925,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                   <select
                     value={data.floor}
                     onChange={(e) => set("floor", e.target.value)}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none"
+                    className="w-full rounded-xl border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none"
                   >
                     <option value="">— Non précisé —</option>
                     <option value="0">Rez-de-chaussée</option>
@@ -942,7 +942,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                     max="50"
                     value={data.total_floors}
                     onChange={(e) => set("total_floors", e.target.value)}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none"
+                    className="w-full rounded-xl border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none"
                     placeholder="Ex: 6"
                   />
                 </div>
@@ -959,7 +959,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                   max={new Date().getFullYear()}
                   value={data.year_built}
                   onChange={(e) => set("year_built", e.target.value)}
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none"
+                  className="w-full rounded-xl border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none"
                   placeholder="Ex: 2010"
                 />
               </div>
@@ -968,7 +968,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                 <select
                   value={data.condition}
                   onChange={(e) => set("condition", e.target.value)}
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none"
+                  className="w-full rounded-xl border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none"
                 >
                   <option value="">— Non précisé —</option>
                   {CONDITIONS.map((c) => (
@@ -1006,7 +1006,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
         {step === 4 && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-zinc-800">Équipements &amp; prestations</h2>
+              <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Équipements &amp; prestations</h2>
               <p className="mt-0.5 text-sm text-gray-500">Sélectionnez tout ce qui s&apos;applique à votre bien.</p>
             </div>
 
@@ -1041,7 +1041,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
         {step === 5 && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-lg font-semibold text-zinc-800">Titre &amp; description</h2>
+              <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Titre &amp; description</h2>
               <p className="mt-0.5 text-sm text-gray-500">
                 Un titre accrocheur et une description complète multiplient les contacts.
               </p>
@@ -1056,7 +1056,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                 value={data.title_fr}
                 onChange={(e) => set("title_fr", e.target.value)}
                 maxLength={120}
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
+                className="w-full rounded-xl border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
                 placeholder="Ex: Bel appartement F4 avec vue mer, Oran centre"
               />
               <div className="mt-1 flex items-center justify-between text-xs text-gray-400">
@@ -1076,7 +1076,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                 onChange={(e) => set("description_fr", e.target.value)}
                 rows={8}
                 maxLength={3000}
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
+                className="w-full rounded-xl border border-gray-300 bg-white dark:bg-zinc-900 px-4 py-3 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/20"
                 placeholder={`Décrivez votre bien en détail :\n\n• Situation et emplacement (quartier, proximité services, transports)\n• Caractéristiques principales (surface, étage, luminosité, vue)\n• Prestations (cuisine équipée, parquet, double vitrage…)\n• Environnement (calme, commerces, écoles à proximité)\n• Informations pratiques (disponibilité, charges, etc.)`}
               />
               <div className="mt-1 flex items-center justify-between text-xs text-gray-400">
@@ -1088,7 +1088,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
             </div>
 
             {/* AI generation panel */}
-            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+            <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4">
               <div className="flex items-start gap-3">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100">
                   <svg className="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -1096,7 +1096,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-zinc-800">Générer avec l&apos;IA</p>
+                  <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Générer avec l&apos;IA</p>
                   <p className="mt-0.5 text-xs text-zinc-500">
                     Claude rédige une description professionnelle à partir de vos informations. Vous pouvez la modifier ensuite.
                   </p>
@@ -1104,7 +1104,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                     type="button"
                     onClick={handleGenerateAiDescription}
                     disabled={aiGenerating || !data.wilaya_code || !data.listing_type}
-                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-xs font-semibold text-zinc-950 transition-opacity hover:opacity-90 disabled:opacity-50"
+                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-xs font-semibold text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-90 disabled:opacity-50"
                   >
                     {aiGenerating ? (
                       <>
@@ -1147,7 +1147,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
         {step === 6 && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-lg font-semibold text-zinc-800">Photos</h2>
+              <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Photos</h2>
               <p className="mt-0.5 text-sm text-gray-500">
                 Ajoutez jusqu&apos;à {MAX_PHOTOS} photos. La première photo sélectionnée sera la photo de couverture.
                 Formats acceptés : JPG, PNG, WebP — max 10 Mo par photo.
@@ -1170,7 +1170,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
               <div className="text-center">
                 <p className="text-sm font-medium text-gray-700">
                   Glissez vos photos ici ou{" "}
-                  <span className="text-zinc-900 underline">cliquez pour parcourir</span>
+                  <span className="text-zinc-900 dark:text-zinc-100 underline">cliquez pour parcourir</span>
                 </p>
                 <p className="mt-1 text-xs text-gray-400">
                   {photos.length}/{MAX_PHOTOS} photo{photos.length !== 1 ? "s" : ""} ajoutée{photos.length !== 1 ? "s" : ""}
@@ -1240,7 +1240,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                   <button
                     type="button"
                     onClick={() => photoInputRef.current?.click()}
-                    className="flex h-32 flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-200 text-gray-400 transition-all hover:border-zinc-900/50 hover:text-zinc-900"
+                    className="flex h-32 flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-200 text-gray-400 transition-all hover:border-zinc-900/50 hover:text-zinc-900 dark:text-zinc-100"
                   >
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -1284,7 +1284,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
               type="button"
               onClick={() => setStep((s) => s + 1)}
               disabled={!canAdvance()}
-              className="flex items-center gap-2 rounded-xl bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex items-center gap-2 rounded-xl bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Suivant
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -1296,7 +1296,7 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
               type="button"
               onClick={handleFinalSubmit}
               disabled={isSubmitting}
-              className="flex items-center gap-2 rounded-xl bg-amber-500 px-8 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-amber-500/90 hover:shadow-lg disabled:opacity-60"
+              className="flex items-center gap-2 rounded-xl bg-amber-500 px-8 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-amber-600/90 hover:shadow-lg disabled:opacity-60"
             >
               {isSubmitting ? (
                 <>

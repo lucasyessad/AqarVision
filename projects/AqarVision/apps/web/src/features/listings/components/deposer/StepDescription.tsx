@@ -66,7 +66,7 @@ export function StepDescription({ state, onChange, onNext, onBack }: StepDescrip
         </div>
         <input
           type="text"
-          className="w-full rounded-md border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+          className="w-full rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
           placeholder="Ex : F3 Appartement standing, vue dégagée..."
           value={state.title}
           onChange={(e) => onChange({ title: e.target.value })}
@@ -89,7 +89,7 @@ export function StepDescription({ state, onChange, onNext, onBack }: StepDescrip
         </div>
         <textarea
           rows={8}
-          className="w-full resize-y rounded-md border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+          className="w-full resize-y rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
           placeholder="Décrivez votre bien : emplacement, état, atouts principaux..."
           value={state.description}
           onChange={(e) => onChange({ description: e.target.value })}
@@ -101,7 +101,7 @@ export function StepDescription({ state, onChange, onNext, onBack }: StepDescrip
       </div>
 
       {/* AI suggestion panel */}
-      <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4">
         <div className="flex items-start gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100">
             <svg className="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -109,7 +109,7 @@ export function StepDescription({ state, onChange, onNext, onBack }: StepDescrip
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-semibold text-zinc-800">Générer avec l'IA</p>
+            <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Générer avec l'IA</p>
             <p className="mt-0.5 text-xs text-zinc-500">
               Claude rédige une description professionnelle à partir de vos informations. Vous pouvez la modifier ensuite.
             </p>
@@ -117,7 +117,7 @@ export function StepDescription({ state, onChange, onNext, onBack }: StepDescrip
               type="button"
               onClick={handleGenerateAi}
               disabled={isPending || !state.wilaya_code || !state.listing_type}
-              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-xs font-semibold text-zinc-950 transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-xs font-semibold text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {isPending ? (
                 <>
@@ -147,7 +147,7 @@ export function StepDescription({ state, onChange, onNext, onBack }: StepDescrip
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
+          className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           ← Retour
         </button>

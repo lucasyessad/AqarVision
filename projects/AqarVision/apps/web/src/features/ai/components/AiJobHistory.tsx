@@ -38,14 +38,14 @@ export function AiJobHistory({ jobs }: AiJobHistoryProps) {
 
   if (jobs.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
+      <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 p-8 text-center">
         <p className="text-sm text-gray-500">{t("no_jobs")}</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 shadow-sm">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>

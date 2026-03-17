@@ -100,7 +100,7 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
   ];
 
   return (
-    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
 
       {/* -- Sidebar desktop -- */}
       <aside className="hidden w-60 shrink-0 flex-col border-e border-zinc-800/60 bg-zinc-950 dark:bg-zinc-900 md:flex">

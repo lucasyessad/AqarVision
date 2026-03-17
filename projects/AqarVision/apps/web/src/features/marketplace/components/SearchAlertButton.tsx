@@ -103,7 +103,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
           aria-modal="true"
           aria-labelledby="alert-modal-title"
         >
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-zinc-900 p-6 shadow-xl">
             {success ? (
               <div className="text-center py-6">
                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
@@ -111,7 +111,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-zinc-800">Alerte créée !</h3>
+                <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Alerte créée !</h3>
                 <p className="mt-1 text-sm text-zinc-400">
                   Vous serez notifié lors de nouvelles annonces correspondant à vos critères.
                 </p>
@@ -120,7 +120,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
               <form onSubmit={handleSubmit}>
                 <div className="mb-5 flex items-start justify-between">
                   <div>
-                    <h2 id="alert-modal-title" className="text-lg font-semibold text-zinc-900">
+                    <h2 id="alert-modal-title" className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                       Créer une alerte de recherche
                     </h2>
                     <p className="mt-1 text-sm text-zinc-400">
@@ -141,7 +141,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
 
                 {/* Alert name */}
                 <div className="mb-4">
-                  <label htmlFor="alert-name" className="mb-1.5 block text-sm font-medium text-zinc-800">
+                  <label htmlFor="alert-name" className="mb-1.5 block text-sm font-medium text-zinc-800 dark:text-zinc-200">
                     Nom de l&apos;alerte
                   </label>
                   <input
@@ -150,7 +150,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
                     value={alertName}
                     onChange={(e) => setAlertName(e.target.value)}
                     placeholder="Ex: Appartements Alger centre"
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
                     maxLength={100}
                     required
                   />
@@ -158,7 +158,7 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
 
                 {/* Frequency */}
                 <div className="mb-5">
-                  <span className="mb-1.5 block text-sm font-medium text-zinc-800">
+                  <span className="mb-1.5 block text-sm font-medium text-zinc-800 dark:text-zinc-200">
                     Fréquence de notification
                   </span>
                   <div className="space-y-2">
@@ -171,9 +171,9 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
                             value={value}
                             checked={frequency === value}
                             onChange={() => setFrequency(value)}
-                            className="text-zinc-900 focus:ring-amber-500"
+                            className="text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
                           />
-                          <span className="text-sm text-zinc-800">{label}</span>
+                          <span className="text-sm text-zinc-800 dark:text-zinc-200">{label}</span>
                         </label>
                       )
                     )}
@@ -192,14 +192,14 @@ export function SearchAlertButton({ compact }: { compact?: boolean } = {}) {
                   <button
                     type="button"
                     onClick={() => setIsOpen(false)}
-                    className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-zinc-800 transition-colors hover:bg-gray-50"
+                    className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-zinc-800 dark:text-zinc-200 transition-colors hover:bg-gray-50"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="flex-1 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex-1 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isPending ? "Création..." : "Créer l'alerte"}
                   </button>

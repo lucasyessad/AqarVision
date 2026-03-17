@@ -55,7 +55,7 @@ export default async function AgencesPage({ params }: PageProps) {
         <MarketingHeaderWrapper locale={locale} />
       </Suspense>
 
-      <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <main className="min-h-screen bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
         <AgencesClient
           agencies={(agencies ?? []).map((a) => ({
             id: a.id as string,

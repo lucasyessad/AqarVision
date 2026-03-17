@@ -64,7 +64,7 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
       </div>
 
       {/* Search bar */}
-      <div className="w-full overflow-hidden rounded-2xl bg-white shadow-xl focus-within:ring-2 focus-within:ring-amber-500/30 dark:bg-zinc-900">
+      <div className="w-full overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-xl focus-within:ring-2 focus-within:ring-amber-500/30 dark:bg-zinc-900">
         <div className="flex flex-col sm:flex-row">
           {/* Wilaya */}
           <div className="flex flex-1 items-center gap-2 px-4 h-14">

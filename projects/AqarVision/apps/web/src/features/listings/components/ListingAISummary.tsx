@@ -50,7 +50,7 @@ export function ListingAISummary({ data }: ListingAISummaryProps) {
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
             {SPARKLE_ICON}
           </span>
-          <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+          <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 dark:text-zinc-100">
             Analyse IA de cette annonce
           </span>
           <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
@@ -113,7 +113,7 @@ export function ListingAISummary({ data }: ListingAISummaryProps) {
 
           {/* Questions à poser */}
           {data.questions.length > 0 && (
-            <div className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-800/50">
+            <div className="mb-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-3 dark:border-zinc-700 dark:bg-zinc-800/50">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
                 Questions à poser au vendeur
               </p>

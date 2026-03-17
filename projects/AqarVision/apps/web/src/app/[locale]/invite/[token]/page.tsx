@@ -27,8 +27,8 @@ export default async function InvitePage({
 
   if (!invite) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-off-white p-8">
-        <div className="rounded-xl bg-white p-8 text-center shadow-sm">
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-800 p-8">
+        <div className="rounded-xl bg-white dark:bg-zinc-900 p-8 text-center shadow-sm">
           <p className="text-gray-500">Invite not found</p>
         </div>
       </div>
@@ -47,7 +47,7 @@ export default async function InvitePage({
     new Date(invite.expires_at) < new Date();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-off-white p-8">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-800 p-8">
       <AcceptInvite
         token={token}
         agencyName={agency?.name ?? "Unknown Agency"}

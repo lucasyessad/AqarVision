@@ -6,10 +6,10 @@ export default function ForgotPasswordPage() {
   const t = useTranslations("auth");
 
   return (
-    <div className="rounded-xl bg-white p-8 shadow-lg">
+    <div className="rounded-xl bg-white dark:bg-zinc-900 p-8 shadow-lg">
       <div className="mb-6 text-center">
-        <h1 className="text-2xl font-bold text-gold">AqarVision</h1>
-        <p className="mt-2 text-lg font-semibold text-blue-night">
+        <h1 className="text-2xl font-bold text-amber-500">AqarVision</h1>
+        <p className="mt-2 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           {t("forgot_password_title")}
         </p>
       </div>
@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
       <p className="mt-4 text-center text-sm text-gray-500">
         <Link
           href="/AqarChaab/auth/login"
-          className="font-medium text-gold hover:underline"
+          className="font-medium text-amber-500 hover:underline"
         >
           {t("back_to_login")}
         </Link>

@@ -8,7 +8,7 @@ interface MarketingFooterProps {
 
 export function MarketingFooter({ locale }: MarketingFooterProps) {
   return (
-    <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
+    <footer className="border-t border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-10 lg:grid-cols-4">
 
@@ -44,7 +44,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
                   <Link
                     href={href}
                     locale={locale}
-                    className="text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-100"
                   >
                     {label}
                   </Link>
@@ -68,7 +68,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
                   <Link
                     href={href}
                     locale={locale}
-                    className="text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-100"
                   >
                     {label}
                   </Link>
@@ -92,7 +92,7 @@ export function MarketingFooter({ locale }: MarketingFooterProps) {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-zinc-200 dark:border-zinc-800 pt-8 text-center text-xs text-zinc-400 dark:text-zinc-500">
+        <div className="mt-12 border-t border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 pt-8 text-center text-xs text-zinc-400 dark:text-zinc-500">
           &copy; 2026 AqarVision — Tous droits réservés
         </div>
       </div>

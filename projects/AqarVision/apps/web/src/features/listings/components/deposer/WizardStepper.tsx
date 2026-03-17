@@ -35,8 +35,8 @@ export function WizardStepper({ current, total = 7 }: WizardStepperProps) {
                       completed
                         ? "bg-zinc-900 text-zinc-50"
                         : active
-                        ? "bg-amber-500 text-zinc-950 ring-4 ring-amber-500/20"
-                        : "bg-zinc-100 text-zinc-400",
+                        ? "bg-amber-500 text-zinc-950 dark:text-zinc-50 ring-4 ring-amber-500/20"
+                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400",
                     ].join(" ")}
                   >
                     {completed ? (
@@ -74,18 +74,18 @@ export function WizardStepper({ current, total = 7 }: WizardStepperProps) {
       {/* Mobile — compact: "Étape X / 7 — Label" */}
       <div className="mb-6 sm:hidden">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-zinc-950">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-zinc-950 dark:text-zinc-50">
             {current + 1}
           </div>
           <div className="flex-1">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
               Étape {current + 1} sur {total}
             </p>
-            <p className="text-sm font-semibold text-zinc-900">{STEP_LABELS[current]}</p>
+            <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{STEP_LABELS[current]}</p>
           </div>
         </div>
         {/* Progress bar */}
-        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-zinc-100">
+        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
           <div
             className="h-full rounded-full bg-amber-500 transition-all duration-300"
             style={{ width: `${((current + 1) / total) * 100}%` }}

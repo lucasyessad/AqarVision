@@ -88,7 +88,7 @@ export default async function ProPage({
               <Link
                 href="/auth/register"
                 locale={locale}
-                className="rounded-xl bg-amber-500 px-8 py-3.5 font-semibold text-zinc-950 transition-colors hover:bg-amber-400"
+                className="rounded-xl bg-amber-500 px-8 py-3.5 font-semibold text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-amber-400"
               >
                 Démarrer gratuitement
               </Link>
@@ -104,10 +104,10 @@ export default async function ProPage({
         </section>
 
         {/* -- Features ---------------------------------------------------- */}
-        <section className="bg-zinc-50 px-4 py-16 sm:px-6 lg:px-8 dark:bg-zinc-950">
+        <section className="bg-zinc-50 dark:bg-zinc-800 px-4 py-16 sm:px-6 lg:px-8 dark:bg-zinc-950">
           <div className="mx-auto max-w-6xl">
             <div className="mb-12 text-center">
-              <h2 className="text-2xl font-bold text-zinc-900 sm:text-3xl dark:text-zinc-50">
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-3xl dark:text-zinc-50">
                 Tout ce dont votre agence a besoin
               </h2>
               <p className="mt-3 text-zinc-500 dark:text-zinc-400">
@@ -120,12 +120,12 @@ export default async function ProPage({
               {features.map((feature) => (
                 <div
                   key={feature.title}
-                  className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex flex-col gap-4 rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-8 shadow-sm transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
                 >
                   <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-zinc-950/5 dark:bg-zinc-50/5">
                     {feature.icon}
                   </div>
-                  <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
+                  <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">
                     {feature.title}
                   </h3>
                   <p className="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
@@ -138,9 +138,9 @@ export default async function ProPage({
         </section>
 
         {/* -- Social proof ------------------------------------------------ */}
-        <section className="bg-white px-4 py-16 sm:px-6 lg:px-8 dark:bg-zinc-900">
+        <section className="bg-white dark:bg-zinc-900 px-4 py-16 sm:px-6 lg:px-8 dark:bg-zinc-900">
           <div className="mx-auto max-w-4xl text-center">
-            <h2 className="text-2xl font-bold text-zinc-900 sm:text-3xl dark:text-zinc-50">
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-3xl dark:text-zinc-50">
               Rejoignez 320+ agences partenaires
             </h2>
             <div className="mt-10 grid grid-cols-2 gap-8 sm:grid-cols-4">
@@ -151,7 +151,7 @@ export default async function ProPage({
                 { value: "4.8/5", label: "Note moyenne" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">
                     {stat.value}
                   </p>
                   <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{stat.label}</p>
@@ -162,9 +162,9 @@ export default async function ProPage({
         </section>
 
         {/* -- Pricing teaser ---------------------------------------------- */}
-        <section className="bg-zinc-50 px-4 py-16 sm:px-6 lg:px-8 dark:bg-zinc-950">
+        <section className="bg-zinc-50 dark:bg-zinc-800 px-4 py-16 sm:px-6 lg:px-8 dark:bg-zinc-950">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-2xl font-bold text-zinc-900 sm:text-3xl dark:text-zinc-50">
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-3xl dark:text-zinc-50">
               Des tarifs adaptés à chaque agence
             </h2>
             <p className="mt-4 text-zinc-500 dark:text-zinc-400">
@@ -176,14 +176,14 @@ export default async function ProPage({
               <Link
                 href="/pricing"
                 locale={locale}
-                className="rounded-xl border-2 border-zinc-900 px-8 py-3 font-semibold text-zinc-900 transition-colors hover:bg-zinc-900 hover:text-white dark:border-zinc-50 dark:text-zinc-50 dark:hover:bg-zinc-50 dark:hover:text-zinc-900"
+                className="rounded-xl border-2 border-zinc-900 px-8 py-3 font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-zinc-900 hover:text-white dark:border-zinc-50 dark:text-zinc-50 dark:hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:text-zinc-900 dark:text-zinc-100"
               >
                 Voir tous les tarifs
               </Link>
               <Link
                 href="/auth/register"
                 locale={locale}
-                className="rounded-xl bg-zinc-900 px-8 py-3 font-semibold text-white transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:text-zinc-900"
+                className="rounded-xl bg-zinc-900 px-8 py-3 font-semibold text-white transition-opacity hover:opacity-90 dark:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-900 dark:text-zinc-100"
               >
                 Démarrer gratuitement
               </Link>
@@ -203,7 +203,7 @@ export default async function ProPage({
             <Link
               href="/auth/register"
               locale={locale}
-              className="mt-8 inline-flex items-center rounded-xl bg-amber-500 px-8 py-3.5 font-semibold text-zinc-950 transition-colors hover:bg-amber-400"
+              className="mt-8 inline-flex items-center rounded-xl bg-amber-500 px-8 py-3.5 font-semibold text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-amber-400"
             >
               Démarrer gratuitement →
             </Link>

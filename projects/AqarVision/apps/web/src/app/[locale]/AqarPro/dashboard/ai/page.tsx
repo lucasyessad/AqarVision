@@ -29,7 +29,7 @@ export default async function AiDashboardPage({
 
   if (!membership) {
     return (
-      <div className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white py-16 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 py-16 dark:border-zinc-800 dark:bg-zinc-900">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">{t("no_jobs")}</p>
       </div>
     );
@@ -57,8 +57,8 @@ export default async function AiDashboardPage({
       </div>
 
       {/* Quota card */}
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             Quota mensuel
           </h2>
@@ -66,7 +66,7 @@ export default async function AiDashboardPage({
             Réinitialisé le 1er de chaque mois.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 p-6 dark:border-zinc-800 md:grid-cols-[240px_1fr]">
+        <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 dark:border-zinc-700 p-6 dark:border-zinc-800 md:grid-cols-[240px_1fr]">
           <div>
             <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
               {t("jobs_used")}
@@ -93,7 +93,7 @@ export default async function AiDashboardPage({
             </p>
           </div>
         </div>
-        <div className="bg-zinc-50 px-6 py-4 dark:bg-zinc-900/50">
+        <div className="bg-zinc-50 dark:bg-zinc-800 px-6 py-4 dark:bg-zinc-900/50">
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
             Augmentez votre quota en passant au plan Pro ou Enterprise.
           </p>
@@ -101,8 +101,8 @@ export default async function AiDashboardPage({
       </div>
 
       {/* Job history card */}
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4 dark:border-zinc-800">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             {t("job_history")}
           </h2>

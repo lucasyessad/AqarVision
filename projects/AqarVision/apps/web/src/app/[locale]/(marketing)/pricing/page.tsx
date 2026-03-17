@@ -88,7 +88,7 @@ export default async function PricingPage() {
     <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-16 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-50">
+        <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-5xl dark:text-zinc-50">
           {t("pricing_title")}
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-500 dark:text-zinc-400">
@@ -111,7 +111,7 @@ export default async function PricingPage() {
             {/* Badge */}
             {plan.badge && (
               <div className="absolute -top-3.5 inset-x-0 flex justify-center">
-                <span className="rounded-full bg-amber-500 px-4 py-1 text-xs font-semibold text-white dark:bg-amber-400 dark:text-zinc-900">
+                <span className="rounded-full bg-amber-500 px-4 py-1 text-xs font-semibold text-white dark:bg-amber-400 dark:text-zinc-900 dark:text-zinc-100">
                   {plan.badge}
                 </span>
               </div>
@@ -123,7 +123,7 @@ export default async function PricingPage() {
                 {plan.name}
               </h3>
               <div className="mt-4 flex items-baseline gap-1.5">
-                <span className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">
+                <span className="text-4xl font-bold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">
                   {plan.price}
                 </span>
                 {plan.priceSuffix && (
@@ -164,8 +164,8 @@ export default async function PricingPage() {
                 href={plan.ctaHref}
                 className={`flex w-full items-center justify-center rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
                   plan.highlighted
-                    ? "bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-400 dark:text-zinc-900 dark:hover:bg-amber-300"
-                    : "border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                    ? "bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-400 dark:text-zinc-900 dark:text-zinc-100 dark:hover:bg-amber-300"
+                    : "border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-700 hover:bg-zinc-100 dark:bg-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                 }`}
               >
                 {plan.cta}

@@ -23,7 +23,7 @@ export default async function ProForgotPasswordPage({ params }: PageProps) {
         </h2>
       </div>
 
-      <div className="[&_input]:bg-zinc-900 [&_input]:border-zinc-700 [&_input]:text-zinc-50 [&_input:focus]:border-amber-400 [&_label]:text-zinc-400 [&_p]:text-zinc-500 [&_button[type=submit]]:bg-amber-400 [&_button[type=submit]]:text-zinc-950">
+      <div className="[&_input]:bg-zinc-900 [&_input]:border-zinc-700 [&_input]:text-zinc-50 [&_input:focus]:border-amber-400 [&_label]:text-zinc-400 [&_p]:text-zinc-500 [&_button[type=submit]]:bg-amber-400 [&_button[type=submit]]:text-zinc-950 dark:text-zinc-50">
         <ForgotPasswordForm />
       </div>
 

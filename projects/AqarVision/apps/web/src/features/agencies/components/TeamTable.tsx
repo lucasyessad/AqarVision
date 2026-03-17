@@ -52,7 +52,7 @@ export function TeamTable({
   const showActions = canManage(currentUserRole);
 
   return (
-    <div className="overflow-x-auto rounded-xl bg-white shadow-sm">
+    <div className="overflow-x-auto rounded-xl bg-white dark:bg-zinc-900 shadow-sm">
       {roleState?.success === false && (
         <div className="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-600">
           {roleState.error.message}

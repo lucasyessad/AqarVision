@@ -136,7 +136,7 @@ function UploadZone({ label, hint, aspectRatio, maxSizeLabel, brandingType, curr
             <button
               type="submit"
               disabled={isPending}
-              className="self-start inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-zinc-950 transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="self-start inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {isPending ? (
                 <>
