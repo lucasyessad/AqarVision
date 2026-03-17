@@ -423,7 +423,7 @@ DashboardSidebar (8 chaînes), Dashboard layout (2), ProLoginForm (3), Homepage 
 
 | Référence | Quand consulter |
 |-----------|-----------------|
-| `/mnt/skills/user/aqarvision-ux-ui/SKILL.md` | Toujours |
+| `../../library/skills/design/frontend-design/` | Toujours |
 | `references/design-tokens.md` | Couleurs, fonts, spacing, shadows, motion |
 | `references/component-library.md` | Avant de créer un composant |
 | `references/aqarpro-ux.md` | Dashboard, CRM |
@@ -431,6 +431,60 @@ DashboardSidebar (8 chaînes), Dashboard layout (2), ProLoginForm (3), Homepage 
 | `references/aqarchaab-ux.md` | Espace particulier |
 | `references/editorial-immersive.md` | Homepage, vitrines, marketing |
 | `references/product-vision.md` | Décisions fonctionnelles majeures |
+
+-----
+
+## Ressources library (repo parent)
+
+Le repo parent (`../../`) contient une bibliotheque de ressources Claude Code. Voici celles pertinentes pour AqarVision — les consulter avant de developper.
+
+### Skills
+
+| Skill | Chemin | Usage |
+|-------|--------|-------|
+| **frontend-design** | `../../library/skills/design/frontend-design/` | Design des pages et composants UI |
+| **frontend-design-plugin** | `../../library/skills/design/frontend-design-plugin/` | Plugin Claude pour le design frontend |
+| **theme-factory** | `../../library/skills/design/theme-factory/` | Creation et modification des 10 themes vitrines agences |
+| **webapp-testing** | `../../library/skills/development/webapp-testing/` | Tests Vitest (unit) + Playwright (E2E) |
+| **mcp-builder** | `../../library/skills/development/mcp-builder/` | Construction de serveurs MCP |
+
+### Subagents
+
+| Subagent | Chemin | Usage |
+|----------|--------|-------|
+| **nextjs-developer** | `../../library/subagents/languages/` | Developpement Next.js 15 App Router |
+| **react-specialist** | `../../library/subagents/languages/` | Composants React, Server Components |
+| **typescript-pro** | `../../library/subagents/languages/` | TypeScript strict, typage avance |
+| **postgres-pro** | `../../library/subagents/data-ai/` | PostgreSQL + PostGIS, migrations, RPC, RLS |
+| **security-auditor** | `../../library/subagents/testing/` | Audit securite (CSP, RLS, OWASP) |
+| **code-reviewer** | `../../library/subagents/testing/` | Review de code systematique |
+| **qa-expert** | `../../library/subagents/testing/` | Strategie de tests |
+
+### Workflows
+
+| Workflow | Chemin | Usage |
+|----------|--------|-------|
+| **manus-style** | `../../library/workflows/planning/manus-style/` | Planification des phases du projet |
+| **systematic-debugging** | `../../library/workflows/debugging/systematic-debugging/` | Debug methodique |
+| **test-driven-development** | `../../library/workflows/debugging/test-driven-development/` | TDD pour les features critiques |
+| **code-review** | `../../library/workflows/code-review/` | Processus de review |
+| **git-strategies** | `../../library/workflows/git-strategies/` | Gestion des branches et merges |
+| **verification-before-completion** | `../../library/workflows/verification-before-completion/` | Quality gates avant merge |
+
+### Generateurs
+
+| Generateur | Chemin | Usage |
+|------------|--------|-------|
+| **ui-ux-pro** | `../../library/generators/ui-components/ui-ux-pro/` | Generation de composants UI (67 styles, 96 palettes) |
+
+### Exemples d'utilisation
+
+```
+Utilise ../../library/skills/design/frontend-design/ pour designer la page de recherche AqarSearch
+Active le subagent postgres-pro de ../../library/subagents/data-ai/ pour optimiser les requetes PostGIS
+Applique le workflow TDD de ../../library/workflows/debugging/test-driven-development/ pour les Server Actions
+Utilise ../../library/generators/ui-components/ui-ux-pro/ pour generer les composants du dashboard AqarPro
+```
 
 -----
 
