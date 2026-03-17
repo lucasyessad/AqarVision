@@ -4,27 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-**PersoDev** is a personal development workspace that centralizes Claude Code resources (skills, subagents, workflows, generators) and hosts development projects. It serves as both a curated reference library and a foundation for project development.
+**AqarVision** is a personal development workspace that centralizes Claude Code resources (skills, subagents, workflows, generators) and hosts development projects. It serves as both a curated reference library and a foundation for project development.
 
 ## Architecture
 
 The repository follows a **dual-structure approach**:
 
-- **`resources/`** — Upstream git repositories (read-only, update via `git pull`). Never modify files here directly.
+- **`resources/`** — 26 upstream git repositories (read-only, update via `./scripts/update-all.sh`). Never modify files here directly.
 - **`library/`** — Curated copies organized by use case. All customizations go here, not in `resources/`.
 - **`projects/`** — Independent development projects, each with its own stack and dependencies. Reference library resources via `../../library/...`.
 - **`templates/`** — Starter templates + `clone-template.sh` (supports: nextjs, saas, saas-nextjs, api-node, api-fastapi, mobile, ds).
 - **`scripts/`** — Automation scripts for maintenance.
-- **`docs/`** — Guides (`quick-start.md`, `maintenance.md`), best practices, references, and `NeoAqar/` product vision & strategy docs.
+- **`docs/`** — Guides (`quick-start.md`, `maintenance.md`), best practices, references.
 - **`tools/`** — Utility tools (e.g., `je-extractor`).
 
 ## Key Commands
 
 ```bash
-./scripts/update-all.sh                        # Update all source repos in resources/
+./scripts/update-all.sh                        # Update all 26 source repos in resources/
 ./scripts/verify.sh                            # Verify project integrity (structure, counts)
 ./scripts/backup.sh                            # Create timestamped backup (keeps last 5)
-./scripts/commit-to-main.sh                    # Safely commit from dev → main (7-step workflow)
+./scripts/commit-to-main.sh                    # Safely commit from dev → master (7-step workflow)
+./scripts/create-branch.sh                     # Create feature branches with module scaffolding
 ./templates/clone-template.sh <type> <name>    # Clone a project template
 ```
 
@@ -34,9 +35,26 @@ There is **no global build system, test runner, or linter**. Each project in `pr
 
 Resources in `library/` are organized into four categories — browse each for full contents:
 
-- **`skills/`** — Task-specific instructions organized by domain: `documents/`, `design/`, `development/`, `communication/`. Each skill has a `SKILL.md`.
-- **`subagents/`** — 80+ specialist agent prompts: `languages/`, `infrastructure/`, `testing/`, `data-ai/`, `workflows/`.
-- **`workflows/`** — Development methodologies: `planning/`, `git-strategies/`, `code-review/`, `debugging/`, `autonomous-development/`, `subagent-driven-development/`, and more.
+- **`skills/`** — Task-specific instructions organized by domain:
+  - `documents/` — PDF, DOCX, PPTX, XLSX
+  - `design/` — algorithmic-art, canvas-design, frontend-design, frontend-design-plugin, theme-factory
+  - `development/` — claude-api, claude-mem, context7, mcp-builder, skill-creator, web-artifacts-builder, webapp-testing
+  - `communication/` — brand-guidelines, doc-coauthoring, internal-comms, slack-gif-creator
+
+- **`subagents/`** — Specialist agent prompts: `languages/`, `infrastructure/`, `testing/`, `data-ai/`, `workflows/`.
+
+- **`workflows/`** — Development methodologies:
+  - `planning/` — manus-style, brainstorming, executing-plans, writing-plans
+  - `git-strategies/` — finishing-a-development-branch, using-git-worktrees
+  - `code-review/` — automated-code-review, receiving-code-review, requesting-code-review
+  - `debugging/` — systematic-debugging, test-driven-development
+  - `autonomous-development/` — Ralph autonomous dev system
+  - `subagent-driven-development/` — Multi-agent orchestration
+  - `dispatching-parallel-agents/` — Parallel execution
+  - `verification-before-completion/` — Quality gates
+  - `using-superpowers/` — Advanced workflows
+  - `writing-skills/` — Create new skills
+
 - **`generators/`** — Creation tools: `prompts/intelligent-generator`, `ui-components/ui-ux-pro`, `templates/skill-templates`.
 
 Always reference resources by full path:
@@ -48,18 +66,17 @@ Activate the Python specialist subagent from library/subagents/languages/python
 
 ## Active Projects
 
-- **`projects/AqarVision/`** — Algerian proptech ecosystem (marketplace + agency CRM). See `projects/CLAUDE.md` for full stack details, architecture, and conventions.
+- **`projects/AqarVision/`** — Algerian proptech ecosystem (marketplace + agency CRM). See `projects/AqarVision/CLAUDE.md` for full stack details, architecture, and conventions.
 
 ## MCP Configuration
 
 - Root `.mcp.json` configures Supabase MCP server.
-- `.claude/settings.local.json` enables Supabase and all project-specific MCP servers.
-- Individual projects may have their own `.mcp.json`.
+- Individual projects may have their own `.mcp.json` (e.g., `projects/AqarVision/.mcp.json`).
 
 ## Git Workflow
 
-- **`main`** is the primary branch; **`dev`** is for development.
-- `scripts/commit-to-main.sh` handles the dev-to-main merge with integrity verification.
+- **`master`** is the primary branch.
+- `scripts/commit-to-main.sh` handles the dev-to-master merge with integrity verification.
 
 ## Important Conventions
 
