@@ -298,7 +298,30 @@
     "no_results_in_wilaya": "No listings in {wilaya} at the moment",
     "no_results_generic": "Try broadening your criteria or searching in another city.",
     "new_search": "New search",
-    "suggested_wilayas": "Popular wilayas"
+    "suggested_wilayas": "Popular wilayas",
+    "rooms": "rooms",
+    "disable_alert": "Disable alert",
+    "enable_alert": "Enable alert",
+    "delete_search": "Delete search",
+    "no_saved_searches": "No saved searches",
+    "select_wilayas": "Select wilayas",
+    "search_wilaya": "Search a wilaya...",
+    "zones_selected": "{count}/{max} zones selected"
+  },
+  "compare": {
+    "page_title": "Compare listings",
+    "page_description": "Compare features of multiple real estate listings",
+    "title": "Compare",
+    "subtitle": "Compare up to 4 listings side by side",
+    "empty_state": "No listings to compare",
+    "empty_hint": "Add listings from search or your favorites",
+    "add_listing": "Add a listing",
+    "price": "Price",
+    "surface": "Surface",
+    "rooms": "Rooms",
+    "bathrooms": "Bathrooms",
+    "location": "Location",
+    "property_type": "Property type"
   },
   "listings": {
     "title": "My listings",
@@ -468,7 +491,19 @@
     "freshness_recent": "Recently updated",
     "freshness_moderate": "Updated this month",
     "freshness_old": "Not recently updated",
-    "freshness_confirmed": "verified"
+    "freshness_confirmed": "verified",
+    "ai_summary": "AI Summary",
+    "generate_summary": "Generate AI summary",
+    "performance": "Performance",
+    "views": "Views",
+    "leads": "Leads",
+    "quality": "Quality",
+    "open_in_new_tab": "Open in new tab",
+    "view_listing": "View listing",
+    "edit": "Edit",
+    "similar_listings": "Similar listings",
+    "rent": "Rent",
+    "sale": "Sale"
   },
   "media": {
     "title": "Photos",
@@ -642,7 +677,12 @@
     "status_interested": "Interested",
     "status_visited": "Visited",
     "status_negotiating": "Negotiating",
-    "status_rejected": "Rejected"
+    "status_rejected": "Rejected",
+    "all_favorites": "All favorites",
+    "new_collection": "New folder",
+    "collection_name": "Folder name...",
+    "rename": "Rename",
+    "delete_collection": "Delete folder"
   },
   "moderation": {
     "report": "Report",

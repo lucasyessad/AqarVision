@@ -1,10 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import Anthropic from "@anthropic-ai/sdk";
 import { logger } from "@/lib/logger";
 import type { AiJobDto, AiJobStatus, AiJobType } from "../types/ai.types";
 
-// Module-level singleton — avoids re-instantiating the client on every call
-const anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
+const AI_BACKEND_URL = process.env.AI_BACKEND_URL ?? "http://localhost:8000";
+const AI_SERVICE_KEY = process.env.AI_SERVICE_KEY ?? "";
 
 /* ------------------------------------------------------------------ */
 /*  Mappers                                                            */
@@ -132,26 +131,28 @@ export async function failJob(
 }
 
 /* ------------------------------------------------------------------ */
-/*  Claude API helper                                                  */
+/*  Python AI Backend helper                                           */
 /* ------------------------------------------------------------------ */
 
-async function callClaude(
-  systemPrompt: string,
-  userPrompt: string
-): Promise<string> {
-  const response = await anthropicClient.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 4096,
-    system: systemPrompt,
-    messages: [{ role: "user", content: userPrompt }],
+async function callAIBackend<T>(
+  endpoint: string,
+  body: Record<string, unknown>
+): Promise<T> {
+  const response = await fetch(`${AI_BACKEND_URL}/api/v1${endpoint}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Service-Key": AI_SERVICE_KEY,
+    },
+    body: JSON.stringify(body),
   });
 
-  const textBlock = response.content.find((block) => block.type === "text");
-  if (!textBlock || textBlock.type !== "text") {
-    throw new Error("No text response from Claude");
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`AI Backend error (${response.status}): ${error}`);
   }
 
-  return textBlock.text;
+  return response.json() as Promise<T>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -191,21 +192,23 @@ export async function generateDescription(
   });
 
   try {
-    const systemPrompt = `You are a professional real estate copywriter specializing in the Algerian property market. Generate compelling, accurate property descriptions in ${locale === "ar" ? "Arabic" : locale === "fr" ? "French" : locale === "es" ? "Spanish" : "English"}. Use a professional yet warm tone. Highlight key features and the property's unique selling points. Do not invent features not provided in the data. Output only the description text, no additional formatting or labels.`;
-
-    const userPrompt = `Generate a real estate listing description for the following property:
-- Type: ${listing.property_type}
-- Listing type: ${listing.listing_type}
-- Price: ${listing.current_price} ${listing.currency}
-- Surface: ${listing.surface_m2 ?? "N/A"} m²
-- Rooms: ${listing.rooms ?? "N/A"}
-- Bathrooms: ${listing.bathrooms ?? "N/A"}
-- Wilaya code: ${listing.wilaya_code}
-- Details: ${JSON.stringify(listing.details ?? {})}
-
-Write a professional description of 150-250 words.`;
-
-    const text = await callClaude(systemPrompt, userPrompt);
+    const result = await callAIBackend<{ description: string; locale: string }>(
+      "/generate/description",
+      {
+        title: listingId,
+        property_type: listing.property_type as string,
+        listing_type: listing.listing_type as string,
+        wilaya: listing.wilaya_code as string,
+        surface_m2: listing.surface_m2 as number | null,
+        rooms: listing.rooms as number | null,
+        bathrooms: listing.bathrooms as number | null,
+        price: listing.current_price as number,
+        currency: listing.currency as string,
+        details: (listing.details as Record<string, unknown>) ?? {},
+        locale,
+      }
+    );
+    const text = result.description;
 
     await completeJob(supabase, job.id, { text, locale });
 
@@ -255,40 +258,31 @@ export async function translateListing(
     source_title: sourceTranslation.title,
   });
 
-  const localeNames: Record<string, string> = {
-    fr: "French",
-    ar: "Arabic",
-    en: "English",
-    es: "Spanish",
-  };
-
   try {
-    const systemPrompt = `You are a professional real estate translator specializing in the Algerian property market. Translate the given listing content from ${localeNames[sourceLocale] ?? sourceLocale} to ${localeNames[targetLocale] ?? targetLocale}. Maintain the professional tone and real estate terminology. If translating to Arabic, use Modern Standard Arabic. Output a JSON object with "title" and "description" fields only, no additional text.`;
-
-    const userPrompt = `Translate this real estate listing:
-
-Title: ${sourceTranslation.title}
-
-Description: ${sourceTranslation.description}
-
-Output format: {"title": "...", "description": "..."}`;
-
-    const raw = await callClaude(systemPrompt, userPrompt);
-    let translation: { title: string; description: string };
-    try {
-      const parsed = JSON.parse(raw) as unknown;
-      if (
-        typeof parsed !== "object" ||
-        parsed === null ||
-        typeof (parsed as Record<string, unknown>).title !== "string" ||
-        typeof (parsed as Record<string, unknown>).description !== "string"
-      ) {
-        throw new Error("Unexpected translation shape from Claude");
+    // Translate title
+    const titleResult = await callAIBackend<{ translated_text: string }>(
+      "/translate",
+      {
+        text: sourceTranslation.title,
+        source_locale: sourceLocale,
+        target_locale: targetLocale,
       }
-      translation = parsed as { title: string; description: string };
-    } catch {
-      throw new Error(`Claude returned invalid JSON for translation: ${raw.slice(0, 200)}`);
-    }
+    );
+
+    // Translate description
+    const descResult = await callAIBackend<{ translated_text: string }>(
+      "/translate",
+      {
+        text: sourceTranslation.description,
+        source_locale: sourceLocale,
+        target_locale: targetLocale,
+      }
+    );
+
+    const translation = {
+      title: titleResult.translated_text,
+      description: descResult.translated_text,
+    };
 
     await completeJob(supabase, job.id, {
       translation,

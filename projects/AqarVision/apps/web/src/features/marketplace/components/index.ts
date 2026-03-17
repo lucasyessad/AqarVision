@@ -11,3 +11,6 @@ export { ListingHighlights } from "./ListingHighlights";
 export { VerificationBadge } from "./VerificationBadge";
 export { AgencyTrustCard } from "./AgencyTrustCard";
 export { SmartEmptyState } from "./SmartEmptyState";
+export { SavedSearchCard, SavedSearchList } from "./SavedSearchCard";
+export { SimilarListings } from "./SimilarListings";
+export { MultiZoneSearch } from "./MultiZoneSearch";

@@ -298,7 +298,30 @@
     "no_results_in_wilaya": "لا توجد إعلانات في {wilaya} حاليًا",
     "no_results_generic": "حاول توسيع معايير البحث أو البحث في مدينة أخرى.",
     "new_search": "بحث جديد",
-    "suggested_wilayas": "ولايات شائعة"
+    "suggested_wilayas": "ولايات شائعة",
+    "rooms": "غرف",
+    "disable_alert": "إلغاء التنبيه",
+    "enable_alert": "تفعيل التنبيه",
+    "delete_search": "حذف البحث",
+    "no_saved_searches": "لا توجد عمليات بحث محفوظة",
+    "select_wilayas": "اختر الولايات",
+    "search_wilaya": "ابحث عن ولاية...",
+    "zones_selected": "{count}/{max} مناطق مختارة"
+  },
+  "compare": {
+    "page_title": "مقارنة الإعلانات",
+    "page_description": "قارن خصائص عدة إعلانات عقارية",
+    "title": "مقارنة",
+    "subtitle": "قارن حتى 4 إعلانات جنبًا إلى جنب",
+    "empty_state": "لا توجد إعلانات للمقارنة",
+    "empty_hint": "أضف إعلانات من البحث أو المفضلة",
+    "add_listing": "إضافة إعلان",
+    "price": "السعر",
+    "surface": "المساحة",
+    "rooms": "الغرف",
+    "bathrooms": "الحمامات",
+    "location": "الموقع",
+    "property_type": "نوع العقار"
   },
   "listings": {
     "title": "إعلاناتي",
@@ -468,7 +491,19 @@
     "freshness_recent": "تم التحديث مؤخرًا",
     "freshness_moderate": "تم التحديث هذا الشهر",
     "freshness_old": "لم يتم التحديث",
-    "freshness_confirmed": "تم التحقق"
+    "freshness_confirmed": "تم التحقق",
+    "ai_summary": "ملخص الذكاء الاصطناعي",
+    "generate_summary": "إنشاء ملخص ذكي",
+    "performance": "الأداء",
+    "views": "المشاهدات",
+    "leads": "العملاء المحتملون",
+    "quality": "الجودة",
+    "open_in_new_tab": "فتح في علامة تبويب جديدة",
+    "view_listing": "عرض الإعلان",
+    "edit": "تعديل",
+    "similar_listings": "إعلانات مشابهة",
+    "rent": "إيجار",
+    "sale": "بيع"
   },
   "media": {
     "title": "الصور",
@@ -642,7 +677,12 @@
     "status_interested": "مهتم",
     "status_visited": "تمت الزيارة",
     "status_negotiating": "قيد التفاوض",
-    "status_rejected": "مرفوض"
+    "status_rejected": "مرفوض",
+    "all_favorites": "كل المفضلة",
+    "new_collection": "مجلد جديد",
+    "collection_name": "اسم المجلد...",
+    "rename": "إعادة تسمية",
+    "delete_collection": "حذف المجلد"
   },
   "moderation": {
     "report": "إبلاغ",

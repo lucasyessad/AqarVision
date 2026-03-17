@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import settings
-from routers import generate, analyze, translate, estimate, health
+from routers import generate, analyze, translate, estimate, search, health
 
 app = FastAPI(
     title="AqarVision AI Backend",
@@ -24,3 +24,4 @@ app.include_router(generate.router, prefix="/api/v1")
 app.include_router(analyze.router, prefix="/api/v1")
 app.include_router(translate.router, prefix="/api/v1")
 app.include_router(estimate.router, prefix="/api/v1")
+app.include_router(search.router, prefix="/api/v1")

@@ -298,7 +298,30 @@
     "no_results_in_wilaya": "Aucune annonce à {wilaya} pour le moment",
     "no_results_generic": "Essayez d'élargir vos critères ou de chercher dans une autre ville.",
     "new_search": "Nouvelle recherche",
-    "suggested_wilayas": "Wilayas populaires"
+    "suggested_wilayas": "Wilayas populaires",
+    "rooms": "pièces",
+    "disable_alert": "Désactiver l'alerte",
+    "enable_alert": "Activer l'alerte",
+    "delete_search": "Supprimer la recherche",
+    "no_saved_searches": "Aucune recherche sauvegardée",
+    "select_wilayas": "Sélectionnez des wilayas",
+    "search_wilaya": "Chercher une wilaya...",
+    "zones_selected": "{count}/{max} zones sélectionnées"
+  },
+  "compare": {
+    "page_title": "Comparer des annonces",
+    "page_description": "Comparez les caractéristiques de plusieurs annonces immobilières",
+    "title": "Comparer",
+    "subtitle": "Comparez jusqu'à 4 annonces côte à côte",
+    "empty_state": "Aucune annonce à comparer",
+    "empty_hint": "Ajoutez des annonces depuis la recherche ou vos favoris",
+    "add_listing": "Ajouter une annonce",
+    "price": "Prix",
+    "surface": "Surface",
+    "rooms": "Pièces",
+    "bathrooms": "Salles de bain",
+    "location": "Localisation",
+    "property_type": "Type de bien"
   },
   "listings": {
     "title": "Mes annonces",
@@ -468,7 +491,19 @@
     "freshness_recent": "Mis à jour récemment",
     "freshness_moderate": "Mis à jour ce mois",
     "freshness_old": "Non mis à jour",
-    "freshness_confirmed": "vérifié"
+    "freshness_confirmed": "vérifié",
+    "ai_summary": "Résumé IA",
+    "generate_summary": "Générer un résumé IA",
+    "performance": "Performance",
+    "views": "Vues",
+    "leads": "Leads",
+    "quality": "Qualité",
+    "open_in_new_tab": "Ouvrir dans un nouvel onglet",
+    "view_listing": "Voir l'annonce",
+    "edit": "Modifier",
+    "similar_listings": "Annonces similaires",
+    "rent": "Location",
+    "sale": "Vente"
   },
   "media": {
     "title": "Photos",
@@ -642,7 +677,12 @@
     "status_interested": "Intéressé",
     "status_visited": "Visité",
     "status_negotiating": "En négociation",
-    "status_rejected": "Écarté"
+    "status_rejected": "Écarté",
+    "all_favorites": "Tous les favoris",
+    "new_collection": "Nouveau dossier",
+    "collection_name": "Nom du dossier...",
+    "rename": "Renommer",
+    "delete_collection": "Supprimer le dossier"
   },
   "moderation": {
     "report": "Signaler",

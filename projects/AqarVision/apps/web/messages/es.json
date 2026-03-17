@@ -298,7 +298,30 @@
     "no_results_in_wilaya": "No hay anuncios en {wilaya} por el momento",
     "no_results_generic": "Intenta ampliar tus criterios o buscar en otra ciudad.",
     "new_search": "Nueva búsqueda",
-    "suggested_wilayas": "Wilayas populares"
+    "suggested_wilayas": "Wilayas populares",
+    "rooms": "habitaciones",
+    "disable_alert": "Desactivar alerta",
+    "enable_alert": "Activar alerta",
+    "delete_search": "Eliminar búsqueda",
+    "no_saved_searches": "No hay búsquedas guardadas",
+    "select_wilayas": "Seleccionar wilayas",
+    "search_wilaya": "Buscar una wilaya...",
+    "zones_selected": "{count}/{max} zonas seleccionadas"
+  },
+  "compare": {
+    "page_title": "Comparar anuncios",
+    "page_description": "Compare las características de varios anuncios inmobiliarios",
+    "title": "Comparar",
+    "subtitle": "Compare hasta 4 anuncios lado a lado",
+    "empty_state": "No hay anuncios para comparar",
+    "empty_hint": "Añada anuncios desde la búsqueda o sus favoritos",
+    "add_listing": "Añadir un anuncio",
+    "price": "Precio",
+    "surface": "Superficie",
+    "rooms": "Habitaciones",
+    "bathrooms": "Baños",
+    "location": "Ubicación",
+    "property_type": "Tipo de propiedad"
   },
   "listings": {
     "title": "Mis anuncios",
@@ -468,7 +491,19 @@
     "freshness_recent": "Actualizado recientemente",
     "freshness_moderate": "Actualizado este mes",
     "freshness_old": "No actualizado",
-    "freshness_confirmed": "verificado"
+    "freshness_confirmed": "verificado",
+    "ai_summary": "Resumen IA",
+    "generate_summary": "Generar resumen IA",
+    "performance": "Rendimiento",
+    "views": "Vistas",
+    "leads": "Contactos",
+    "quality": "Calidad",
+    "open_in_new_tab": "Abrir en nueva pestaña",
+    "view_listing": "Ver anuncio",
+    "edit": "Editar",
+    "similar_listings": "Anuncios similares",
+    "rent": "Alquiler",
+    "sale": "Venta"
   },
   "media": {
     "title": "Fotos",
@@ -642,7 +677,12 @@
     "status_interested": "Interesado",
     "status_visited": "Visitado",
     "status_negotiating": "Negociando",
-    "status_rejected": "Descartado"
+    "status_rejected": "Descartado",
+    "all_favorites": "Todos los favoritos",
+    "new_collection": "Nueva carpeta",
+    "collection_name": "Nombre de la carpeta...",
+    "rename": "Renombrar",
+    "delete_collection": "Eliminar carpeta"
   },
   "moderation": {
     "report": "Reportar",
