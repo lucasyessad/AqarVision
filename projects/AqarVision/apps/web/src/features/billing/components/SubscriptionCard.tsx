@@ -9,7 +9,6 @@ interface SubscriptionCardProps {
   subscription: SubscriptionDto;
   agencyId: string;
   usedListings: number;
-  usedAiJobs: number;
 }
 
 function UsageBar({ label, used, max }: { label: string; used: number; max: number }) {
@@ -54,7 +53,6 @@ export function SubscriptionCard({
   subscription,
   agencyId,
   usedListings,
-  usedAiJobs,
 }: SubscriptionCardProps) {
   const t = useTranslations("billing");
 
@@ -119,11 +117,6 @@ export function SubscriptionCard({
             label={t("max_listings")}
             used={usedListings}
             max={subscription.plan.max_listings}
-          />
-          <UsageBar
-            label={t("max_ai_jobs")}
-            used={usedAiJobs}
-            max={subscription.plan.max_ai_jobs}
           />
         </div>
       </div>

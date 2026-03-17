@@ -36,7 +36,6 @@ export default async function BillingPage() {
   // Fetch subscription and usage if user has an agency
   let subscription = null;
   let usedListings = 0;
-  let usedAiJobs = 0;
 
   if (agencyId) {
     subscription = await getAgencySubscription(supabase, agencyId);
@@ -49,19 +48,6 @@ export default async function BillingPage() {
       .is("deleted_at", null);
 
     usedListings = listingCount ?? 0;
-
-    // Count AI jobs this month
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const { count: aiJobCount } = await supabase
-      .from("ai_jobs")
-      .select("id", { count: "exact", head: true })
-      .eq("agency_id", agencyId)
-      .gte("created_at", startOfMonth.toISOString());
-
-    usedAiJobs = aiJobCount ?? 0;
   }
 
   return (
@@ -79,7 +65,6 @@ export default async function BillingPage() {
           subscription={subscription}
           agencyId={agencyId}
           usedListings={usedListings}
-          usedAiJobs={usedAiJobs}
         />
       )}
 

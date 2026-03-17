@@ -125,7 +125,7 @@ describe("withAgencyAuth — RBAC permission map", () => {
   // -------------------------------------------------------------------------
 
   describe("rôle : owner", () => {
-    const allResources: Resource[] = ["listing", "team_member", "invitation", "billing", "settings", "analytics", "media", "ai_job"];
+    const allResources: Resource[] = ["listing", "team_member", "invitation", "billing", "settings", "analytics", "media"];
     const allPermissions: Permission[] = ["create", "read", "update", "delete"];
 
     it.each(
@@ -184,10 +184,6 @@ describe("withAgencyAuth — RBAC permission map", () => {
       expect(result.success).toBe(true);
     });
 
-    it("ne peut rien faire sur 'ai_job'", async () => {
-      const result = await checkPermission("viewer", "ai_job", "create");
-      expect(result.success).toBe(false);
-    });
   });
 
   // -------------------------------------------------------------------------
@@ -242,10 +238,6 @@ describe("withAgencyAuth — RBAC permission map", () => {
       expect(result.success).toBe(false);
     });
 
-    it("peut 'create' sur 'ai_job'", async () => {
-      const result = await checkPermission("agent", "ai_job", "create");
-      expect(result.success).toBe(true);
-    });
   });
 
   // -------------------------------------------------------------------------

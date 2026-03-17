@@ -200,7 +200,6 @@
       "analytics": "Analytics",
       "settings": "Settings",
       "team": "Team",
-      "ai": "AI Assistant",
       "billing": "Billing"
     },
     "save": "Save",
@@ -609,26 +608,6 @@
     "invite_sent": "Invitation sent successfully",
     "pending_invites": "Pending invitations"
   },
-  "ai": {
-    "title": "AI Assistant",
-    "generate_description": "Generate description",
-    "translate": "Translate",
-    "generating": "Generating...",
-    "translating": "Translating...",
-    "accept": "Accept",
-    "reject": "Reject",
-    "regenerate": "Regenerate",
-    "quota_exceeded": "AI quota reached for this month",
-    "jobs_used": "AI jobs used this month",
-    "job_history": "AI Job History",
-    "status_pending": "Pending",
-    "status_completed": "Completed",
-    "status_failed": "Failed",
-    "source_locale": "Source language",
-    "target_locale": "Target language",
-    "generated_text": "Generated text",
-    "no_jobs": "No AI jobs yet"
-  },
   "messaging": {
     "conversations": "Conversations",
     "new_message": "New message",
@@ -733,7 +712,6 @@
     "manage_subscription": "Manage subscription",
     "features": "Choose the plan that fits your real estate agency",
     "max_listings": "listings",
-    "max_ai_jobs": "AI jobs / month",
     "unlimited": "Unlimited",
     "subscribe": "Subscribe",
     "contact_sales": "Contact sales",

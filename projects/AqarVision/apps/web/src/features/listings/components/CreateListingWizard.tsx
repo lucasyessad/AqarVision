@@ -12,7 +12,6 @@ import {
   finalizeMediaUploadAction,
 } from "@/features/media/actions/upload.action";
 import { getCommunesForWilaya } from "@/features/marketplace/actions/get-communes.action";
-import { generateDescriptionIndividualAction } from "@/features/ai/actions/generate-description-individual.action";
 import { LISTING_TYPES, PROPERTY_TYPES } from "../schemas/listing.schema";
 import type { PropertyType } from "../schemas/listing.schema";
 
@@ -422,54 +421,8 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
   const [submitProgress, setSubmitProgress] = useState("");
   const [submitError, setSubmitError] = useState("");
   const photoInputRef = useRef<HTMLInputElement>(null);
-  const [aiGenerating, setAiGenerating] = useState(false);
-  const [aiError, setAiError] = useState("");
 
   const propertyType = data.property_type as PropertyType | "";
-
-  // ── AI description generation ──────────────────────────────────────────────
-
-  function handleGenerateAiDescription() {
-    setAiError("");
-    setAiGenerating(true);
-    startTransition(async () => {
-      try {
-        // Collect amenity details
-        const details: Record<string, unknown> = {};
-        for (const key of Object.keys(data)) {
-          if (key.startsWith("has_") && data[key as keyof WizardData]) {
-            details[key] = true;
-          }
-        }
-        if (data.furnished) details.furnished = true;
-
-        const result = await generateDescriptionIndividualAction({
-          listing_type: data.listing_type,
-          property_type: data.property_type,
-          current_price: Number(data.current_price) || 0,
-          surface_m2: data.surface_m2 ? Number(data.surface_m2) : undefined,
-          rooms: data.rooms || undefined,
-          bathrooms: data.bathrooms || undefined,
-          floor: data.floor ? Number(data.floor) : undefined,
-          wilaya_code: data.wilaya_code,
-          commune_name: communes.find((c) => String(c.id) === data.commune_id)?.name_fr,
-          details,
-          condition: data.condition || undefined,
-          year_built: data.year_built ? Number(data.year_built) : undefined,
-        });
-
-        if (result.success) {
-          setData((prev) => ({ ...prev, description_fr: result.data.text }));
-        } else {
-          setAiError(result.error.message);
-        }
-      } catch {
-        setAiError("La génération a échoué. Réessayez.");
-      } finally {
-        setAiGenerating(false);
-      }
-    });
-  }
 
   // ── Field helpers ──────────────────────────────────────────────────────────
 
@@ -1084,49 +1037,6 @@ export function CreateListingWizard({ agencyId, wilayas, mode = "create", listin
                 <span className={data.description_fr.length < 30 ? "text-red-400" : "text-green-500"}>
                   {data.description_fr.length}/3000
                 </span>
-              </div>
-            </div>
-
-            {/* AI generation panel */}
-            <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100">
-                  <svg className="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Générer avec l&apos;IA</p>
-                  <p className="mt-0.5 text-xs text-zinc-500">
-                    Claude rédige une description professionnelle à partir de vos informations. Vous pouvez la modifier ensuite.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleGenerateAiDescription}
-                    disabled={aiGenerating || !data.wilaya_code || !data.listing_type}
-                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-xs font-semibold text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-90 disabled:opacity-50"
-                  >
-                    {aiGenerating ? (
-                      <>
-                        <svg className="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        Rédaction en cours...
-                      </>
-                    ) : (
-                      <>
-                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                        </svg>
-                        Générer la description
-                      </>
-                    )}
-                  </button>
-                  {aiError && (
-                    <p className="mt-2 text-xs text-red-500">{aiError}</p>
-                  )}
-                </div>
               </div>
             </div>
 

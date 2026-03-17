@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-> Dernière mise à jour : 16 mars 2026.
+> Dernière mise à jour : 17 mars 2026.
 > Ce fichier est lu automatiquement par Claude Code à chaque session. C’est la **source de vérité unique** du projet. Lire intégralement avant toute modification.
 
 -----
@@ -9,7 +9,7 @@
 
 **AqarVision** — Plateforme immobilière algérienne (proptech) composée de quatre surfaces :
 
-**AqarSearch** est la marketplace publique : recherche, carte, SEO, alertes, favoris. **AqarPro** est le CRM agence : annonces, leads, messaging, analytics, IA, facturation. **AqarChaab** est l’espace particulier : déposer une annonce, favoris, messagerie, profil. **Marketing** regroupe la homepage, les pages /pro, /vendre, /estimer, /pricing, et les vitrines agences.
+**AqarSearch** est la marketplace publique : recherche, carte, SEO, alertes, favoris. **AqarPro** est le CRM agence : annonces, leads, messaging, analytics, facturation. **AqarChaab** est l’espace particulier : déposer une annonce, favoris, messagerie, profil. **Marketing** regroupe la homepage, les pages /pro, /vendre, /estimer, /pricing, et les vitrines agences.
 
 Le projet est multi-tenant (RLS Supabase isolé par agence), multilingue (FR/AR/EN/ES avec RTL natif pour l’arabe), et cible l’Algérie (58 wilayas, 1 541 communes). La monétisation se fait via Stripe (plans Starter/Pro/Enterprise).
 
@@ -26,7 +26,6 @@ Le projet est multi-tenant (RLS Supabase isolé par agence), multilingue (FR/AR/
 |Base de données|PostgreSQL 15+ avec PostGIS                                              |
 |Paiements      |Stripe (Checkout + Customer Portal + Webhooks via Edge Function Supabase)|
 |Cartes         |MapLibre GL JS + tuiles OpenStreetMap                                    |
-|IA             |Migration en cours vers backend Python FastAPI (voir section dédiée)     |
 |Validation     |Zod                                                                      |
 |i18n           |next-intl (4 locales : fr, ar, en, es)                                   |
 |Monorepo       |Turborepo + pnpm workspaces                                              |
@@ -66,7 +65,7 @@ AqarVision/
 │   │   ├── auth/                             # Redirect login → AqarPro ou AqarChaab
 │   │   ├── AqarPro/auth/                     # Login/signup pro
 │   │   ├── AqarPro/dashboard/                # CRM agence (overview, listings, leads,
-│   │   │                                     #   visit-requests, analytics, ai, team,
+│   │   │                                     #   visit-requests, analytics, team,
 │   │   │                                     #   billing, settings, onboarding)
 │   │   ├── AqarChaab/auth/                   # Login/signup particulier
 │   │   ├── AqarChaab/espace/                 # Espace perso (mes-annonces, messagerie,
@@ -84,8 +83,8 @@ AqarVision/
 │   │   ├── pro/                              # Page marketing AqarPro
 │   │   ├── agency/new/                       # Création agence
 │   │   └── invite/[token]/                   # Acceptation invitation
-│   ├── features/                             # 16 modules (admin, agencies, agency-settings,
-│   │                                         #   ai, analytics, auth, billing, favorites,
+│   ├── features/                             # 15 modules (admin, agencies, agency-settings,
+│   │                                         #   analytics, auth, billing, favorites,
 │   │                                         #   leads, listings, marketplace, media,
 │   │                                         #   messaging, moderation, onboarding, visit-requests)
 │   ├── components/
@@ -146,7 +145,7 @@ withAgencyAuth(agencyId, resource, permission, async (ctx) => {
 withSuperAdminAuth(async (ctx) => { return data; });
 ```
 
-La matrice RBAC couvre 5 rôles (owner > admin > agent > editor > viewer) × 8 ressources (listing, team_member, invitation, billing, settings, analytics, media, ai_job) × 4 permissions (create, read, update, delete). Définie dans `lib/auth/with-agency-auth.ts`.
+La matrice RBAC couvre 5 rôles (owner > admin > agent > editor > viewer) × 7 ressources (listing, team_member, invitation, billing, settings, analytics, media) × 4 permissions (create, read, update, delete). Définie dans `lib/auth/with-agency-auth.ts`.
 
 -----
 
@@ -224,32 +223,9 @@ Le dashboard AqarPro est fonctionnel mais incomplet par rapport aux spécificati
 
 -----
 
-## Architecture IA — Backend Python (MIGRATION TERMINÉE)
-
-**Architecture :** Tous les appels Claude API passent par le backend Python FastAPI. Le TypeScript ne fait que `fetch()` vers les endpoints Python. La logique de quotas et CRUD jobs reste en TypeScript/Supabase. La dépendance `@anthropic-ai/sdk` a été supprimée du `package.json`.
-
-```
-Next.js (frontend) → HTTP/JSON → FastAPI (backend IA) → SDK Python → Claude API
-```
-
-**Dossier :** `services/ai-backend/` — FastAPI async, Anthropic SDK Python, Pydantic v2, structured logging, retry+timeout.
-
-**Endpoints disponibles :**
-- `POST /api/v1/generate/description` — Description agence (4 locales)
-- `POST /api/v1/generate/description/individual` — Description particulier (AqarChaab)
-- `POST /api/v1/translate` — Traduction single field
-- `POST /api/v1/translate/batch` — Traduction multi-champs en 1 appel Claude (titre + description)
-- `POST /api/v1/analyze/photos` — Analyse photo Vision (opt-in, coûteux)
-- `POST /api/v1/estimate/price` — Estimation prix par wilaya
-- `POST /api/v1/search/intent` — Parsing NLP recherche naturelle
-
-**Env vars Next.js :** `AI_BACKEND_URL` + `AI_SERVICE_KEY` (plus besoin de `ANTHROPIC_API_KEY` côté Next.js).
-
------
-
 ## Direction design — Homepage
 
-La homepage doit basculer de l’ancien thème dark-hero-overlay vers un design lumineux, tech, avec une identité tricolore algérienne. Fond clair (#fafafa), barre de recherche structurée, photos dans les cards et la mosaïque (pas en background), animations GSAP au scroll, trois régions visuellement distinctes (Sahara or, Méditerranée bleu, Montagnes vert), section IA mise en avant, métriques avec compteurs animés. Les inspirations sont Stripe (précision, data), Linear (densité), Apple (fluidité, espaces), Zillow (photos immersives) — sans copier le template générique de portail immobilier.
+La homepage doit basculer de l’ancien thème dark-hero-overlay vers un design lumineux, tech, avec une identité tricolore algérienne. Fond clair (#fafafa), barre de recherche structurée, photos dans les cards et la mosaïque (pas en background), animations GSAP au scroll, trois régions visuellement distinctes (Sahara or, Méditerranée bleu, Montagnes vert), métriques avec compteurs animés. Les inspirations sont Stripe (précision, data), Linear (densité), Apple (fluidité, espaces), Zillow (photos immersives) — sans copier le template générique de portail immobilier.
 
 -----
 
@@ -267,8 +243,6 @@ La homepage doit basculer de l’ancien thème dark-hero-overlay vers un design 
 
 **Phase 5 — Sécurité et qualité (continu) :** CSP durcie, CI gates, tests E2E dashboard.
 
-**Phase 6 — Backend Python IA (2-3 semaines) :** Microservice FastAPI, migration des 3 endpoints.
-
 -----
 
 ## i18n et SEO
@@ -279,7 +253,7 @@ Toutes les routes sont préfixées par `[locale]`. Chaîne de fallback : locale 
 
 ## Schéma base de données
 
-44 fichiers de migration dans `supabase/migrations/`. Extensions PostGIS et btree_gist. Enums (user_role, agency_role, listing_status, listing_type, property_type, listing_owner_type). Tables principales : profiles, agencies, branches, memberships, invites, listings, translations, media, favorites, notes, saved_searches, leads, conversations, messages, plans, subscriptions, ai_jobs, entitlements, domain_events, listing_views, agency_stats_daily, wilayas, communes. RLS deny-by-default sur toutes les tables. Fonctions RPC : is_agency_member, is_agency_admin, is_super_admin, handle_new_user.
+44 fichiers de migration dans `supabase/migrations/`. Extensions PostGIS et btree_gist. Enums (user_role, agency_role, listing_status, listing_type, property_type, listing_owner_type). Tables principales : profiles, agencies, branches, memberships, invites, listings, translations, media, favorites, notes, saved_searches, leads, conversations, messages, plans, subscriptions, entitlements, domain_events, listing_views, agency_stats_daily, wilayas, communes. RLS deny-by-default sur toutes les tables. Fonctions RPC : is_agency_member, is_agency_admin, is_super_admin, handle_new_user.
 
 -----
 

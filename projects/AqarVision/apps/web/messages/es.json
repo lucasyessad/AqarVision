@@ -200,7 +200,6 @@
       "analytics": "Estadisticas",
       "settings": "Configuracion",
       "team": "Equipo",
-      "ai": "Asistente IA",
       "billing": "Facturacion"
     },
     "save": "Guardar",
@@ -609,26 +608,6 @@
     "invite_sent": "Invitacion enviada exitosamente",
     "pending_invites": "Invitaciones pendientes"
   },
-  "ai": {
-    "title": "Asistente IA",
-    "generate_description": "Generar descripción",
-    "translate": "Traducir",
-    "generating": "Generando...",
-    "translating": "Traduciendo...",
-    "accept": "Aceptar",
-    "reject": "Rechazar",
-    "regenerate": "Regenerar",
-    "quota_exceeded": "Cuota de IA alcanzada para este mes",
-    "jobs_used": "Usos de IA este mes",
-    "job_history": "Historial de tareas IA",
-    "status_pending": "Pendiente",
-    "status_completed": "Completada",
-    "status_failed": "Fallida",
-    "source_locale": "Idioma de origen",
-    "target_locale": "Idioma de destino",
-    "generated_text": "Texto generado",
-    "no_jobs": "Aún no hay tareas de IA"
-  },
   "messaging": {
     "conversations": "Conversaciones",
     "new_message": "Nuevo mensaje",
@@ -733,7 +712,6 @@
     "manage_subscription": "Gestionar suscripcion",
     "features": "Elige el plan adecuado para tu agencia inmobiliaria",
     "max_listings": "anuncios",
-    "max_ai_jobs": "tareas IA / mes",
     "unlimited": "Ilimitado",
     "subscribe": "Suscribirse",
     "contact_sales": "Contactar ventas",

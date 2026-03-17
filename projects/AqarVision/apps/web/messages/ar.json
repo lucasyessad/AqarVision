@@ -200,7 +200,6 @@
       "analytics": "الإحصائيات",
       "settings": "الإعدادات",
       "team": "الفريق",
-      "ai": "مساعد الذكاء الاصطناعي",
       "billing": "الفوترة"
     },
     "save": "حفظ",
@@ -609,26 +608,6 @@
     "invite_sent": "تم إرسال الدعوة بنجاح",
     "pending_invites": "الدعوات المعلقة"
   },
-  "ai": {
-    "title": "مساعد الذكاء الاصطناعي",
-    "generate_description": "توليد الوصف",
-    "translate": "ترجمة",
-    "generating": "جاري التوليد...",
-    "translating": "جاري الترجمة...",
-    "accept": "قبول",
-    "reject": "رفض",
-    "regenerate": "إعادة التوليد",
-    "quota_exceeded": "تم استنفاد حصة الذكاء الاصطناعي لهذا الشهر",
-    "jobs_used": "استخدامات الذكاء الاصطناعي هذا الشهر",
-    "job_history": "سجل مهام الذكاء الاصطناعي",
-    "status_pending": "قيد الانتظار",
-    "status_completed": "مكتملة",
-    "status_failed": "فشلت",
-    "source_locale": "اللغة المصدر",
-    "target_locale": "اللغة الهدف",
-    "generated_text": "النص المُولَّد",
-    "no_jobs": "لا توجد مهام ذكاء اصطناعي حالياً"
-  },
   "messaging": {
     "conversations": "المحادثات",
     "new_message": "رسالة جديدة",
@@ -733,7 +712,6 @@
     "manage_subscription": "إدارة الاشتراك",
     "features": "اختر الخطة المناسبة لوكالتك العقارية",
     "max_listings": "إعلانات",
-    "max_ai_jobs": "مهام ذكاء اصطناعي / شهر",
     "unlimited": "غير محدود",
     "subscribe": "اشترك",
     "contact_sales": "تواصل مع المبيعات",

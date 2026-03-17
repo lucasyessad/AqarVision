@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Search, FileText, Users, BarChart3, Settings, Sparkles, CreditCard, Calendar } from "lucide-react";
+import { Search, FileText, Users, BarChart3, Settings, CreditCard, Calendar } from "lucide-react";
 
 interface CommandItem {
   id: string;
@@ -32,7 +32,6 @@ export function CommandPalette({ open, onClose, locale }: CommandPaletteProps) {
     { id: "leads", label: t("nav.leads"), href: `/${locale}/AqarPro/dashboard/leads`, icon: <Users className="h-4 w-4" />, group: "Pages" },
     { id: "visits", label: t("nav.visit_requests"), href: `/${locale}/AqarPro/dashboard/visit-requests`, icon: <Calendar className="h-4 w-4" />, group: "Pages" },
     { id: "analytics", label: t("nav.analytics"), href: `/${locale}/AqarPro/dashboard/analytics`, icon: <BarChart3 className="h-4 w-4" />, group: "Pages" },
-    { id: "ai", label: t("nav.ai"), href: `/${locale}/AqarPro/dashboard/ai`, icon: <Sparkles className="h-4 w-4" />, group: "Pages" },
     { id: "team", label: t("nav.team"), href: `/${locale}/AqarPro/dashboard/team`, icon: <Users className="h-4 w-4" />, group: "Pages" },
     { id: "billing", label: t("nav.billing"), href: `/${locale}/AqarPro/dashboard/billing`, icon: <CreditCard className="h-4 w-4" />, group: "Pages" },
     { id: "settings", label: t("nav.settings"), href: `/${locale}/AqarPro/dashboard/settings`, icon: <Settings className="h-4 w-4" />, group: "Pages" },

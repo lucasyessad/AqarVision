@@ -95,12 +95,6 @@ function PlanCard({
             ? t("unlimited")
             : `${plan.max_listings} ${t("max_listings")}`}
         </div>
-        <div className="flex items-center gap-2.5 text-sm text-zinc-700">
-          <span className="text-rose-500"><CheckIcon /></span>
-          {plan.max_ai_jobs === -1
-            ? t("unlimited")
-            : `${plan.max_ai_jobs} ${t("max_ai_jobs")}`}
-        </div>
       </div>
 
       {/* CTA footer */}

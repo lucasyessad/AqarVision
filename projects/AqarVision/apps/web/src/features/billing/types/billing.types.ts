@@ -4,7 +4,6 @@ export interface PlanDto {
   name: string;
   price_eur: number;
   max_listings: number;
-  max_ai_jobs: number;
   stripe_price_id: string | null;
 }
 
