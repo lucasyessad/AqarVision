@@ -182,7 +182,7 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">Historique</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">Historique</h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Annonces consultées ces 30 derniers jours
           </p>
@@ -242,7 +242,7 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
           </p>
           <Link
             href="/search"
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-zinc-900 dark:bg-amber-500 px-4 py-2 text-sm font-medium text-white dark:text-zinc-950 transition-colors hover:bg-zinc-900/90 dark:hover:bg-amber-400"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-zinc-900 dark:bg-amber-500 px-4 py-2 text-sm font-medium text-white dark:text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-zinc-800 dark:hover:bg-amber-400"
           >
             Rechercher des annonces
           </Link>
@@ -293,7 +293,7 @@ export default async function HistoriquePage({ params }: HistoriquePageProps) {
 
                   {/* Content */}
                   <div className="min-w-0 flex-1">
-                    <p className="line-clamp-1 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+                    <p className="line-clamp-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200 dark:text-zinc-100">
                       {entry.title}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-zinc-400">

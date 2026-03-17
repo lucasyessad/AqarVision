@@ -74,7 +74,7 @@ function ProgressBar({
       </div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
         <div
-          className="h-full rounded-full bg-gold transition-all duration-500"
+          className="h-full rounded-full bg-amber-500 transition-all duration-500"
           style={{ width: `${percent}%` }}
         />
       </div>
@@ -85,7 +85,7 @@ function ProgressBar({
             key={step.id}
             className={`text-center text-xs font-medium ${
               idx === currentIndex
-                ? "text-blue-night"
+                ? "text-zinc-900 dark:text-zinc-100"
                 : idx < currentIndex
                   ? "text-green-600"
                   : "text-gray-400"
@@ -142,7 +142,7 @@ function StepBasics({
         Pour modifier ces informations, rendez-vous dans{" "}
         <Link
           href="/AqarPro/dashboard/settings"
-          className="font-medium text-blue-night hover:underline"
+          className="font-medium text-zinc-900 dark:text-zinc-100 hover:underline"
         >
           Paramètres de l&apos;agence
         </Link>
@@ -158,9 +158,9 @@ function StepBranding() {
   return (
     <div className="space-y-4">
       <div className="flex items-start gap-4 rounded-xl border border-gray-200 p-5">
-        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-night/10">
+        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-900/10">
           <svg
-            className="h-6 w-6 text-blue-night"
+            className="h-6 w-6 text-zinc-900 dark:text-zinc-100"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -180,7 +180,7 @@ function StepBranding() {
           </p>
           <Link
             href="/AqarPro/dashboard/settings/branding"
-            className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-blue-night px-4 py-1.5 text-sm font-medium text-blue-night transition-colors hover:bg-blue-night hover:text-white"
+            className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-zinc-900 px-4 py-1.5 text-sm font-medium text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-zinc-900 hover:text-white"
           >
             Configurer le branding
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,9 +190,9 @@ function StepBranding() {
         </div>
       </div>
       <div className="flex items-start gap-4 rounded-xl border border-gray-200 p-5">
-        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gold/10">
+        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
           <svg
-            className="h-6 w-6 text-gold"
+            className="h-6 w-6 text-amber-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -212,7 +212,7 @@ function StepBranding() {
           </p>
           <Link
             href="/AqarPro/dashboard/settings/appearance"
-            className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-gold px-4 py-1.5 text-sm font-medium text-gold transition-colors hover:bg-gold hover:text-white"
+            className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-amber-500 px-4 py-1.5 text-sm font-medium text-amber-500 transition-colors hover:bg-amber-600 hover:text-white"
           >
             Personnaliser l&apos;apparence
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -254,7 +254,7 @@ function StepFirstListing() {
       </p>
       <Link
         href="/AqarPro/dashboard/listings/new"
-        className="inline-flex items-center gap-2 rounded-lg bg-blue-night px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-night/90"
+        className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -298,12 +298,12 @@ function StepInviteTeam({ agencyId }: { agencyId: string }) {
           name="email"
           required
           placeholder="email@agence.dz"
-          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-night focus:outline-none focus:ring-2 focus:ring-blue-night/20"
+          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-night/20"
         />
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-blue-night px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-night/90 disabled:opacity-50"
+          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
         >
           {isPending ? "Envoi…" : "Inviter"}
         </button>
@@ -370,7 +370,7 @@ export function OnboardingWizard({
     <div className="mx-auto max-w-2xl">
       {/* Header */}
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-blue-night">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
           Bienvenue sur AqarPro !
         </h1>
         <p className="mt-2 text-gray-500">
@@ -383,8 +383,8 @@ export function OnboardingWizard({
       <ProgressBar currentIndex={stepIndex} total={STEPS.length} />
 
       {/* Step card */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-        <h2 className="mb-1 text-xl font-bold text-blue-night">
+      <div className="rounded-2xl border border-gray-200 bg-white dark:bg-zinc-900 p-8 shadow-sm">
+        <h2 className="mb-1 text-xl font-bold text-zinc-900 dark:text-zinc-100">
           {currentStep.title}
         </h2>
         <p className="mb-6 text-sm text-gray-500">{currentStep.description}</p>
@@ -415,7 +415,7 @@ export function OnboardingWizard({
           <button
             type="button"
             onClick={handleNext}
-            className="rounded-lg bg-blue-night px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-night/90"
+            className="rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
           >
             {isLast ? "Terminer" : "Étape suivante →"}
           </button>

@@ -40,8 +40,8 @@ export function ReportButton({ listingId }: ReportButtonProps) {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="mb-4 text-lg font-semibold text-blue-night">
+          <div className="mx-4 w-full max-w-md rounded-xl bg-white dark:bg-zinc-900 p-6 shadow-xl">
+            <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
               {t("report")}
             </h3>
 
@@ -68,7 +68,7 @@ export function ReportButton({ listingId }: ReportButtonProps) {
                   required
                   minLength={5}
                   rows={4}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-night focus:outline-none focus:ring-2 focus:ring-blue-night/20"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-night/20"
                   placeholder={t("report_reason")}
                 />
                 <div className="mt-4 flex justify-end gap-3">

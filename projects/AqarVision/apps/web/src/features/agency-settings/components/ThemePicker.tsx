@@ -83,9 +83,9 @@ export function ThemePicker({
       )}
 
       {/* ── Theme selection card ─────────────────────────────────── */}
-      <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
-        <div className="border-b border-zinc-200 px-6 py-4">
-          <h2 className="text-sm font-semibold text-zinc-950">
+      <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4">
+          <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             Thème de la vitrine
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
@@ -109,7 +109,7 @@ export function ThemePicker({
                     "relative rounded-lg border-2 p-4 text-start transition-all focus:outline-none",
                     isSelected
                       ? "border-rose-500 bg-rose-500/[0.04] shadow-sm"
-                      : "border-zinc-200 bg-white hover:border-rose-500",
+                      : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-rose-500",
                     !available ? "cursor-not-allowed opacity-40 grayscale" : "cursor-pointer",
                   ].join(" ")}
                 >
@@ -134,7 +134,7 @@ export function ThemePicker({
                   )}
 
                   <div className="flex items-start justify-between gap-1 pe-6">
-                    <span className="text-sm font-semibold text-zinc-950">
+                    <span className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                       {theme.name}
                     </span>
                     <PlanBadge plan={theme.plan} />
@@ -162,9 +162,9 @@ export function ThemePicker({
       </div>
 
       {/* ── Custom colors card ───────────────────────────────────── */}
-      <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
-        <div className="border-b border-zinc-200 px-6 py-4">
-          <h2 className="text-sm font-semibold text-zinc-950">
+      <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+        <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4">
+          <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             Couleurs personnalisées
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
@@ -173,7 +173,7 @@ export function ThemePicker({
         </div>
 
         {/* Color pickers row */}
-        <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 p-6 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 dark:border-zinc-700 p-6 sm:grid-cols-3">
           {[
             { label: "Couleur principale", value: primaryColor, onChange: setPrimaryColor },
             { label: "Couleur d'accentuation", value: accentColor, onChange: setAccentColor },
@@ -184,7 +184,7 @@ export function ThemePicker({
                 {label}
               </label>
               <div
-                className="flex items-center gap-3 rounded-md border border-zinc-200 px-3 py-2"
+                className="flex items-center gap-3 rounded-md border border-zinc-200 dark:border-zinc-700 px-3 py-2"
               >
                 <input
                   type="color"
@@ -201,7 +201,7 @@ export function ThemePicker({
         </div>
 
         {/* Preview bar */}
-        <div className="bg-zinc-50 px-6 py-4">
+        <div className="bg-zinc-50 dark:bg-zinc-800 px-6 py-4">
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">
             Aperçu
           </p>

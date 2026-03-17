@@ -14,7 +14,7 @@ function getStripe() {
 export async function getPlans(supabase: SupabaseClient): Promise<PlanDto[]> {
   const { data, error } = await supabase
     .from("plans")
-    .select("id, slug, name, price_monthly, max_listings, max_ai_jobs, stripe_price_id")
+    .select("id, slug, name, price_monthly, max_listings, stripe_price_id")
     .eq("is_active", true)
     .order("price_monthly", { ascending: true });
 
@@ -26,7 +26,6 @@ export async function getPlans(supabase: SupabaseClient): Promise<PlanDto[]> {
     name: p.name as string,
     price_eur: Number(p.price_monthly),
     max_listings: p.max_listings as number,
-    max_ai_jobs: p.max_ai_jobs as number,
     stripe_price_id: (p.stripe_price_id as string) ?? null,
   }));
 }
@@ -47,7 +46,7 @@ export async function getAgencySubscription(
       status,
       current_period_start,
       current_period_end,
-      plan:plans(id, slug, name, price_monthly, max_listings, max_ai_jobs, stripe_price_id)
+      plan:plans(id, slug, name, price_monthly, max_listings, stripe_price_id)
     `)
     .eq("agency_id", agencyId)
     .in("status", ["active", "trialing", "past_due"])
@@ -69,7 +68,6 @@ export async function getAgencySubscription(
       name: plan.name as string,
       price_eur: Number(plan.price_monthly),
       max_listings: plan.max_listings as number,
-      max_ai_jobs: plan.max_ai_jobs as number,
       stripe_price_id: (plan.stripe_price_id as string) ?? null,
     },
     status: data.status as string,
@@ -192,7 +190,7 @@ export async function syncEntitlements(
 ): Promise<void> {
   const { data: plan } = await supabase
     .from("plans")
-    .select("max_listings, max_ai_jobs, max_media_per_listing, max_team_members, features")
+    .select("max_listings, max_media_per_listing, max_team_members, features")
     .eq("id", planId)
     .single();
 
@@ -204,12 +202,6 @@ export async function syncEntitlements(
       feature_key: "max_listings",
       is_enabled: true,
       metadata: { limit: plan.max_listings },
-    },
-    {
-      agency_id: agencyId,
-      feature_key: "max_ai_jobs",
-      is_enabled: true,
-      metadata: { limit: plan.max_ai_jobs },
     },
     {
       agency_id: agencyId,

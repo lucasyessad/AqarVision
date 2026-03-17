@@ -36,7 +36,7 @@ export default async function EstimerPage({ params }: EstimerPageProps) {
   }));
 
   return (
-    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
       <div className="mx-auto max-w-3xl px-4 py-12">
         {/* Hero */}
         <div className="mb-10 text-center">
@@ -44,7 +44,7 @@ export default async function EstimerPage({ params }: EstimerPageProps) {
             <BarChart3 className="h-3.5 w-3.5" />
             Estimation gratuite
           </span>
-          <h1 className="mt-4 text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+          <h1 className="mt-4 text-3xl font-bold text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">
             Estimez votre bien immobilier
           </h1>
           <p className="mt-3 text-base text-zinc-500 dark:text-zinc-400">

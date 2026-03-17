@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { getAgencyForCurrentUser, isAuthError } from "@/lib/actions/auth";
+import { getAgencyForCurrentUser, isAuthError } from "@/lib/auth/get-agency-for-user";
 import { withAgencyAuth } from "@/lib/auth/with-agency-auth";
 import type { ActionResult } from "@/features/agencies/types/agency.types";
 

@@ -41,9 +41,9 @@ export function ListingNoteWidget({
   }
 
   return (
-    <div className="rounded-xl bg-white p-5 shadow-sm">
+    <div className="rounded-xl bg-white dark:bg-zinc-900 p-5 shadow-sm">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-800">
+        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Votre note privée
         </h3>
         {isSaving && (
@@ -66,7 +66,7 @@ export function ListingNoteWidget({
           placeholder="Ajoutez une note personnelle sur cette annonce..."
           rows={4}
           maxLength={2000}
-          className="w-full resize-none rounded-lg border border-gray-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 outline-none transition-colors focus:border-zinc-900 focus:bg-white focus:ring-1 focus:ring-zinc-900 placeholder:text-zinc-400"
+          className="w-full resize-none rounded-lg border border-gray-200 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 outline-none transition-colors focus:border-zinc-900 focus:bg-white dark:bg-zinc-900 focus:ring-1 focus:ring-zinc-900 placeholder:text-zinc-400"
         />
       </form>
 

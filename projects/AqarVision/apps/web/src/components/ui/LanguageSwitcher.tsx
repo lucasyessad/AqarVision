@@ -73,7 +73,7 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
         <div
           role="listbox"
           aria-label="Sélectionner une langue"
-          className="absolute end-0 z-50 mt-1 min-w-[9rem] rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
+          className="absolute end-0 z-50 mt-1 min-w-[9rem] rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 py-1 shadow-lg"
         >
           {LOCALES.map((locale) => (
             <button
@@ -84,8 +84,8 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
               onClick={() => switchLocale(locale.code)}
               className={`flex w-full items-center gap-2.5 px-3 py-2 text-sm transition-colors hover:bg-gray-50 ${
                 locale.code === currentLocale
-                  ? "font-semibold text-zinc-900"
-                  : "text-zinc-800"
+                  ? "font-semibold text-zinc-900 dark:text-zinc-100"
+                  : "text-zinc-800 dark:text-zinc-200"
               }`}
             >
               <span className="w-6 text-center font-mono text-xs font-bold">

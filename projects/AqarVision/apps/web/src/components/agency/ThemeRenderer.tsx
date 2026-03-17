@@ -230,7 +230,7 @@ function AboutEditorial({ agency }: { agency: AgencyPublicDto }) {
       >
         <h2 className="text-3xl font-bold text-white">{agency.name}</h2>
       </div>
-      <div className="flex items-center bg-white p-12">
+      <div className="flex items-center bg-white dark:bg-zinc-900 p-12">
         <p className="leading-relaxed text-gray-600">{agency.description}</p>
       </div>
     </section>
@@ -364,7 +364,7 @@ function CTABanner({ agency }: { agency: AgencyPublicDto }) {
           {agency.phone && (
             <a
               href={`tel:${agency.phone}`}
-              className="rounded-full bg-white px-8 py-3 text-sm font-bold transition-transform hover:scale-105"
+              className="rounded-full bg-white dark:bg-zinc-900 px-8 py-3 text-sm font-bold transition-transform hover:scale-105"
               style={{ color: 'var(--agency-accent, #e94560)' }}
             >
               {agency.phone}

@@ -33,7 +33,7 @@ export function FavoritesTabs({
   return (
     <>
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-lg bg-white p-1 shadow-sm">
+      <div className="mb-6 flex gap-1 rounded-lg bg-white dark:bg-zinc-900 p-1 shadow-sm">
         {tabs.map((tabItem) => (
           <button
             key={tabItem.key}
@@ -42,7 +42,7 @@ export function FavoritesTabs({
             className={`flex-1 rounded-md px-4 py-2.5 text-center text-sm font-medium transition-colors ${
               activeTab === tabItem.key
                 ? "bg-zinc-900 text-white"
-                : "text-zinc-800 hover:bg-gray-100"
+                : "text-zinc-800 dark:text-zinc-200 hover:bg-gray-100"
             }`}
           >
             {tabItem.label}
@@ -51,7 +51,7 @@ export function FavoritesTabs({
                 className={`ms-1.5 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1 text-xs font-semibold ${
                   activeTab === tabItem.key
                     ? "bg-white/20 text-white"
-                    : "bg-zinc-900/10 text-zinc-900"
+                    : "bg-zinc-900/10 text-zinc-900 dark:text-zinc-100"
                 }`}
               >
                 {tabItem.count}
@@ -91,12 +91,12 @@ export function FavoritesTabs({
               {notes.map((note) => (
                 <div
                   key={note.id}
-                  className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm"
+                  className="rounded-xl border border-gray-100 bg-white dark:bg-zinc-900 p-4 shadow-sm"
                 >
-                  <h3 className="mb-1 text-sm font-semibold text-zinc-800">
+                  <h3 className="mb-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200">
                     {note.listing_title}
                   </h3>
-                  <p className="mb-2 text-sm text-zinc-800 whitespace-pre-wrap">
+                  <p className="mb-2 text-sm text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap">
                     {note.body}
                   </p>
                   <p className="text-xs text-zinc-400">
@@ -136,10 +136,10 @@ export function FavoritesTabs({
               {searches.map((search) => (
                 <div
                   key={search.id}
-                  className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-4 shadow-sm"
+                  className="flex items-center justify-between rounded-xl border border-gray-100 bg-white dark:bg-zinc-900 p-4 shadow-sm"
                 >
                   <div>
-                    <h3 className="text-sm font-semibold text-zinc-800">
+                    <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
                       {search.name}
                     </h3>
                     <p className="text-xs text-zinc-400">

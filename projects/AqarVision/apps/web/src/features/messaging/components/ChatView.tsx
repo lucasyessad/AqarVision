@@ -126,7 +126,7 @@ export function ChatView({
                   }`}
                 >
                   {!isOwn && (
-                    <p className="mb-0.5 text-xs font-medium text-zinc-900">
+                    <p className="mb-0.5 text-xs font-medium text-zinc-900 dark:text-zinc-100">
                       {msg.sender_name}
                     </p>
                   )}
@@ -213,7 +213,7 @@ export function ChatView({
           <button
             type="submit"
             disabled={isSending || !body.trim()}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
           >
             {isSending ? (
               <svg

@@ -46,7 +46,7 @@ export class ErrorBoundary extends Component<
         <div className="flex min-h-[400px] flex-col items-center justify-center px-4">
           <div className="text-center">
             {this.props.title && (
-              <h2 className="mb-2 text-xl font-semibold text-blue-night">
+              <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-zinc-100">
                 {this.props.title}
               </h2>
             )}
@@ -56,7 +56,7 @@ export class ErrorBoundary extends Component<
             <button
               type="button"
               onClick={() => this.setState({ hasError: false, error: null })}
-              className="rounded-lg bg-blue-night px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-night/90"
+              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
             >
               {this.props.retryLabel}
             </button>

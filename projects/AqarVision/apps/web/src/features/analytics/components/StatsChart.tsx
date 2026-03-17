@@ -12,7 +12,7 @@ export function StatsChart({ stats }: StatsChartProps) {
 
   if (stats.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
+      <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 p-8 text-center">
         <p className="text-sm text-gray-500">{t("no_data")}</p>
       </div>
     );
@@ -25,7 +25,7 @@ export function StatsChart({ stats }: StatsChartProps) {
     <div className="space-y-6">
       {/* Daily Views Chart */}
       <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
-        <h3 className="mb-4 text-sm font-semibold text-blue-night">
+        <h3 className="mb-4 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
           {t("daily_views")}
         </h3>
         <div className="flex h-40 items-end gap-1">
@@ -38,7 +38,7 @@ export function StatsChart({ stats }: StatsChartProps) {
                 className="group relative flex h-full flex-1 flex-col items-center justify-end"
               >
                 <div
-                  className="w-full min-w-[4px] rounded-t bg-blue-night/80 transition-colors group-hover:bg-blue-night"
+                  className="w-full min-w-[4px] rounded-t bg-zinc-900/80 transition-colors group-hover:bg-zinc-900"
                   style={{ height: `${Math.max(heightPercent, 2)}%` }}
                 />
                 {stats.length <= 15 && (
@@ -56,7 +56,7 @@ export function StatsChart({ stats }: StatsChartProps) {
 
       {/* Daily Leads Chart */}
       <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
-        <h3 className="mb-4 text-sm font-semibold text-blue-night">
+        <h3 className="mb-4 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
           {t("daily_leads")}
         </h3>
         <div className="flex h-40 items-end gap-1">
@@ -69,7 +69,7 @@ export function StatsChart({ stats }: StatsChartProps) {
                 className="group relative flex h-full flex-1 flex-col items-center justify-end"
               >
                 <div
-                  className="w-full min-w-[4px] rounded-t bg-gold/80 transition-colors group-hover:bg-gold"
+                  className="w-full min-w-[4px] rounded-t bg-amber-500/80 transition-colors group-hover:bg-amber-600"
                   style={{ height: `${Math.max(heightPercent, 2)}%` }}
                 />
                 {stats.length <= 15 && (

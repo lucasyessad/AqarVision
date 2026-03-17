@@ -195,9 +195,9 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
         isOpen ? "block" : "hidden"
       } w-full shrink-0 ${isDesktopVisible ? "lg:block" : "lg:hidden"} lg:w-64`}
     >
-      <div className="rounded-xl bg-white p-4 shadow-sm">
+      <div className="rounded-xl bg-white dark:bg-zinc-900 p-4 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900">{t("filters")}</h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{t("filters")}</h3>
           <button
             type="button"
             onClick={resetFilters}
@@ -209,17 +209,17 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
 
         {/* Listing type */}
         <div className="mb-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-800">
+          <h4 className="mb-2 text-xs font-medium text-zinc-800 dark:text-zinc-200">
             {t("listing_type_filter")}
           </h4>
           <div className="space-y-1">
             {LISTING_TYPES.map((type) => (
-              <label key={type} className="flex items-center gap-2 text-sm text-zinc-800">
+              <label key={type} className="flex items-center gap-2 text-sm text-zinc-800 dark:text-zinc-200">
                 <input
                   type="checkbox"
                   checked={listingTypes.includes(type)}
                   onChange={() => toggleListingType(type)}
-                  className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                  className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
                 />
                 {tListings(type)}
               </label>
@@ -229,17 +229,17 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
 
         {/* Property type */}
         <div className="mb-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-800">
+          <h4 className="mb-2 text-xs font-medium text-zinc-800 dark:text-zinc-200">
             {t("property_type_filter")}
           </h4>
           <div className="space-y-1">
             {PROPERTY_TYPES.map((type) => (
-              <label key={type} className="flex items-center gap-2 text-sm text-zinc-800">
+              <label key={type} className="flex items-center gap-2 text-sm text-zinc-800 dark:text-zinc-200">
                 <input
                   type="checkbox"
                   checked={propertyTypes.includes(type)}
                   onChange={() => togglePropertyType(type)}
-                  className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                  className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
                 />
                 {tListings(type)}
               </label>
@@ -249,7 +249,7 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
 
         {/* Multi-select Wilaya */}
         <div className="mb-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-800">
+          <h4 className="mb-2 text-xs font-medium text-zinc-800 dark:text-zinc-200">
             {t("wilaya_filter")}
             {wilayaCodes.length > 0 && (
               <span className="ms-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-zinc-900 text-[10px] text-white">
@@ -260,7 +260,7 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
           <button
             type="button"
             onClick={() => setWilayaOpen((o) => !o)}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-start text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="w-full rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-3 py-2 text-start text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             {wilayaCodes.length === 0
               ? "Sélectionner wilayas..."
@@ -272,17 +272,17 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
               : `${wilayaCodes.length} wilayas sélectionnées`}
           </button>
           {wilayaOpen && (
-            <div className="mt-1 max-h-40 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-md">
+            <div className="mt-1 max-h-40 overflow-y-auto rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 shadow-md">
               {wilayas.map(({ code, name }) => (
                 <label
                   key={code}
-                  className="flex cursor-pointer items-center gap-2 px-3 py-1.5 text-sm text-zinc-800 hover:bg-gray-50"
+                  className="flex cursor-pointer items-center gap-2 px-3 py-1.5 text-sm text-zinc-800 dark:text-zinc-200 hover:bg-gray-50"
                 >
                   <input
                     type="checkbox"
                     checked={wilayaCodes.includes(code)}
                     onChange={() => toggleWilaya(code)}
-                    className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                    className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
                   />
                   {code} - {name}
                 </label>
@@ -293,7 +293,7 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
 
         {/* Price range */}
         <div className="mb-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-800">
+          <h4 className="mb-2 text-xs font-medium text-zinc-800 dark:text-zinc-200">
             {t("price_range")}
           </h4>
           <div className="flex gap-2">
@@ -303,7 +303,7 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
               onChange={(e) => setPriceMin(e.target.value)}
               placeholder="Min"
               min={0}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
             <input
               type="number"
@@ -311,14 +311,14 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
               onChange={(e) => setPriceMax(e.target.value)}
               placeholder="Max"
               min={0}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
           </div>
         </div>
 
         {/* Rooms min */}
         <div className="mb-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-800">
+          <h4 className="mb-2 text-xs font-medium text-zinc-800 dark:text-zinc-200">
             {t("rooms_min")}
           </h4>
           <input
@@ -326,13 +326,13 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
             value={roomsMin}
             onChange={(e) => setRoomsMin(e.target.value)}
             min={0}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="w-full rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
         </div>
 
         {/* Surface min */}
         <div className="mb-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-800">
+          <h4 className="mb-2 text-xs font-medium text-zinc-800 dark:text-zinc-200">
             {t("surface_min")}
           </h4>
           <input
@@ -340,13 +340,13 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
             value={surfaceMin}
             onChange={(e) => setSurfaceMin(e.target.value)}
             min={0}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="w-full rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
         </div>
 
         {/* Floor range */}
         <div className="mb-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-800">
+          <h4 className="mb-2 text-xs font-medium text-zinc-800 dark:text-zinc-200">
             Étage (min – max)
           </h4>
           <div className="flex gap-2">
@@ -356,7 +356,7 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
               onChange={(e) => setFloorMin(e.target.value)}
               placeholder="Min"
               min={0}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
             <input
               type="number"
@@ -364,68 +364,68 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
               onChange={(e) => setFloorMax(e.target.value)}
               placeholder="Max"
               min={0}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-lg border border-gray-300 bg-white dark:bg-zinc-900 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
           </div>
         </div>
 
         {/* Equipment / Amenities */}
         <div className="mb-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-800">
+          <h4 className="mb-2 text-xs font-medium text-zinc-800 dark:text-zinc-200">
             Équipements
           </h4>
           <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-sm text-zinc-800">
+            <label className="flex items-center gap-2 text-sm text-zinc-800 dark:text-zinc-200">
               <input
                 type="checkbox"
                 checked={hasElevator}
                 onChange={(e) => setHasElevator(e.target.checked)}
-                className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
               />
               Ascenseur
             </label>
-            <label className="flex items-center gap-2 text-sm text-zinc-800">
+            <label className="flex items-center gap-2 text-sm text-zinc-800 dark:text-zinc-200">
               <input
                 type="checkbox"
                 checked={hasParking}
                 onChange={(e) => setHasParking(e.target.checked)}
-                className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
               />
               Parking
             </label>
-            <label className="flex items-center gap-2 text-sm text-zinc-800">
+            <label className="flex items-center gap-2 text-sm text-zinc-800 dark:text-zinc-200">
               <input
                 type="checkbox"
                 checked={hasBalcony}
                 onChange={(e) => setHasBalcony(e.target.checked)}
-                className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
               />
               Balcon
             </label>
-            <label className="flex items-center gap-2 text-sm text-zinc-800">
+            <label className="flex items-center gap-2 text-sm text-zinc-800 dark:text-zinc-200">
               <input
                 type="checkbox"
                 checked={hasPool}
                 onChange={(e) => setHasPool(e.target.checked)}
-                className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
               />
               Piscine
             </label>
-            <label className="flex items-center gap-2 text-sm text-zinc-800">
+            <label className="flex items-center gap-2 text-sm text-zinc-800 dark:text-zinc-200">
               <input
                 type="checkbox"
                 checked={hasGarden}
                 onChange={(e) => setHasGarden(e.target.checked)}
-                className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
               />
               Jardin
             </label>
-            <label className="flex items-center gap-2 text-sm text-zinc-800">
+            <label className="flex items-center gap-2 text-sm text-zinc-800 dark:text-zinc-200">
               <input
                 type="checkbox"
                 checked={furnished}
                 onChange={(e) => setFurnished(e.target.checked)}
-                className="rounded border-gray-300 text-zinc-900 focus:ring-amber-500"
+                className="rounded border-gray-300 text-zinc-900 dark:text-zinc-100 focus:ring-amber-500"
               />
               Meublé
             </label>
@@ -436,7 +436,7 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
         <button
           type="button"
           onClick={applyFilters}
-          className="w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
+          className="w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
         >
           {t("button")}
         </button>
@@ -446,7 +446,7 @@ export function SearchFilters({ isOpen, isDesktopVisible = true, onToggle, onSav
           <button
             type="button"
             onClick={onSaveSearch}
-            className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-amber-500 px-4 py-2 text-sm font-medium text-amber-500 transition-colors hover:bg-amber-500/10"
+            className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-amber-500 px-4 py-2 text-sm font-medium text-amber-500 transition-colors hover:bg-amber-600/10"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />

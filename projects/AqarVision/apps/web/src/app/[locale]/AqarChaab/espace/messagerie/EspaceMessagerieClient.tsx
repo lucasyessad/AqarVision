@@ -37,13 +37,13 @@ export function EspaceMessagerieClient({
   if (conversations.length === 0) {
     return (
       <div className="flex h-[calc(100vh-8rem)] flex-col items-center justify-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
           <svg className="h-8 w-8 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
           </svg>
         </div>
         <div className="text-center">
-          <p className="text-sm font-medium text-zinc-800">
+          <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
             Aucun message pour l&apos;instant
           </p>
           <p className="mt-1 text-xs text-zinc-400">
@@ -56,12 +56,12 @@ export function EspaceMessagerieClient({
 
   return (
     <div
-      className="flex h-[calc(100vh-7rem)] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+      className="flex h-[calc(100vh-7rem)] overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900"
     >
       {/* Conversation list */}
-      <div className="w-72 shrink-0 overflow-y-auto border-e border-zinc-200">
-        <div className="border-b border-zinc-200 px-4 py-3">
-          <h2 className="text-sm font-semibold text-zinc-800">
+      <div className="w-72 shrink-0 overflow-y-auto border-e border-zinc-200 dark:border-zinc-700">
+        <div className="border-b border-zinc-200 dark:border-zinc-700 px-4 py-3">
+          <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
             Messagerie
           </h2>
         </div>

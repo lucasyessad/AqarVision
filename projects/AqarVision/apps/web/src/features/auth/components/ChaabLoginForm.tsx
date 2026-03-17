@@ -64,7 +64,7 @@ export function ChaabLoginForm({ locale = "fr" }: ChaabLoginFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-md px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 bg-zinc-50 text-zinc-950"
+        className="w-full rounded-md px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 bg-zinc-50 dark:bg-zinc-800 text-zinc-950 dark:text-zinc-50"
       >
         {isPending ? t("logging_in") : "Se connecter"}
       </button>

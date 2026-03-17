@@ -15,7 +15,7 @@ function HorizontalBar({
   label,
   value,
   max,
-  color = "bg-blue-night",
+  color = "bg-zinc-900",
 }: {
   label: string;
   value: number;
@@ -51,7 +51,7 @@ function TopListingsCard({ listings }: { listings: TopListingByViews[] }) {
 
   return (
     <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-bold text-blue-night">
+      <h3 className="mb-4 text-sm font-bold text-zinc-900 dark:text-zinc-100">
         Top 5 annonces par vues
       </h3>
       {listings.length === 0 ? (
@@ -64,7 +64,7 @@ function TopListingsCard({ listings }: { listings: TopListingByViews[] }) {
               label={l.listing_title}
               value={l.view_count}
               max={max}
-              color="bg-blue-night"
+              color="bg-zinc-900"
             />
           ))}
         </div>
@@ -82,7 +82,7 @@ function LeadsBySourceCard({ data }: { data: LeadsBySource[] }) {
 
   return (
     <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-bold text-blue-night">
+      <h3 className="mb-4 text-sm font-bold text-zinc-900 dark:text-zinc-100">
         Prospects par source
       </h3>
       {data.length === 0 ? (
@@ -95,7 +95,7 @@ function LeadsBySourceCard({ data }: { data: LeadsBySource[] }) {
               label={row.source}
               value={row.count}
               max={max}
-              color="bg-gold"
+              color="bg-amber-500"
             />
           ))}
         </div>
@@ -120,7 +120,7 @@ function LeadsByStatusCard({ data }: { data: LeadsByStatus[] }) {
 
   return (
     <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-bold text-blue-night">
+      <h3 className="mb-4 text-sm font-bold text-zinc-900 dark:text-zinc-100">
         Prospects par statut
       </h3>
       {data.length === 0 ? (

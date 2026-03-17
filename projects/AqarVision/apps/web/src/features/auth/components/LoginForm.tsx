@@ -24,7 +24,7 @@ export function LoginForm({ locale = "fr", defaultMode = "visitor" }: LoginFormP
           onClick={() => setMode("visitor")}
           className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
             mode === "visitor"
-              ? "bg-white text-blue-night shadow-sm"
+              ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-sm"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -35,7 +35,7 @@ export function LoginForm({ locale = "fr", defaultMode = "visitor" }: LoginFormP
           onClick={() => setMode("pro")}
           className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
             mode === "pro"
-              ? "bg-blue-night text-white shadow-sm"
+              ? "bg-zinc-900 text-white shadow-sm"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -76,7 +76,7 @@ export function LoginForm({ locale = "fr", defaultMode = "visitor" }: LoginFormP
             name="email"
             required
             defaultValue={state?.email ?? ""}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-night focus:outline-none focus:ring-2 focus:ring-blue-night/20"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-night/20"
           />
         </div>
 
@@ -92,14 +92,14 @@ export function LoginForm({ locale = "fr", defaultMode = "visitor" }: LoginFormP
             type="password"
             name="password"
             required
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-night focus:outline-none focus:ring-2 focus:ring-blue-night/20"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-night/20"
           />
         </div>
 
         <div className="flex items-center justify-end">
           <Link
             href="/auth/forgot-password"
-            className="text-sm text-gold hover:underline"
+            className="text-sm text-amber-500 hover:underline"
           >
             {t("forgot_password")}
           </Link>
@@ -110,8 +110,8 @@ export function LoginForm({ locale = "fr", defaultMode = "visitor" }: LoginFormP
           disabled={isPending}
           className={`w-full rounded-lg px-4 py-2.5 font-medium text-white transition-colors disabled:opacity-50 ${
             mode === "pro"
-              ? "bg-gold hover:bg-gold/90"
-              : "bg-blue-night hover:bg-blue-night/90"
+              ? "bg-amber-500 hover:bg-amber-600/90"
+              : "bg-zinc-900 hover:bg-zinc-800"
           }`}
         >
           {isPending ? t("logging_in") : t("login_button")}
@@ -123,7 +123,7 @@ export function LoginForm({ locale = "fr", defaultMode = "visitor" }: LoginFormP
           {t("pro_no_account_hint")}{" "}
           <Link
             href="/auth/signup"
-            className="font-medium text-gold hover:underline"
+            className="font-medium text-amber-500 hover:underline"
           >
             {t("signup_button")}
           </Link>

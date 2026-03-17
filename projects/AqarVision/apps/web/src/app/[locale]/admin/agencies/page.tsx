@@ -34,7 +34,7 @@ export default async function AdminAgenciesPage({
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-blue-night">Agences</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Agences</h1>
           <p className="mt-1 text-sm text-gray-400">
             {total} agence{total !== 1 ? "s" : ""} au total
           </p>
@@ -55,7 +55,7 @@ export default async function AdminAgenciesPage({
               }
               className={`border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "border-blue-night text-blue-night"
+                  ? "border-zinc-900 text-zinc-900 dark:text-zinc-100"
                   : "border-transparent text-gray-400 hover:border-gray-300 hover:text-gray-600"
               }`}
             >
@@ -78,7 +78,7 @@ export default async function AdminAgenciesPage({
             {page > 1 && (
               <Link
                 href={`/admin/agencies?status=${status}&page=${page - 1}`}
-                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
+                className="rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 px-3 py-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
               >
                 Précédent
               </Link>
@@ -86,7 +86,7 @@ export default async function AdminAgenciesPage({
             {page < totalPages && (
               <Link
                 href={`/admin/agencies?status=${status}&page=${page + 1}`}
-                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
+                className="rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 px-3 py-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
               >
                 Suivant
               </Link>

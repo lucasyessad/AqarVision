@@ -28,16 +28,16 @@ export function InviteMemberDialog({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90"
+        className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
       >
         {t("invite_member")}
       </button>
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+          <div className="mx-4 w-full max-w-md rounded-xl bg-white dark:bg-zinc-900 p-6 shadow-xl">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-zinc-900">
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 {t("invite_member")}
               </h3>
               <button
@@ -124,7 +124,7 @@ export function InviteMemberDialog({
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
+                  className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
                 >
                   {isPending ? t("sending") : t("send_invite")}
                 </button>
@@ -143,7 +143,7 @@ export function InviteMemberDialog({
                       className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm"
                     >
                       <span className="text-gray-700">{invite.email}</span>
-                      <span className="rounded-full border border-gray-200 bg-white px-2 py-0.5 text-xs text-gray-500">
+                      <span className="rounded-full border border-gray-200 bg-white dark:bg-zinc-900 px-2 py-0.5 text-xs text-gray-500">
                         {t(`role_${invite.role}`)}
                       </span>
                     </li>

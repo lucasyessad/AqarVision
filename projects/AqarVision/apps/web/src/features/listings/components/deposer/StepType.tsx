@@ -49,7 +49,7 @@ function SelectCard({
         wide ? "min-w-[90px] flex-1" : "flex-1",
         selected
           ? "border-amber-500 bg-amber-50 shadow-sm"
-          : "border-zinc-200 bg-white hover:border-zinc-300 hover:shadow-sm",
+          : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-zinc-300 hover:shadow-sm",
       ].join(" ")}
     >
       <svg
@@ -72,7 +72,7 @@ export function StepType({ state, onChange, onNext }: StepTypeProps) {
     <div className="space-y-8">
       {/* Listing type */}
       <div>
-        <h2 className="mb-4 text-base font-semibold text-zinc-900">Type d'annonce</h2>
+        <h2 className="mb-4 text-base font-semibold text-zinc-900 dark:text-zinc-100">Type d'annonce</h2>
         <div className="flex gap-3">
           {LISTING_TYPE_OPTIONS.map((opt) => (
             <SelectCard
@@ -89,7 +89,7 @@ export function StepType({ state, onChange, onNext }: StepTypeProps) {
 
       {/* Property type */}
       <div>
-        <h2 className="mb-4 text-base font-semibold text-zinc-900">Type de bien</h2>
+        <h2 className="mb-4 text-base font-semibold text-zinc-900 dark:text-zinc-100">Type de bien</h2>
         <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-4">
           {PROPERTY_TYPE_OPTIONS.map((opt) => (
             <SelectCard

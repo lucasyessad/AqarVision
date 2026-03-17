@@ -1,6 +1,6 @@
 export default function HomeLoading() {
   return (
-    <main className="min-h-screen bg-white dark:bg-zinc-950">
+    <main className="min-h-screen bg-white dark:bg-zinc-900 dark:bg-zinc-950">
       {/* Hero skeleton */}
       <section className="relative flex min-h-screen flex-col items-center justify-center bg-zinc-200 dark:bg-zinc-900">
         <div className="flex flex-col items-center gap-6 px-4">
@@ -25,7 +25,7 @@ export default function HomeLoading() {
 
       {/* Split editorial skeleton */}
       <section className="grid min-h-[70vh] grid-cols-1 lg:grid-cols-2">
-        <div className="flex flex-col justify-center gap-4 bg-zinc-50 px-8 py-16 dark:bg-zinc-900 lg:px-16">
+        <div className="flex flex-col justify-center gap-4 bg-zinc-50 dark:bg-zinc-800 px-8 py-16 dark:bg-zinc-900 lg:px-16">
           <div className="h-3 w-20 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
           <div className="h-10 w-72 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
           <div className="h-10 w-64 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
@@ -36,7 +36,7 @@ export default function HomeLoading() {
       </section>
 
       {/* Wilayas scroll skeleton */}
-      <section className="border-t border-zinc-100 bg-zinc-50 py-16 dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="border-t border-zinc-100 bg-zinc-50 dark:bg-zinc-800 py-16 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
           <div className="mb-2 h-7 w-48 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
           <div className="mb-7 h-4 w-56 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
@@ -55,7 +55,7 @@ export default function HomeLoading() {
       </section>
 
       {/* Featured grid skeleton */}
-      <section className="border-t border-zinc-100 bg-white py-20 dark:border-zinc-800 dark:bg-zinc-950">
+      <section className="border-t border-zinc-100 bg-white dark:bg-zinc-900 py-20 dark:border-zinc-800 dark:bg-zinc-950">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
           <div className="mb-10">
             <div className="mb-1 h-3 w-16 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
@@ -69,7 +69,7 @@ export default function HomeLoading() {
       </section>
 
       {/* Trending skeleton */}
-      <section className="border-t border-zinc-200 bg-zinc-50 py-20 dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 py-20 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
             <div className="mb-2 h-3 w-14 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
@@ -106,7 +106,7 @@ export default function HomeLoading() {
       </section>
 
       {/* CTA Pro skeleton */}
-      <section className="flex flex-col items-center bg-zinc-50 py-20 dark:bg-zinc-900">
+      <section className="flex flex-col items-center bg-zinc-50 dark:bg-zinc-800 py-20 dark:bg-zinc-900">
         <div className="h-3 w-40 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
         <div className="mt-4 h-9 w-64 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
         <div className="mt-2 h-9 w-56 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />

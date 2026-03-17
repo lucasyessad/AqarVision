@@ -32,7 +32,7 @@ export default function Error({
       )}
       <button
         onClick={reset}
-        className="mt-6 inline-flex items-center gap-2 rounded-lg bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
+        className="mt-6 inline-flex items-center gap-2 rounded-lg bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-200"
       >
         <RotateCcw className="h-4 w-4" />
         Réessayer

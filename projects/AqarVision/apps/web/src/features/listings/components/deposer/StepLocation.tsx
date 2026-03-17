@@ -22,7 +22,7 @@ interface StepLocationProps {
 }
 
 const inputClass =
-  "w-full rounded-md border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20";
+  "w-full rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20";
 
 export function StepLocation({ state, onChange, onNext, onBack, wilayas }: StepLocationProps) {
   const [communes, setCommunes] = useState<Commune[]>([]);
@@ -110,7 +110,7 @@ export function StepLocation({ state, onChange, onNext, onBack, wilayas }: StepL
         <label className="mb-1.5 block text-sm font-medium text-zinc-700">
           Localisation sur la carte (optionnel)
         </label>
-        <div className="flex h-48 items-center justify-center rounded-xl border-2 border-dashed border-zinc-200 bg-zinc-50 text-center">
+        <div className="flex h-48 items-center justify-center rounded-xl border-2 border-dashed border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-center">
           <div className="space-y-1">
             <svg className="mx-auto h-8 w-8 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -132,7 +132,7 @@ export function StepLocation({ state, onChange, onNext, onBack, wilayas }: StepL
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
+          className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           ← Retour
         </button>

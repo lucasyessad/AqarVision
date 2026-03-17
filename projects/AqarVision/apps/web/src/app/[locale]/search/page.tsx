@@ -68,7 +68,7 @@ export default async function SearchPage({
   const supabase = await createClient();
   const [result, wilayas, viewedIds] = await Promise.all([
     searchListingsAction(filters),
-    getWilayas(supabase),
+    getWilayas(supabase, locale),
     getViewedListingIds(),
   ]);
 

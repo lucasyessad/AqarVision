@@ -186,7 +186,7 @@ export function StepPhotos({ state, onChange, onNext, onBack }: StepPhotosProps)
           "cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition-all",
           dragOver
             ? "scale-[1.01] border-amber-500 bg-amber-100/50"
-            : "border-zinc-200 bg-zinc-50 hover:border-amber-400 hover:bg-amber-50/50",
+            : "border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 hover:border-amber-400 hover:bg-amber-50/50",
         ].join(" ")}
       >
         <svg className="mx-auto mb-3 h-10 w-10 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -209,7 +209,7 @@ export function StepPhotos({ state, onChange, onNext, onBack }: StepPhotosProps)
       {Object.entries(progress).map(([key, pct]) => (
         <div key={key} className="space-y-1">
           <p className="text-xs text-zinc-500">Upload en cours...</p>
-          <div className="h-1.5 overflow-hidden rounded-full bg-zinc-100">
+          <div className="h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
             <div
               className="h-full rounded-full bg-amber-500 transition-all duration-150"
               style={{ width: `${pct}%` }}
@@ -246,7 +246,7 @@ export function StepPhotos({ state, onChange, onNext, onBack }: StepPhotosProps)
                 />
                 {/* Cover badge */}
                 {i === 0 && (
-                  <span className="absolute start-1 top-1 rounded bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-950">
+                  <span className="absolute start-1 top-1 rounded bg-amber-500 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-950 dark:text-zinc-50">
                     ⭐ Couverture
                   </span>
                 )}
@@ -274,7 +274,7 @@ export function StepPhotos({ state, onChange, onNext, onBack }: StepPhotosProps)
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
+          className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           ← Retour
         </button>

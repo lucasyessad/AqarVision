@@ -64,11 +64,11 @@ export function StatsOverview({ summary }: StatsOverviewProps) {
       {cards.map((card) => (
         <div
           key={card.label}
-          className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
+          className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 p-5 shadow-sm"
         >
           <p className="text-sm font-medium text-gray-500">{card.label}</p>
           <div className="mt-2 flex items-baseline gap-2">
-            <p className="text-2xl font-bold text-blue-night">{card.value}</p>
+            <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{card.value}</p>
             <TrendIndicator value={card.trend} />
           </div>
           <p className="mt-1 text-xs text-gray-400">{t("last_30_days")}</p>

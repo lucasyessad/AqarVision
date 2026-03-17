@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   getAgencyForCurrentUser,
   isAuthError,
-} from "@/lib/actions/auth";
+} from "@/lib/auth/get-agency-for-user";
 import { VerificationForm } from "@/features/agency-settings/components/VerificationForm";
 
 export default async function VerificationPage({

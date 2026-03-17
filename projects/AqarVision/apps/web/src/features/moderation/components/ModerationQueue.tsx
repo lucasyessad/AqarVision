@@ -15,14 +15,14 @@ export function ModerationQueue({ reports }: ModerationQueueProps) {
 
   if (reports.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
+      <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 p-8 text-center">
         <p className="text-sm text-gray-500">{t("no_pending")}</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-zinc-900">
       {state?.success === false && (
         <div className="border-b border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
           {state.error.message}

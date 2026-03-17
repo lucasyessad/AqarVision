@@ -35,7 +35,7 @@ export default async function InvitesPage({
 
   const STATUS_MAP = {
     accepted: { label: "Acceptée", cls: "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400" },
-    expired:  { label: "Expirée",  cls: "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500" },
+    expired:  { label: "Expirée",  cls: "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500" },
     pending:  { label: "En attente", cls: "bg-yellow-50 text-yellow-600 dark:bg-yellow-950 dark:text-yellow-400" },
   };
 
@@ -52,10 +52,10 @@ export default async function InvitesPage({
       </div>
 
       {/* Table card */}
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/50">
+            <tr className="border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/50">
               <th className="px-6 py-3 text-start text-[11px] font-medium uppercase tracking-wider text-zinc-400">
                 {t("member_email")}
               </th>
@@ -79,8 +79,8 @@ export default async function InvitesPage({
                 return (
                   <tr
                     key={invite.id}
-                    className={`h-12 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 ${
-                      i !== invites.length - 1 ? "border-b border-zinc-200 dark:border-zinc-800" : ""
+                    className={`h-12 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800/50 ${
+                      i !== invites.length - 1 ? "border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800" : ""
                     }`}
                   >
                     <td className="px-6 py-4 text-zinc-950 dark:text-zinc-50">

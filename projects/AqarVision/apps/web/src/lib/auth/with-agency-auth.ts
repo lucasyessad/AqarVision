@@ -5,7 +5,7 @@ import { logger } from "@/lib/logger";
 import type { AnyAgencyRole } from "@/features/agencies/schemas/agency.schema";
 
 export type AgencyRole = AnyAgencyRole;
-export type Resource = "listing" | "team_member" | "invitation" | "billing" | "settings" | "analytics" | "media" | "ai_job";
+export type Resource = "listing" | "team_member" | "invitation" | "billing" | "settings" | "analytics" | "media";
 export type Permission = "create" | "read" | "update" | "delete";
 
 export type AgencyAuthContext = {
@@ -18,11 +18,11 @@ type ActionError = { success: false; error: { code: string; message: string } };
 type ActionOk<T> = { success: true; data: T };
 
 const PERMISSION_MAP: Record<AgencyRole, Record<Resource, ReadonlySet<Permission>>> = {
-  owner:  { listing: new Set(["create","read","update","delete"]), team_member: new Set(["create","read","update","delete"]), invitation: new Set(["create","read","update","delete"]), billing: new Set(["create","read","update","delete"]), settings: new Set(["create","read","update","delete"]), analytics: new Set(["create","read","update","delete"]), media: new Set(["create","read","update","delete"]), ai_job: new Set(["create","read","update","delete"]) },
-  admin:  { listing: new Set(["create","read","update","delete"]), team_member: new Set(["create","read","update"]), invitation: new Set(["create","read","update","delete"]), billing: new Set(["read"]), settings: new Set(["create","read","update"]), analytics: new Set(["create","read","update","delete"]), media: new Set(["create","read","update","delete"]), ai_job: new Set(["create","read","update","delete"]) },
-  agent:  { listing: new Set(["create","read","update"]), team_member: new Set(["read"]), invitation: new Set([]), billing: new Set([]), settings: new Set(["read"]), analytics: new Set(["read"]), media: new Set(["create","read","update"]), ai_job: new Set(["create","read"]) },
-  editor: { listing: new Set(["read","update"]), team_member: new Set(["read"]), invitation: new Set([]), billing: new Set([]), settings: new Set(["read"]), analytics: new Set(["read"]), media: new Set(["create","read","update"]), ai_job: new Set(["create","read"]) },
-  viewer: { listing: new Set(["read"]), team_member: new Set(["read"]), invitation: new Set([]), billing: new Set([]), settings: new Set([]), analytics: new Set(["read"]), media: new Set(["read"]), ai_job: new Set([]) },
+  owner:  { listing: new Set(["create","read","update","delete"]), team_member: new Set(["create","read","update","delete"]), invitation: new Set(["create","read","update","delete"]), billing: new Set(["create","read","update","delete"]), settings: new Set(["create","read","update","delete"]), analytics: new Set(["create","read","update","delete"]), media: new Set(["create","read","update","delete"]) },
+  admin:  { listing: new Set(["create","read","update","delete"]), team_member: new Set(["create","read","update"]), invitation: new Set(["create","read","update","delete"]), billing: new Set(["read"]), settings: new Set(["create","read","update"]), analytics: new Set(["create","read","update","delete"]), media: new Set(["create","read","update","delete"]) },
+  agent:  { listing: new Set(["create","read","update"]), team_member: new Set(["read"]), invitation: new Set([]), billing: new Set([]), settings: new Set(["read"]), analytics: new Set(["read"]), media: new Set(["create","read","update"]) },
+  editor: { listing: new Set(["read","update"]), team_member: new Set(["read"]), invitation: new Set([]), billing: new Set([]), settings: new Set(["read"]), analytics: new Set(["read"]), media: new Set(["create","read","update"]) },
+  viewer: { listing: new Set(["read"]), team_member: new Set(["read"]), invitation: new Set([]), billing: new Set([]), settings: new Set([]), analytics: new Set(["read"]), media: new Set(["read"]) },
 };
 
 function hasPermission(role: AgencyRole, resource: Resource, permission: Permission): boolean {

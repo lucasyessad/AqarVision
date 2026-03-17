@@ -32,7 +32,7 @@ interface ListingRow {
 
 const STATUS_CLS: Record<string, string> = {
   published:      "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400",
-  draft:          "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
+  draft:          "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
   paused:         "bg-yellow-50 text-yellow-600 dark:bg-yellow-950 dark:text-yellow-400",
   pending_review: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400",
   rejected:       "bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-400",
@@ -108,7 +108,7 @@ export default async function ListingsPage({
       </div>
 
       {/* Status filter tabs */}
-      <div className="flex gap-0 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="flex gap-0 border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800">
         {STATUS_FILTERS.map((filter) => {
           const isActive = activeFilter === filter;
           const label =
@@ -133,7 +133,7 @@ export default async function ListingsPage({
 
       {/* Content */}
       {typedListings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200 bg-white py-16 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 py-16 dark:border-zinc-800 dark:bg-zinc-900">
           <svg className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
           </svg>
@@ -146,10 +146,10 @@ export default async function ListingsPage({
           </Link>
         </div>
       ) : (
-        <div className="rounded-xl border border-zinc-200 overflow-hidden dark:border-zinc-800">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 overflow-hidden dark:border-zinc-800">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <tr className="border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/50">
                 <th className="px-6 py-3 text-start text-[11px] font-medium uppercase tracking-wider text-zinc-400">
                   Annonce
                 </th>
@@ -179,8 +179,8 @@ export default async function ListingsPage({
                 return (
                   <tr
                     key={listing.id}
-                    className={`h-12 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 ${
-                      i !== typedListings.length - 1 ? "border-b border-zinc-200 dark:border-zinc-800" : ""
+                    className={`h-12 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800/50 ${
+                      i !== typedListings.length - 1 ? "border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800" : ""
                     }`}
                   >
                     <td className="px-6 py-4">

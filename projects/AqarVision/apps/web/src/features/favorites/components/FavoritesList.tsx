@@ -53,9 +53,9 @@ function FavoriteCard({
   const [, formAction] = useActionState(toggleFavoriteAction, null);
 
   return (
-    <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+    <div className="rounded-xl border border-gray-100 bg-white dark:bg-zinc-900 p-4 shadow-sm">
       <div className="mb-3 flex items-start justify-between gap-2">
-        <h3 className="text-sm font-semibold text-zinc-800 line-clamp-2">
+        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 line-clamp-2">
           {favorite.listing_title}
         </h3>
         <form

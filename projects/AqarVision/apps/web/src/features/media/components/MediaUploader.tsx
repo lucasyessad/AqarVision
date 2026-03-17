@@ -193,7 +193,7 @@ export function MediaUploader({
           ${
             isDragging
               ? "border-amber-500 bg-amber-500/5"
-              : "border-gray-300 bg-zinc-50 hover:border-zinc-900/40"
+              : "border-gray-300 bg-zinc-50 dark:bg-zinc-800 hover:border-zinc-900/40"
           }
           ${isUploading ? "pointer-events-none opacity-60" : ""}
         `}
@@ -213,7 +213,7 @@ export function MediaUploader({
           />
         </svg>
 
-        <p className="mb-1 text-sm font-medium text-zinc-800">
+        <p className="mb-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
           {t("drop_zone_title")}
         </p>
         <p className="text-xs text-zinc-400">

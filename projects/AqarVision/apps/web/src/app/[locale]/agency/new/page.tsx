@@ -19,7 +19,7 @@ export default async function NewAgencyPage({
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-off-white p-8">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-800 p-8">
       <CreateAgencyForm />
     </div>
   );

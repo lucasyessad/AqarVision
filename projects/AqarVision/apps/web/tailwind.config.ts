@@ -4,7 +4,6 @@ const config: Config = {
   darkMode: ["class", '[data-theme="dark"]'],
   content: [
     "./src/**/*.{ts,tsx}",
-    "../../packages/ui/src/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
@@ -56,6 +55,11 @@ const config: Config = {
         danger:  { DEFAULT: "#EF4444", ghost: "rgba(239,68,68,0.08)" },
         info:    { DEFAULT: "#3B82F6", ghost: "rgba(59,130,246,0.08)" },
 
+        // ── Tricolore algérien (Atlas Pulse) ─────────────────────
+        sahara:  { DEFAULT: "#E8920A", 50: "#FEF7E8", 100: "#FDECC5", 500: "#E8920A", 600: "#C67A08", 700: "#9D6106" },
+        med:     { DEFAULT: "#1A7FA8", 50: "#E8F5FA", 100: "#C5E8F3", 500: "#1A7FA8", 600: "#156B8E", 700: "#105674" },
+        atlas:   { DEFAULT: "#2A8A4A", 50: "#EAF5EE", 100: "#C8E6D2", 500: "#2A8A4A", 600: "#22733D", 700: "#1A5C30" },
+
         // ── Real estate specific ──────────────────────────────────
         "listing-sale":     "#3B82F6",
         "listing-rent":     "#8B5CF6",
@@ -67,63 +71,6 @@ const config: Config = {
         "status-rejected":  "#EF4444",
         "status-sold":      "#3B82F6",
 
-        // ── Backward compat — old names → Zinc/Amber ─────────────
-        onyx: {
-          DEFAULT: "#09090B",  // zinc-950
-          light:   "#18181B",  // zinc-900
-          mid:     "#27272A",  // zinc-800
-          soft:    "#3F3F46",  // zinc-700
-        },
-        ivoire: {
-          DEFAULT: "#FAFAFA",  // zinc-50
-          warm:    "#F4F4F5",  // zinc-100
-          deep:    "#E4E4E7",  // zinc-200
-          border:  "#D4D4D8",  // zinc-300
-        },
-        or: {
-          DEFAULT: "#F59E0B",  // amber-500
-          light:   "#FBBF24",  // amber-400
-          deep:    "#D97706",  // amber-600
-        },
-        "blue-night": "#18181B",  // zinc-900
-        gold:         "#F59E0B",  // amber-500
-        "off-white":  "#FAFAFA",  // zinc-50
-        charcoal: {
-          950: "#09090B",
-          900: "#18181B",
-          800: "#27272A",
-          700: "#3F3F46",
-          600: "#52525B",
-          500: "#71717A",
-          400: "#A1A1AA",
-          300: "#D4D4D8",
-          200: "#E4E4E7",
-          100: "#F4F4F5",
-        },
-        warm: {
-          50:  "#FAFAFA",
-          100: "#F4F4F5",
-          200: "#E4E4E7",
-          300: "#D4D4D8",
-        },
-        coral: {
-          DEFAULT: "#F59E0B",
-          hover:   "#D97706",
-          light:   "#FBBF24",
-        },
-        aqar: {
-          page:    "#FAFAFA",
-          surface: "#FFFFFF",
-          sunken:  "#F4F4F5",
-          coral:   "#F59E0B",
-          amber:   "#F59E0B",
-          red:     "#EF4444",
-          success: "#22C55E",
-        },
-        "text-dark":  "#09090B",
-        "text-body":  "#71717A",
-        "text-muted": "#A1A1AA",
-        "text-faint": "#D4D4D8",
       },
 
       fontFamily: {
@@ -198,9 +145,6 @@ const config: Config = {
         "scale-in":   { from: { transform: "scale(0.97)", opacity: "0" }, to: { transform: "scale(1)", opacity: "1" } },
         "shimmer":    { "0%": { backgroundPosition: "-200% 0" }, "100%": { backgroundPosition: "200% 0" } },
         "shake":      { "0%, 100%": { transform: "translateX(0)" }, "20%, 60%": { transform: "translateX(-4px)" }, "40%, 80%": { transform: "translateX(4px)" } },
-        // Legacy
-        "aqar-pulse":   { "0%, 100%": { opacity: "1" }, "50%": { opacity: "0.4" } },
-        "aqar-fade-up": { from: { opacity: "0", transform: "translateY(20px)" }, to: { opacity: "1", transform: "translateY(0)" } },
       },
 
       animation: {
@@ -211,9 +155,6 @@ const config: Config = {
         "scale-in":   "scale-in 200ms ease-out",
         "shimmer":    "shimmer 2s ease-in-out infinite",
         "shake":      "shake 400ms ease-in-out",
-        // Legacy
-        "aqar-pulse":   "aqar-pulse 2.5s infinite",
-        "aqar-fade-up": "aqar-fade-up 0.8s ease both",
       },
     },
   },

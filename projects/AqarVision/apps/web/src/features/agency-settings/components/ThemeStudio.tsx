@@ -214,7 +214,7 @@ function StepBar({ current }: { current: number }) {
               </div>
               <span className={[
                 "text-xs font-medium hidden sm:block",
-                active ? "text-zinc-950" : done ? "text-green-500" : "text-zinc-400",
+                active ? "text-zinc-950 dark:text-zinc-50" : done ? "text-green-500" : "text-zinc-400",
               ].join(" ")}>
                 {label}
               </span>
@@ -286,7 +286,7 @@ function UploadZone({
 
       <div>
         <div className="mb-2 flex items-baseline justify-between">
-          <p className="text-sm font-semibold text-zinc-950">{label}</p>
+          <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{label}</p>
           <p className="text-xs text-zinc-400">{hint}</p>
         </div>
 
@@ -305,7 +305,7 @@ function UploadZone({
           }}
           className={[
             "group relative cursor-pointer overflow-hidden rounded-xl transition-all",
-            dragging ? "border-2 border-dashed border-zinc-950 bg-black/[0.03]" : file ? "border-2 border-dashed border-zinc-950 bg-zinc-50" : "border-2 border-dashed border-zinc-200 bg-zinc-50",
+            dragging ? "border-2 border-dashed border-zinc-950 bg-black/[0.03]" : file ? "border-2 border-dashed border-zinc-950 bg-zinc-50 dark:bg-zinc-800" : "border-2 border-dashed border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800",
           ].join(" ")}
           style={{
             aspectRatio: isSquare ? "1/1" : "3/1",
@@ -329,7 +329,7 @@ function UploadZone({
               </div>
               <div className="text-center">
                 <p className="text-xs font-medium text-gray-700">
-                  Glissez ou <span className="text-zinc-950 underline">choisissez</span>
+                  Glissez ou <span className="text-zinc-950 dark:text-zinc-50 underline">choisissez</span>
                 </p>
                 <p className="mt-0.5 text-[10px] text-gray-400">PNG, JPEG, WebP</p>
               </div>
@@ -366,7 +366,7 @@ function UploadZone({
 
 function ColorRow({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-zinc-200 p-4 transition-shadow hover:shadow-sm">
+    <div className="flex items-center gap-4 rounded-xl border border-zinc-200 dark:border-zinc-700 p-4 transition-shadow hover:shadow-sm">
       <div
         className="h-10 w-10 shrink-0 cursor-pointer overflow-hidden rounded-lg shadow-inner ring-2 ring-black/[0.08]"
       >
@@ -378,7 +378,7 @@ function ColorRow({ label, value, onChange }: { label: string; value: string; on
         />
       </div>
       <div className="flex-1">
-        <p className="text-sm font-medium text-zinc-950">{label}</p>
+        <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">{label}</p>
         <p className="font-mono text-xs uppercase text-zinc-400">{value}</p>
       </div>
       <div className="h-8 w-8 rounded-full shadow-sm ring-2 ring-black/[0.08]" style={{ background: value }} />
@@ -460,7 +460,7 @@ export function ThemeStudio({
   return (
     <div className="flex min-h-full flex-col gap-5">
       {/* Step bar */}
-      <div className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-white px-6 py-4">
+      <div className="flex items-center justify-between rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-4">
         <StepBar current={step} />
         {manifest && (
           <div className="hidden items-center gap-2 sm:flex">
@@ -482,9 +482,9 @@ export function ThemeStudio({
 
           {/* ── STEP 1: Themes ── */}
           {step === 1 && (
-            <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-              <div className="border-b border-zinc-200 px-6 py-5">
-                <h2 className="text-base font-bold text-zinc-950">Choisissez un thème</h2>
+            <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+              <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-5">
+                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Choisissez un thème</h2>
                 <p className="mt-0.5 text-sm text-zinc-500">
                   Sélectionnez le style visuel de votre vitrine publique.
                 </p>
@@ -537,12 +537,12 @@ export function ThemeStudio({
                       <div
                         className={[
                           "flex-1 px-2.5 py-2 border-t border-black/[0.06]",
-                          isDark ? "bg-zinc-950" : "bg-zinc-50",
+                          isDark ? "bg-zinc-950" : "bg-zinc-50 dark:bg-zinc-800",
                         ].join(" ")}
                       >
                         <p className={[
                           "text-xs font-semibold leading-tight",
-                          isDark ? "text-white" : "text-zinc-950",
+                          isDark ? "text-white" : "text-zinc-950 dark:text-zinc-50",
                         ].join(" ")}>
                           {theme.name}
                         </p>
@@ -564,9 +564,9 @@ export function ThemeStudio({
 
           {/* ── STEP 2: Colors ── */}
           {step === 2 && (
-            <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-              <div className="border-b border-zinc-200 px-6 py-5">
-                <h2 className="text-base font-bold text-zinc-950">Personnalisez les couleurs</h2>
+            <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+              <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-5">
+                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Personnalisez les couleurs</h2>
                 <p className="mt-0.5 text-sm text-zinc-500">
                   Adaptez les couleurs du thème <strong>{manifest?.name}</strong> à votre identité.
                 </p>
@@ -597,9 +597,9 @@ export function ThemeStudio({
 
           {/* ── STEP 3: Branding ── */}
           {step === 3 && (
-            <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-              <div className="border-b border-zinc-200 px-6 py-5">
-                <h2 className="text-base font-bold text-zinc-950">Logo & image de couverture</h2>
+            <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+              <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-5">
+                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Logo & image de couverture</h2>
                 <p className="mt-0.5 text-sm text-zinc-500">
                   Ces visuels s&apos;affichent sur votre vitrine publique.
                 </p>
@@ -629,9 +629,9 @@ export function ThemeStudio({
 
           {/* ── STEP 4: Confirm ── */}
           {step === 4 && (
-            <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-              <div className="border-b border-zinc-200 px-6 py-5">
-                <h2 className="text-base font-bold text-zinc-950">Prêt à publier</h2>
+            <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+              <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-5">
+                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Prêt à publier</h2>
                 <p className="mt-0.5 text-sm text-zinc-500">
                   Vérifiez l&apos;aperçu à droite, puis cliquez sur Appliquer.
                 </p>
@@ -645,16 +645,16 @@ export function ThemeStudio({
                     { icon: "🖼", label: "Logo", value: logoUrl ? "Configuré" : "Non défini" },
                     { icon: "🏞", label: "Couverture", value: coverUrl ? "Configurée" : "Non définie" },
                   ].map(({ icon, label, value }) => (
-                    <div key={label} className="rounded-xl bg-zinc-50 p-4">
+                    <div key={label} className="rounded-xl bg-zinc-50 dark:bg-zinc-800 p-4">
                       <p className="text-lg">{icon}</p>
                       <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-400">{label}</p>
-                      <p className="mt-0.5 text-sm font-semibold text-zinc-950">{value}</p>
+                      <p className="mt-0.5 text-sm font-semibold text-zinc-950 dark:text-zinc-50">{value}</p>
                     </div>
                   ))}
                 </div>
 
                 {/* Color palette preview */}
-                <div className="flex items-center gap-3 rounded-xl bg-zinc-50 p-4">
+                <div className="flex items-center gap-3 rounded-xl bg-zinc-50 dark:bg-zinc-800 p-4">
                   <p className="text-sm font-medium text-zinc-500">Palette :</p>
                   <div className="flex gap-2">
                     {[
@@ -721,7 +721,7 @@ export function ThemeStudio({
                       href={getAgencyUrl(agencySlug)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 px-4 py-3 text-sm font-medium text-zinc-950 transition-colors hover:bg-gray-50"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 dark:border-zinc-700 px-4 py-3 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-gray-50"
                     >
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -740,7 +740,7 @@ export function ThemeStudio({
               <button
                 type="button"
                 onClick={() => setStep(s => s - 1)}
-                className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-gray-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-950 dark:text-zinc-50 transition-colors hover:bg-gray-50"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -842,7 +842,7 @@ export function ThemeStudio({
             </div>
 
             {/* Scrollable preview content */}
-            <div className="mx-6 h-[calc(100vh-80px)] overflow-y-auto rounded-t-2xl bg-white shadow-2xl">
+            <div className="mx-6 h-[calc(100vh-80px)] overflow-y-auto rounded-t-2xl bg-white dark:bg-zinc-900 shadow-2xl">
               <ThemeLoader
                 themeId={selectedTheme}
                 agency={{

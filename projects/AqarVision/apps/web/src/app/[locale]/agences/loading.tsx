@@ -1,6 +1,6 @@
 export default function AgencesLoading() {
   return (
-    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
 
       {/* Dark hero header */}
       <div className="border-b border-zinc-800 bg-zinc-950 pb-8 pt-16 dark:border-zinc-700">
@@ -32,7 +32,7 @@ export default function AgencesLoading() {
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="flex items-center gap-5 rounded-xl border border-zinc-200 bg-white px-6 py-5 dark:border-zinc-800 dark:bg-zinc-900"
+              className="flex items-center gap-5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-5 dark:border-zinc-800 dark:bg-zinc-900"
             >
               {/* Logo */}
               <div className="h-14 w-14 shrink-0 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />

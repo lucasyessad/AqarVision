@@ -52,7 +52,7 @@ export function FavoriteButton({
       type="button"
       onClick={handleToggle}
       disabled={isPending}
-      className={`group inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium transition-colors hover:border-amber-500/50 hover:bg-amber-500/5 disabled:opacity-70 ${
+      className={`group inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 px-3 py-2 text-sm font-medium transition-colors hover:border-amber-500/50 hover:bg-amber-600/5 disabled:opacity-70 ${
         hasError ? "animate-shake" : ""
       }`}
       aria-label={favorited ? t("remove") : t("my_favorites")}
@@ -60,11 +60,11 @@ export function FavoriteButton({
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        fill={favorited ? "#f59e0b" : "none"}
-        stroke={favorited ? "#f59e0b" : "currentColor"}
+        fill={favorited ? "currentColor" : "none"}
+        stroke="currentColor"
         strokeWidth={2}
-        className={`h-5 w-5 transition-all group-hover:stroke-amber-500 ${
-          favorited ? "scale-110" : "scale-100"
+        className={`h-5 w-5 transition-all ${
+          favorited ? "scale-110 text-amber-500" : "scale-100 text-zinc-400 group-hover:text-amber-500"
         }`}
       >
         <path

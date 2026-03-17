@@ -301,7 +301,7 @@ async function syncEntitlementsFromPlan(
 ): Promise<void> {
   const { data: plan } = await supabase
     .from("plans")
-    .select("max_listings, max_ai_jobs, max_media_per_listing, max_team_members, features")
+    .select("max_listings, max_media_per_listing, max_team_members, features")
     .eq("id", planId)
     .single();
 
@@ -309,7 +309,6 @@ async function syncEntitlementsFromPlan(
 
   const entitlements = [
     { agency_id: agencyId, feature_key: "max_listings", is_enabled: true, metadata: { limit: plan.max_listings } },
-    { agency_id: agencyId, feature_key: "max_ai_jobs", is_enabled: true, metadata: { limit: plan.max_ai_jobs } },
     { agency_id: agencyId, feature_key: "max_media_per_listing", is_enabled: true, metadata: { limit: plan.max_media_per_listing } },
     { agency_id: agencyId, feature_key: "max_team_members", is_enabled: true, metadata: { limit: plan.max_team_members } },
   ];

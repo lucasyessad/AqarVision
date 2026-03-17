@@ -77,7 +77,7 @@ export default async function CollectionsPage({ params }: CollectionsPageProps) 
   return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900">Collections</h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Collections</h1>
         <p className="mt-1 text-sm text-gray-500">
           Organisez vos favoris en collections. Glissez une annonce vers une collection.
         </p>

@@ -30,7 +30,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-4 py-2">
       <span className="text-xs font-medium text-zinc-500">{label}</span>
-      <span className="text-right text-xs text-zinc-800">{value}</span>
+      <span className="text-right text-xs text-zinc-800 dark:text-zinc-200">{value}</span>
     </div>
   );
 }
@@ -74,16 +74,16 @@ export function StepRecap({ state, onChange, onBack, locale, activeCount, quota 
   return (
     <div className="space-y-6">
       {/* Summary card */}
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-sm">
         <div className="border-b border-zinc-100 px-4 py-3">
           <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400">
             {LISTING_TYPE_LABEL[state.listing_type] ?? state.listing_type} · {PROPERTY_TYPE_LABEL[state.property_type] ?? state.property_type}
           </p>
-          <h3 className="mt-0.5 text-base font-semibold text-zinc-900 line-clamp-2">{state.title}</h3>
+          <h3 className="mt-0.5 text-base font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-2">{state.title}</h3>
         </div>
         <div className="divide-y divide-zinc-50 px-4">
           <Row label="Localisation" value={[state.wilaya_name, state.commune_name].filter(Boolean).join(" · ")} />
-          <Row label="Prix" value={<span className="font-bold text-zinc-900">{price.toLocaleString("fr-DZ")} DZD</span>} />
+          <Row label="Prix" value={<span className="font-bold text-zinc-900 dark:text-zinc-100">{price.toLocaleString("fr-DZ")} DZD</span>} />
           {state.surface_m2 && <Row label="Surface" value={`${state.surface_m2} m²`} />}
           {state.rooms > 0 && <Row label="Pièces" value={state.rooms} />}
           {state.bathrooms > 0 && <Row label="Salles de bain" value={state.bathrooms} />}
@@ -96,15 +96,15 @@ export function StepRecap({ state, onChange, onBack, locale, activeCount, quota 
 
       {/* Description preview */}
       {state.description && (
-        <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4">
           <p className="mb-1 text-xs font-semibold text-zinc-500">Description</p>
           <p className="line-clamp-4 text-sm text-zinc-700">{state.description}</p>
         </div>
       )}
 
       {/* Contact info */}
-      <div className="rounded-xl border border-zinc-200 bg-white p-4">
-        <h3 className="mb-3 text-sm font-semibold text-zinc-800">Vos coordonnées</h3>
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
+        <h3 className="mb-3 text-sm font-semibold text-zinc-800 dark:text-zinc-200">Vos coordonnées</h3>
         <div className="space-y-3">
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-600">
@@ -112,7 +112,7 @@ export function StepRecap({ state, onChange, onBack, locale, activeCount, quota 
             </label>
             <input
               type="tel"
-              className="w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+              className="w-full rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
               placeholder="0555 XX XX XX"
               value={state.contact_phone}
               onChange={(e) => onChange({ contact_phone: e.target.value })}
@@ -163,7 +163,7 @@ export function StepRecap({ state, onChange, onBack, locale, activeCount, quota 
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-zinc-200 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
+          className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800"
         >
           ← Retour
         </button>
@@ -171,7 +171,7 @@ export function StepRecap({ state, onChange, onBack, locale, activeCount, quota 
           type="button"
           onClick={handlePublish}
           disabled={isPending || !state.draft_listing_id}
-          className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-2.5 text-sm font-semibold text-zinc-950 transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-2.5 text-sm font-semibold text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {isPending ? (
             <>

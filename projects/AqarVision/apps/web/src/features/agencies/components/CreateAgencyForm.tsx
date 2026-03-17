@@ -44,7 +44,7 @@ export function CreateAgencyForm() {
 
   return (
     <div className="mx-auto max-w-lg">
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">
+      <h1 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
         {t("create_title")}
       </h1>
 
@@ -56,7 +56,7 @@ export function CreateAgencyForm() {
 
       <form
         action={formAction}
-        className="space-y-4 rounded-xl bg-white p-6 shadow-sm"
+        className="space-y-4 rounded-xl bg-white dark:bg-zinc-900 p-6 shadow-sm"
       >
         <div>
           <label
@@ -146,7 +146,7 @@ export function CreateAgencyForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 font-medium text-white transition-colors hover:bg-zinc-900/90 disabled:opacity-50"
+          className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
         >
           {isPending ? t("creating") : t("create_button")}
         </button>

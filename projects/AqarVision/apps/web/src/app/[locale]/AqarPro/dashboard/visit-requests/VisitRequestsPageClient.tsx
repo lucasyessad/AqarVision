@@ -24,7 +24,7 @@ const STATUS_LABELS: Record<VisitRequestStatus, string> = {
 const STATUS_CLS: Record<VisitRequestStatus, string> = {
   pending:   "bg-yellow-50 text-yellow-600 dark:bg-yellow-950 dark:text-yellow-400",
   confirmed: "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400",
-  cancelled: "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500",
+  cancelled: "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500",
   done:      "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400",
 };
 
@@ -74,7 +74,7 @@ export function VisitRequestsPageClient({
       </div>
 
       {/* Status tabs */}
-      <div className="flex gap-0 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="flex gap-0 border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800">
         {STATUS_TABS.map((tab) => {
           const isActive = activeTab === tab.key;
           const count = tab.key === "all" ? requests.length : requests.filter((r) => r.status === tab.key).length;
@@ -111,18 +111,18 @@ export function VisitRequestsPageClient({
 
       {/* List */}
       {filtered.length === 0 ? (
-        <div className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white py-16 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 py-16 dark:border-zinc-800 dark:bg-zinc-900">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">Aucune demande de visite</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:border-zinc-800 dark:bg-zinc-900">
           {filtered.map((req, i) => {
             const statusCls = STATUS_CLS[req.status];
             return (
               <div
                 key={req.id}
                 className={`grid grid-cols-1 gap-4 p-6 md:grid-cols-[1fr_auto] ${
-                  i !== filtered.length - 1 ? "border-b border-zinc-200 dark:border-zinc-800" : ""
+                  i !== filtered.length - 1 ? "border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800" : ""
                 }`}
               >
                 {/* Info */}
@@ -162,7 +162,7 @@ export function VisitRequestsPageClient({
                   )}
 
                   {req.message && (
-                    <p className="mt-2 rounded-lg bg-zinc-50 px-3 py-1.5 text-xs italic text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                    <p className="mt-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 px-3 py-1.5 text-xs italic text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                       &ldquo;{req.message}&rdquo;
                     </p>
                   )}
@@ -184,7 +184,7 @@ export function VisitRequestsPageClient({
                         type="button"
                         disabled={loadingId === req.id}
                         onClick={() => handleStatusChange(req.id, "cancelled")}
-                        className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-600 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                        className="rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-600 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 disabled:opacity-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800"
                       >
                         Annuler
                       </button>

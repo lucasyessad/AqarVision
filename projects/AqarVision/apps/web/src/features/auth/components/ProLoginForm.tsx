@@ -63,7 +63,7 @@ export function ProLoginForm({ locale = "fr" }: ProLoginFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-md bg-amber-500 px-4 py-3 text-sm font-semibold text-zinc-950 transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="w-full rounded-md bg-amber-500 px-4 py-3 text-sm font-semibold text-zinc-950 dark:text-zinc-50 transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {isPending ? t("logging_in") : "Accéder à AqarPro"}
       </button>

@@ -23,7 +23,7 @@ export function ListingCard({ listing }: ListingCardProps) {
   return (
     <Link
       href={`/AqarPro/dashboard/listings/${listing.id}/edit`}
-      className="group block w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden text-start transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-zinc-300 dark:hover:border-zinc-700"
+      className="group block w-full rounded-xl border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden text-start transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-zinc-300 dark:hover:border-zinc-700"
     >
       {/* Cover image */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
@@ -60,12 +60,12 @@ export function ListingCard({ listing }: ListingCardProps) {
           {t(listing.property_type)}
         </span>
 
-        <h3 className="mb-1 truncate text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+        <h3 className="mb-1 truncate text-sm font-semibold text-zinc-800 dark:text-zinc-200 dark:text-zinc-100">
           {title}
         </h3>
 
         {/* Price */}
-        <p className="mb-2 text-lg font-bold tabular-nums text-zinc-900 dark:text-zinc-50">
+        <p className="mb-2 text-lg font-bold tabular-nums text-zinc-900 dark:text-zinc-100 dark:text-zinc-50">
           {formatPrice(listing.current_price, listing.currency)}
         </p>
 

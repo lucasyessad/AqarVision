@@ -9,7 +9,6 @@ interface SubscriptionCardProps {
   subscription: SubscriptionDto;
   agencyId: string;
   usedListings: number;
-  usedAiJobs: number;
 }
 
 function UsageBar({ label, used, max }: { label: string; used: number; max: number }) {
@@ -54,7 +53,6 @@ export function SubscriptionCard({
   subscription,
   agencyId,
   usedListings,
-  usedAiJobs,
 }: SubscriptionCardProps) {
   const t = useTranslations("billing");
 
@@ -120,11 +118,6 @@ export function SubscriptionCard({
             used={usedListings}
             max={subscription.plan.max_listings}
           />
-          <UsageBar
-            label={t("max_ai_jobs")}
-            used={usedAiJobs}
-            max={subscription.plan.max_ai_jobs}
-          />
         </div>
       </div>
 
@@ -138,7 +131,7 @@ export function SubscriptionCard({
           <button
             type="submit"
             disabled={isPending}
-            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800 disabled:opacity-50"
           >
             {isPending ? (
               <>

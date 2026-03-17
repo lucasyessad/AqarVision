@@ -104,14 +104,14 @@ interface Props {
 export function AgenciesTableClient({ agencies }: Props) {
   if (agencies.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white px-6 py-12 text-center text-sm text-gray-400">
+      <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 px-6 py-12 text-center text-sm text-gray-400">
         Aucune agence trouvée.
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 shadow-sm">
       <table className="w-full text-sm">
         <thead className="border-b border-gray-100 bg-gray-50">
           <tr>
@@ -136,7 +136,7 @@ export function AgenciesTableClient({ agencies }: Props) {
           {agencies.map((agency) => (
             <tr key={agency.id} className="transition-colors hover:bg-gray-50">
               <td className="px-4 py-3">
-                <p className="font-medium text-blue-night">{agency.name}</p>
+                <p className="font-medium text-zinc-900 dark:text-zinc-100">{agency.name}</p>
                 <p className="text-xs text-gray-400">{agency.slug}</p>
               </td>
               <td className="px-4 py-3">

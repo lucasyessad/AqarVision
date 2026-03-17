@@ -9,7 +9,7 @@ const ROLE_FILTERS = [
 
 function RoleBadge({ role }: { role: string }) {
   const styles: Record<string, string> = {
-    super_admin: "bg-gold/20 text-gold",
+    super_admin: "bg-amber-500/20 text-amber-500",
     user: "bg-gray-100 text-gray-600",
   };
   return (
@@ -44,7 +44,7 @@ export default async function AdminUsersPage({
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-blue-night">Utilisateurs</h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Utilisateurs</h1>
         <p className="mt-1 text-sm text-gray-400">
           {total} utilisateur{total !== 1 ? "s" : ""} au total
         </p>
@@ -62,7 +62,7 @@ export default async function AdminUsersPage({
               }
               className={`border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "border-blue-night text-blue-night"
+                  ? "border-zinc-900 text-zinc-900 dark:text-zinc-100"
                   : "border-transparent text-gray-400 hover:border-gray-300 hover:text-gray-600"
               }`}
             >
@@ -74,11 +74,11 @@ export default async function AdminUsersPage({
 
       {/* Table */}
       {users.length === 0 ? (
-        <div className="rounded-xl border border-gray-200 bg-white px-6 py-12 text-center text-sm text-gray-400">
+        <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 px-6 py-12 text-center text-sm text-gray-400">
           Aucun utilisateur trouvé.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 shadow-sm">
           <table className="w-full text-sm">
             <thead className="border-b border-gray-100 bg-gray-50">
               <tr>
@@ -97,7 +97,7 @@ export default async function AdminUsersPage({
               {users.map((u) => (
                 <tr key={u.user_id} className="transition-colors hover:bg-gray-50">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-blue-night">
+                    <p className="font-medium text-zinc-900 dark:text-zinc-100">
                       {u.full_name ?? "—"}
                     </p>
                     <p className="font-mono text-xs text-gray-400">{u.user_id}</p>
@@ -125,7 +125,7 @@ export default async function AdminUsersPage({
             {page > 1 && (
               <Link
                 href={`/admin/users?role=${role}&page=${page - 1}`}
-                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
+                className="rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 px-3 py-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
               >
                 Précédent
               </Link>
@@ -133,7 +133,7 @@ export default async function AdminUsersPage({
             {page < totalPages && (
               <Link
                 href={`/admin/users?role=${role}&page=${page + 1}`}
-                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
+                className="rounded-lg border border-gray-200 bg-white dark:bg-zinc-900 px-3 py-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-50"
               >
                 Suivant
               </Link>

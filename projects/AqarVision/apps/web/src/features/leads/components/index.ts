@@ -1,0 +1,1 @@
+export { HeatBadge } from "./HeatBadge";

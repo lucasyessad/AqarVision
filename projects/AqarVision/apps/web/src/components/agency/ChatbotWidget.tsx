@@ -158,7 +158,7 @@ function OptionButton({
       className={`w-full rounded-lg border px-3 py-2 text-start text-sm transition-colors ${
         selected
           ? 'border-[var(--agency-primary,#1a365d)] bg-[var(--agency-primary,#1a365d)] text-white'
-          : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+          : 'border-gray-200 bg-white dark:bg-zinc-900 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
       }`}
     >
       {label}
@@ -256,7 +256,7 @@ export default function ChatbotWidget({ agencyId, agencyName }: ChatbotWidgetPro
           role="dialog"
           aria-label={`Chat avec ${agencyName}`}
           aria-modal="true"
-          className="fixed bottom-40 end-6 z-50 flex w-80 flex-col overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none"
+          className="fixed bottom-40 end-6 z-50 flex w-80 flex-col overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-2xl ring-1 ring-black/5 focus:outline-none"
           style={{ maxHeight: 'min(520px, calc(100dvh - 12rem))' }}
         >
           {/* Header */}

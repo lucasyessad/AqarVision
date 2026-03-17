@@ -13,7 +13,7 @@ export default async function BillingPage() {
 
   if (!user) {
     return (
-      <div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <p className="text-zinc-500 dark:text-zinc-400">Authentication required</p>
       </div>
     );
@@ -36,7 +36,6 @@ export default async function BillingPage() {
   // Fetch subscription and usage if user has an agency
   let subscription = null;
   let usedListings = 0;
-  let usedAiJobs = 0;
 
   if (agencyId) {
     subscription = await getAgencySubscription(supabase, agencyId);
@@ -49,19 +48,6 @@ export default async function BillingPage() {
       .is("deleted_at", null);
 
     usedListings = listingCount ?? 0;
-
-    // Count AI jobs this month
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const { count: aiJobCount } = await supabase
-      .from("ai_jobs")
-      .select("id", { count: "exact", head: true })
-      .eq("agency_id", agencyId)
-      .gte("created_at", startOfMonth.toISOString());
-
-    usedAiJobs = aiJobCount ?? 0;
   }
 
   return (
@@ -79,7 +65,6 @@ export default async function BillingPage() {
           subscription={subscription}
           agencyId={agencyId}
           usedListings={usedListings}
-          usedAiJobs={usedAiJobs}
         />
       )}
 

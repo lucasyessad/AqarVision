@@ -48,8 +48,8 @@ export function PublishChecklist({
   const allMet = missing.length === 0;
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-lg font-semibold text-zinc-900">
+    <div className="rounded-xl bg-white dark:bg-zinc-900 p-6 shadow-sm">
+      <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
         {t("publish_checklist")}
       </h2>
 
@@ -77,7 +77,7 @@ export function PublishChecklist({
               </span>
               <span
                 className={`text-sm ${
-                  isMet ? "text-zinc-800" : "text-red-600"
+                  isMet ? "text-zinc-800 dark:text-zinc-200" : "text-red-600"
                 }`}
               >
                 {t(`requirement_${key}`)}
@@ -104,7 +104,7 @@ export function PublishChecklist({
         <button
           type="submit"
           disabled={!allMet || isPending}
-          className="w-full rounded-lg bg-amber-500 px-4 py-2.5 font-medium text-white transition-colors hover:bg-amber-500/90 disabled:opacity-50"
+          className="w-full rounded-lg bg-amber-500 px-4 py-2.5 font-medium text-white transition-colors hover:bg-amber-600/90 disabled:opacity-50"
         >
           {isPending ? t("submitting") : t("submit_for_review")}
         </button>
