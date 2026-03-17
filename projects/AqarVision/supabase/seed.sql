@@ -27,10 +27,10 @@ on conflict do nothing;
 -- ──────────────────────────────────────────────
 -- 2. Plans (Starter, Pro, Enterprise)
 -- ──────────────────────────────────────────────
-insert into public.plans (name, slug, price_monthly, max_listings, max_media_per_listing, max_team_members, max_ai_jobs, features) values
-  ('Starter',    'starter',    0,        10,  5,  2,  0,   '{"analytics": false, "ai": false, "priority_support": false}'::jsonb),
-  ('Pro',        'pro',        4900,     50,  20, 10, 100, '{"analytics": true, "ai": true, "priority_support": false}'::jsonb),
-  ('Enterprise', 'enterprise', 14900,    -1,  50, -1, -1,  '{"analytics": true, "ai": true, "priority_support": true}'::jsonb)
+insert into public.plans (name, slug, price_monthly, max_listings, max_media_per_listing, max_team_members, features) values
+  ('Starter',    'starter',    0,        10,  5,  2,  '{"analytics": false, "priority_support": false}'::jsonb),
+  ('Pro',        'pro',        4900,     50,  20, 10, '{"analytics": true, "priority_support": false}'::jsonb),
+  ('Enterprise', 'enterprise', 14900,    -1,  50, -1, '{"analytics": true, "priority_support": true}'::jsonb)
 on conflict (slug) do nothing;
 
 -- ──────────────────────────────────────────────
@@ -162,15 +162,7 @@ insert into public.subscriptions (agency_id, plan_id, status, current_period_sta
   ('a0000000-0000-0000-0000-000000000005', (select id from public.plans where slug = 'starter'),    'trialing', now(), now() + interval '14 days');
 
 -- ──────────────────────────────────────────────
--- 8. AI Prompts
--- ──────────────────────────────────────────────
-insert into public.ai_prompts (name, description, system_prompt, user_prompt_template, model) values
-  ('generate_listing_description', 'Génère une description immobilière professionnelle', 'Tu es un expert en rédaction immobilière en Algérie. Rédige des descriptions attrayantes et professionnelles en français.', 'Génère une description pour : Type: {{property_type}}, Surface: {{surface_m2}}m², Pièces: {{rooms}}, Wilaya: {{wilaya}}, Détails: {{details}}', 'claude-sonnet-4-20250514'),
-  ('translate_listing', 'Traduit une annonce immobilière', 'Tu es un traducteur professionnel spécialisé en immobilier. Traduis fidèlement en gardant le ton professionnel.', 'Traduis le texte suivant de {{source_locale}} vers {{target_locale}} :\n\nTitre: {{title}}\n\nDescription: {{description}}', 'claude-sonnet-4-20250514')
-on conflict (name) do nothing;
-
--- ──────────────────────────────────────────────
--- 9. Agency stats (sample daily stats)
+-- 8. Agency stats (sample daily stats)
 -- ──────────────────────────────────────────────
 insert into public.agency_stats_daily (agency_id, stat_date, total_views, total_leads, total_listings) values
   ('a0000000-0000-0000-0000-000000000001', current_date - 6, 45, 3, 7),

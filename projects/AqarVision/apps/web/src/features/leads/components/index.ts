@@ -1,1 +1,0 @@
-export { HeatBadge } from "./HeatBadge";
