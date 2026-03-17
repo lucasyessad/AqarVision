@@ -15,8 +15,7 @@ The repository follows a **dual-structure approach**:
 - **`projects/`** — Independent development projects, each with its own stack and dependencies. Reference library resources via `../../library/...`.
 - **`templates/`** — Starter templates + `clone-template.sh` (supports: nextjs, saas, saas-nextjs, api-node, api-fastapi, mobile, ds).
 - **`scripts/`** — Automation scripts for maintenance.
-- **`docs/`** — Guides (`quick-start.md`, `maintenance.md`), best practices, references.
-- **`tools/`** — Utility tools (e.g., `je-extractor`).
+- **`docs/`** — Guides (`quick-start.md`, `maintenance.md`, `resource-management.md`) and `references/quick-reference.md`.
 
 ## Key Commands
 
@@ -33,28 +32,11 @@ There is **no global build system, test runner, or linter**. Each project in `pr
 
 ## Library Organization
 
-Resources in `library/` are organized into four categories — browse each for full contents:
+Resources in `library/` are organized into four categories — browse each directory for full contents:
 
-- **`skills/`** — Task-specific instructions organized by domain:
-  - `documents/` — PDF, DOCX, PPTX, XLSX
-  - `design/` — algorithmic-art, canvas-design, frontend-design, frontend-design-plugin, theme-factory
-  - `development/` — claude-api, claude-mem, context7, mcp-builder, skill-creator, web-artifacts-builder, webapp-testing
-  - `communication/` — brand-guidelines, doc-coauthoring, internal-comms, slack-gif-creator
-
+- **`skills/`** — Task-specific instructions by domain: `documents/`, `design/`, `development/`, `communication/`. Each skill has a `SKILL.md` with methodology.
 - **`subagents/`** — Specialist agent prompts: `languages/`, `infrastructure/`, `testing/`, `data-ai/`, `workflows/`.
-
-- **`workflows/`** — Development methodologies:
-  - `planning/` — manus-style, brainstorming, executing-plans, writing-plans
-  - `git-strategies/` — finishing-a-development-branch, using-git-worktrees
-  - `code-review/` — automated-code-review, receiving-code-review, requesting-code-review
-  - `debugging/` — systematic-debugging, test-driven-development
-  - `autonomous-development/` — Ralph autonomous dev system
-  - `subagent-driven-development/` — Multi-agent orchestration
-  - `dispatching-parallel-agents/` — Parallel execution
-  - `verification-before-completion/` — Quality gates
-  - `using-superpowers/` — Advanced workflows
-  - `writing-skills/` — Create new skills
-
+- **`workflows/`** — Development methodologies: `planning/`, `git-strategies/`, `code-review/`, `debugging/`, `autonomous-development/`, `subagent-driven-development/`, `verification-before-completion/`, and more.
 - **`generators/`** — Creation tools: `prompts/intelligent-generator`, `ui-components/ui-ux-pro`, `templates/skill-templates`.
 
 Always reference resources by full path:

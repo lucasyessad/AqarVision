@@ -35,7 +35,7 @@ Multi-tenant (RLS Supabase isolé par agence), multilingue (FR/AR/EN/ES avec RTL
 | Hébergement     | Vercel (web) + Supabase Cloud                                             |
 | Tests           | Vitest (unit, 3 fichiers) + Playwright (E2E, 8 specs)                     |
 | Polices         | Geist (latin) + IBM Plex Sans Arabic — chargées via next/font             |
-| Observabilité   | Sentry (version mismatch à corriger)                                      |
+| Observabilité   | Sentry (package installé mais non initialisé — à configurer ou retirer)   |
 | Rate limiting   | Upstash Redis                                                             |
 | Logging         | Pino                                                                      |
 | CI/CD           | GitHub Actions (ci.yml + deploy.yml)                                      |
@@ -379,12 +379,10 @@ Validation Zod dans `packages/config/src/env.ts`. Déclarées dans `turbo.json` 
 
 ### Code mort à supprimer
 
-- 5 hooks inutilisés : `hooks/useScrollReveal.ts`, `features/auth/hooks/use-auth.ts`, `features/auth/services/auth.service.ts`, `features/agencies/hooks/use-current-agency.ts`, `features/messaging/hooks/use-realtime-messages.ts`.
-- DeposerWizard v1 (remplacé par V2) : `features/listings/components/DeposerWizard.tsx` (29 Ko) + `features/listings/actions/create-individual-listing.action.ts` + `features/listings/schemas/individual-listing.schema.ts`.
-- 6 packages monorepo vides : domain, database, ui, security, analytics, feature-flags.
-- `lib/actions/auth.ts` (duplique `withAgencyAuth`) + 6 fichiers importateurs à migrer.
+- 1 hook inutilisé restant : `features/messaging/hooks/use-realtime-messages.ts`.
 - Bloc backward-compat colors dans `tailwind.config.ts` (onyx, ivoire, or, charcoal, warm, coral, aqar, text-dark, text-body, text-muted, text-faint).
-- Références mortes dans `next.config.ts` : `@aqarvision/domain` et `@aqarvision/security` dans `transpilePackages`, `picsum.photos` dans `remotePatterns`.
+
+> **Déjà nettoyé :** 4 hooks morts (useScrollReveal, use-auth, auth.service, use-current-agency), DeposerWizard v1, 6 packages vides, lib/actions/auth.ts, références mortes next.config.ts.
 
 ### Dette design
 
@@ -396,7 +394,7 @@ DashboardSidebar (8 chaînes), Dashboard layout (2), ProLoginForm (3), Homepage 
 
 ### Autres dettes
 
-- **Sentry :** `@sentry/core` v10.43 vs `@sentry/nextjs` v8.0 — versions incompatibles. `next.config.ts` try/catch silencieux.
+- **Sentry :** `@sentry/nextjs@^9.5.0` installé mais non initialisé dans le code — décider si on configure ou on retire la dépendance.
 - **CSP :** `unsafe-inline` + `unsafe-eval` dans le middleware. Implémenter CSP par environnement avec nonces.
 - **SearchMap :** 3 types `any` (MapLibreMap, MapLibreMarker, MapLibrePopup).
 - **Mobile :** `apps/mobile/` est un spike Expo non actif (13 fichiers).
