@@ -12,7 +12,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 echo -e "${BLUE}╔══════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║      Vérification d'intégrité PersoDev              ║${NC}"
+echo -e "${BLUE}║      Vérification d'intégrité AqarVision              ║${NC}"
 echo -e "${BLUE}╚══════════════════════════════════════════════════════╝${NC}"
 echo ""
 

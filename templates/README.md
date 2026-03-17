@@ -1,4 +1,4 @@
-# 📚 Templates PersoDev
+# 📚 Templates AqarVision
 
 > Collection complète des meilleurs templates pour démarrer vos projets rapidement
 
@@ -179,7 +179,7 @@ cp <source> templates/<destination>
 
 - **[GITHUB_TEMPLATES.md](GITHUB_TEMPLATES.md)** - Guide complet des templates GitHub
 - **[clone-template.sh](clone-template.sh)** - Script de clonage automatique
-- **[../README.md](../README.md)** - Documentation principale PersoDev
+- **[../README.md](../README.md)** - Documentation principale AqarVision
 - **[../CLAUDE.md](../CLAUDE.md)** - Guide Claude Code
 
 ---

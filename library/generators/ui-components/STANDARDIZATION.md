@@ -2,7 +2,7 @@
 
 ## ✅ Nettoyage Effectué
 
-Ce générateur a été **standardisé** pour suivre les règles de PersoDev.
+Ce générateur a été **standardisé** pour suivre les règles de AqarVision.
 
 ### Problèmes Corrigés
 
@@ -70,7 +70,7 @@ Le fichier **SKILL.md** contient tout ce dont Claude Code a besoin :
 
 ---
 
-## 🎯 Règles de Standardisation PersoDev
+## 🎯 Règles de Standardisation AqarVision
 
 ### `library/` ne doit contenir que :
 1. ✅ **Fichiers utilisables** - Skills, documentation
@@ -165,4 +165,4 @@ Le skill s'active automatiquement pour les tâches UI/UX.
 
 ---
 
-**Générateur UI/UX Pro maintenant conforme aux standards PersoDev ! ✅**
+**Générateur UI/UX Pro maintenant conforme aux standards AqarVision ! ✅**
