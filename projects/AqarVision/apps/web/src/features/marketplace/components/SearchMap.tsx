@@ -5,6 +5,18 @@ import { useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import type { MapBounds } from "../schemas/search.schema";
 import { formatPrice } from "@/lib/format";
+import {
+  MAP_CENTER_NORTH,
+  MAP_ZOOM_COUNTRY,
+  MAP_MAX_BOUNDS,
+  getMapStyle,
+  MARKER_CLASSES,
+  buildPopupHtml,
+  flyToWilaya,
+  fitToWilayas,
+  buildWilayaPoints,
+} from "@/lib/map";
+import type { Locale } from "@/lib/geodata";
 
 import type { Map as MapLibreMap, Marker as MapLibreMarker, Popup as MapLibrePopup } from "maplibre-gl";
 
@@ -26,13 +38,26 @@ interface SearchMapProps {
   fillContainer?: boolean;
   /** Called with listing id on marker hover, null on leave */
   onListingHover?: (id: string | null) => void;
+  /** Wilaya code(s) to zoom to — from search filters */
+  activeWilayas?: string[];
+  /** ID of the listing to highlight on the map */
+  highlightedListingId?: string | null;
 }
 
-export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContainer, onListingHover }: SearchMapProps) {
+export function SearchMap({
+  listings,
+  onBoundsChange,
+  locale = "fr",
+  fillContainer,
+  onListingHover,
+  activeWilayas,
+  highlightedListingId,
+}: SearchMapProps) {
   const t = useTranslations("search");
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap>(null);
   const markersRef = useRef<MapLibreMarker[]>([]);
+  const wilayaMarkersRef = useRef<MapLibreMarker[]>([]);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Debounced bounds change handler
@@ -61,61 +86,34 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
 
     let mapInstance: MapLibreMap;
 
-    // Dynamic import to ensure client-side only loading
     import("maplibre-gl").then((maplibre) => {
       if (!containerRef.current) return;
 
       try {
-      mapInstance = new maplibre.Map({
-        container: containerRef.current,
-        style: {
-          version: 8,
-          sources: {
-            osm: {
-              type: "raster",
-              tiles: [
-                process.env.NEXT_PUBLIC_MAPTILER_KEY
-                  ? `https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`
-                  : "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              ],
-              tileSize: 256,
-              attribution: process.env.NEXT_PUBLIC_MAPTILER_KEY
-                ? "© MapTiler © OpenStreetMap contributors"
-                : "© OpenStreetMap contributors",
-            },
-          },
-          layers: [
-            {
-              id: "osm",
-              type: "raster",
-              source: "osm",
-              minzoom: 0,
-              maxzoom: 22,
-            },
-          ],
-        },
-        // Algeria center: Algiers
-        center: [3.0588, 36.7372],
-        zoom: 6,
-      });
+        mapInstance = new maplibre.Map({
+          container: containerRef.current,
+          style: getMapStyle() as maplibregl.StyleSpecification,
+          center: MAP_CENTER_NORTH,
+          zoom: MAP_ZOOM_COUNTRY,
+          maxBounds: MAP_MAX_BOUNDS,
+        });
 
-      mapRef.current = mapInstance;
+        mapRef.current = mapInstance;
 
-      // Emit bounds on move end
-      mapInstance.on("moveend", () => {
-        handleBoundsChange(mapInstance);
-      });
+        mapInstance.on("moveend", () => {
+          handleBoundsChange(mapInstance);
+        });
 
-      // Initial bounds emit after map loads
-      mapInstance.on("load", () => {
-        handleBoundsChange(mapInstance);
-      });
+        mapInstance.on("load", () => {
+          handleBoundsChange(mapInstance);
+          // Add wilaya point markers at low zoom
+          addWilayaMarkers(maplibre, mapInstance);
+        });
       } catch (err) {
-        // WebGL unavailable (sandboxed env, old browser) — map won't render
         console.warn("MapLibre: WebGL context creation failed", err);
         if (containerRef.current) {
           containerRef.current.innerHTML =
-            `<div class="flex h-full items-center justify-center text-gray-400 text-sm">${t("map_unavailable")}</div>`;
+            `<div class="flex h-full items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm">${t("map_unavailable")}</div>`;
         }
       }
     });
@@ -132,13 +130,64 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update markers when listings change
+  // Add wilaya center markers (visible at low zoom, hidden at high zoom)
+  function addWilayaMarkers(
+    maplibre: typeof import("maplibre-gl"),
+    map: MapLibreMap
+  ) {
+    // Clear existing
+    wilayaMarkersRef.current.forEach((m) => m.remove());
+    wilayaMarkersRef.current = [];
+
+    const geojson = buildWilayaPoints(locale as Locale);
+
+    for (const feature of geojson.features) {
+      const el = document.createElement("div");
+      el.className = `${MARKER_CLASSES.base} ${MARKER_CLASSES.cluster}`;
+      el.textContent = feature.properties.name;
+      el.title = `${feature.properties.name} (${feature.properties.commune_count} communes)`;
+
+      // Click to zoom into this wilaya
+      el.addEventListener("click", () => {
+        flyToWilaya(map as unknown as Parameters<typeof flyToWilaya>[0], feature.properties.code);
+      });
+
+      const marker = new maplibre.Marker({ element: el })
+        .setLngLat(feature.geometry.coordinates as [number, number])
+        .addTo(map);
+
+      wilayaMarkersRef.current.push(marker);
+    }
+
+    // Toggle visibility based on zoom
+    const updateVisibility = () => {
+      const zoom = map.getZoom();
+      const show = zoom < 8;
+      for (const m of wilayaMarkersRef.current) {
+        (m.getElement() as HTMLElement).style.display = show ? "" : "none";
+      }
+    };
+
+    map.on("zoom", updateVisibility);
+    updateVisibility();
+  }
+
+  // Fly to active wilayas when filter changes
+  useEffect(() => {
+    if (!mapRef.current || !activeWilayas) return;
+    fitToWilayas(
+      mapRef.current as unknown as Parameters<typeof fitToWilayas>[0],
+      activeWilayas
+    );
+  }, [activeWilayas]);
+
+  // Update listing markers when listings change
   useEffect(() => {
     if (!mapRef.current) return;
 
     const map = mapRef.current;
 
-    // Remove existing markers
+    // Remove existing listing markers
     markersRef.current.forEach((marker: MapLibreMarker) => marker.remove());
     markersRef.current = [];
 
@@ -148,12 +197,11 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
           return;
         }
 
-        // Create custom marker element — Onyx & Ivoire price badge
+        const isHighlighted = highlightedListingId === listing.id;
+
+        // Price badge marker — Tailwind classes only, no inline hex
         const el = document.createElement("div");
-        el.className =
-          "cursor-pointer select-none rounded-full px-2.5 py-1 text-xs font-bold shadow-md whitespace-nowrap transition-all";
-        el.style.cssText =
-          "background:#09090b;color:#fafafa;border:1.5px solid rgba(255,255,255,0.15);";
+        el.className = `${MARKER_CLASSES.base} ${isHighlighted ? MARKER_CLASSES.active : MARKER_CLASSES.default}`;
         el.textContent = formatPrice(listing.price, listing.currency);
 
         if (onListingHover) {
@@ -161,19 +209,12 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
           el.addEventListener("mouseleave", () => onListingHover(null));
         }
 
-        // Popup content
-        const popupHtml = `
-          <div class="p-2 min-w-[160px]">
-            <p class="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate mb-1">${listing.title}</p>
-            <p class="text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-2">${formatPrice(listing.price, listing.currency)}</p>
-            <a
-              href="/${locale}/annonce/${listing.slug}"
-              class="block w-full rounded bg-zinc-900 px-3 py-1 text-center text-xs font-medium text-white hover:bg-amber-600 transition-colors"
-            >
-              ${t("view_listing")}
-            </a>
-          </div>
-        `;
+        const popupHtml = buildPopupHtml({
+          title: listing.title,
+          price: formatPrice(listing.price, listing.currency),
+          href: `/${locale}/annonce/${listing.slug}`,
+          ctaLabel: t("view_listing"),
+        });
 
         const popup: MapLibrePopup = new maplibre.Popup({
           closeButton: true,
@@ -190,15 +231,19 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
         markersRef.current.push(marker);
       });
     });
-  }, [listings]);
+  }, [listings, highlightedListingId, locale, onListingHover, t]);
+
+  const ariaLabel = t("map_coming_soon").includes("bientot")
+    ? "Carte des annonces immobilières"
+    : "Property listings map";
 
   if (fillContainer) {
     return (
       <div
         ref={containerRef}
         className="h-full w-full"
-        aria-label="Carte des annonces immobilières"
-        role="img"
+        aria-label={ariaLabel}
+        role="application"
       />
     );
   }
@@ -208,8 +253,8 @@ export function SearchMap({ listings, onBoundsChange, locale = "fr", fillContain
       <div
         ref={containerRef}
         className="h-64 w-full lg:h-80"
-        aria-label="Carte des annonces immobilières"
-        role="img"
+        aria-label={ariaLabel}
+        role="application"
       />
     </div>
   );
