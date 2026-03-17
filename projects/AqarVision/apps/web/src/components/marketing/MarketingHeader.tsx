@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/navigation";
 import { usePathname } from "next/navigation";
 import { AqarBrandLogo } from "@/components/brand/AqarBrandLogo";
 import { signOutAction } from "@/features/auth/actions/auth.action";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { ChevronDown, User, Building2, Home, LogOut } from "lucide-react";
+import { ChevronDown, User, Building2, Home, LogOut, Menu, X } from "lucide-react";
 
 interface HeaderUser {
   name: string;
@@ -22,8 +23,10 @@ interface MarketingHeaderProps {
 
 export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
   const pathname = usePathname();
+  const t = useTranslations("marketing_header");
   const [scrolled, setScrolled] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const avatarRef = useRef<HTMLDivElement>(null);
 
   const isHomepage = pathname === `/${locale}` || pathname === "/";
@@ -49,10 +52,10 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
   const transparent = isHomepage && !scrolled;
 
   const navLinks = [
-    { href: "/search?listing_type=sale", label: "Acheter" },
-    { href: "/search?listing_type=rent", label: "Louer" },
-    { href: "/agences", label: "Agences" },
-    { href: "/estimer", label: "Estimer" },
+    { href: "/search?listing_type=sale", label: t("buy") },
+    { href: "/search?listing_type=rent", label: t("rent") },
+    { href: "/agences", label: t("agencies") },
+    { href: "/estimer", label: t("estimate") },
   ];
 
   return (
@@ -64,7 +67,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
           : "bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-700 dark:border-zinc-800 shadow-xs",
       ].join(" ")}
     >
-      <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-container items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Logo */}
         <Link href="/" locale={locale} className="flex shrink-0 flex-col items-start">
@@ -118,7 +121,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                 type="button"
                 onClick={() => setAvatarOpen((v) => !v)}
                 className="flex items-center gap-2 rounded-full transition-opacity hover:opacity-80"
-                aria-label="Mon espace"
+                aria-label={t("my_space")}
               >
                 {/* Avatar circle */}
                 <div
@@ -149,7 +152,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                         : transparent ? "text-zinc-50/40" : "text-zinc-400 dark:text-zinc-500",
                     ].join(" ")}
                   >
-                    {user.profileType === "pro" ? "Pro" : "Particulier"}
+                    {user.profileType === "pro" ? "Pro" : t("individual")}
                   </span>
                 </div>
                 <ChevronDown
@@ -167,7 +170,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                   {/* Profile info */}
                   <div className="border-b border-zinc-100 dark:border-zinc-800 px-4 py-3">
                     <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-                      {user.profileType === "pro" ? "Espace Professionnel" : "Espace Particulier"}
+                      {user.profileType === "pro" ? t("pro_space") : t("individual_space")}
                     </p>
                     <p className="mt-0.5 truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
                       {user.name}
@@ -181,7 +184,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                     className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
                   >
                     <Home className="h-4 w-4 shrink-0" strokeWidth={1.5} />
-                    Mon espace
+                    {t("my_space")}
                   </Link>
 
                   {/* Sign out */}
@@ -194,7 +197,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                         className="flex w-full items-center gap-2.5 px-4 py-3 text-sm text-zinc-400 dark:text-zinc-500 transition-colors hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-800"
                       >
                         <LogOut className="h-4 w-4 shrink-0" strokeWidth={1.5} />
-                        Se déconnecter
+                        {t("logout")}
                       </button>
                     </form>
                   </div>
@@ -216,7 +219,7 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
                 ].join(" ")}
               >
                 <User className="h-3.5 w-3.5 shrink-0" strokeWidth={1.5} />
-                Particulier
+                {t("individual")}
               </Link>
 
               <Link
@@ -234,8 +237,61 @@ export function MarketingHeader({ locale, user }: MarketingHeaderProps) {
               </Link>
             </div>
           )}
+
+          {/* Mobile hamburger */}
+          <button
+            type="button"
+            onClick={() => setMobileOpen((v) => !v)}
+            className={`lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors ${
+              transparent ? "text-zinc-50 hover:bg-zinc-50/10" : "text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            }`}
+            aria-label={mobileOpen ? t("close_menu") : t("open_menu")}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="lg:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 animate-slide-down">
+          <nav className="flex flex-col px-4 py-3">
+            {navLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                locale={locale}
+                onClick={() => setMobileOpen(false)}
+                className="py-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 border-b border-zinc-100 dark:border-zinc-800 last:border-0"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+          {!user && (
+            <div className="flex gap-2 border-t border-zinc-100 dark:border-zinc-800 px-4 py-4">
+              <Link
+                href="/AqarChaab/auth/login"
+                locale={locale}
+                onClick={() => setMobileOpen(false)}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300"
+              >
+                <User className="h-3.5 w-3.5" strokeWidth={1.5} />
+                {t("individual")}
+              </Link>
+              <Link
+                href="/AqarPro/auth/login"
+                locale={locale}
+                onClick={() => setMobileOpen(false)}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-zinc-900 dark:bg-zinc-100 px-3 py-2.5 text-sm font-semibold text-white dark:text-zinc-900"
+              >
+                <Building2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                Pro
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </header>
   );
 }

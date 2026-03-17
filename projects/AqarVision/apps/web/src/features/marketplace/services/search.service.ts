@@ -191,10 +191,10 @@ export async function searchListings(
       p_limit: 500,
     });
     spatialListingIds = (spatialRows ?? []).map((r: { id: string }) => r.id);
-    if (spatialListingIds.length === 0) {
+    if (spatialListingIds!.length === 0) {
       return { results: [], total_count: 0, page, page_size };
     }
-    query = query.in("id", spatialListingIds);
+    query = query.in("id", spatialListingIds!);
   } else if (filters.map_bounds) {
     // Bounding box: convert to WKT polygon and use the same RPC
     const { north, south, east, west } = filters.map_bounds;
@@ -205,10 +205,10 @@ export async function searchListings(
       p_limit: 500,
     });
     spatialListingIds = (spatialRows ?? []).map((r: { id: string }) => r.id);
-    if (spatialListingIds.length === 0) {
+    if (spatialListingIds!.length === 0) {
       return { results: [], total_count: 0, page, page_size };
     }
-    query = query.in("id", spatialListingIds);
+    query = query.in("id", spatialListingIds!);
   }
 
   // Ordering

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { getAgencyUrl } from "@/lib/agency-url";
 import {
   Building2,
@@ -32,6 +33,7 @@ interface AgencesClientProps {
 }
 
 export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: AgencesClientProps) {
+  const t = useTranslations("agences_page");
   const [query, setQuery] = useState("");
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [selectedWilaya, setSelectedWilaya] = useState("");
@@ -109,12 +111,12 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
           <div className="mb-3 flex items-center gap-3">
             <span className="inline-block h-px w-8 bg-amber-500" />
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
-              Annuaire
+              {t("eyebrow")}
             </p>
           </div>
           <h1 className="font-display text-3xl font-light text-zinc-50 sm:text-4xl">
-            <span className="italic">Trouver</span>{" "}
-            <span className="font-semibold">une agence</span>
+            <span className="italic">{t("title_find")}</span>{" "}
+            <span className="font-semibold">{t("title_agency")}</span>
           </h1>
 
           {/* Filters row */}
@@ -131,7 +133,7 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
                   setShowSuggestions(true);
                 }}
                 onFocus={() => query.trim().length > 0 && setShowSuggestions(true)}
-                placeholder="Nom de l'agence…"
+                placeholder={t("search_placeholder")}
                 className="w-full rounded-lg border border-white/15 bg-white/5 py-2.5 pe-9 ps-10 text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500/50 focus:outline-none focus:ring-1 focus:ring-amber-500/20"
               />
               {query && (
@@ -212,7 +214,7 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
                 <MapPin className="h-4 w-4" />
                 {selectedWilaya
                   ? wilayaNameMap[selectedWilaya] ?? selectedWilaya
-                  : "Toutes les wilayas"}
+                  : t("all_wilayas")}
                 <ChevronDown
                   className={[
                     "h-3.5 w-3.5 transition-transform",
@@ -229,7 +231,7 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
                       type="text"
                       value={wilayaSearch}
                       onChange={(e) => setWilayaSearch(e.target.value)}
-                      placeholder="Rechercher une wilaya…"
+                      placeholder={t("search_wilaya_placeholder")}
                       className="w-full rounded-lg bg-zinc-800 px-3 py-2 text-xs text-zinc-100 placeholder:text-zinc-500 focus:outline-none"
                       autoFocus
                     />
@@ -251,7 +253,7 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
                           : "text-zinc-300 hover:bg-zinc-800",
                       ].join(" ")}
                     >
-                      Toutes les wilayas
+                      {t("all_wilayas")}
                     </button>
 
                     {filteredWilayas.map(({ code, name }) => {
@@ -303,7 +305,7 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
               ].join(" ")}
             >
               <ShieldCheck className="h-4 w-4" />
-              Vérifiées
+              {t("verified_filter")}
             </button>
 
             {/* Reset */}
@@ -318,20 +320,17 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
                 className="flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-2.5 text-xs font-medium text-zinc-500 transition-all hover:border-red-500/30 hover:text-red-400"
               >
                 <X className="h-3.5 w-3.5" />
-                Réinitialiser
+                {t("reset")}
               </button>
             )}
           </div>
 
           {/* Result count */}
           <p className="mt-4 text-sm text-zinc-50/40">
-            <span className="tabular-nums font-medium text-zinc-50/70">
-              {filtered.length}
-            </span>{" "}
-            agence{filtered.length !== 1 ? "s" : ""} trouvée{filtered.length !== 1 ? "s" : ""}
+            {t("results_count", { count: filtered.length })}
             {selectedWilaya && (
               <span>
-                {" "}à{" "}
+                {" "}{t("results_in_wilaya", { wilaya: "" })}
                 <span className="font-medium text-amber-400">
                   {wilayaNameMap[selectedWilaya]}
                 </span>
@@ -349,10 +348,10 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
               <Building2 className="h-8 w-8 text-zinc-300 dark:text-zinc-600" />
             </div>
             <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Aucune agence trouvée
+              {t("no_results_title")}
             </p>
             <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-              Essayez de modifier vos critères de recherche
+              {t("no_results_hint")}
             </p>
             <button
               type="button"
@@ -363,7 +362,7 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
               }}
               className="mt-4 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
             >
-              Réinitialiser les filtres
+              {t("reset_filters")}
             </button>
           </div>
         ) : (
@@ -400,7 +399,7 @@ export function AgencesClient({ agencies, wilayas, wilayaNameMap, locale }: Agen
                     {agency.is_verified && (
                       <span className="flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
                         <BadgeCheck className="h-3 w-3" />
-                        Vérifiée
+                        {t("verified_badge")}
                       </span>
                     )}
                   </div>

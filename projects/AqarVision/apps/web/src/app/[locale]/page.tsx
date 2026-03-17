@@ -15,6 +15,8 @@ import type { SearchResultDto } from "@/features/marketplace/types/search.types"
 import { ChevronDown, ArrowRight, Home, Shield, Clock, Lock, Headphones } from "lucide-react";
 import { formatPrice } from "@/lib/format";
 import { getWilayaName, type Locale } from "@/lib/geodata";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 
 /** Popular wilayas for the homepage scroller — counts are approximate. */
 const POPULAR_WILAYA_CODES = [
@@ -129,28 +131,36 @@ export default async function HomePage({
             className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/65 via-black/25 to-black/70"
           />
 
-          <div className="relative z-10 mx-auto flex w-full max-w-[1320px] flex-col items-center px-4 pb-12 pt-24 text-center sm:px-6 lg:px-8">
-            <div className="mb-6 flex items-center gap-3">
-              <span className="inline-block h-px w-8 bg-amber-500" />
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
-                {t("eyebrow")}
+          <div className="relative z-10 mx-auto flex w-full max-w-container flex-col items-center px-4 pb-12 pt-24 text-center sm:px-6 lg:px-8">
+            <ScrollReveal animation="fade-up" delay={0} threshold={0}>
+              <div className="mb-6 flex items-center gap-3">
+                <span className="inline-block h-px w-8 bg-amber-500" />
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-500">
+                  {t("eyebrow")}
+                </p>
+                <span className="inline-block h-px w-8 bg-amber-500" />
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal animation="fade-up" delay={100} threshold={0}>
+              <h1 className="mb-8 max-w-[750px] text-5xl font-bold leading-[1.05] tracking-tight text-zinc-50 sm:text-6xl lg:text-7xl">
+                {t("hero_headline_1")}
+                <br />
+                <span className="text-amber-400">{t("hero_headline_2")}</span>
+                <br />
+                {t("hero_headline_3")}
+              </h1>
+            </ScrollReveal>
+
+            <ScrollReveal animation="fade-up" delay={200} threshold={0}>
+              <HomeSearchBar locale={locale} wilayas={wilayas} />
+            </ScrollReveal>
+
+            <ScrollReveal animation="fade-up" delay={300} threshold={0}>
+              <p className="mt-5 max-w-xl text-sm leading-relaxed text-zinc-50/45">
+                {t("hero_subtitle")}
               </p>
-              <span className="inline-block h-px w-8 bg-amber-500" />
-            </div>
-
-            <h1 className="mb-8 max-w-[750px] text-5xl font-bold leading-[1.05] tracking-tight text-zinc-50 sm:text-6xl lg:text-7xl">
-              {t("hero_headline_1")}
-              <br />
-              <span className="text-amber-400">{t("hero_headline_2")}</span>
-              <br />
-              {t("hero_headline_3")}
-            </h1>
-
-            <HomeSearchBar locale={locale} wilayas={wilayas} />
-
-            <p className="mt-5 max-w-xl text-sm leading-relaxed text-zinc-50/45">
-              {t("hero_subtitle")}
-            </p>
+            </ScrollReveal>
           </div>
 
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
@@ -159,87 +169,94 @@ export default async function HomePage({
         </section>
 
         {/* ──────────────────── CONFIDENCE LAYER ─── */}
-        <section className="border-b border-zinc-200 dark:border-zinc-700 bg-sky-50 dark:bg-zinc-900">
-          <div className="mx-auto grid max-w-[1320px] grid-cols-2 gap-4 px-4 py-5 sm:grid-cols-4 sm:px-6 lg:px-8">
+        <section className="border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900">
+          <div className="mx-auto grid max-w-container grid-cols-2 gap-4 px-4 py-5 sm:grid-cols-4 sm:px-6 lg:px-8">
             {[
               { icon: <Shield className="h-4 w-4 text-sky-600 dark:text-sky-400" />, label: t("confidence_verified") },
               { icon: <Clock className="h-4 w-4 text-sky-600 dark:text-sky-400" />, label: t("confidence_response") },
               { icon: <Lock className="h-4 w-4 text-sky-600 dark:text-sky-400" />, label: t("confidence_secure") },
               { icon: <Headphones className="h-4 w-4 text-sky-600 dark:text-sky-400" />, label: t("confidence_support") },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2">
-                {item.icon}
-                <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{item.label}</span>
-              </div>
+            ].map((item, index) => (
+              <ScrollReveal key={item.label} animation="fade-up" delay={index * 100}>
+                <div className="flex items-center gap-2">
+                  {item.icon}
+                  <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{item.label}</span>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </section>
 
         {/* ─────────────────────── SPLIT EDITORIAL ─── */}
         <section className="grid min-h-[70vh] grid-cols-1 lg:grid-cols-2">
-          <div className="flex flex-col justify-center bg-zinc-50 dark:bg-zinc-900 px-8 py-16 lg:px-16">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
-              {t("explore_eyebrow")}
-            </p>
-            <h2 className="text-4xl font-bold leading-[1.08] tracking-tight text-zinc-950 dark:text-zinc-50 lg:text-5xl">
-              {t("explore_title_1")}
-              <br />
-              {t("explore_title_2", { count: 58 }).split("58").map((part, i) =>
-                i === 0 ? part : <span key={i}><span className="text-amber-500">58</span>{part}</span>
-              )}
-            </h2>
-            <p className="mt-5 max-w-[420px] text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
-              {t("explore_desc")}
-            </p>
-            <Link
-              href="/search"
-              locale={locale}
-              className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-semibold text-amber-500 transition-opacity hover:opacity-70"
-            >
-              {t("explore_cta")}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="relative min-h-[400px] overflow-hidden">
-            <Image
-              src={splitUrl}
-              alt=""
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </div>
+          <ScrollReveal animation="slide-right">
+            <div className="flex flex-col justify-center bg-zinc-50 dark:bg-zinc-900 px-8 py-16 lg:px-16">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
+                {t("explore_eyebrow")}
+              </p>
+              <h2 className="text-4xl font-bold leading-[1.08] tracking-tight text-zinc-950 dark:text-zinc-50 lg:text-5xl">
+                {t("explore_title_1")}
+                <br />
+                {t("explore_title_2", { count: 58 }).split("58").map((part, i) =>
+                  i === 0 ? part : <span key={i}><span className="text-amber-500">58</span>{part}</span>
+                )}
+              </h2>
+              <p className="mt-5 max-w-[420px] text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
+                {t("explore_desc")}
+              </p>
+              <Link
+                href="/search"
+                locale={locale}
+                className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-semibold text-amber-500 transition-opacity hover:opacity-70"
+              >
+                {t("explore_cta")}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal animation="fade-in" delay={200}>
+            <div className="relative min-h-[400px] overflow-hidden lg:h-full">
+              <Image
+                src={splitUrl}
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+          </ScrollReveal>
         </section>
 
         {/* ──────────────────── 3 REGION CARDS ─── */}
         <section className="border-t border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 py-20">
-          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
             <h2 className="mb-2 text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">
               {t("regions_title")}
             </h2>
             <p className="mb-8 text-sm text-zinc-400 dark:text-zinc-500">{t("regions_subtitle")}</p>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {REGIONS.map((region) => (
-                <Link
-                  key={region.key}
-                  href={`/search?wilaya_code=${region.wilayas[0]}`}
-                  locale={locale}
-                  className="group relative overflow-hidden rounded-2xl"
-                >
-                  <div className={`flex h-[220px] flex-col justify-end bg-gradient-to-br ${region.gradient} p-6`}>
-                    <h3 className="text-2xl font-bold text-white">
-                      {t(`region_${region.key}`)}
-                    </h3>
-                    <p className={`mt-1 text-sm ${region.accent}`}>
-                      {t(`region_${region.key}_desc`)}
-                    </p>
-                    <div className="mt-3 flex items-center gap-1 text-xs font-medium text-white/70 transition-colors group-hover:text-white">
-                      {t("explore_cta")}
-                      <ArrowRight className="h-3 w-3" />
+              {REGIONS.map((region, index) => (
+                <ScrollReveal key={region.key} animation="fade-up" delay={index * 150}>
+                  <Link
+                    href={`/search?wilaya_code=${region.wilayas[0]}`}
+                    locale={locale}
+                    className="group relative overflow-hidden rounded-2xl"
+                  >
+                    <div className={`flex h-[220px] flex-col justify-end bg-gradient-to-br ${region.gradient} p-6`}>
+                      <h3 className="text-2xl font-bold text-white">
+                        {t(`region_${region.key}`)}
+                      </h3>
+                      <p className={`mt-1 text-sm ${region.accent}`}>
+                        {t(`region_${region.key}_desc`)}
+                      </p>
+                      <div className="mt-3 flex items-center gap-1 text-xs font-medium text-white/70 transition-colors group-hover:text-white">
+                        {t("explore_cta")}
+                        <ArrowRight className="h-3 w-3" />
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </ScrollReveal>
               ))}
             </div>
           </div>
@@ -247,36 +264,40 @@ export default async function HomePage({
 
         {/* ──────────────────────── WILAYAS SCROLL ─── */}
         <section className="border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 py-16">
-          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
             <h2 className="mb-2 text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">
               {t("cities.title")}
             </h2>
             <p className="mb-7 text-sm text-zinc-400 dark:text-zinc-500">{t("cities.subtitle")}</p>
           </div>
-          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-hide px-4 pb-4 sm:px-6 lg:px-8">
-            {POPULAR_WILAYA_CODES.map((city) => (
-              <Link
-                key={city.code}
-                href={`/search?wilaya_code=${city.code}`}
-                locale={locale}
-                className="group w-[200px] shrink-0 snap-start overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 transition-all hover:-translate-y-1 hover:shadow-lg"
-              >
-                <div className="flex h-[130px] items-center justify-center bg-zinc-100 dark:bg-zinc-700">
-                  <Home className="h-8 w-8 text-zinc-400 dark:text-zinc-500" />
-                </div>
-                <div className="p-3">
-                  <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{getWilayaName(city.code, locale as Locale)}</p>
-                  <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">{city.count} {t("stats.listings")}</p>
-                </div>
-              </Link>
-            ))}
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-8 bg-gradient-to-r from-zinc-50 dark:from-zinc-900 to-transparent rtl:bg-gradient-to-l sm:w-12" />
+            <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-8 bg-gradient-to-l from-zinc-50 dark:from-zinc-900 to-transparent rtl:bg-gradient-to-r sm:w-12" />
+            <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-hide px-4 pb-4 sm:px-6 lg:px-8">
+              {POPULAR_WILAYA_CODES.map((city) => (
+                <Link
+                  key={city.code}
+                  href={`/search?wilaya_code=${city.code}`}
+                  locale={locale}
+                  className="group w-[200px] shrink-0 snap-start overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 transition-all hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div className="flex h-[130px] items-center justify-center bg-zinc-100 dark:bg-zinc-700">
+                    <Home className="h-8 w-8 text-zinc-400 dark:text-zinc-500" />
+                  </div>
+                  <div className="p-3">
+                    <p className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{getWilayaName(city.code, locale as Locale)}</p>
+                    <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">{city.count} {t("stats.listings")}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* ──────────────────────────────── FEATURED GRID ─── */}
         {(featured || secondary) && (
           <section className="border-t border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 py-20">
-            <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
               <div className="mb-10 flex items-end justify-between">
                 <div>
                   <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
@@ -298,61 +319,65 @@ export default async function HomePage({
 
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
                 {featured && (
-                  <Link href={`/annonce/${featured.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
-                    <div className="relative aspect-[16/10] overflow-hidden bg-zinc-900">
-                      {featured.cover_url ? (
-                        <Image
-                          src={featured.cover_url}
-                          alt={featured.title}
-                          fill
-                          sizes="(min-width: 1024px) 60vw, 100vw"
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-zinc-800">
-                          <Home className="h-16 w-16 text-white opacity-20" />
+                  <ScrollReveal animation="scale">
+                    <Link href={`/annonce/${featured.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
+                      <div className="relative aspect-[16/10] overflow-hidden bg-zinc-900">
+                        {featured.cover_url ? (
+                          <Image
+                            src={featured.cover_url}
+                            alt={featured.title}
+                            fill
+                            sizes="(min-width: 1024px) 60vw, 100vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-zinc-800">
+                            <Home className="h-16 w-16 text-white opacity-20" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/75 to-transparent" />
+                        <div className="absolute inset-x-5 bottom-5">
+                          <p className="font-display text-2xl font-semibold text-zinc-50">
+                            {formatPrice(featured.current_price, featured.currency)}
+                          </p>
+                          <p className="mt-1 line-clamp-1 text-sm text-zinc-50/70">{featured.title}</p>
+                          <p className="mt-0.5 text-xs text-amber-500">
+                            {featured.wilaya_name}{featured.commune_name ? ` · ${featured.commune_name}` : ""}
+                          </p>
                         </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/75 to-transparent" />
-                      <div className="absolute inset-x-5 bottom-5">
-                        <p className="font-display text-2xl font-semibold text-zinc-50">
-                          {formatPrice(featured.current_price, featured.currency)}
-                        </p>
-                        <p className="mt-1 line-clamp-1 text-sm text-zinc-50/70">{featured.title}</p>
-                        <p className="mt-0.5 text-xs text-amber-500">
-                          {featured.wilaya_name}{featured.commune_name ? ` · ${featured.commune_name}` : ""}
-                        </p>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </ScrollReveal>
                 )}
 
                 {secondary && (
-                  <Link href={`/annonce/${secondary.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
-                    <div className="relative h-full min-h-[280px] overflow-hidden bg-zinc-900">
-                      {secondary.cover_url ? (
-                        <Image
-                          src={secondary.cover_url}
-                          alt={secondary.title}
-                          fill
-                          sizes="(min-width: 1024px) 40vw, 100vw"
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-zinc-700">
-                          <Home className="h-12 w-12 text-white opacity-20" />
+                  <ScrollReveal animation="scale" delay={150}>
+                    <Link href={`/annonce/${secondary.slug}`} locale={locale} className="group relative overflow-hidden rounded-xl">
+                      <div className="relative h-full min-h-[280px] overflow-hidden bg-zinc-900">
+                        {secondary.cover_url ? (
+                          <Image
+                            src={secondary.cover_url}
+                            alt={secondary.title}
+                            fill
+                            sizes="(min-width: 1024px) 40vw, 100vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center bg-zinc-700">
+                            <Home className="h-12 w-12 text-white opacity-20" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/75 to-transparent" />
+                        <div className="absolute inset-x-5 bottom-5">
+                          <p className="font-display text-xl font-semibold text-zinc-50">
+                            {formatPrice(secondary.current_price, secondary.currency)}
+                          </p>
+                          <p className="mt-0.5 line-clamp-1 text-sm text-zinc-50/70">{secondary.title}</p>
+                          <p className="mt-0.5 text-xs text-amber-500">{secondary.wilaya_name}</p>
                         </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/75 to-transparent" />
-                      <div className="absolute inset-x-5 bottom-5">
-                        <p className="font-display text-xl font-semibold text-zinc-50">
-                          {formatPrice(secondary.current_price, secondary.currency)}
-                        </p>
-                        <p className="mt-0.5 line-clamp-1 text-sm text-zinc-50/70">{secondary.title}</p>
-                        <p className="mt-0.5 text-xs text-amber-500">{secondary.wilaya_name}</p>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </ScrollReveal>
                 )}
               </div>
             </div>
@@ -362,7 +387,7 @@ export default async function HomePage({
         {/* ──────────────────────────────────────── TENDANCE ─── */}
         {trending.length > 0 && (
           <section className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 py-20">
-            <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
               <div className="flex gap-10 lg:gap-20">
                 <div className="hidden w-[220px] shrink-0 flex-col justify-between lg:flex">
                   <div>
@@ -391,31 +416,33 @@ export default async function HomePage({
                     </Link>
                   </div>
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                    {trending.slice(0, 6).map((listing) => (
-                      <Link key={listing.id} href={`/annonce/${listing.slug}`} locale={locale} className="group">
-                        <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-xl bg-zinc-200 dark:bg-zinc-800">
-                          {listing.cover_url ? (
-                            <Image
-                              src={listing.cover_url}
-                              alt={listing.title}
-                              fill
-                              sizes="(min-width: 640px) 33vw, 50vw"
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center text-zinc-300 dark:text-zinc-600">
-                              <Home className="h-8 w-8" />
-                            </div>
-                          )}
-                        </div>
-                        <p className="font-display text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-                          {formatPrice(listing.current_price, listing.currency)}
-                        </p>
-                        <p className="mt-0.5 line-clamp-1 text-xs text-zinc-500 dark:text-zinc-400">{listing.title}</p>
-                        <p className="text-xs text-zinc-300 dark:text-zinc-600">
-                          {listing.wilaya_name}{listing.commune_name ? `, ${listing.commune_name}` : ""}
-                        </p>
-                      </Link>
+                    {trending.slice(0, 6).map((listing, index) => (
+                      <ScrollReveal key={listing.id} animation="fade-up" delay={index * 100}>
+                        <Link href={`/annonce/${listing.slug}`} locale={locale} className="group">
+                          <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-xl bg-zinc-200 dark:bg-zinc-800">
+                            {listing.cover_url ? (
+                              <Image
+                                src={listing.cover_url}
+                                alt={listing.title}
+                                fill
+                                sizes="(min-width: 640px) 33vw, 50vw"
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center text-zinc-300 dark:text-zinc-600">
+                                <Home className="h-8 w-8" />
+                              </div>
+                            )}
+                          </div>
+                          <p className="font-display text-sm font-semibold text-zinc-950 dark:text-zinc-50">
+                            {formatPrice(listing.current_price, listing.currency)}
+                          </p>
+                          <p className="mt-0.5 line-clamp-1 text-xs text-zinc-500 dark:text-zinc-400">{listing.title}</p>
+                          <p className="text-xs text-zinc-300 dark:text-zinc-600">
+                            {listing.wilaya_name}{listing.commune_name ? `, ${listing.commune_name}` : ""}
+                          </p>
+                        </Link>
+                      </ScrollReveal>
                     ))}
                   </div>
                 </div>
@@ -427,7 +454,7 @@ export default async function HomePage({
         {/* ─────────────────────────── NOUVELLES ANNONCES ─── */}
         {newest.length > 0 && (
           <section className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/50 py-20">
-            <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
               <div className="mb-8 flex items-end justify-between">
                 <div>
                   <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">{t("rent_eyebrow")}</p>
@@ -501,53 +528,60 @@ export default async function HomePage({
 
         {/* ──────────────────────────────── STATS STRIP ─── */}
         <section className="bg-zinc-950 py-20 dark:bg-zinc-900">
-          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
-              {t("trust_title_1")}
-              <br />
-              {t("trust_title_2")}
-            </h2>
+          <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
+            <ScrollReveal animation="fade-up">
+              <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+                {t("trust_title_1")}
+                <br />
+                {t("trust_title_2")}
+              </h2>
+            </ScrollReveal>
             <div className="mx-auto grid max-w-[800px] grid-cols-2 gap-8 sm:grid-cols-4">
               {[
                 { value: t("stats_listings"), label: t("stats_listings_label") },
                 { value: t("stats_wilayas"), label: t("stats_wilayas_label") },
                 { value: t("stats_agencies"), label: t("stats_agencies_label") },
                 { value: t("stats_satisfaction"), label: t("stats_satisfaction_label") },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <p className="tabular-nums text-3xl font-bold text-amber-400 sm:text-4xl">
-                    {stat.value}
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-400">{stat.label}</p>
-                </div>
+              ].map((stat, index) => (
+                <ScrollReveal key={stat.label} animation="fade-up" delay={index * 100}>
+                  <div className="text-center">
+                    <AnimatedCounter
+                      value={stat.value}
+                      className="tabular-nums text-3xl font-bold text-amber-400 sm:text-4xl"
+                    />
+                    <p className="mt-1 text-sm text-zinc-400">{stat.label}</p>
+                  </div>
+                </ScrollReveal>
               ))}
             </div>
           </div>
         </section>
 
         {/* ──────────────────────────────── CTA PRO ─── */}
-        <section className="bg-zinc-50 dark:bg-zinc-900 py-20 text-center">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
-            {t("pro_eyebrow")}
-          </p>
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
-            {t("pro_title_1")}
-            <br />
-            {t("pro_title_2", { accent: "" })}
-            <span className="text-amber-500">{t("pro_accent")}</span>
-          </h2>
-          <p className="mx-auto mt-4 max-w-[480px] text-base text-zinc-500 dark:text-zinc-400">
-            {t("pro_desc")}
-          </p>
-          <Link
-            href="/AqarPro/dashboard"
-            locale={locale}
-            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-amber-600"
-          >
-            {t("pro_cta")}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </section>
+        <ScrollReveal animation="fade-up">
+          <section className="bg-zinc-50 dark:bg-zinc-900 py-20 text-center">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
+              {t("pro_eyebrow")}
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
+              {t("pro_title_1")}
+              <br />
+              {t("pro_title_2", { accent: "" })}
+              <span className="text-amber-500">{t("pro_accent")}</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-[480px] text-base text-zinc-500 dark:text-zinc-400">
+              {t("pro_desc")}
+            </p>
+            <Link
+              href="/AqarPro/dashboard"
+              locale={locale}
+              className="mt-8 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-8 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-amber-600"
+            >
+              {t("pro_cta")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </section>
+        </ScrollReveal>
       </main>
 
       <MarketingFooter locale={locale} />

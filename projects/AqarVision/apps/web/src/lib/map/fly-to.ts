@@ -77,7 +77,7 @@ export function fitToWilayas(
   }
 
   if (codes.length === 1) {
-    return flyToWilaya(map, codes[0]);
+    return flyToWilaya(map, codes[0]!);
   }
 
   const wilayas = codes

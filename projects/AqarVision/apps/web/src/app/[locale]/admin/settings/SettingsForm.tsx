@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useTranslations } from "next-intl";
 import { updatePlatformSettingAction } from "@/features/admin/actions/platform-settings.action";
 import type { SettingRow } from "@/features/admin/actions/platform-settings.action";
 
@@ -9,6 +10,7 @@ interface SettingsFormProps {
 }
 
 export function SettingsForm({ setting }: SettingsFormProps) {
+  const t = useTranslations("admin");
   const [state, action, pending] = useActionState(updatePlatformSettingAction, null);
 
   const displayValue = typeof setting.value === "string"
@@ -40,7 +42,7 @@ export function SettingsForm({ setting }: SettingsFormProps) {
           disabled={pending}
           className="rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-500 transition-opacity hover:opacity-80 disabled:opacity-40"
         >
-          {pending ? "…" : "Sauver"}
+          {pending ? t("saving") : t("save_button")}
         </button>
       </div>
 
@@ -48,7 +50,7 @@ export function SettingsForm({ setting }: SettingsFormProps) {
         <p className="w-full text-xs text-red-400">{state.error}</p>
       )}
       {state?.success === true && (
-        <p className="w-full text-xs text-green-400">Enregistré</p>
+        <p className="w-full text-xs text-green-400">{t("saved")}</p>
       )}
     </form>
   );

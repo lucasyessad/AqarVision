@@ -7,6 +7,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { signOutAction } from "@/features/auth/actions/auth.action";
 import { AqarBrandLogo } from "@/components/brand/AqarBrandLogo";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 interface DashboardSidebarProps {
@@ -14,6 +15,9 @@ interface DashboardSidebarProps {
   userEmail: string;
   fullName?: string | null;
 }
+
+/** Nav items that show a notification badge placeholder */
+const BADGE_KEYS = new Set(["leads", "visit_requests"]);
 
 const NAV_ITEMS = [
   {
@@ -89,7 +93,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
 
   return (
     <aside
-      className={`flex shrink-0 flex-col border-e border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 transition-all duration-200 ${
+      className={`flex shrink-0 flex-col border-e border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 transition-all duration-slow ${
         collapsed ? "w-16" : "w-60"
       }`}
     >
@@ -100,7 +104,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
           <button
             type="button"
             onClick={() => setCollapsed((prev) => !prev)}
-            className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-600"
+            className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-600 dark:hover:text-zinc-300"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
@@ -123,34 +127,61 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-4">
         {NAV_ITEMS.map((item) => {
           const active = isActive(item.href, item.exact);
-          return (
+          const label = t(`nav.${item.key}` as Parameters<typeof t>[0]);
+          const hasBadge = BADGE_KEYS.has(item.key);
+
+          const linkContent = (
             <Link
               key={item.key}
               href={item.href as `/${string}`}
-              title={collapsed ? t(`nav.${item.key}` as Parameters<typeof t>[0]) : undefined}
               className={[
                 "flex items-center rounded-lg border-s-2 transition-all",
                 collapsed ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5 text-sm font-medium",
                 active
-                  ? "border-amber-500 bg-amber-500/10 text-amber-700"
+                  ? "border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-400"
                   : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-100",
               ].join(" ")}
             >
-              <svg
-                className={["h-4 w-4 shrink-0", active ? "text-amber-600" : "text-zinc-400"].join(" ")}
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d={item.d} />
-              </svg>
-              {!collapsed && t(`nav.${item.key}` as Parameters<typeof t>[0])}
+              {/* Icon wrapper — relative for badge positioning when collapsed */}
+              <span className="relative shrink-0">
+                <svg
+                  className={["h-4 w-4", active ? "text-amber-600 dark:text-amber-400" : "text-zinc-400 dark:text-zinc-500"].join(" ")}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d={item.d} />
+                </svg>
+                {/* Badge dot on icon — visible only when collapsed */}
+                {hasBadge && collapsed && (
+                  <span className="absolute -top-0.5 -end-0.5 h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
+                )}
+              </span>
+              {!collapsed && (
+                <>
+                  <span className="flex-1">{label}</span>
+                  {/* Badge dot next to label — visible only when expanded */}
+                  {hasBadge && (
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500 dark:bg-amber-400" />
+                  )}
+                </>
+              )}
             </Link>
           );
+
+          if (collapsed) {
+            return (
+              <Tooltip key={item.key} content={label} side="end">
+                {linkContent}
+              </Tooltip>
+            );
+          }
+
+          return linkContent;
         })}
 
         {/* Settings group */}
         {!collapsed && (
           <div className="pt-4">
-            <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
+            <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
               {t("nav.settings")}
             </p>
             {SETTINGS_ITEMS.map((item) => {
@@ -162,7 +193,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
                   className={[
                     "flex items-center rounded-lg border-s-2 px-3 py-2 text-sm transition-all",
                     active
-                      ? "border-amber-500 bg-amber-500/10 font-medium text-amber-700"
+                      ? "border-amber-500 bg-amber-500/10 font-medium text-amber-700 dark:text-amber-400"
                       : "border-transparent text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-100",
                   ].join(" ")}
                 >
@@ -193,7 +224,7 @@ export function DashboardSidebar({ agencySlug, userEmail, fullName }: DashboardS
 
       {/* User footer */}
       <div className={`flex items-center border-t border-zinc-200 dark:border-zinc-700 ${collapsed ? "justify-center px-2 py-3" : "gap-3 px-4 py-3"}`}>
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-zinc-50">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 dark:bg-zinc-100 text-xs font-semibold text-zinc-50 dark:text-zinc-900">
           {initial}
         </div>
         {!collapsed && (

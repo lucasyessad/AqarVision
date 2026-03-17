@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { ListingStatusBadge } from "./ListingStatusBadge";
+import type { ListingStatus } from "../types/listing.types";
 
 interface ListingDrawerListing {
   id: string;
@@ -86,7 +87,7 @@ export function ListingDrawer({ listing, onClose, locale }: ListingDrawerProps) 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-700">
           <div className="flex items-center gap-2">
-            <ListingStatusBadge status={listing.status} />
+            <ListingStatusBadge status={listing.status as ListingStatus} />
             <span className="text-sm text-zinc-500 dark:text-zinc-400">
               #{listing.id.slice(0, 8)}
             </span>
@@ -116,7 +117,7 @@ export function ListingDrawer({ listing, onClose, locale }: ListingDrawerProps) 
           {listing.photos.length > 0 && (
             <div className="relative aspect-video w-full bg-zinc-100 dark:bg-zinc-800">
               <Image
-                src={listing.photos[0]}
+                src={listing.photos[0] ?? ""}
                 alt={listing.title}
                 fill
                 className="object-cover"

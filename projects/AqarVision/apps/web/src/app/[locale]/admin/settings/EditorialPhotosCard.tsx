@@ -35,11 +35,11 @@ function UploadSlot({ slot }: { slot: PhotoSlot }) {
     try {
       // Step 1 — get signed URL
       const urlResult = await getEditorialUploadUrlAction(slot.key, file.name);
-      if (!urlResult.success) throw new Error(urlResult.error);
+      if (!urlResult.success) throw new Error(urlResult.error.message);
       setProgress(30);
 
       // Step 2 — upload directly to Supabase Storage
-      const res = await fetch(urlResult.signed_url, {
+      const res = await fetch(urlResult.data.signed_url, {
         method: "PUT",
         body: file,
         headers: { "Content-Type": file.type },
@@ -48,11 +48,11 @@ function UploadSlot({ slot }: { slot: PhotoSlot }) {
       setProgress(80);
 
       // Step 3 — save public URL to platform_settings
-      const saveResult = await saveEditorialPhotoAction(slot.key, urlResult.path);
-      if (!saveResult.success) throw new Error(saveResult.error);
+      const saveResult = await saveEditorialPhotoAction(slot.key, urlResult.data.path);
+      if (!saveResult.success) throw new Error(saveResult.error.message);
       setProgress(100);
 
-      setPreview(saveResult.url);
+      setPreview(saveResult.data.url);
       setSaved(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur inconnue");

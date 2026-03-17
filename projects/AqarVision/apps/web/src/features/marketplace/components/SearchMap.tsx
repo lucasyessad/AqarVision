@@ -55,14 +55,14 @@ const DRAW_POINTS_SOURCE_ID = "draw-polygon-points-source";
 /** Convert an array of [lng, lat] points to a WKT POLYGON string */
 function pointsToWkt(points: [number, number][]): string {
   // Close the ring by repeating the first point
-  const ring = [...points, points[0]];
+  const ring = [...points, points[0]!];
   const coords = ring.map(([lng, lat]) => `${lng} ${lat}`).join(", ");
   return `POLYGON((${coords}))`;
 }
 
 /** Build a GeoJSON Polygon from an array of [lng, lat] points */
 function buildPolygonGeoJson(points: [number, number][]): GeoJSON.Feature<GeoJSON.Polygon> {
-  const ring = [...points, points[0]];
+  const ring = [...points, points[0]!];
   return {
     type: "Feature",
     properties: {},

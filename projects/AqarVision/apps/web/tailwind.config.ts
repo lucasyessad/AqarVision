@@ -42,12 +42,20 @@ const config: Config = {
         surface:           "var(--bg-surface)",
         "surface-muted":   "var(--bg-muted)",
         "surface-elevated":"var(--bg-elevated)",
+        app:               "var(--bg-app)",
+        overlay:           "var(--bg-overlay)",
         primary:           "var(--text-primary)",
         secondary:         "var(--text-secondary)",
         tertiary:          "var(--text-tertiary)",
+        inverse:           "var(--text-inverse)",
         accent:            "var(--accent)",
         "accent-hover":    "var(--accent-hover)",
         "accent-ghost":    "var(--accent-ghost)",
+
+        // ── Borders (CSS var–driven) ────────────────────────────
+        "border-default":  "var(--border-default)",
+        "border-strong":   "var(--border-strong)",
+        "border-focus":    "var(--border-focus)",
 
         // ── Status ────────────────────────────────────────────────
         success: { DEFAULT: "#22C55E", ghost: "rgba(34,197,94,0.08)" },
@@ -95,6 +103,10 @@ const config: Config = {
         "5xl": ["3rem",      { lineHeight: "1" }],
       },
 
+      maxWidth: {
+        container: "1320px",
+      },
+
       spacing: {
         "4.5": "1.125rem",
         "13":  "3.25rem",
@@ -121,6 +133,7 @@ const config: Config = {
         xl:           "0 20px 25px rgba(0,0,0,0.10), 0 8px 10px rgba(0,0,0,0.04)",
         card:         "0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)",
         "card-hover": "0 8px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04)",
+        elevated:     "var(--shadow-elevated)",
         ring:         "0 0 0 2px var(--accent)",
         "ring-offset":"0 0 0 2px var(--bg-surface), 0 0 0 4px var(--accent)",
       },
@@ -145,6 +158,7 @@ const config: Config = {
         "scale-in":   { from: { transform: "scale(0.97)", opacity: "0" }, to: { transform: "scale(1)", opacity: "1" } },
         "shimmer":    { "0%": { backgroundPosition: "-200% 0" }, "100%": { backgroundPosition: "200% 0" } },
         "shake":      { "0%, 100%": { transform: "translateX(0)" }, "20%, 60%": { transform: "translateX(-4px)" }, "40%, 80%": { transform: "translateX(4px)" } },
+        "drawer-up":  { from: { transform: "translateY(100%)" }, to: { transform: "translateY(0)" } },
       },
 
       animation: {
@@ -155,6 +169,7 @@ const config: Config = {
         "scale-in":   "scale-in 200ms ease-out",
         "shimmer":    "shimmer 2s ease-in-out infinite",
         "shake":      "shake 400ms ease-in-out",
+        "drawer-up":  "drawer-up 300ms cubic-bezier(0.32, 0.72, 0, 1)",
       },
     },
   },

@@ -357,7 +357,7 @@ export function SearchResults({
         <div className="flex items-center justify-center gap-2 py-8">
           <Loader2 className="h-5 w-5 animate-spin text-amber-500" />
           <span className="text-sm text-zinc-500 dark:text-zinc-400">
-            Chargement...
+            {t("loading")}
           </span>
         </div>
       )}
@@ -365,7 +365,7 @@ export function SearchResults({
       {/* End of results */}
       {!hasMore && results.length > 0 && (
         <p className="py-8 text-center text-sm text-zinc-400 dark:text-zinc-500">
-          {results.length} / {totalCount} annonces affichées
+          {results.length} / {totalCount} {t("listings_shown")}
         </p>
       )}
     </div>

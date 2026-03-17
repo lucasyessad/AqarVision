@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Search, MapPin, Home, Building2 } from "lucide-react";
 
 interface HomeSearchBarProps {
@@ -10,22 +11,23 @@ interface HomeSearchBarProps {
 }
 
 const TRANSACTION_PILLS = [
-  { value: "sale", label: "Acheter", emoji: "🏠" },
-  { value: "rent", label: "Louer", emoji: "🔑" },
-  { value: "vacation", label: "Vacances", emoji: "☀️" },
+  { value: "sale", labelKey: "buy" as const, emoji: "\u{1F3E0}" },
+  { value: "rent", labelKey: "rent" as const, emoji: "\u{1F511}" },
+  { value: "vacation", labelKey: "vacation" as const, emoji: "\u2600\uFE0F" },
 ] as const;
 
 const PROPERTY_TYPES = [
-  { value: "", label: "Tous les biens" },
-  { value: "apartment", label: "Appartement" },
-  { value: "villa", label: "Villa" },
-  { value: "terrain", label: "Terrain" },
-  { value: "office", label: "Bureau" },
-  { value: "commercial", label: "Local commercial" },
+  { value: "", labelKey: "all_property_types" as const },
+  { value: "apartment", labelKey: "apartment" as const },
+  { value: "villa", labelKey: "villa" as const },
+  { value: "terrain", labelKey: "terrain" as const },
+  { value: "office", labelKey: "office" as const },
+  { value: "commercial", labelKey: "commercial" as const },
 ];
 
 export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
   const router = useRouter();
+  const t = useTranslations("homepage.search_bar");
   const [wilaya, setWilaya] = useState("");
   const [listingType, setListingType] = useState("sale");
   const [propertyType, setPropertyType] = useState("");
@@ -46,7 +48,7 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
     <div className="flex w-full max-w-3xl flex-col items-center gap-4">
       {/* Transaction type pills */}
       <div className="flex gap-2">
-        {TRANSACTION_PILLS.map(({ value, label, emoji }) => (
+        {TRANSACTION_PILLS.map(({ value, labelKey, emoji }) => (
           <button
             key={value}
             type="button"
@@ -58,7 +60,7 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
                 : "bg-white/10 text-white/65 backdrop-blur-sm hover:bg-white/20",
             ].join(" ")}
           >
-            {emoji} {label}
+            {emoji} {t(labelKey)}
           </button>
         ))}
       </div>
@@ -80,7 +82,7 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
                   : "text-zinc-400 dark:text-zinc-500",
               ].join(" ")}
             >
-              <option value="">Toutes les wilayas</option>
+              <option value="">{t("all_wilayas")}</option>
               {wilayas.map((w) => (
                 <option key={w.code} value={w.code}>{w.name}</option>
               ))}
@@ -106,8 +108,8 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
                   : "text-zinc-400 dark:text-zinc-500",
               ].join(" ")}
             >
-              {PROPERTY_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>{t.label}</option>
+              {PROPERTY_TYPES.map((pt) => (
+                <option key={pt.value} value={pt.value}>{t(pt.labelKey)}</option>
               ))}
             </select>
           </div>
@@ -119,7 +121,7 @@ export function HomeSearchBar({ locale, wilayas }: HomeSearchBarProps) {
             className="flex min-w-[140px] items-center justify-center gap-2 whitespace-nowrap rounded-e-2xl bg-amber-500 hover:bg-amber-600 h-14 px-7 text-sm font-semibold text-white transition-colors"
           >
             <Search className="h-4 w-4" />
-            Rechercher
+            {t("button")}
           </button>
         </div>
       </div>

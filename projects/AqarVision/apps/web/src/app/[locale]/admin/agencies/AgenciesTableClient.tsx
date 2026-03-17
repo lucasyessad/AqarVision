@@ -1,38 +1,41 @@
 "use client";
 
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { approveAgencyAction } from "@/features/admin/actions/approve-agency.action";
 import { rejectAgencyAction } from "@/features/admin/actions/reject-agency.action";
 import { suspendAgencyAction } from "@/features/admin/actions/suspend-agency.action";
 import type { AgencyRow } from "@/features/admin/services/admin.service";
 
-// ── Status badge ──────────────────────────────────────────────────────────────
+// -- Status badge --
 
 function VerificationBadge({ status }: { status: string }) {
+  const t = useTranslations("admin");
   const styles: Record<string, string> = {
     verified: "bg-green-100 text-green-700",
     pending: "bg-yellow-100 text-yellow-700",
     rejected: "bg-red-100 text-red-700",
     unverified: "bg-gray-100 text-gray-500",
   };
-  const labels: Record<string, string> = {
-    verified: "Vérifié",
-    pending: "En attente",
-    rejected: "Rejeté",
-    unverified: "Non vérifié",
+  const labelKeys: Record<string, string> = {
+    verified: "status_verified",
+    pending: "status_pending",
+    rejected: "status_rejected",
+    unverified: "status_unverified",
   };
   return (
     <span
       className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${styles[status] ?? "bg-gray-100 text-gray-500"}`}
     >
-      {labels[status] ?? status}
+      {labelKeys[status] ? t(labelKeys[status] as "status_verified" | "status_pending" | "status_rejected" | "status_unverified") : status}
     </span>
   );
 }
 
-// ── Row actions ───────────────────────────────────────────────────────────────
+// -- Row actions --
 
 function AgencyActions({ agency }: { agency: AgencyRow }) {
+  const t = useTranslations("admin");
   const [isPending, startTransition] = useTransition();
 
   const handleApprove = () => {
@@ -50,7 +53,7 @@ function AgencyActions({ agency }: { agency: AgencyRow }) {
   };
 
   const handleSuspend = () => {
-    if (!confirm(`Suspendre l'agence "${agency.name}" ?`)) return;
+    if (!confirm(t("confirm_suspend", { name: agency.name }))) return;
     startTransition(async () => {
       const result = await suspendAgencyAction(agency.id);
       if (!result.success) alert(result.error.message);
@@ -67,7 +70,7 @@ function AgencyActions({ agency }: { agency: AgencyRow }) {
           disabled={isPending}
           className="rounded px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-300 transition-colors hover:bg-green-50 disabled:opacity-50"
         >
-          Vérifier
+          {t("action_verify")}
         </button>
       )}
       {agency.verification_status !== "rejected" && (
@@ -76,7 +79,7 @@ function AgencyActions({ agency }: { agency: AgencyRow }) {
           disabled={isPending}
           className="rounded px-2 py-1 text-xs font-medium text-red-600 ring-1 ring-red-300 transition-colors hover:bg-red-50 disabled:opacity-50"
         >
-          Rejeter
+          {t("action_reject")}
         </button>
       )}
       {!isSuspended && (
@@ -85,27 +88,29 @@ function AgencyActions({ agency }: { agency: AgencyRow }) {
           disabled={isPending}
           className="rounded px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-300 transition-colors hover:bg-gray-100 disabled:opacity-50"
         >
-          Suspendre
+          {t("action_suspend")}
         </button>
       )}
       {isSuspended && (
-        <span className="text-xs text-red-500 font-medium">Suspendue</span>
+        <span className="text-xs text-red-500 font-medium">{t("status_suspended")}</span>
       )}
     </div>
   );
 }
 
-// ── Table ─────────────────────────────────────────────────────────────────────
+// -- Table --
 
 interface Props {
   agencies: AgencyRow[];
 }
 
 export function AgenciesTableClient({ agencies }: Props) {
+  const t = useTranslations("admin");
+
   if (agencies.length === 0) {
     return (
       <div className="rounded-xl border border-gray-200 bg-white dark:bg-zinc-900 px-6 py-12 text-center text-sm text-gray-400">
-        Aucune agence trouvée.
+        {t("no_agencies")}
       </div>
     );
   }
@@ -116,19 +121,19 @@ export function AgenciesTableClient({ agencies }: Props) {
         <thead className="border-b border-gray-100 bg-gray-50">
           <tr>
             <th className="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Nom
+              {t("table_name")}
             </th>
             <th className="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Statut
+              {t("table_status")}
             </th>
             <th className="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Annonces
+              {t("table_listings")}
             </th>
             <th className="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Créée le
+              {t("table_created_at")}
             </th>
             <th className="px-4 py-3 text-start text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Actions
+              {t("table_actions")}
             </th>
           </tr>
         </thead>

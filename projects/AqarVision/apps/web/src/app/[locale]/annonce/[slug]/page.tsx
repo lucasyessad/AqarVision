@@ -97,7 +97,7 @@ export default async function ListingDetailPage({ params }: ListingPageProps) {
     currency: listing.currency,
     images: listing.media.map((m) => m.storage_path),
     url: `/${locale}/annonce/${slug}`,
-    agencyName: listing.agency_name,
+    agencyName: listing.agency_name ?? "",
     propertyType: listing.property_type,
     rooms: listing.rooms,
     surface: listing.surface_m2,

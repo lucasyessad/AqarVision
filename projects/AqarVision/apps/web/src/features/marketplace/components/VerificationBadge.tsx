@@ -19,7 +19,7 @@ const LEVEL_CONFIG: Record<number, { color: string; darkColor: string; bgColor: 
 
 export function VerificationBadge({ level, compact = false }: VerificationBadgeProps) {
   const t = useTranslations("listings");
-  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG[0];
+  const config = LEVEL_CONFIG[level] ?? LEVEL_CONFIG[0]!;
   const Icon = level >= 3 ? ShieldCheck : Shield;
 
   if (compact) {

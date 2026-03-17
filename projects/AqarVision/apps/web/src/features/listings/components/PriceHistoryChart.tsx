@@ -21,12 +21,12 @@ export function PriceHistoryChart({ history, currency, locale }: PriceHistoryCha
 
   if (history.length === 0) return null;
 
-  const prices = [history[0].old_price, ...history.map((h) => h.new_price)];
+  const prices = [history[0]!.old_price, ...history.map((h) => h.new_price)];
   const maxPrice = Math.max(...prices);
   const minPrice = Math.min(...prices);
   const range = maxPrice - minPrice || 1;
 
-  const latestChange = history[history.length - 1];
+  const latestChange = history[history.length - 1]!;
   const priceDiff = latestChange.new_price - latestChange.old_price;
   const pctChange = ((priceDiff / latestChange.old_price) * 100).toFixed(1);
 

@@ -5,6 +5,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { AqarBrandLogo } from "@/components/brand/AqarBrandLogo";
 import { signOutAction } from "@/features/auth/actions/auth.action";
 import { ChaabSidebarNav } from "./ChaabSidebarNav";
+import { ChaabMobileNav } from "./ChaabMobileNav";
 import {
   Home, List, MessageSquare, Heart, Bell, FolderOpen, Clock, Banknote, User, ArrowLeft, LogOut,
 } from "lucide-react";
@@ -100,16 +101,16 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
   ];
 
   return (
-    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-800 dark:bg-zinc-950">
+    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
 
-      {/* -- Sidebar desktop -- */}
-      <aside className="hidden w-60 shrink-0 flex-col border-e border-zinc-800/60 bg-zinc-950 dark:bg-zinc-900 md:flex">
+      {/* -- Sidebar desktop (hidden on mobile, replaced by bottom nav) -- */}
+      <aside className="hidden w-60 shrink-0 flex-col border-e border-zinc-100 bg-white dark:border-zinc-800 dark:bg-zinc-900 md:flex">
         {/* Header */}
-        <div className="flex flex-col gap-3 border-b border-zinc-800/60 px-5 py-5">
-          <AqarBrandLogo product="Chaab" size="sm" onDark />
+        <div className="flex flex-col gap-3 border-b border-zinc-100 px-5 py-5 dark:border-zinc-800">
+          <AqarBrandLogo product="Chaab" size="sm" onDark={false} />
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 transition-opacity hover:opacity-80"
+            className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
           >
             <ArrowLeft className="h-3 w-3" />
             {t("nav.back_portal")}
@@ -120,16 +121,16 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
         <ChaabSidebarNav items={navItems} />
 
         {/* User footer */}
-        <div className="border-t border-zinc-800/60 px-4 py-4">
+        <div className="border-t border-zinc-100 px-4 py-4 dark:border-zinc-800">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-xs font-semibold text-zinc-100">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
               {initial}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-medium text-zinc-100">
+              <p className="truncate text-xs font-medium text-zinc-900 dark:text-zinc-100">
                 {displayName}
               </p>
-              <p className="truncate text-[10px] text-zinc-500">
+              <p className="truncate text-[10px] text-zinc-500 dark:text-zinc-500">
                 {user.email}
               </p>
             </div>
@@ -139,7 +140,7 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
               <button
                 type="submit"
                 title={t("nav.logout")}
-                className="shrink-0 rounded-lg p-1 text-zinc-500 transition-opacity hover:opacity-70"
+                className="shrink-0 rounded-lg p-1 text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
               >
                 <LogOut className="h-4 w-4" />
               </button>
@@ -149,32 +150,24 @@ export default async function EspaceLayout({ children, params }: EspaceLayoutPro
       </aside>
 
       {/* -- Mobile top bar -- */}
-      <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between border-b border-zinc-800/60 bg-zinc-950 dark:bg-zinc-900 px-4 py-3 md:hidden">
+      <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between border-b border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900 md:hidden">
         <Link href="/">
-          <AqarBrandLogo product="Chaab" size="sm" onDark />
+          <AqarBrandLogo product="Chaab" size="sm" onDark={false} />
         </Link>
-        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-800 text-xs font-semibold text-zinc-100">
+        <Link
+          href="/AqarChaab/espace/profil"
+          className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 text-xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+        >
           {initial}
-        </div>
+        </Link>
       </div>
 
-      {/* -- Mobile bottom nav -- */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 flex border-t border-zinc-800/60 bg-zinc-950 dark:bg-zinc-900 md:hidden">
-        {navItems.slice(0, 5).map((item) => (
-          <Link
-            key={item.href}
-            href={item.href as "/"}
-            className="flex flex-1 flex-col items-center gap-1 px-1 py-3 text-[10px] text-zinc-500 transition-opacity hover:opacity-80"
-          >
-            <span className="text-amber-500">{item.icon}</span>
-            <span className="truncate">{item.label}</span>
-          </Link>
-        ))}
-      </nav>
+      {/* -- Mobile bottom nav (client component with "Plus" drawer) -- */}
+      <ChaabMobileNav />
 
       {/* -- Main content -- */}
       <main className="flex-1 overflow-y-auto pb-20 pt-14 md:pb-0 md:pt-0">
-        <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">
+        <div className="mx-auto max-w-4xl px-4 py-8 md:px-8">
           {children}
         </div>
       </main>

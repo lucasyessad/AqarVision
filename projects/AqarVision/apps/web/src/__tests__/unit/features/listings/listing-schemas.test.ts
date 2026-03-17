@@ -41,7 +41,7 @@ describe("UpsertTranslationSchema", () => {
       slug: "Bel-Appartement",
     });
     expect(result.success).toBe(false);
-    expect(result.error?.issues[0].message).toMatch(/lowercase/i);
+    expect(result.error?.issues[0]?.message).toMatch(/lowercase/i);
   });
 
   it("rejette un slug contenant des espaces", () => {

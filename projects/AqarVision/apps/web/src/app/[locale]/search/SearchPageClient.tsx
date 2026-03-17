@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { SearchResults } from "@/features/marketplace/components/SearchResults";
 import { SearchAlertButton } from "@/features/marketplace/components/SearchAlertButton";
@@ -20,34 +21,17 @@ const SearchMap = dynamic(
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const LISTING_TYPE_LABELS: Record<string, string> = {
-  sale: "Vente",
-  rent: "Location",
-  vacation: "Vacances",
-};
-
-const PROPERTY_TYPE_LABELS: Record<string, string> = {
-  apartment: "Appartement",
-  villa: "Villa",
-  terrain: "Terrain",
-  commercial: "Local commercial",
-  office: "Bureau",
-  building: "Immeuble",
-  farm: "Ferme",
-  warehouse: "Entrepôt",
-};
-
 const LISTING_TYPES = ["sale", "rent", "vacation"] as const;
 const PROPERTY_TYPES = ["apartment", "villa", "terrain", "commercial", "office", "building", "farm", "warehouse"] as const;
 
 const AMENITY_PILLS = [
-  { label: "Vue mer",  icon: "🌊", key: "view_sea" },
-  { label: "Piscine",  icon: "🏊", key: "has_pool" },
-  { label: "Jardin",   icon: "🌿", key: "has_garden" },
-  { label: "Parking",  icon: "🚗", key: "has_parking" },
-  { label: "Meublé",   icon: "🛋️",  key: "furnished" },
-  { label: "Neuf",     icon: "✨", key: "new_build" },
-  { label: "Balcon",   icon: "🏡", key: "has_balcony" },
+  { labelKey: "amenity_view_sea" as const, icon: "\u{1F30A}", key: "view_sea" },
+  { labelKey: "amenity_pool" as const,     icon: "\u{1F3CA}", key: "has_pool" },
+  { labelKey: "amenity_garden" as const,   icon: "\u{1F33F}", key: "has_garden" },
+  { labelKey: "amenity_parking" as const,  icon: "\u{1F697}", key: "has_parking" },
+  { labelKey: "amenity_furnished" as const, icon: "\u{1F6CB}\uFE0F", key: "furnished" },
+  { labelKey: "amenity_new_build" as const, icon: "\u2728",   key: "new_build" },
+  { labelKey: "amenity_balcony" as const,  icon: "\u{1F3E1}", key: "has_balcony" },
 ];
 
 // ── FilterDropdown ────────────────────────────────────────────────────────────
@@ -128,6 +112,26 @@ export function SearchPageClient({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const tSearch = useTranslations("search");
+  const tListings = useTranslations("listings");
+
+  // ── Translated label maps (rebuilt on locale change) ──────────────────────
+  const listingTypeLabels: Record<string, string> = useMemo(() => ({
+    sale: tListings("sale"),
+    rent: tListings("rent"),
+    vacation: tListings("vacation"),
+  }), [tListings]);
+
+  const propertyTypeLabels: Record<string, string> = useMemo(() => ({
+    apartment: tListings("apartment"),
+    villa: tListings("villa"),
+    terrain: tListings("terrain"),
+    commercial: tListings("commercial"),
+    office: tListings("office"),
+    building: tListings("building"),
+    farm: tListings("farm"),
+    warehouse: tListings("warehouse"),
+  }), [tListings]);
 
   // ── Filter state ───────────────────────────────────────────────────────────
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
@@ -199,16 +203,16 @@ export function SearchPageClient({
       .filter((w) => w.name.toLowerCase().includes(q) || w.code.includes(q))
       .slice(0, 5);
 
-    const matchedPropertyTypes = Object.entries(PROPERTY_TYPE_LABELS)
+    const matchedPropertyTypes = Object.entries(propertyTypeLabels)
       .filter(([, label]) => label.toLowerCase().includes(q))
       .map(([key, label]) => ({ key, label }));
 
-    const matchedListingTypes = Object.entries(LISTING_TYPE_LABELS)
+    const matchedListingTypes = Object.entries(listingTypeLabels)
       .filter(([, label]) => label.toLowerCase().includes(q))
       .map(([key, label]) => ({ key, label }));
 
     return { wilayas: matchedWilayas, propertyTypes: matchedPropertyTypes, listingTypes: matchedListingTypes };
-  }, [query, wilayas]);
+  }, [query, wilayas, propertyTypeLabels, listingTypeLabels]);
 
   const hasSuggestions = suggestions.wilayas.length > 0 || suggestions.propertyTypes.length > 0 || suggestions.listingTypes.length > 0;
 
@@ -325,7 +329,7 @@ export function SearchPageClient({
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
               onFocus={() => query.trim().length >= 2 && setShowSuggestions(true)}
-              placeholder="Ville, quartier ou type de bien…"
+              placeholder={tSearch("placeholder")}
               className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 py-2 pe-4 ps-9 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
 
@@ -337,7 +341,7 @@ export function SearchPageClient({
                 {suggestions.wilayas.length > 0 && (
                   <div>
                     <p className="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                      Wilayas
+                      {tSearch("autocomplete_wilayas")}
                     </p>
                     {suggestions.wilayas.map(({ code, name }) => (
                       <button
@@ -357,7 +361,7 @@ export function SearchPageClient({
                 {suggestions.propertyTypes.length > 0 && (
                   <div className={suggestions.wilayas.length > 0 ? "border-t border-zinc-100 dark:border-zinc-800" : ""}>
                     <p className="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                      Types de bien
+                      {tSearch("autocomplete_property_types")}
                     </p>
                     {suggestions.propertyTypes.map(({ key, label }) => (
                       <button
@@ -376,7 +380,7 @@ export function SearchPageClient({
                 {suggestions.listingTypes.length > 0 && (
                   <div className={(suggestions.wilayas.length > 0 || suggestions.propertyTypes.length > 0) ? "border-t border-zinc-100 dark:border-zinc-800" : ""}>
                     <p className="px-3 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                      Types d&apos;annonce
+                      {tSearch("autocomplete_listing_types")}
                     </p>
                     {suggestions.listingTypes.map(({ key, label }) => (
                       <button
@@ -394,7 +398,7 @@ export function SearchPageClient({
             )}
           </div>
 
-          {/* View toggle [Annonces | Carte] */}
+          {/* View toggle [Listings | Map] */}
           <div className="flex overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 dark:border-zinc-800">
             {(["listings", "map"] as const).map((mode) => (
               <button
@@ -411,12 +415,12 @@ export function SearchPageClient({
                 {mode === "listings" ? (
                   <>
                     <List className="h-3.5 w-3.5" />
-                    Annonces
+                    {tSearch("view_listings")}
                   </>
                 ) : (
                   <>
                     <Map className="h-3.5 w-3.5" />
-                    Carte
+                    {tSearch("view_map")}
                   </>
                 )}
               </button>
@@ -425,8 +429,8 @@ export function SearchPageClient({
 
           {/* Result count */}
           <span className="hidden text-sm text-zinc-400 dark:text-zinc-500 sm:block">
-            <span className="font-semibold text-zinc-800 dark:text-zinc-200">{totalCount.toLocaleString("fr-DZ")}</span>{" "}
-            annonce{totalCount !== 1 ? "s" : ""}
+            <span className="font-semibold text-zinc-800 dark:text-zinc-200">{totalCount.toLocaleString(locale)}</span>{" "}
+            {tSearch("listing_count", { count: totalCount })}
           </span>
 
           <div className="ms-auto">
@@ -442,7 +446,7 @@ export function SearchPageClient({
 
           {/* Listing type */}
           <FilterDropdown
-            label={listingType ? LISTING_TYPE_LABELS[listingType]! : "Type d'annonce"}
+            label={listingType ? listingTypeLabels[listingType]! : tSearch("listing_type_filter")}
             active={!!listingType}
           >
             <div className="space-y-1">
@@ -468,7 +472,7 @@ export function SearchPageClient({
                   {listingType === t && (
                     <Check className="h-3.5 w-3.5 shrink-0 text-amber-500" />
                   )}
-                  {LISTING_TYPE_LABELS[t]}
+                  {listingTypeLabels[t]}
                 </button>
               ))}
             </div>
@@ -476,7 +480,7 @@ export function SearchPageClient({
 
           {/* Property type */}
           <FilterDropdown
-            label={propertyType ? PROPERTY_TYPE_LABELS[propertyType]! : "Type de bien"}
+            label={propertyType ? propertyTypeLabels[propertyType]! : tSearch("property_type_filter")}
             active={!!propertyType}
           >
             <div className="grid grid-cols-2 gap-1">
@@ -499,7 +503,7 @@ export function SearchPageClient({
                       : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700",
                   ].join(" ")}
                 >
-                  {PROPERTY_TYPE_LABELS[t]}
+                  {propertyTypeLabels[t]}
                 </button>
               ))}
             </div>
@@ -507,7 +511,7 @@ export function SearchPageClient({
 
           {/* Wilaya */}
           <FilterDropdown
-            label={wilayaCode ? (wilayas.find((w) => w.code === wilayaCode)?.name ?? wilayaCode) : "Wilaya"}
+            label={wilayaCode ? (wilayas.find((w) => w.code === wilayaCode)?.name ?? wilayaCode) : tSearch("wilaya_filter")}
             active={!!wilayaCode}
           >
             <div className="max-h-56 space-y-0.5 overflow-y-auto">
@@ -537,27 +541,27 @@ export function SearchPageClient({
             </div>
           </FilterDropdown>
 
-          {/* Prix */}
+          {/* Price */}
           <FilterDropdown
-            label={priceMin || priceMax ? `${priceMin || "0"} – ${priceMax || "∞"} DZD` : "Prix"}
+            label={priceMin || priceMax ? `${priceMin || "0"} \u2013 ${priceMax || "\u221E"} DZD` : tSearch("price_label")}
             active={!!(priceMin || priceMax)}
           >
             <div className="space-y-3 p-1">
-              <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500">Fourchette de prix (DZD)</p>
+              <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500">{tSearch("price_range_dzd")}</p>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
                   value={priceMin}
                   onChange={(e) => setPriceMin(e.target.value)}
-                  placeholder="Min"
+                  placeholder={tSearch("price_min_placeholder")}
                   className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 focus:border-amber-500 focus:outline-none"
                 />
-                <span className="text-zinc-400 dark:text-zinc-500">–</span>
+                <span className="text-zinc-400 dark:text-zinc-500">{"\u2013"}</span>
                 <input
                   type="number"
                   value={priceMax}
                   onChange={(e) => setPriceMax(e.target.value)}
-                  placeholder="Max"
+                  placeholder={tSearch("price_max_placeholder")}
                   className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 focus:border-amber-500 focus:outline-none"
                 />
               </div>
@@ -566,19 +570,19 @@ export function SearchPageClient({
                 onClick={() => applyFilters()}
                 className="w-full rounded-lg bg-zinc-950 dark:bg-zinc-50 dark:bg-zinc-800 py-2 text-sm font-semibold text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
               >
-                Appliquer
+                {tSearch("apply")}
               </button>
             </div>
           </FilterDropdown>
 
-          {/* Surface & Pieces */}
+          {/* Surface & Rooms */}
           <FilterDropdown
-            label={roomsMin || surfaceMin ? [roomsMin ? `${roomsMin}+ pièces` : "", surfaceMin ? `${surfaceMin}+ m²` : ""].filter(Boolean).join(" · ") : "Surface & Pièces"}
+            label={roomsMin || surfaceMin ? [roomsMin ? tSearch("rooms_min_summary", { count: roomsMin }) : "", surfaceMin ? tSearch("surface_min_summary", { count: surfaceMin }) : ""].filter(Boolean).join(" \u00B7 ") : tSearch("surface_and_rooms")}
             active={!!(roomsMin || surfaceMin)}
           >
             <div className="space-y-3 p-1">
               <div>
-                <p className="mb-1.5 text-xs font-semibold text-zinc-400 dark:text-zinc-500">Pièces minimum</p>
+                <p className="mb-1.5 text-xs font-semibold text-zinc-400 dark:text-zinc-500">{tSearch("rooms_min")}</p>
                 <div className="flex gap-1.5">
                   {["", "1", "2", "3", "4", "5"].map((n) => (
                     <button
@@ -592,18 +596,18 @@ export function SearchPageClient({
                           : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700",
                       ].join(" ")}
                     >
-                      {n || "—"}
+                      {n || "\u2014"}
                     </button>
                   ))}
                 </div>
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-semibold text-zinc-400 dark:text-zinc-500">Surface min (m²)</p>
+                <p className="mb-1.5 text-xs font-semibold text-zinc-400 dark:text-zinc-500">{tSearch("surface_min")}</p>
                 <input
                   type="number"
                   value={surfaceMin}
                   onChange={(e) => setSurfaceMin(e.target.value)}
-                  placeholder="ex: 80"
+                  placeholder={tSearch("surface_min_placeholder")}
                   className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 focus:border-amber-500 focus:outline-none"
                 />
               </div>
@@ -612,7 +616,7 @@ export function SearchPageClient({
                 onClick={() => applyFilters()}
                 className="w-full rounded-lg bg-zinc-950 dark:bg-zinc-50 dark:bg-zinc-800 py-2 text-sm font-semibold text-zinc-50 dark:text-zinc-950 dark:text-zinc-50"
               >
-                Appliquer
+                {tSearch("apply")}
               </button>
             </div>
           </FilterDropdown>
@@ -624,7 +628,7 @@ export function SearchPageClient({
 
           {/* Amenity pills — scrollable */}
           <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto scrollbar-hide">
-          {AMENITY_PILLS.map(({ label, icon, key }) => {
+          {AMENITY_PILLS.map(({ labelKey, icon, key }) => {
             const active = activeAmenities.includes(key);
             return (
               <button
@@ -639,7 +643,7 @@ export function SearchPageClient({
                 ].join(" ")}
               >
                 <span>{icon}</span>
-                {label}
+                {tSearch(labelKey)}
               </button>
             );
           })}
@@ -652,7 +656,7 @@ export function SearchPageClient({
               className="flex shrink-0 items-center gap-1 rounded-full border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-400 dark:text-zinc-500 transition-all hover:border-red-300 dark:hover:border-red-500 hover:text-red-500 dark:hover:text-red-400"
             >
               <X className="h-3.5 w-3.5" />
-              Réinitialiser
+              {tSearch("reset_filters")}
             </button>
           )}
           </div>
@@ -706,10 +710,10 @@ export function SearchPageClient({
           {/* Floating result count on map */}
           <div className="absolute start-4 top-4 z-10 rounded-lg bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm px-3 py-1.5 shadow-md border border-zinc-200/50 dark:border-zinc-700/50">
             <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-              {totalCount.toLocaleString("fr-DZ")}
+              {totalCount.toLocaleString(locale)}
             </span>
             <span className="text-xs text-zinc-500 dark:text-zinc-400">
-              {" "}annonce{totalCount !== 1 ? "s" : ""}
+              {" "}{tSearch("listing_count", { count: totalCount })}
             </span>
           </div>
         </div>

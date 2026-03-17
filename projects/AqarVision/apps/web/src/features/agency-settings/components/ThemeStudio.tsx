@@ -2,6 +2,7 @@
 
 import { useActionState, useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getAgencyUrl } from "@/lib/agency-url";
 import { ThemeLoader } from "@/components/agency/themes/ThemeLoader";
 import type { SearchResultDto } from "@/features/marketplace/types/search.types";
@@ -15,7 +16,6 @@ import type { BrandingType } from "../actions/upload-branding.action";
 
 // Module-level constants (avoid per-render allocations)
 const LISTING_INDICES = [0, 1, 2, 3] as const;
-const NAV_LINKS = ["Biens", "Contact"] as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -39,12 +39,12 @@ interface ThemeStudioProps {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const PREVIEW_LISTINGS: SearchResultDto[] = [
-  { id: "p1", agency_id: "", current_status: "published", current_price: 8500000, currency: "DZD", listing_type: "sale", property_type: "apartment", surface_m2: 95, rooms: 4, bathrooms: 1, wilaya_code: "16", wilaya_name: "Alger", commune_name: "Hydra", commune_id: 1, published_at: null, created_at: "", title: "Appartement F4 lumineux", slug: "demo-1", cover_url: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 1 },
-  { id: "p2", agency_id: "", current_status: "published", current_price: 25000000, currency: "DZD", listing_type: "sale", property_type: "villa", surface_m2: 220, rooms: 6, bathrooms: 2, wilaya_code: "16", wilaya_name: "Alger", commune_name: "El Biar", commune_id: 2, published_at: null, created_at: "", title: "Villa avec piscine", slug: "demo-2", cover_url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 2 },
-  { id: "p3", agency_id: "", current_status: "published", current_price: 45000, currency: "DZD", listing_type: "rent", property_type: "apartment", surface_m2: 65, rooms: 3, bathrooms: 1, wilaya_code: "31", wilaya_name: "Oran", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "F3 meublé centre-ville", slug: "demo-3", cover_url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 3 },
-  { id: "p4", agency_id: "", current_status: "published", current_price: 15000000, currency: "DZD", listing_type: "sale", property_type: "terrain", surface_m2: 500, rooms: null, bathrooms: null, wilaya_code: "09", wilaya_name: "Blida", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "Terrain constructible", slug: "demo-4", cover_url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 4 },
-  { id: "p5", agency_id: "", current_status: "published", current_price: 12000000, currency: "DZD", listing_type: "sale", property_type: "apartment", surface_m2: 110, rooms: 5, bathrooms: 2, wilaya_code: "16", wilaya_name: "Alger", commune_name: "Bir Mourad Raïs", commune_id: 3, published_at: null, created_at: "", title: "Appartement F5 avec balcon", slug: "demo-5", cover_url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 5 },
-  { id: "p6", agency_id: "", current_status: "published", current_price: 35000000, currency: "DZD", listing_type: "sale", property_type: "villa", surface_m2: 350, rooms: 7, bathrooms: 3, wilaya_code: "25", wilaya_name: "Constantine", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "Villa luxe avec jardin", slug: "demo-6", cover_url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 6 },
+  { id: "p1", agency_id: "", current_status: "published", current_price: 8500000, currency: "DZD", listing_type: "sale", property_type: "apartment", surface_m2: 95, rooms: 4, bathrooms: 1, wilaya_code: "16", wilaya_name: "Alger", commune_name: "Hydra", commune_id: 1, published_at: null, created_at: "", title: "Appartement F4 lumineux", slug: "demo-1", cover_url: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 1, lat: null, lng: null },
+  { id: "p2", agency_id: "", current_status: "published", current_price: 25000000, currency: "DZD", listing_type: "sale", property_type: "villa", surface_m2: 220, rooms: 6, bathrooms: 2, wilaya_code: "16", wilaya_name: "Alger", commune_name: "El Biar", commune_id: 2, published_at: null, created_at: "", title: "Villa avec piscine", slug: "demo-2", cover_url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 2, lat: null, lng: null },
+  { id: "p3", agency_id: "", current_status: "published", current_price: 45000, currency: "DZD", listing_type: "rent", property_type: "apartment", surface_m2: 65, rooms: 3, bathrooms: 1, wilaya_code: "31", wilaya_name: "Oran", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "F3 meublé centre-ville", slug: "demo-3", cover_url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 3, lat: null, lng: null },
+  { id: "p4", agency_id: "", current_status: "published", current_price: 15000000, currency: "DZD", listing_type: "sale", property_type: "terrain", surface_m2: 500, rooms: null, bathrooms: null, wilaya_code: "09", wilaya_name: "Blida", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "Terrain constructible", slug: "demo-4", cover_url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 4, lat: null, lng: null },
+  { id: "p5", agency_id: "", current_status: "published", current_price: 12000000, currency: "DZD", listing_type: "sale", property_type: "apartment", surface_m2: 110, rooms: 5, bathrooms: 2, wilaya_code: "16", wilaya_name: "Alger", commune_name: "Bir Mourad Raïs", commune_id: 3, published_at: null, created_at: "", title: "Appartement F5 avec balcon", slug: "demo-5", cover_url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 5, lat: null, lng: null },
+  { id: "p6", agency_id: "", current_status: "published", current_price: 35000000, currency: "DZD", listing_type: "sale", property_type: "villa", surface_m2: 350, rooms: 7, bathrooms: 3, wilaya_code: "25", wilaya_name: "Constantine", commune_name: null, commune_id: null, published_at: null, created_at: "", title: "Villa luxe avec jardin", slug: "demo-6", cover_url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop", agency_name: "", relevance_score: null, reference_number: 6, lat: null, lng: null },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -53,12 +53,14 @@ const PREVIEW_LISTINGS: SearchResultDto[] = [
 
 function LivePreview({
   themeId, primary, accent, secondary,
-  logoUrl, coverUrl, agencyName, description,
+  logoUrl, coverUrl, agencyName, description, t,
 }: {
   themeId: string; primary: string; accent: string; secondary: string;
   logoUrl: string | null; coverUrl: string | null;
   agencyName: string; description: string | null;
+  t: ReturnType<typeof useTranslations<"theme_studio">>;
 }) {
+  const NAV_LINKS = [t("preview_nav_listings"), t("preview_nav_contact")] as const;
   const manifest = getThemeById(themeId);
   const isDark = manifest?.style.themeMode === "dark";
   const bg = isDark ? primary : "#f8fafc";
@@ -116,7 +118,7 @@ function LivePreview({
           ))}
           <div className="rounded px-2 py-0.5 text-[7px] font-bold"
             style={{ background: isMinimalHeader ? primary : accent, color: isMinimalHeader ? "#fff" : isDark ? "#000" : "#fff" }}>
-            Nous contacter
+            {t("preview_contact_us")}
           </div>
         </div>
       </div>
@@ -148,7 +150,7 @@ function LivePreview({
       <div className="flex gap-3 px-3 py-3" style={{ background: bg, flex: 1 }}>
         {/* Listings */}
         <div className="flex-1">
-          <p className="mb-1.5 text-[9px] font-semibold" style={{ color: textMain }}>Nos biens</p>
+          <p className="mb-1.5 text-[9px] font-semibold" style={{ color: textMain }}>{t("preview_our_listings")}</p>
           <div className="grid grid-cols-2 gap-1.5">
             {LISTING_INDICES.map((i) => (
               <div key={i} className="overflow-hidden rounded-lg" style={{ background: cardBg, border: `1px solid ${border}` }}>
@@ -165,12 +167,12 @@ function LivePreview({
         {/* Sidebar */}
         <div className="w-16 shrink-0">
           <div className="rounded-lg p-2" style={{ background: cardBg, border: `1px solid ${border}` }}>
-            <p className="mb-1.5 text-[8px] font-semibold" style={{ color: textMain }}>Contact</p>
+            <p className="mb-1.5 text-[8px] font-semibold" style={{ color: textMain }}>{t("preview_nav_contact")}</p>
             <div className="mb-1 w-full rounded py-0.5 text-center text-[7px] font-bold text-white" style={{ background: primary }}>
-              Appeler
+              {t("preview_call")}
             </div>
             <div className="w-full rounded border py-0.5 text-center text-[7px] font-bold" style={{ borderColor: primary, color: primary }}>
-              Email
+              {t("preview_email")}
             </div>
           </div>
         </div>
@@ -188,9 +190,8 @@ function LivePreview({
 // Step bar
 // ─────────────────────────────────────────────────────────────────────────────
 
-const STEPS = ["Thème", "Couleurs", "Branding", "Aperçu"];
-
-function StepBar({ current }: { current: number }) {
+function StepBar({ current, t }: { current: number; t: ReturnType<typeof useTranslations<"theme_studio">> }) {
+  const STEPS = [t("step_theme"), t("step_colors"), t("step_branding"), t("step_preview")];
   return (
     <div className="flex items-center gap-0">
       {STEPS.map((label, i) => {
@@ -237,7 +238,7 @@ function StepBar({ current }: { current: number }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function UploadZone({
-  brandingType, currentUrl, onUploaded, label, hint, aspectRatio,
+  brandingType, currentUrl, onUploaded, label, hint, aspectRatio, t,
 }: {
   brandingType: BrandingType;
   currentUrl: string | null;
@@ -245,6 +246,7 @@ function UploadZone({
   label: string;
   hint: string;
   aspectRatio: "square" | "wide";
+  t: ReturnType<typeof useTranslations<"theme_studio">>;
 }) {
   type State = ActionResult<{ url: string; type: BrandingType }> | null;
   const [state, formAction, isPending] = useActionState<State, FormData>(uploadBrandingAction, null);
@@ -316,7 +318,7 @@ function UploadZone({
             <>
               <img src={preview} alt="" className="h-full w-full object-cover" />
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                <p className="text-xs font-semibold text-white">Changer</p>
+                <p className="text-xs font-semibold text-white">{t("upload_change")}</p>
               </div>
             </>
           ) : (
@@ -329,9 +331,9 @@ function UploadZone({
               </div>
               <div className="text-center">
                 <p className="text-xs font-medium text-gray-700">
-                  Glissez ou <span className="text-zinc-950 dark:text-zinc-50 underline">choisissez</span>
+                  {t("upload_drag_or")} <span className="text-zinc-950 dark:text-zinc-50 underline">{t("upload_browse")}</span>
                 </p>
-                <p className="mt-0.5 text-[10px] text-gray-400">PNG, JPEG, WebP</p>
+                <p className="mt-0.5 text-[10px] text-gray-400">{t("upload_formats")}</p>
               </div>
             </div>
           )}
@@ -345,7 +347,7 @@ function UploadZone({
               disabled={isPending}
               className="shrink-0 rounded-lg bg-zinc-950 px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
             >
-              {isPending ? "Envoi…" : "Enregistrer"}
+              {isPending ? t("upload_sending") : t("upload_save")}
             </button>
           </div>
         )}
@@ -353,7 +355,7 @@ function UploadZone({
           <p className="mt-1 text-xs text-red-500">{state.error.message}</p>
         )}
         {state?.success === true && (
-          <p className="mt-1 text-xs font-medium text-green-600">✓ Enregistré</p>
+          <p className="mt-1 text-xs font-medium text-green-600">✓ {t("upload_saved")}</p>
         )}
       </div>
     </form>
@@ -394,6 +396,7 @@ export function ThemeStudio({
   currentTheme, currentPrimaryColor, currentAccentColor, currentSecondaryColor,
   currentLogoUrl, currentCoverUrl, agencyPlan, agencyName, agencySlug, agencyDescription,
 }: ThemeStudioProps) {
+  const t = useTranslations("theme_studio");
   const [step, setStep] = useState(1);
   const [selectedTheme, setSelectedTheme] = useState(currentTheme);
   const initialTheme = getThemeById(currentTheme);
@@ -461,7 +464,7 @@ export function ThemeStudio({
     <div className="flex min-h-full flex-col gap-5">
       {/* Step bar */}
       <div className="flex items-center justify-between rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-4">
-        <StepBar current={step} />
+        <StepBar current={step} t={t} />
         {manifest && (
           <div className="hidden items-center gap-2 sm:flex">
             <div className="flex h-5 overflow-hidden rounded">
@@ -484,9 +487,9 @@ export function ThemeStudio({
           {step === 1 && (
             <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
               <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-5">
-                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Choisissez un thème</h2>
+                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">{t("step1_title")}</h2>
                 <p className="mt-0.5 text-sm text-zinc-500">
-                  Sélectionnez le style visuel de votre vitrine publique.
+                  {t("step1_description")}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 p-5 sm:grid-cols-3 xl:grid-cols-4">
@@ -551,7 +554,7 @@ export function ThemeStudio({
                             "text-[9px]",
                             isDark ? "text-white/50" : "text-zinc-400",
                           ].join(" ")}>
-                            {isDark ? "🌙" : "☀️"} {theme.plan ? (theme.plan === "enterprise" ? "Enterprise" : "Pro") : "Gratuit"}
+                            {isDark ? "🌙" : "☀️"} {theme.plan ? (theme.plan === "enterprise" ? "Enterprise" : "Pro") : t("plan_free")}
                           </span>
                         </div>
                       </div>
@@ -566,15 +569,15 @@ export function ThemeStudio({
           {step === 2 && (
             <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
               <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-5">
-                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Personnalisez les couleurs</h2>
+                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">{t("step2_title")}</h2>
                 <p className="mt-0.5 text-sm text-zinc-500">
-                  Adaptez les couleurs du thème <strong>{manifest?.name}</strong> à votre identité.
+                  {t("step2_description", { theme: manifest?.name ?? "" })}
                 </p>
               </div>
               <div className="space-y-3 p-6">
-                <ColorRow label="Couleur principale" value={primaryColor} onChange={setPrimaryColor} />
-                <ColorRow label="Couleur d'accentuation" value={accentColor} onChange={setAccentColor} />
-                <ColorRow label="Couleur secondaire" value={secondaryColor} onChange={setSecondaryColor} />
+                <ColorRow label={t("color_primary")} value={primaryColor} onChange={setPrimaryColor} />
+                <ColorRow label={t("color_accent")} value={accentColor} onChange={setAccentColor} />
+                <ColorRow label={t("color_secondary")} value={secondaryColor} onChange={setSecondaryColor} />
                 <button
                   type="button"
                   onClick={() => {
@@ -589,7 +592,7 @@ export function ThemeStudio({
                   <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                   </svg>
-                  Réinitialiser aux couleurs du thème
+                  {t("reset_theme_colors")}
                 </button>
               </div>
             </div>
@@ -599,9 +602,9 @@ export function ThemeStudio({
           {step === 3 && (
             <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
               <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-5">
-                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Logo & image de couverture</h2>
+                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">{t("step3_title")}</h2>
                 <p className="mt-0.5 text-sm text-zinc-500">
-                  Ces visuels s&apos;affichent sur votre vitrine publique.
+                  {t("step3_description")}
                 </p>
               </div>
               <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-[140px_1fr]">
@@ -610,18 +613,20 @@ export function ThemeStudio({
                   brandingType="logo"
                   currentUrl={logoUrl}
                   onUploaded={setLogoUrl}
-                  label="Logo"
-                  hint="400×400 px — max 500 Ko"
+                  label={t("branding_logo")}
+                  hint={t("branding_logo_hint")}
                   aspectRatio="square"
+                  t={t}
                 />
                 {/* Cover */}
                 <UploadZone
                   brandingType="cover"
                   currentUrl={coverUrl}
                   onUploaded={setCoverUrl}
-                  label="Image de couverture"
-                  hint="1200×400 px — max 2 Mo"
+                  label={t("branding_cover")}
+                  hint={t("branding_cover_hint")}
                   aspectRatio="wide"
+                  t={t}
                 />
               </div>
             </div>
@@ -631,19 +636,19 @@ export function ThemeStudio({
           {step === 4 && (
             <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
               <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-5">
-                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Prêt à publier</h2>
+                <h2 className="text-base font-bold text-zinc-950 dark:text-zinc-50">{t("step4_title")}</h2>
                 <p className="mt-0.5 text-sm text-zinc-500">
-                  Vérifiez l&apos;aperçu à droite, puis cliquez sur Appliquer.
+                  {t("step4_description")}
                 </p>
               </div>
               <div className="p-6 space-y-5">
                 {/* Summary cards */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {[
-                    { icon: "🎨", label: "Thème", value: manifest?.name ?? selectedTheme },
-                    { icon: manifest?.style.themeMode === "dark" ? "🌙" : "☀️", label: "Mode", value: manifest?.style.themeMode === "dark" ? "Sombre" : "Clair" },
-                    { icon: "🖼", label: "Logo", value: logoUrl ? "Configuré" : "Non défini" },
-                    { icon: "🏞", label: "Couverture", value: coverUrl ? "Configurée" : "Non définie" },
+                    { icon: "🎨", label: t("summary_theme"), value: manifest?.name ?? selectedTheme },
+                    { icon: manifest?.style.themeMode === "dark" ? "🌙" : "☀️", label: t("summary_mode"), value: manifest?.style.themeMode === "dark" ? t("mode_dark") : t("mode_light") },
+                    { icon: "🖼", label: t("summary_logo"), value: logoUrl ? t("summary_configured") : t("summary_not_set") },
+                    { icon: "🏞", label: t("summary_cover"), value: coverUrl ? t("summary_configured_f") : t("summary_not_set_f") },
                   ].map(({ icon, label, value }) => (
                     <div key={label} className="rounded-xl bg-zinc-50 dark:bg-zinc-800 p-4">
                       <p className="text-lg">{icon}</p>
@@ -655,12 +660,12 @@ export function ThemeStudio({
 
                 {/* Color palette preview */}
                 <div className="flex items-center gap-3 rounded-xl bg-zinc-50 dark:bg-zinc-800 p-4">
-                  <p className="text-sm font-medium text-zinc-500">Palette :</p>
+                  <p className="text-sm font-medium text-zinc-500">{t("palette_label")}</p>
                   <div className="flex gap-2">
                     {[
-                      { c: primaryColor, label: "Principale" },
-                      { c: accentColor, label: "Accentuation" },
-                      { c: secondaryColor, label: "Secondaire" },
+                      { c: primaryColor, label: t("palette_primary") },
+                      { c: accentColor, label: t("palette_accent") },
+                      { c: secondaryColor, label: t("palette_secondary") },
                     ].map(({ c, label }) => (
                       <div key={label} className="flex items-center gap-1.5">
                         <div className="h-5 w-5 rounded-full shadow-sm ring-2 ring-black/[0.08]" style={{ background: c }} />
@@ -684,7 +689,7 @@ export function ThemeStudio({
                     <svg className="mt-0.5 h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Thème appliqué ! Votre vitrine est mise à jour.
+                    {t("theme_applied_success")}
                   </div>
                 )}
 
@@ -706,14 +711,14 @@ export function ThemeStudio({
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                           </svg>
-                          Application…
+                          {t("applying")}
                         </>
                       ) : (
                         <>
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          Appliquer le thème
+                          {t("apply_theme")}
                         </>
                       )}
                     </button>
@@ -726,7 +731,7 @@ export function ThemeStudio({
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                       </svg>
-                      Voir la vitrine
+                      {t("view_storefront")}
                     </a>
                   </div>
                 </form>
@@ -745,7 +750,7 @@ export function ThemeStudio({
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                 </svg>
-                Précédent
+                {t("nav_previous")}
               </button>
             ) : <div />}
             {step < 4 && (
@@ -754,7 +759,7 @@ export function ThemeStudio({
                 onClick={() => setStep(s => s + 1)}
                 className="inline-flex items-center gap-2 rounded-xl bg-zinc-950 px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:shadow-lg hover:scale-[1.02]"
               >
-                Suivant
+                {t("nav_next")}
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
@@ -768,7 +773,7 @@ export function ThemeStudio({
           <div className="sticky top-4">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                Aperçu en direct
+                {t("live_preview")}
               </p>
               <button
                 type="button"
@@ -778,7 +783,7 @@ export function ThemeStudio({
                 <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                 </svg>
-                Agrandir
+                {t("expand")}
               </button>
             </div>
             {/* Clickable mini preview */}
@@ -796,6 +801,7 @@ export function ThemeStudio({
                 coverUrl={coverUrl}
                 agencyName={agencyName}
                 description={agencyDescription}
+                t={t}
               />
             </button>
           </div>
@@ -826,13 +832,13 @@ export function ThemeStudio({
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                   </svg>
-                  Ouvrir dans un nouvel onglet
+                  {t("open_in_new_tab")}
                 </a>
                 <button
                   type="button"
                   onClick={() => setPreviewExpanded(false)}
                   className="rounded-full bg-white/10 p-2.5 text-white transition-colors hover:bg-white/20"
-                  aria-label="Fermer"
+                  aria-label={t("close")}
                 >
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

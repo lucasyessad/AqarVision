@@ -17,7 +17,7 @@ const HEAT_CONFIG = [
 export function HeatBadge({ score, compact = false }: HeatBadgeProps) {
   const t = useTranslations("leads");
 
-  const config = HEAT_CONFIG.find((c) => score >= c.min && score <= c.max) ?? HEAT_CONFIG[0];
+  const config = HEAT_CONFIG.find((c) => score >= c.min && score <= c.max) ?? HEAT_CONFIG[0]!;
 
   if (compact) {
     return (

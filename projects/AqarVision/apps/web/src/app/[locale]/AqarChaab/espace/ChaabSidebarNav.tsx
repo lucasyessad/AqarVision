@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 interface NavItem {
   href: string;
@@ -21,24 +22,25 @@ export function ChaabSidebarNav({ items }: { items: NavItem[] }) {
             : pathname.includes(item.href);
 
         return (
-          <Link
-            key={item.href}
-            href={item.href as "/"}
-            className={[
-              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
-              isActive
-                ? "bg-zinc-800 text-zinc-100"
-                : "text-zinc-500 hover:bg-zinc-800/50 hover:text-zinc-300",
-            ].join(" ")}
-          >
-            <span className={`shrink-0 [&>svg]:h-4 [&>svg]:w-4 ${isActive ? "text-amber-500" : ""}`}>
-              {item.icon}
-            </span>
-            {item.label}
-            {isActive && (
-              <span className="ms-auto h-1.5 w-1.5 rounded-full bg-amber-500" />
-            )}
-          </Link>
+          <Tooltip key={item.href} content={item.label} side="end">
+            <Link
+              href={item.href as "/"}
+              className={[
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
+                isActive
+                  ? "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300"
+                  : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-200",
+              ].join(" ")}
+            >
+              <span className={`shrink-0 [&>svg]:h-4 [&>svg]:w-4 ${isActive ? "text-amber-500" : ""}`}>
+                {item.icon}
+              </span>
+              {item.label}
+              {isActive && (
+                <span className="ms-auto h-1.5 w-1.5 rounded-full bg-amber-500" />
+              )}
+            </Link>
+          </Tooltip>
         );
       })}
     </nav>

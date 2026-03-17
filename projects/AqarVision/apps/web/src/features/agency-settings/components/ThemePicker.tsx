@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { THEME_REGISTRY } from "@/lib/themes/registry";
 import { isThemeAvailable } from "@/lib/plan-gating";
 import { updateAgencyThemeAction } from "../actions/update-agency-theme.action";
@@ -17,12 +18,12 @@ interface ThemePickerProps {
 function PlanBadge({ plan }: { plan: string | null }) {
   if (!plan) return null;
   const label = plan === "enterprise" ? "Enterprise" : "Pro";
-  const style =
+  const cls =
     plan === "enterprise"
-      ? { background: "#F5F3FF", color: "#7C3AED", border: "1px solid #DDD6FE" }
-      : { background: "#EFF6FF", color: "#2563EB", border: "1px solid #BFDBFE" };
+      ? "bg-violet-50 text-violet-600 border border-violet-200 dark:bg-violet-950 dark:text-violet-400 dark:border-violet-800"
+      : "bg-blue-50 text-blue-600 border border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800";
   return (
-    <span className="rounded-full px-2 py-0.5 text-xs font-semibold" style={style}>
+    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${cls}`}>
       {label}
     </span>
   );
@@ -45,6 +46,7 @@ export function ThemePicker({
   currentSecondaryColor,
   agencyPlan,
 }: ThemePickerProps) {
+  const t = useTranslations("theme_picker");
   const [selectedTheme, setSelectedTheme] = useState(currentTheme);
   const [primaryColor, setPrimaryColor] = useState(currentPrimaryColor ?? "#1a365d");
   const [accentColor, setAccentColor] = useState(currentAccentColor ?? "#d4af37");
@@ -78,7 +80,7 @@ export function ThemePicker({
           <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Thème appliqué avec succès.
+          {t("theme_applied")}
         </div>
       )}
 
@@ -86,10 +88,10 @@ export function ThemePicker({
       <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
         <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-            Thème de la vitrine
+            {t("storefront_theme")}
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            Le thème définit l'apparence de votre page publique.
+            {t("storefront_theme_desc")}
           </p>
         </div>
 
@@ -126,7 +128,7 @@ export function ThemePicker({
 
                   {/* Locked indicator */}
                   {!available && (
-                    <span className="absolute end-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-gray-500">
+                    <span className="absolute end-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-200 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400">
                       <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                       </svg>
@@ -141,12 +143,12 @@ export function ThemePicker({
                   </div>
 
                   <p className="mt-0.5 text-xs text-zinc-500">
-                    {theme.style.themeMode === "dark" ? "Sombre" : "Clair"} &middot;{" "}
+                    {theme.style.themeMode === "dark" ? t("mode_dark") : t("mode_light")} &middot;{" "}
                     {theme.style.fontFamily === "elegant"
-                      ? "Élégant"
+                      ? t("font_elegant")
                       : theme.style.fontFamily === "classic"
-                        ? "Classique"
-                        : "Moderne"}
+                        ? t("font_classic")
+                        : t("font_modern")}
                   </p>
 
                   <ColorSwatch
@@ -165,19 +167,19 @@ export function ThemePicker({
       <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
         <div className="border-b border-zinc-200 dark:border-zinc-700 px-6 py-4">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-            Couleurs personnalisées
+            {t("custom_colors")}
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            Ces couleurs remplacent les valeurs par défaut du thème sélectionné.
+            {t("custom_colors_desc")}
           </p>
         </div>
 
         {/* Color pickers row */}
         <div className="grid grid-cols-1 gap-6 border-b border-zinc-200 dark:border-zinc-700 p-6 sm:grid-cols-3">
           {[
-            { label: "Couleur principale", value: primaryColor, onChange: setPrimaryColor },
-            { label: "Couleur d'accentuation", value: accentColor, onChange: setAccentColor },
-            { label: "Couleur secondaire", value: secondaryColor, onChange: setSecondaryColor },
+            { label: t("color_primary"), value: primaryColor, onChange: setPrimaryColor },
+            { label: t("color_accent"), value: accentColor, onChange: setAccentColor },
+            { label: t("color_secondary"), value: secondaryColor, onChange: setSecondaryColor },
           ].map(({ label, value, onChange }) => (
             <div key={label}>
               <label className="mb-1.5 block text-xs font-medium text-zinc-700">
@@ -203,7 +205,7 @@ export function ThemePicker({
         {/* Preview bar */}
         <div className="bg-zinc-50 dark:bg-zinc-800 px-6 py-4">
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">
-            Aperçu
+            {t("preview")}
           </p>
           <div className="flex h-8 w-full overflow-hidden rounded-md shadow-sm">
             <div className="flex-1" style={{ backgroundColor: primaryColor }} />
@@ -231,9 +233,9 @@ export function ThemePicker({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                Application…
+                {t("applying")}
               </>
-            ) : "Appliquer le thème"}
+            ) : t("apply_theme")}
           </button>
         </div>
       </form>
