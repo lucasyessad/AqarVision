@@ -28,20 +28,20 @@ on conflict do nothing;
 -- 2. Plans (Starter, Pro, Enterprise)
 -- ──────────────────────────────────────────────
 insert into public.plans (name, slug, price_monthly, max_listings, max_media_per_listing, max_team_members, features) values
-  ('Starter',    'starter',    0,        10,  5,  2,  '{"analytics": false, "priority_support": false}'::jsonb),
-  ('Pro',        'pro',        4900,     50,  20, 10, '{"analytics": true, "priority_support": false}'::jsonb),
-  ('Enterprise', 'enterprise', 14900,    -1,  50, -1, '{"analytics": true, "priority_support": true}'::jsonb)
+  ('Starter',    'starter',    2900,     10,  3,   2,  '{"analytics": false, "priority_support": false}'::jsonb),
+  ('Pro',        'pro',        6900,     30,  10,  10, '{"analytics": true, "priority_support": false}'::jsonb),
+  ('Enterprise', 'enterprise', 12900,    -1,  20,  -1, '{"analytics": true, "priority_support": true}'::jsonb)
 on conflict (slug) do nothing;
 
 -- ──────────────────────────────────────────────
 -- 3. Agencies
 -- ──────────────────────────────────────────────
-insert into public.agencies (id, name, slug, description, phone, email, is_verified) values
-  ('a0000000-0000-0000-0000-000000000001', 'Immobilière El Djazair',   'immobiliere-el-djazair',   'Agence leader à Alger, spécialisée dans les biens résidentiels haut de gamme.', '+213 21 74 55 00', 'contact@eldjazair-immo.dz', true),
-  ('a0000000-0000-0000-0000-000000000002', 'Oran Realty',              'oran-realty',              'Première agence immobilière à Oran. Vente, location et gestion locative.',       '+213 41 33 22 11', 'info@oran-realty.dz',       true),
-  ('a0000000-0000-0000-0000-000000000003', 'Constantine Immobilier',   'constantine-immobilier',   'Expert immobilier à Constantine et ses environs depuis 2010.',                   '+213 31 88 99 00', 'contact@constantine-immo.dz', false),
-  ('a0000000-0000-0000-0000-000000000004', 'Blida Habitat',            'blida-habitat',            'Solutions immobilières complètes pour la wilaya de Blida.',                      '+213 25 44 33 22', 'info@blida-habitat.dz',     true),
-  ('a0000000-0000-0000-0000-000000000005', 'Kabylie Properties',       'kabylie-properties',       'Immobilier en Kabylie : Tizi Ouzou et Béjaïa.',                                 '+213 26 11 22 33', 'contact@kabylie-prop.dz',   false)
+insert into public.agencies (id, name, slug, description, phone, email, is_verified, whatsapp_phone, facebook_url, instagram_url) values
+  ('a0000000-0000-0000-0000-000000000001', 'Immobilière El Djazair',   'immobiliere-el-djazair',   'Agence leader à Alger, spécialisée dans les biens résidentiels haut de gamme.', '+213 21 74 55 00', 'contact@eldjazair-immo.dz', true,  '+213 555 74 55 00', 'https://facebook.com/eldjazair.immo', 'https://instagram.com/eldjazair_immo'),
+  ('a0000000-0000-0000-0000-000000000002', 'Oran Realty',              'oran-realty',              'Première agence immobilière à Oran. Vente, location et gestion locative.',       '+213 41 33 22 11', 'info@oran-realty.dz',       true,  '+213 555 33 22 11', 'https://facebook.com/oran.realty', null),
+  ('a0000000-0000-0000-0000-000000000003', 'Constantine Immobilier',   'constantine-immobilier',   'Expert immobilier à Constantine et ses environs depuis 2010.',                   '+213 31 88 99 00', 'contact@constantine-immo.dz', false, null, null, null),
+  ('a0000000-0000-0000-0000-000000000004', 'Blida Habitat',            'blida-habitat',            'Solutions immobilières complètes pour la wilaya de Blida.',                      '+213 25 44 33 22', 'info@blida-habitat.dz',     true,  '+213 555 44 33 22', null, null),
+  ('a0000000-0000-0000-0000-000000000005', 'Kabylie Properties',       'kabylie-properties',       'Immobilier en Kabylie : Tizi Ouzou et Béjaïa.',                                 '+213 26 11 22 33', 'contact@kabylie-prop.dz',   false, null, null, null)
 on conflict do nothing;
 
 -- ──────────────────────────────────────────────
@@ -55,6 +55,109 @@ insert into public.agency_branches (agency_id, name, wilaya_code, address_text, 
   ('a0000000-0000-0000-0000-000000000004', 'Siège Blida',       '09', '5 Avenue de l''ALN, Blida',            ST_MakePoint(2.8300, 36.4700)::geography),
   ('a0000000-0000-0000-0000-000000000005', 'Agence Tizi Ouzou', '15', '10 Rue Abane Ramdane, Tizi Ouzou',     ST_MakePoint(4.0500, 36.7117)::geography),
   ('a0000000-0000-0000-0000-000000000005', 'Agence Béjaïa',     '06', '3 Boulevard Amirouche, Béjaïa',        ST_MakePoint(5.0840, 36.7510)::geography);
+
+-- ──────────────────────────────────────────────
+-- 4b. Listing Features (30 équipements)
+-- ──────────────────────────────────────────────
+insert into public.listing_features (key, label_fr, label_ar, label_en, icon, category, sort_order) values
+  -- Extérieur
+  ('has_parking',        'Parking',              'موقف سيارات',    'Parking',            'Car',          'exterior', 1),
+  ('has_garden',         'Jardin',               'حديقة',          'Garden',             'Trees',        'exterior', 2),
+  ('has_pool',           'Piscine',              'مسبح',           'Swimming pool',      'Waves',        'exterior', 3),
+  ('has_balcony',        'Balcon',               'شرفة',           'Balcony',            'Fence',        'exterior', 4),
+  ('sea_view',           'Vue mer',              'إطلالة بحرية',    'Sea view',           'Sailboat',     'exterior', 5),
+  ('has_terrace',        'Terrasse',             'تراس',           'Terrace',            'Sun',          'exterior', 6),
+  ('beach_access',       'Accès plage',          'وصول للشاطئ',     'Beach access',       'Palmtree',     'exterior', 7),
+  ('has_garage',         'Garage',               'مرآب',           'Garage',             'Warehouse',    'exterior', 8),
+  ('has_court',          'Cour',                 'فناء',           'Courtyard',          'Shrub',        'exterior', 9),
+  ('separate_entrance',  'Entrée indépendante',  'مدخل مستقل',     'Separate entrance',  'DoorOpen',     'exterior', 10),
+  -- Intérieur
+  ('has_elevator',       'Ascenseur',            'مصعد',           'Elevator',           'ArrowUpDown',  'interior', 1),
+  ('furnished',          'Meublé',               'مفروش',          'Furnished',          'Sofa',         'interior', 2),
+  ('has_ac',             'Climatisation',        'تكييف',          'Air conditioning',   'Snowflake',    'interior', 3),
+  ('has_heating',        'Chauffage central',    'تدفئة مركزية',    'Central heating',    'Flame',        'interior', 4),
+  ('equipped_kitchen',   'Cuisine équipée',      'مطبخ مجهز',      'Equipped kitchen',   'CookingPot',   'interior', 5),
+  ('modern_bathroom',    'Salle de bain moderne','حمام عصري',      'Modern bathroom',    'ShowerHead',   'interior', 6),
+  ('has_internet',       'Internet / Fibre',     'إنترنت / ألياف',  'Internet / Fiber',   'Wifi',         'interior', 7),
+  ('has_satellite',      'Parabole',             'طبق فضائي',      'Satellite dish',     'Satellite',    'interior', 8),
+  ('has_intercom',       'Interphone',           'اتصال داخلي',    'Intercom',           'BellRing',     'interior', 9),
+  ('double_glazing',     'Double vitrage',       'زجاج مزدوج',     'Double glazing',     'PanelTop',     'interior', 10),
+  -- Infrastructure
+  ('has_water_source',   'Eau courante',         'مياه جارية',     'Running water',      'Droplets',     'infrastructure', 1),
+  ('has_electricity',    'Électricité',          'كهرباء',         'Electricity',        'Zap',          'infrastructure', 2),
+  ('has_city_gas',       'Gaz de ville',         'غاز المدينة',    'City gas',           'Flame',        'infrastructure', 3),
+  ('has_sewer',          'Tout-à-l''égout',      'صرف صحي',        'Sewerage',           'Pipette',      'infrastructure', 4),
+  ('has_fiber',          'Fibre optique',        'ألياف بصرية',    'Fiber optic',        'Cable',        'infrastructure', 5),
+  -- Sécurité
+  ('has_cctv',           'Vidéosurveillance',    'كاميرات مراقبة',  'CCTV',               'Camera',       'security', 1),
+  ('has_guard',          'Gardien',              'حارس',           'Guard',              'ShieldCheck',  'security', 2),
+  ('armored_door',       'Porte blindée',        'باب مصفح',       'Armored door',       'ShieldAlert',  'security', 3),
+  ('has_digicode',       'Digicode',             'رمز رقمي',       'Digicode',           'KeyRound',     'security', 4),
+  ('gated_community',    'Résidence fermée',     'مجمع سكني مغلق', 'Gated community',    'Building2',    'security', 5)
+on conflict (key) do nothing;
+
+-- ──────────────────────────────────────────────
+-- 4c. Filter Options (valeurs des selects)
+-- ──────────────────────────────────────────────
+insert into public.filter_options (filter_key, value, label_fr, label_en, sort_order) values
+  -- Prix vente
+  ('price_sale', '1000000',   '1 000 000 DZD',   '1,000,000 DZD',   1),
+  ('price_sale', '2000000',   '2 000 000 DZD',   '2,000,000 DZD',   2),
+  ('price_sale', '5000000',   '5 000 000 DZD',   '5,000,000 DZD',   3),
+  ('price_sale', '10000000',  '10 000 000 DZD',  '10,000,000 DZD',  4),
+  ('price_sale', '15000000',  '15 000 000 DZD',  '15,000,000 DZD',  5),
+  ('price_sale', '20000000',  '20 000 000 DZD',  '20,000,000 DZD',  6),
+  ('price_sale', '30000000',  '30 000 000 DZD',  '30,000,000 DZD',  7),
+  ('price_sale', '50000000',  '50 000 000 DZD',  '50,000,000 DZD',  8),
+  ('price_sale', '100000000', '100 000 000 DZD', '100,000,000 DZD', 9),
+  ('price_sale', '200000000', '200 000 000 DZD', '200,000,000 DZD', 10),
+  -- Prix location
+  ('price_rent', '10000',  '10 000 DZD/mois',  '10,000 DZD/mo',  1),
+  ('price_rent', '20000',  '20 000 DZD/mois',  '20,000 DZD/mo',  2),
+  ('price_rent', '30000',  '30 000 DZD/mois',  '30,000 DZD/mo',  3),
+  ('price_rent', '50000',  '50 000 DZD/mois',  '50,000 DZD/mo',  4),
+  ('price_rent', '80000',  '80 000 DZD/mois',  '80,000 DZD/mo',  5),
+  ('price_rent', '100000', '100 000 DZD/mois', '100,000 DZD/mo', 6),
+  ('price_rent', '150000', '150 000 DZD/mois', '150,000 DZD/mo', 7),
+  ('price_rent', '200000', '200 000 DZD/mois', '200,000 DZD/mo', 8),
+  ('price_rent', '300000', '300 000 DZD/mois', '300,000 DZD/mo', 9),
+  -- Pièces
+  ('rooms', '1', '1', '1', 1),
+  ('rooms', '2', '2', '2', 2),
+  ('rooms', '3', '3', '3', 3),
+  ('rooms', '4', '4', '4', 4),
+  ('rooms', '5', '5+', '5+', 5),
+  -- Salles de bain
+  ('bathrooms', '1', '1', '1', 1),
+  ('bathrooms', '2', '2', '2', 2),
+  ('bathrooms', '3', '3', '3', 3),
+  ('bathrooms', '4', '4+', '4+', 4),
+  -- Surface m²
+  ('surface', '30',   '30 m²',   '30 m²',   1),
+  ('surface', '50',   '50 m²',   '50 m²',   2),
+  ('surface', '80',   '80 m²',   '80 m²',   3),
+  ('surface', '100',  '100 m²',  '100 m²',  4),
+  ('surface', '150',  '150 m²',  '150 m²',  5),
+  ('surface', '200',  '200 m²',  '200 m²',  6),
+  ('surface', '300',  '300 m²',  '300 m²',  7),
+  ('surface', '500',  '500 m²',  '500 m²',  8),
+  ('surface', '1000', '1 000 m²', '1,000 m²', 9),
+  -- Année de construction
+  ('year', '2020', 'Après 2020', 'After 2020', 1),
+  ('year', '2015', 'Après 2015', 'After 2015', 2),
+  ('year', '2010', 'Après 2010', 'After 2010', 3),
+  ('year', '2005', 'Après 2005', 'After 2005', 4),
+  ('year', '2000', 'Après 2000', 'After 2000', 5),
+  ('year', '1990', 'Après 1990', 'After 1990', 6),
+  ('year', '1980', 'Après 1980', 'After 1980', 7),
+  -- Étage
+  ('floor', '0',  'RDC', 'Ground floor', 1),
+  ('floor', '1',  '1er', '1st', 2),
+  ('floor', '2',  '2ème', '2nd', 3),
+  ('floor', '3',  '3ème', '3rd', 4),
+  ('floor', '4',  '4ème', '4th', 5),
+  ('floor', '5',  '5ème+', '5th+', 6)
+on conflict (filter_key, value) do nothing;
 
 -- ──────────────────────────────────────────────
 -- 5. Listings (30 biens variés)

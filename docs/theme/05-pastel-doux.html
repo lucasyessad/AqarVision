@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{agency_name}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--lavender:#B8A9E8;--peach:#F4B8A5;--mint:#A8D8C8;--sky:#A5C8E4;--blush:#F9E8E0;--cream:#FDF9F5;--dark:#2D2A3E;--text:#4A4558;--text-light:#8E89A0}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);font-weight:300}
+a{color:inherit;text-decoration:none}
+
+nav{padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;color:var(--dark)}
+.logo span{display:inline-block;width:8px;height:8px;background:var(--peach);border-radius:50%;margin-left:2px;vertical-align:super}
+nav ul{display:flex;gap:2rem;list-style:none;font-size:.85rem}
+nav ul a{padding:.3rem .8rem;border-radius:20px;transition:.3s}
+nav ul a:hover{background:var(--blush);color:var(--dark)}
+.nav-cta{background:var(--lavender);color:white;padding:.6rem 1.5rem;border-radius:50px;font-size:.8rem;font-weight:600;transition:.3s}
+.nav-cta:hover{background:var(--dark)}
+
+.hero{padding:3rem;display:flex;gap:3rem;align-items:center;min-height:80vh}
+.hero-text{flex:1}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(2rem,4.5vw,3.5rem);line-height:1.15;color:var(--dark)}
+.hero h1 span{background:linear-gradient(120deg,var(--peach),var(--lavender));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text-light);line-height:1.8;margin:1.2rem 0 2rem;max-width:450px}
+.hero-btns{display:flex;gap:1rem}
+.btn-primary{background:var(--lavender);color:white;padding:.85rem 2rem;border-radius:50px;font-size:.85rem;font-weight:600;transition:.3s;border:none}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(184,169,232,.3)}
+.btn-secondary{background:white;color:var(--dark);padding:.85rem 2rem;border-radius:50px;font-size:.85rem;border:1.5px solid #e0dce8;transition:.3s}
+.btn-secondary:hover{border-color:var(--lavender)}
+
+.hero-visual{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:1rem;height:480px}
+.hv-1{grid-row:1/3;border-radius:100px 20px 20px 100px;background:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&q=80') center/cover}
+.hv-2{border-radius:20px 100px 20px 20px;background:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80') center/cover}
+.hv-3{border-radius:20px 20px 100px 20px;background:var(--mint);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;color:var(--dark);padding:1rem}
+.hv-3 .num{font-family:'Fraunces',serif;font-size:2rem;font-weight:700}
+.hv-3 .lbl{font-size:.7rem;color:var(--text-light)}
+
+section{padding:5rem 3rem}
+.section-label{display:inline-block;background:var(--blush);padding:.4rem 1rem;border-radius:50px;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--peach);margin-bottom:.8rem;font-weight:600}
+.section-title{font-family:'Fraunces',serif;font-size:clamp(1.5rem,2.5vw,2.2rem);color:var(--dark);margin-bottom:2.5rem}
+
+.listings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.listing-card{background:white;border-radius:20px;overflow:hidden;transition:.3s;box-shadow:0 2px 15px rgba(0,0,0,.03)}
+.listing-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(184,169,232,.12)}
+.listing-img{height:200px;background-size:cover;background-position:center;position:relative;margin:1rem;border-radius:14px;overflow:hidden}
+.listing-badge{position:absolute;top:.8rem;left:.8rem;background:white;color:var(--lavender);padding:.3rem .8rem;border-radius:50px;font-size:.65rem;font-weight:600}
+.listing-body{padding:0 1.2rem 1.2rem}
+.listing-price{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--dark);font-weight:700}
+.listing-price small{font-family:'Nunito',sans-serif;font-size:.7rem;color:var(--text-light);font-weight:300}
+.listing-title{font-size:.85rem;margin:.4rem 0 .8rem;color:var(--text)}
+.listing-pills{display:flex;gap:.5rem;flex-wrap:wrap}
+.listing-pills span{background:var(--blush);padding:.25rem .65rem;border-radius:50px;font-size:.7rem;color:var(--text-light)}
+
+.about-section{background:white;border-radius:24px;margin:0 3rem;padding:3.5rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;box-shadow:0 2px 20px rgba(0,0,0,.03)}
+.about-img{height:350px;border-radius:16px;background:url('https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=600&q=80') center/cover}
+.about-text p{color:var(--text-light);line-height:1.8;margin-bottom:1rem}
+.about-tags{display:flex;gap:.8rem;margin-top:1.5rem;flex-wrap:wrap}
+.about-tag{background:var(--blush);padding:.5rem 1.2rem;border-radius:50px;font-size:.8rem;color:var(--dark);font-weight:400}
+
+.contact-section{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.contact-card{background:white;border-radius:20px;padding:2.5rem;box-shadow:0 2px 15px rgba(0,0,0,.03)}
+.contact-card h3{font-family:'Fraunces',serif;font-size:1.3rem;color:var(--dark);margin-bottom:1.5rem}
+.contact-card p{color:var(--text-light);line-height:2}
+form input,form textarea{width:100%;border:1.5px solid #EDE8F3;border-radius:14px;padding:.85rem 1.2rem;font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--text);outline:none;margin-bottom:.7rem;transition:.3s;background:var(--cream)}
+form input:focus,form textarea:focus{border-color:var(--lavender);background:white}
+form textarea{height:90px;resize:none}
+.btn-submit{width:100%;background:var(--lavender);color:white;border:none;padding:1rem;border-radius:14px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:.3s}
+.btn-submit:hover{background:var(--dark)}
+
+footer{text-align:center;padding:2rem;font-size:.75rem;color:var(--text-light)}
+footer span{color:var(--lavender);font-weight:600}
+
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}nav ul{display:none}
+  .hero{flex-direction:column;padding:2rem 1.5rem}
+  .hero-visual{height:300px}
+  section{padding:3rem 1.5rem}
+  .about-section{grid-template-columns:1fr;margin:0 1rem}
+  .contact-section{grid-template-columns:1fr}
+  .listings-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">{{agency_name}}<span></span></div>
+  <ul><li><a href="#biens">Nos biens</a></li><li><a href="#agence">L'agence</a></li><li><a href="#contact">Contact</a></li></ul>
+  <a href="#contact" class="nav-cta">Nous contacter</a>
+</nav>
+<div class="hero">
+  <div class="hero-text">
+    <h1>Trouvez votre <span>chez-vous</span> à {{city}}</h1>
+    <p>On s'occupe de tout : recherche, visites, négociation, accompagnement. Votre seul rôle ? Nous dire de quoi vous rêvez.</p>
+    <div class="hero-btns">
+      <button class="btn-primary">Voir nos biens →</button>
+      <a href="#contact" class="btn-secondary">Estimer mon bien</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hv-1"></div><div class="hv-2"></div>
+    <div class="hv-3"><div class="num">{{sales_count}}+</div><div class="lbl">Familles accompagnées</div></div>
+  </div>
+</div>
+<section id="biens">
+  <div class="section-label">Nos coups de cœur</div>
+  <div class="section-title">Biens disponibles</div>
+  <div class="listings-grid">
+    <div class="listing-card"><div class="listing-img" style="background-image:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80')"><span class="listing-badge">Coup de cœur</span></div><div class="listing-body"><div class="listing-price">1 850 000 MAD <small>· 15 417 MAD/m²</small></div><div class="listing-title">Maison familiale avec jardin arboré</div><div class="listing-pills"><span>120 m²</span><span>3 ch.</span><span>Jardin</span><span>Parking</span></div></div></div>
+    <div class="listing-card"><div class="listing-img" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80')"><span class="listing-badge">Nouveau</span></div><div class="listing-body"><div class="listing-price">950 000 MAD <small>· 13 571 MAD/m²</small></div><div class="listing-title">Appartement lumineux avec balcon</div><div class="listing-pills"><span>70 m²</span><span>2 ch.</span><span>Balcon</span><span>Asc.</span></div></div></div>
+    <div class="listing-card"><div class="listing-img" style="background-image:url('https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=600&q=80')"></div><div class="listing-body"><div class="listing-price">2 400 000 MAD <small>· 17 143 MAD/m²</small></div><div class="listing-title">Villa moderne avec piscine</div><div class="listing-pills"><span>140 m²</span><span>4 ch.</span><span>Piscine</span><span>Clim.</span></div></div></div>
+  </div>
+</section>
+<div class="about-section" id="agence">
+  <div class="about-img"></div>
+  <div>
+    <div class="section-label">Qui sommes-nous</div>
+    <div class="section-title">Une agence à taille humaine</div>
+    <p>{{agency_description}}</p>
+    <p>Notre équipe de {{team_count}} passionnés vous accompagne avec bienveillance, transparence et bonne humeur. Parce que chercher un logement, ça devrait être un plaisir.</p>
+    <div class="about-tags"><span>🏠 {{listings_count}} biens</span><span>🤝 {{sales_count}} ventes</span><span>📅 Depuis {{since_year}}</span></div>
+  </div>
+</div>
+<section id="contact">
+  <div class="section-label">Un projet ?</div>
+  <div class="section-title">On en parle !</div>
+  <div class="contact-section">
+    <div class="contact-card"><h3>Passez nous voir</h3><p>📍 {{address}}</p><p>📞 {{phone}}</p><p>✉️ {{email}}</p><p style="margin-top:1rem">Lun — Sam · 9h — 19h</p></div>
+    <div class="contact-card"><h3>Écrivez-nous</h3><form><input type="text" placeholder="Votre nom"><input type="email" placeholder="Votre email"><input type="tel" placeholder="Votre téléphone"><textarea placeholder="Parlez-nous de votre projet..."></textarea><button type="submit" class="btn-submit">Envoyer 💌</button></form></div>
+  </div>
+</section>
+<footer>© 2026 {{agency_name}} · Propulsé par <span>Aqar</span>Pro</footer>
+</body>
+</html>

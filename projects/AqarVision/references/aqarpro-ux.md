@@ -3,6 +3,17 @@
 > Spec UX pour la surface AqarPro : dashboard de gestion d'agence immobiliere.
 > Inspiration : Linear (densite), Stripe (precision), Notion (clarte).
 
+> **MISE A JOUR MARS 2026 — Lire en priorite le CLAUDE.md (source de verite). Ce fichier est un complement.**
+> Changements majeurs non refletes en detail ici :
+> - Design system : **Stone** (pas Zinc) + **Teal** accent (pas Amber). Voir `design-tokens.md`.
+> - **BottomNav mobile AqarPro** : 5 items (Dashboard | Annonces | Leads | Messages | Plus). Le Kanban leads devient liste filtrable avec tabs sur mobile.
+> - **Auth unique** : plus de `/AqarPro/auth/login|signup`. Un seul flux `/auth/login|signup` avec routing intelligent post-login.
+> - **Settings** : 4 tabs (General, Apparence + ThemeStudio + wizard vitrine, Verification, Notifications). Branding fusionne dans Apparence.
+> - **Onboarding** : checklist progressive sur le dashboard (pas de wizard bloquant). Banner "Completez votre profil" + items liens.
+> - **Plans** : Starter 2 900, Pro 6 900, Enterprise 12 900 DZD/mois. Pas de gratuite.
+> - Proxy : `proxy.ts` remplace `middleware.ts` (Next.js 16).
+> - **RBAC** : seul le owner peut inviter (pas l'admin).
+
 ---
 
 ## Principes UX

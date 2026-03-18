@@ -16,7 +16,8 @@ comment on table public.users is 'Shadow table for auth.users, allows FK referen
 
 create table public.profiles (
   user_id          uuid primary key references public.users (id) on delete cascade,
-  full_name        text,
+  first_name       text,
+  last_name        text,
   avatar_url       text,
   phone            text,
   role             public.user_role not null default 'end_user',
@@ -34,7 +35,7 @@ comment on column public.profiles.stripe_customer_id is
 -- ── profiles_public view ────────────────────────────────────────────────────
 
 create view public.profiles_public as
-  select user_id, full_name, avatar_url
+  select user_id, first_name, last_name, avatar_url
   from public.profiles;
 
 comment on view public.profiles_public is 'Public-safe subset of profile data.';

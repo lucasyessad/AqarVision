@@ -3,6 +3,15 @@
 > Spec UX pour la surface AqarSearch : recherche et decouverte immobiliere.
 > Inspiration : Zillow (immersion), Rightmove (recherche), Airbnb (carte + filtres).
 
+> **MISE A JOUR MARS 2026 — Lire en priorite le CLAUDE.md (source de verite). Ce fichier est un complement.**
+> Changements majeurs non refletes en detail ici :
+> - Design system : **Stone** + **Teal** accent. Voir `design-tokens.md`.
+> - **`/comparer` supprime** : la comparaison est maintenant une feature inline dans `/search` (multi-select + bouton flottant).
+> - **`/favorites` supprime** : fusionne dans `/AqarChaab/espace/favoris`. Le coeur sur search redirige vers login si non-auth.
+> - **ContactCard** : ordre configurable (Appeler > WhatsApp > Message > Visite). Lead capture SANS authentification. Voir CLAUDE.md "Composants critiques".
+> - **Detail annonce** : photos uniquement (pas de video). PriceHistoryChart public. Partage WhatsApp.
+> - **Estimation** : appel au micro-service Python `/estimate` (ML) au lieu de templates simples.
+
 ---
 
 ## Principes UX

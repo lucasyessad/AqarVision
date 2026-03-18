@@ -68,10 +68,12 @@ create or replace function public.handle_new_user()
 as $$
 begin
   insert into public.users (id, created_at) values (new.id, now());
-  insert into public.profiles (user_id, full_name, avatar_url, created_at, updated_at)
+  insert into public.profiles (user_id, first_name, last_name, phone, avatar_url, created_at, updated_at)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data ->> 'full_name', null),
+    coalesce(new.raw_user_meta_data ->> 'first_name', ''),
+    coalesce(new.raw_user_meta_data ->> 'last_name', ''),
+    coalesce(new.raw_user_meta_data ->> 'phone', ''),
     coalesce(new.raw_user_meta_data ->> 'avatar_url', null),
     now(), now()
   );
@@ -606,8 +608,10 @@ create policy leads_select_agency on public.leads for select
   using (public.is_agency_member(agency_id, auth.uid()));
 create policy leads_select_sender on public.leads for select
   using (sender_user_id = auth.uid());
-create policy leads_insert_authenticated on public.leads for insert
-  with check (auth.uid() is not null);
+create policy leads_insert_authenticated on public.leads for insert to authenticated
+  with check (sender_user_id = auth.uid());
+create policy leads_insert_anon on public.leads for insert to anon
+  with check (sender_user_id is null);
 create policy leads_update_agency on public.leads for update
   using (public.is_agency_member(agency_id, auth.uid()));
 create policy leads_select_individual on public.leads for select to authenticated

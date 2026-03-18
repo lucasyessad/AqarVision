@@ -119,6 +119,29 @@ insert into public.wilayas (code, name_fr, name_ar, name_en) values
   ('57', 'El M''Ghair',       'المغير',            'El M''Ghair'),
   ('58', 'El Meniaa',         'المنيعة',           'El Meniaa');
 
--- ── Index ───────────────────────────────────────────────────────────────────
+-- ── market_data (scraped/computed market prices per area) ──────────────────
+
+create table public.market_data (
+  id            uuid primary key default gen_random_uuid(),
+  wilaya_code   text not null references public.wilayas(code),
+  commune_id    bigint,
+  property_type public.property_type not null,
+  listing_type  public.listing_type not null default 'sale',
+  avg_price     numeric(14,2),
+  avg_price_m2  numeric(10,2),
+  median_price  numeric(14,2),
+  sample_size   integer not null default 0,
+  source        text not null default 'internal'
+    check (source in ('internal', 'ouedkniss', 'manual')),
+  scraped_at    timestamptz not null default now(),
+  created_at    timestamptz not null default now()
+);
+
+comment on table public.market_data is
+  'Market price data per area, fed by Python scraper and internal aggregation. Used by /estimer.';
+
+-- ── Indexes ──────────────────────────────────────────────────────────────────
 
 create index idx_communes_wilaya_code on public.communes (wilaya_code);
+create index idx_market_data_lookup
+  on public.market_data(wilaya_code, property_type, listing_type, scraped_at desc);

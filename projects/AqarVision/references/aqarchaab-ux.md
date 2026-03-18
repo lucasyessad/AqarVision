@@ -3,6 +3,18 @@
 > Spec UX pour la surface AqarChaab : espace de gestion pour les proprietaires individuels.
 > Inspiration : LeBonCoin (simplicite), Vinted (accessibilite), Notion (clarte).
 
+> **MISE A JOUR MARS 2026 — Lire en priorite le CLAUDE.md (source de verite). Ce fichier est un complement.**
+> Changements majeurs non refletes en detail ici :
+> - Design system : **Stone** + **Teal** accent. Voir `design-tokens.md`.
+> - **Auth unique** : plus de `/AqarChaab/auth/login|signup`. Un seul flux `/auth/login|signup`.
+> - **BottomNav** : 4 items avec CTA central (Annonces | **Deposer** [amber surreleve] | Messages | Profil). Alertes/Collections dans Profil ou "Plus".
+> - **Wizard listing** : **4 etapes** pour les particuliers (pas 7). (1) Quoi & Ou, (2) Details & Description + bouton generer auto, (3) Photos, (4) Prix & Recap.
+> - **`/deposer`** : auth differee (etape 3). L'utilisateur commence sans compte, auth demandee quand il est engage.
+> - **`/espace/collections`** renomme **`/espace/favoris`** (merge favorites + collections).
+> - **`/espace/notifications`** ajoute (centre de notifications).
+> - Photos uniquement sur les annonces (pas de video). Video = vitrines agences seulement.
+> - Plans : Gratuit 3 photos/2 ann, chaab_plus 10 photos/4 ann, chaab_pro 15 photos/6 ann.
+
 ---
 
 ## Principes UX

@@ -17,7 +17,7 @@ create table public.plans (
   price_monthly         numeric(10,2) not null default 0,
   currency              text not null default 'DZD',
   max_listings          integer not null default 10,
-  max_media_per_listing integer not null default 5,
+  max_media_per_listing integer not null default 3,
   max_team_members      integer not null default 2,
   features              jsonb not null default '{}'::jsonb,
   is_active             boolean not null default true,
@@ -172,6 +172,8 @@ create table public.verifications (
   legal_name       text,
   rc_number        text,
   document_url     text,
+  nif_number       text,
+  address_proof_url text,
   reviewed_by      uuid references auth.users(id),
   reviewed_at      timestamptz,
   rejection_reason text,
@@ -183,9 +185,27 @@ create table public.verifications (
 -- ── Seed default platform settings ──────────────────────────────────────────
 
 insert into public.platform_settings (key, value, description, category) values
-  -- Quotas
+  -- Quotas particuliers
   ('individual_free_quota',        '2',             'Nombre d''annonces gratuites pour les particuliers',                 'quotas'),
+  ('individual_free_max_photos',   '3',             'Max photos par annonce (gratuit)',                                   'quotas'),
   ('individual_max_quota_cap',     '100',           'Quota maximum absolu (abonnement Pro illimite = cette valeur)',      'quotas'),
+  ('chaab_plus_max_listings',      '4',             'Max annonces chaab_plus',                                           'quotas'),
+  ('chaab_plus_max_photos',        '10',            'Max photos par annonce chaab_plus',                                  'quotas'),
+  ('chaab_pro_max_listings',       '6',             'Max annonces chaab_pro',                                            'quotas'),
+  ('chaab_pro_max_photos',         '15',            'Max photos par annonce chaab_pro',                                   'quotas'),
+  -- Plans agences (modifiables depuis /admin/platform-settings)
+  ('starter_price_da',             '2900',          'Prix Starter DZD/mois',                                             'plans'),
+  ('starter_max_listings',         '10',            'Max annonces Starter',                                              'plans'),
+  ('starter_max_photos',           '3',             'Max photos/annonce Starter',                                        'plans'),
+  ('starter_max_team',             '2',             'Max membres equipe Starter',                                        'plans'),
+  ('pro_price_da',                 '6900',          'Prix Pro DZD/mois',                                                 'plans'),
+  ('pro_max_listings',             '30',            'Max annonces Pro',                                                  'plans'),
+  ('pro_max_photos',               '10',            'Max photos/annonce Pro',                                            'plans'),
+  ('pro_max_team',                 '10',            'Max membres equipe Pro',                                            'plans'),
+  ('enterprise_price_da',          '12900',         'Prix Enterprise DZD/mois',                                          'plans'),
+  ('enterprise_max_listings',      '-1',            'Max annonces Enterprise (-1=illimite)',                              'plans'),
+  ('enterprise_max_photos',        '20',            'Max photos/annonce Enterprise',                                     'plans'),
+  ('enterprise_max_team',          '-1',            'Max membres Enterprise (-1=illimite)',                               'plans'),
   -- Payment provider
   ('payment_provider',             '"virement"',    'Provider actif: stripe | cib | dahabia | baridimob | virement',      'payments'),
   ('payment_bank_name',            '""',            'Nom de la banque pour les paiements manuels',                        'payments'),

@@ -95,7 +95,7 @@ create table public.listing_media (
 );
 
 comment on column public.listing_media.storage_path is
-  'Path in Supabase Storage. Image variants derived at read time via Supabase Image Transformations.';
+  'Path in Supabase Storage (WebP, processed by Sharp at upload). Variants via Supabase Image Transformations at read time.';
 
 -- ── listing_documents ───────────────────────────────────────────────────────
 
@@ -107,3 +107,46 @@ create table public.listing_documents (
   is_public     boolean not null default false,
   created_at    timestamptz not null default now()
 );
+
+-- ── listing_features (extensible feature definitions) ─────────────────────
+
+create table public.listing_features (
+  id         uuid primary key default gen_random_uuid(),
+  key        text not null unique,
+  label_fr   text not null,
+  label_ar   text,
+  label_en   text,
+  label_es   text,
+  icon       text not null default 'Circle',
+  category   text not null default 'exterior'
+    check (category in ('exterior', 'interior', 'infrastructure', 'security')),
+  sort_order integer not null default 0,
+  is_active  boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+comment on table public.listing_features is
+  'Extensible feature definitions for listings. Admin can add/edit via platform settings. Listings store feature values in details JSONB.';
+
+create index idx_listing_features_category on public.listing_features(category, sort_order);
+
+-- ── filter_options (configurable filter dropdown values) ──────────────────
+
+create table public.filter_options (
+  id         uuid primary key default gen_random_uuid(),
+  filter_key text not null,
+  value      text not null,
+  label_fr   text not null,
+  label_ar   text,
+  label_en   text,
+  label_es   text,
+  sort_order integer not null default 0,
+  is_active  boolean not null default true,
+  created_at timestamptz not null default now(),
+  unique(filter_key, value)
+);
+
+comment on table public.filter_options is
+  'Configurable dropdown values for search filters. Admin can add/edit price ranges, room counts, surface options, etc. filter_key = price_sale, price_rent, rooms, bathrooms, surface, year, floor.';
+
+create index idx_filter_options_key on public.filter_options(filter_key, sort_order);

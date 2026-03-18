@@ -294,6 +294,61 @@ async function handleIndividualSubscriptionUpdated(
     .eq("id", sub.id);
 }
 
+async function handleChargeFailed(
+  supabase: ReturnType<typeof createClient>,
+  charge: Record<string, unknown>
+): Promise<void> {
+  const customerId = charge.customer as string | null;
+  if (!customerId) return;
+
+  // Log the failed charge as a domain event for visibility
+  await supabase.from("domain_events").insert({
+    event_type: "charge_failed",
+    aggregate_type: "stripe_charge",
+    aggregate_id: charge.id as string,
+    payload: {
+      customer_id: customerId,
+      amount: charge.amount,
+      currency: charge.currency,
+      failure_code: charge.failure_code,
+      failure_message: charge.failure_message,
+    },
+  });
+}
+
+async function handleInvoicePaymentFailed(
+  supabase: ReturnType<typeof createClient>,
+  invoice: Record<string, unknown>
+): Promise<void> {
+  const stripeSubId = invoice.subscription as string | null;
+  if (!stripeSubId) return;
+
+  // Update agency subscription status to past_due
+  await supabase
+    .from("subscriptions")
+    .update({ status: "past_due", updated_at: new Date().toISOString() })
+    .eq("stripe_subscription_id", stripeSubId);
+
+  // Update individual subscription status to past_due
+  await supabase
+    .from("individual_subscriptions")
+    .update({ status: "past_due", updated_at: new Date().toISOString() })
+    .eq("stripe_subscription_id", stripeSubId);
+
+  // Log the event
+  await supabase.from("domain_events").insert({
+    event_type: "invoice_payment_failed",
+    aggregate_type: "stripe_invoice",
+    aggregate_id: invoice.id as string,
+    payload: {
+      subscription_id: stripeSubId,
+      amount_due: invoice.amount_due,
+      attempt_count: invoice.attempt_count,
+      next_payment_attempt: invoice.next_payment_attempt,
+    },
+  });
+}
+
 async function syncEntitlementsFromPlan(
   supabase: ReturnType<typeof createClient>,
   agencyId: string,
@@ -385,8 +440,16 @@ Deno.serve(async (req) => {
         await handleSubscriptionDeleted(supabase, event.data.object);
         break;
 
+      case "charge.failed":
+        await handleChargeFailed(supabase, event.data.object);
+        break;
+
+      case "invoice.payment_failed":
+        await handleInvoicePaymentFailed(supabase, event.data.object);
+        break;
+
       default:
-        // Unhandled event type — acknowledge silently
+        console.log(`Unhandled Stripe event type: ${event.type}`);
         break;
     }
 

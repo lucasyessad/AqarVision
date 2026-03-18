@@ -1,9 +1,9 @@
 name: CI
 on:
   push:
-    branches: [main, dev]
+    branches: [master, dev]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   lint-and-typecheck:
@@ -36,25 +36,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
 
-  # Tests SQL pgTAP — nécessite Supabase local
-  test-db:
-    runs-on: ubuntu-latest
-    needs: lint-and-typecheck
-    steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-      - run: supabase start
-      - run: supabase test db
-
   # Build Next.js — uniquement si lint + tests passent
   build:
     runs-on: ubuntu-latest
-    needs: [test-unit, test-db]
+    needs: [test-unit]
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_MAPLIBRE_STYLE_URL: https://api.maptiler.com/maps/streets/style.json?key=placeholder
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

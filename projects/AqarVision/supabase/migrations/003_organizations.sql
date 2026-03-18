@@ -22,10 +22,29 @@ create table public.agencies (
   verification_status text not null default 'none'
     check (verification_status in ('none', 'pending', 'verified', 'rejected')),
   stripe_customer_id  text,
+  whatsapp_phone      text,
+  opening_hours       text,
+  facebook_url        text,
+  instagram_url       text,
+  notification_prefs  jsonb not null default '{}',
+  onboarding_progress jsonb not null default '{}',
+  contact_button_order jsonb,
+  storefront_content  jsonb not null default '{}',
   deleted_at          timestamptz,
   created_at          timestamptz not null default now(),
   updated_at          timestamptz not null default now()
 );
+
+comment on column public.agencies.whatsapp_phone is
+  'WhatsApp number for agency contact (wa.me/ integration).';
+comment on column public.agencies.notification_prefs is
+  'JSON notification preferences: { new_lead_email: true, visit_email: true, ... }.';
+comment on column public.agencies.onboarding_progress is
+  'Onboarding checklist state: { logo: true, first_listing: false, ... completed_at: null }.';
+comment on column public.agencies.contact_button_order is
+  'Custom ContactCard button order. Null = default (call > whatsapp > message > visit).';
+comment on column public.agencies.storefront_content is
+  'Storefront wizard content: { hero_image_url, hero_video_url, extra_photos[], tagline, about_text, services[], custom_stats: { years_experience, satisfied_clients }, theme_extras: {} }.';
 
 comment on column public.agencies.stripe_customer_id is
   'Stripe Customer ID (cus_...) — stored after first checkout or portal creation.';

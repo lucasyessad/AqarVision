@@ -10,7 +10,10 @@ create table public.leads (
   id               uuid primary key default gen_random_uuid(),
   listing_id       uuid not null references public.listings(id) on delete cascade,
   agency_id        uuid not null references public.agencies(id) on delete cascade,
-  sender_user_id   uuid not null references public.users(id) on delete cascade,
+  sender_user_id   uuid references public.users(id) on delete cascade,
+  sender_name      text,
+  sender_phone     text,
+  sender_email     text,
   status           public.lead_status not null default 'new',
   source           text not null default 'platform'
     check (source in ('platform', 'whatsapp', 'phone', 'chatbot', 'email')),
@@ -76,6 +79,8 @@ create table public.visit_requests (
   visitor_email  text,
   message        text,
   requested_date date,
+  preferred_time_slot text
+    check (preferred_time_slot in ('morning', 'afternoon', 'evening')),
   status         text not null default 'pending'
     check (status in ('pending', 'confirmed', 'cancelled', 'done')),
   created_at     timestamptz default now(),

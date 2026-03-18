@@ -3,6 +3,15 @@
 > Spec du langage design pour les pages marketing, homepage, vitrines, et landing pages.
 > Inspiration : Apple (cinematique), Stripe (precision), magazines immobilier de luxe.
 
+> **MISE A JOUR MARS 2026 — Lire en priorite le CLAUDE.md (source de verite). Ce fichier est un complement.**
+> Changements majeurs non refletes en detail ici :
+> - Design system : **Stone** (pas Zinc) + **Teal** accent (pas Amber). Remplacer toutes les refs `zinc-*` par `stone-*` et `amber-*` accent par `teal-*`. Voir `design-tokens.md`.
+> - **Homepage** : **8 sections** (pas 11). Voir CLAUDE.md "Homepage — 8 sections". Confiance implicite (pas de bloc dedie). Sections supprimees : Full Bleed Photo, Trending separee, Rent Carousel separee.
+> - **Themes** : "MarocainContemporain" renomme **"MediterraneenContemporain"**. Voir `agency-themes.md` pour les 10 specs completes.
+> - **Plans pricing** : Starter 2 900, Pro 6 900, Enterprise 12 900 DZD. Pas de gratuite.
+> - **Vitrines** : video YouTube/Vimeo supportee (via `storefront_content.hero_video_url`). Wizard contenu vitrine 4 etapes dans ThemeStudio.
+> - **Videos** : vitrines agences seulement. PAS de video sur les annonces.
+
 ---
 
 ## Principes
@@ -145,7 +154,7 @@ Chaque agence a sa vitrine avec un des 10 themes :
 | LuxeNoir | Luxe sombre, or et noir |
 | Mediterranee | Bleu mer, blanc, lumineux |
 | NeoBrutalist | Brutaliste moderne, bold |
-| MarocainContemporain | Arabesques modernes, terracotta |
+| MéditerranéenContemporain | Zellige, teal/terracotta, mosaïque |
 | PastelDoux | Pastel, feminin, doux |
 | CorporateNavy | Corporate, bleu marine, serieux |
 | Editorial | Magazine, typographie forte |
