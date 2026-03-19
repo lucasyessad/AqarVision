@@ -1,29 +1,61 @@
 import { z } from "zod";
-import { LISTING_TYPES, PROPERTY_TYPES, LOCALES } from "@/features/listings/schemas/listing.schema";
 
-export const MapBoundsSchema = z.object({
-  north: z.number().min(-90).max(90),
-  south: z.number().min(-90).max(90),
-  east: z.number().min(-180).max(180),
-  west: z.number().min(-180).max(180),
-});
-
-export type MapBounds = z.infer<typeof MapBoundsSchema>;
-
-export const SearchFiltersSchema = z.object({
-  locale: z.enum(LOCALES),
+export const searchFiltersSchema = z.object({
   q: z.string().optional(),
-  listing_type: z.enum(LISTING_TYPES).optional(),
-  property_type: z.enum(PROPERTY_TYPES).optional(),
-  wilaya_code: z.coerce.number().optional(),
-  commune_id: z.coerce.number().optional(),
-  price_min: z.coerce.number().nonnegative().optional(),
-  price_max: z.coerce.number().nonnegative().optional(),
-  rooms_min: z.coerce.number().nonnegative().int().optional(),
-  surface_min: z.coerce.number().nonnegative().optional(),
-  map_bounds: MapBoundsSchema.optional(),
+  type: z.enum(["sale", "rent", "vacation"]).optional(),
+  propertyType: z
+    .union([
+      z.enum([
+        "apartment",
+        "villa",
+        "terrain",
+        "commercial",
+        "office",
+        "building",
+        "farm",
+        "warehouse",
+      ]),
+      z.array(
+        z.enum([
+          "apartment",
+          "villa",
+          "terrain",
+          "commercial",
+          "office",
+          "building",
+          "farm",
+          "warehouse",
+        ])
+      ),
+    ])
+    .optional(),
+  wilaya: z.string().optional(),
+  priceMin: z.coerce.number().positive().optional(),
+  priceMax: z.coerce.number().positive().optional(),
+  surfaceMin: z.coerce.number().positive().optional(),
+  surfaceMax: z.coerce.number().positive().optional(),
+  roomsMin: z.coerce.number().int().positive().optional(),
+  roomsMax: z.coerce.number().int().positive().optional(),
+  bathroomsMin: z.coerce.number().int().min(0).optional(),
+  floorMin: z.coerce.number().int().min(0).optional(),
+  yearMin: z.coerce.number().int().min(1900).optional(),
+  hasParking: z.coerce.boolean().optional(),
+  hasElevator: z.coerce.boolean().optional(),
+  furnished: z.coerce.boolean().optional(),
+  agency: z.string().optional(),
+  sort: z
+    .enum(["newest", "price_asc", "price_desc", "surface_desc"])
+    .default("newest"),
   page: z.coerce.number().int().positive().default(1),
-  page_size: z.coerce.number().int().positive().max(100).default(20),
+  limit: z.coerce.number().int().positive().max(50).default(20),
 });
 
-export type SearchFiltersInput = z.infer<typeof SearchFiltersSchema>;
+export type SearchFilters = z.infer<typeof searchFiltersSchema>;
+
+export const createAlertSchema = z.object({
+  name: z.string().min(2, "Le nom de l'alerte doit contenir au moins 2 caractères"),
+  frequency: z.enum(["instant", "daily", "weekly"]),
+  filters: searchFiltersSchema,
+});
+
+export type CreateAlertInput = z.infer<typeof createAlertSchema>;

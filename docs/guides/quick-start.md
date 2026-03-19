@@ -1,39 +1,37 @@
-# Guide de Démarrage Rapide - PersoDev
+# Guide de Demarrage Rapide - AqarVision
 
 ## Introduction
 
-Bienvenue dans **PersoDev** ! Ce guide vous aidera à commencer rapidement avec votre nouvel espace de développement organisé.
+Bienvenue dans **AqarVision** ! Ce guide vous aidera a commencer rapidement avec votre espace de developpement organise.
 
-## 🎯 En 5 Minutes
+## En 5 Minutes
 
 ### 1. Explorer la Structure
 
 ```bash
-# Voir les ressources sources
+# Voir les ressources sources (26 depots)
 ls resources/
 
-# Voir la bibliothèque organisée
+# Voir la bibliotheque organisee
 ls library/
 
-# Voir les catégories de skills
+# Voir les categories de skills
 ls library/skills/
 
-# Voir les catégories de subagents
+# Voir les categories de subagents
 ls library/subagents/
 ```
 
 ### 2. Premier Projet
 
 ```bash
-# Créer un nouveau projet
+# Creer un projet depuis un template
+./templates/clone-template.sh nextjs mon-premier-projet
+
+# Ou manuellement
 mkdir projects/mon-premier-projet
 cd projects/mon-premier-projet
-
-# Initialiser git (optionnel)
 git init
-
-# Créer un fichier README
-echo "# Mon Premier Projet" > README.md
 ```
 
 ### 3. Utiliser un Skill avec Claude Code
@@ -41,107 +39,51 @@ echo "# Mon Premier Projet" > README.md
 Ouvrez Claude Code et essayez :
 
 ```
-@claude Utilise le skill canvas-design de library/skills/design/canvas-design
-pour créer une visualisation de données
+Utilise le skill canvas-design de library/skills/design/canvas-design
+pour creer une visualisation de donnees
 ```
 
-## 📚 Ressources Clés
+> Pour la liste complete des skills, subagents et workflows disponibles, voir le [README principal](../../README.md#-bibliotheque).
 
-### Skills Disponibles
+## Cas d'Usage Courants
 
-**Documents** (`library/skills/documents/`)
-- PDF, DOCX, PPTX, XLSX
-
-**Design** (`library/skills/design/`)
-- Art algorithmique, Canvas, Frontend, Thèmes
-
-**Développement** (`library/skills/development/`)
-- MCP Builder, Testing, Web Artifacts, API Claude
-
-**Communication** (`library/skills/communication/`)
-- Comms internes, Slack, Branding
-
-### Workflows Essentiels
-
-**Planning** (`library/workflows/planning/`)
-- Manus-style planning - Pour projets complexes
-- Brainstorming - Génération d'idées
-- Writing plans - Rédaction de plans
-
-**Git** (`library/workflows/git-strategies/`)
-- Git worktrees - Travailler sur plusieurs branches
-- Finishing branches - Finaliser des branches
-
-**Code Review** (`library/workflows/code-review/`)
-- Processus de review de code
-
-## 🚀 Cas d'Usage Courants
-
-### Créer un Document
+### Creer un Document
 
 ```
-@claude Utilise library/skills/documents/docx pour créer un rapport
-professionnel avec les données de data.json
+Utilise library/skills/documents/docx pour creer un rapport
+professionnel avec les donnees de data.json
 ```
 
 ### Optimiser du Code
 
 ```
-@claude Active le subagent Python de library/subagents/languages/
+Active le subagent Python de library/subagents/languages/
 pour optimiser le script analysis.py
 ```
 
 ### Planifier un Projet
 
 ```
-@claude Applique le workflow Manus-style de library/workflows/planning/manus-style
+Applique le workflow Manus-style de library/workflows/planning/manus-style
 pour structurer mon projet de marketplace
 ```
 
-### Générer un Prompt
+### Generer un Prompt
 
 ```
-@claude Utilise library/generators/prompts/intelligent-generator
-pour créer un skill de génération de documentation API
+Utilise library/generators/prompts/intelligent-generator
+pour creer un skill de generation de documentation API
 ```
 
-## 💡 Bonnes Pratiques
+## Bonnes Pratiques
 
-### Organisation
+1. **Projets dans `projects/`** - Gardez vos projets separes
+2. **Ne jamais modifier `resources/`** - Utilisez `library/` pour les customisations
+3. **Mises a jour regulieres** - Lancez `./scripts/update-all.sh` chaque semaine
 
-1. **Projets dans `projects/`** - Gardez vos projets séparés
-2. **Templates dans `templates/`** - Créez des templates réutilisables
-3. **Documentation dans `docs/`** - Documentez vos workflows
+## Explorer Plus
 
-### Mise à Jour
-
-```bash
-# Mettre à jour une ressource source
-cd resources/skills
-git pull origin main
-cd ../..
-
-# Copier les mises à jour pertinentes vers library/ si nécessaire
-```
-
-### Customisation
-
-- Modifiez les ressources dans `library/` selon vos besoins
-- Gardez `resources/` en lecture seule
-- Documentez vos modifications
-
-## 🔍 Explorer Plus
-
-- [README.md](../../README.md) - Documentation complète
+- [README.md](../../README.md) - Documentation complete
 - [CLAUDE.md](../../CLAUDE.md) - Guide pour Claude Code
 - [Best Practices](../best-practices/) - Meilleures pratiques
-
-## 📞 Support
-
-- Documentation Claude Code : https://docs.claude.com/claude-code
-- Agent Skills Spec : http://agentskills.io
-- Support Claude : https://support.claude.com
-
----
-
-**Prêt à créer ? Lancez-vous !** 🚀
+- [Maintenance](./maintenance.md) - Guide de maintenance

@@ -1,10 +1,21 @@
-export const cacheTags = {
-  agencyListings: (agencyId: string) => `agency-listings-${agencyId}` as const,
-  listingDetail: (listingId: string) => `listing-detail-${listingId}` as const,
-  searchResults: (queryHash: string) => `search-results-${queryHash}` as const,
-  agencyProfile: (agencyId: string) => `agency-profile-${agencyId}` as const,
+export const CacheTags = {
+  listing: (id: string) => `listing:${id}`,
+  listings: (agencyId: string) => `listings:${agencyId}`,
+  agency: (id: string) => `agency:${id}`,
+  agencyMembers: (agencyId: string) => `agency-members:${agencyId}`,
+  leads: (agencyId: string) => `leads:${agencyId}`,
+  visitRequests: (agencyId: string) => `visit-requests:${agencyId}`,
+  analytics: (agencyId: string) => `analytics:${agencyId}`,
+  conversations: (userId: string) => `conversations:${userId}`,
+  favorites: (userId: string) => `favorites:${userId}`,
+  alerts: (userId: string) => `alerts:${userId}`,
+  profile: (userId: string) => `profile:${userId}`,
+  adminModeration: "admin:moderation",
+  adminAuditLogs: "admin:audit-logs",
+  adminVerifications: "admin:verifications",
+  adminSettings: "admin:settings",
+  adminAgencies: "admin:agencies",
+  adminUsers: "admin:users",
+  adminPayments: "admin:payments",
+  adminEntitlements: (agencyId: string) => `admin:entitlements:${agencyId}`,
 } as const;
-
-export type CacheTag = ReturnType<
-  (typeof cacheTags)[keyof typeof cacheTags]
->;

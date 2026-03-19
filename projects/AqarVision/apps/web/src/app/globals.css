@@ -1,20 +1,213 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@config "../../tailwind.config.ts";
 
 :root {
-  --color-blue-night: #1a365d;
-  --color-gold: #d4af37;
-  --color-off-white: #f7fafc;
-  --color-gray-700: #2d3748;
-  --color-gray-400: #a0aec0;
+  /* Backgrounds */
+  --bg-app: #fafaf9;
+  --bg-surface: #ffffff;
+  --bg-muted: #f5f5f4;
+  --bg-elevated: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-inverse: #1c1917;
 
-  --font-sans: "Inter", "Noto Sans Arabic", sans-serif;
-  --font-arabic: "Noto Sans Arabic", sans-serif;
+  /* Text */
+  --text-primary: #0c0a09;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --text-inverse: #fafaf9;
+  --text-accent: #0d9488;
+  --text-danger: #dc2626;
+  --text-success: #16a34a;
+
+  /* Borders */
+  --border-default: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --border-focus: #0d9488;
+  --border-danger: #ef4444;
+  --border-success: #22c55e;
+
+  /* Accent */
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
+  --accent-ghost: rgba(13, 148, 136, 0.08);
+  --accent-warm: #fbbf24;
+  --accent-warm-ghost: rgba(251, 191, 36, 0.08);
+
+  /* Focus */
+  --ring-color: #0d9488;
+  --ring-offset: #ffffff;
+  --ring-danger: #ef4444;
+
+  /* Shadows */
+  --shadow-color: rgba(12, 10, 9, 0.04);
+  --shadow-color-hover: rgba(12, 10, 9, 0.08);
+
+  /* Semantic status */
+  --text-warning: #f59e0b;
+  --text-info: #3b82f6;
+  --border-warning: #f59e0b;
+  --border-info: #3b82f6;
+  --bg-success-ghost: rgba(34, 197, 94, 0.08);
+  --bg-warning-ghost: rgba(245, 158, 11, 0.08);
+  --bg-danger-ghost: rgba(239, 68, 68, 0.08);
+  --bg-info-ghost: rgba(59, 130, 246, 0.08);
+
+  /* Listing status */
+  --status-draft: #78716c;
+  --status-pending: #f59e0b;
+  --status-published: #22c55e;
+  --status-paused: #a8a29e;
+  --status-rejected: #ef4444;
+  --status-sold: #3b82f6;
+  --status-rented: #8b5cf6;
+  --status-expired: #a8a29e;
+
+  /* Listing types */
+  --listing-sale: #3b82f6;
+  --listing-rent: #8b5cf6;
+  --listing-vacation: #f59e0b;
+
+  /* Tricolore */
+  --tricolore-sahara: #e8920a;
+  --tricolore-med: #1a7fa8;
+  --tricolore-atlas: #2a8a4a;
+
+  /* Motion */
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+  --ease-default: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Opacity */
+  --opacity-ghost: 0.08;
+  --opacity-hover: 0.12;
+  --opacity-disabled: 0.5;
+  --opacity-placeholder: 0.5;
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 64px;
 }
 
-@layer base {
-  body {
-    @apply bg-off-white text-gray-700 antialiased;
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-app: #0c0a09;
+  --bg-surface: #1c1917;
+  --bg-muted: #292524;
+  --bg-elevated: #292524;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+  --bg-inverse: #fafaf9;
+
+  /* Text */
+  --text-primary: #fafaf9;
+  --text-secondary: #a8a29e;
+  --text-tertiary: #78716c;
+  --text-inverse: #0c0a09;
+  --text-accent: #2dd4bf;
+  --text-danger: #f87171;
+  --text-success: #4ade80;
+
+  /* Borders */
+  --border-default: #292524;
+  --border-strong: #44403c;
+  --border-focus: #2dd4bf;
+  --border-danger: #f87171;
+  --border-success: #4ade80;
+
+  /* Accent */
+  --accent: #2dd4bf;
+  --accent-hover: #14b8a6;
+  --accent-ghost: rgba(45, 212, 191, 0.08);
+  --accent-warm: #fbbf24;
+  --accent-warm-ghost: rgba(251, 191, 36, 0.08);
+
+  /* Focus */
+  --ring-color: #2dd4bf;
+  --ring-offset: #1c1917;
+  --ring-danger: #f87171;
+
+  /* Shadows */
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-color-hover: rgba(0, 0, 0, 0.4);
+
+  /* Semantic status */
+  --text-warning: #fbbf24;
+  --text-info: #60a5fa;
+  --border-warning: #fbbf24;
+  --border-info: #60a5fa;
+  --bg-success-ghost: rgba(74, 222, 128, 0.08);
+  --bg-warning-ghost: rgba(251, 191, 36, 0.08);
+  --bg-danger-ghost: rgba(248, 113, 113, 0.08);
+  --bg-info-ghost: rgba(96, 165, 250, 0.08);
+
+  /* Listing status */
+  --status-draft: #a8a29e;
+  --status-pending: #fbbf24;
+  --status-published: #4ade80;
+  --status-paused: #78716c;
+  --status-rejected: #f87171;
+  --status-sold: #60a5fa;
+  --status-rented: #a78bfa;
+  --status-expired: #78716c;
+
+  /* Listing types */
+  --listing-sale: #60a5fa;
+  --listing-rent: #a78bfa;
+  --listing-vacation: #fbbf24;
+
+  /* Tricolore */
+  --tricolore-sahara: #e8920a;
+  --tricolore-med: #1a7fa8;
+  --tricolore-atlas: #2a8a4a;
+
+  /* Motion */
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+  --ease-default: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Opacity */
+  --opacity-ghost: 0.08;
+  --opacity-hover: 0.12;
+  --opacity-disabled: 0.5;
+  --opacity-placeholder: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+}
+
+[dir="rtl"] body {
+  font-family: var(--font-ibm-plex-arabic), "Noto Sans Arabic", sans-serif;
+}
+
+/* Hide scrollbar while keeping scroll functionality */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

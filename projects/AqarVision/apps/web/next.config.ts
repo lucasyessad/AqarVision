@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
-import { withSentryConfig } from "@sentry/nextjs";
 
 const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 
@@ -12,15 +11,14 @@ const nextConfig: NextConfig = {
         hostname: "*.supabase.co",
         pathname: "/storage/v1/object/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
+    formats: ["image/webp", "image/avif"],
   },
-  experimental: {
-    typedRoutes: true,
-  },
+  // reactCompiler: true, // Disabled temporarily for faster dev compilation
 };
 
-export default withSentryConfig(withNextIntl(nextConfig), {
-  silent: true,
-  org: "aqarvision",
-  project: "web",
-});
+export default withNextIntl(nextConfig);

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{agency_name}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#111;--white:#F2F0EB;--yellow:#E8FF00;--red:#FF3B30;--gray:#999}
+body{font-family:'IBM Plex Mono',monospace;background:var(--white);color:var(--black);font-weight:300;font-size:.9rem}
+a{color:inherit;text-decoration:none}
+
+nav{padding:1.2rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--black)}
+.logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;text-transform:uppercase;letter-spacing:-.02em}
+nav ul{display:flex;gap:2rem;list-style:none;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em}
+nav ul a:hover{background:var(--yellow);padding:2px 4px}
+.nav-cta{background:var(--black);color:var(--white);padding:.5rem 1.2rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-family:'IBM Plex Mono',monospace}
+
+.hero{padding:4rem 2rem;border-bottom:2px solid var(--black);display:grid;grid-template-columns:1fr 1fr;gap:2rem;min-height:80vh;align-items:center}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(3rem,8vw,7rem);font-weight:800;line-height:.9;text-transform:uppercase;letter-spacing:-.04em}
+.hero h1 span{color:var(--red);display:block}
+.hero-right{position:relative}
+.hero-img{width:100%;height:500px;background:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80') center/cover;border:2px solid var(--black)}
+.hero-tag{position:absolute;bottom:-1rem;right:-1rem;background:var(--yellow);padding:.8rem 1.5rem;font-family:'Syne',sans-serif;font-weight:800;font-size:.8rem;text-transform:uppercase;border:2px solid var(--black)}
+.hero-meta{margin-top:2rem;font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:.1em;line-height:2}
+
+section{padding:4rem 2rem;border-bottom:2px solid var(--black)}
+.section-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3rem}
+.section-num{font-family:'Syne',sans-serif;font-size:5rem;font-weight:800;line-height:1;opacity:.15}
+.section-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;text-transform:uppercase}
+
+.listings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2px solid var(--black)}
+.listing-card{border-right:2px solid var(--black);overflow:hidden;transition:.2s}
+.listing-card:last-child{border-right:none}
+.listing-card:hover{background:var(--yellow)}
+.listing-img{height:280px;background-size:cover;background-position:center;border-bottom:2px solid var(--black)}
+.listing-body{padding:1.5rem}
+.listing-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;opacity:.1}
+.listing-price{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin:.5rem 0}
+.listing-price small{font-weight:300;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--gray)}
+.listing-title{font-size:.85rem;margin-bottom:1rem;line-height:1.4}
+.listing-meta{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);display:flex;flex-wrap:wrap;gap:.5rem}
+.listing-meta span{border:1px solid var(--gray);padding:.2rem .5rem}
+
+.about-section{display:grid;grid-template-columns:2fr 1fr;gap:0}
+.about-left{padding:3rem;border-right:2px solid var(--black)}
+.about-left p{line-height:1.8;margin-bottom:1.5rem;color:#555;max-width:500px}
+.about-right{padding:3rem}
+.stat-row{padding:1.5rem 0;border-bottom:1px solid #ddd}
+.stat-row:last-child{border:none}
+.stat-val{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800}
+.stat-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-top:.3rem}
+
+.contact-section{background:var(--black);color:var(--white);display:grid;grid-template-columns:1fr 1fr}
+.contact-left{padding:3rem;border-right:1px solid #333}
+.contact-left h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;text-transform:uppercase;margin-bottom:2rem}
+.contact-left p{color:var(--gray);line-height:2}
+.contact-right{padding:3rem}
+.contact-right input,.contact-right textarea{width:100%;background:transparent;border:none;border-bottom:1px solid #444;color:var(--white);padding:1rem 0;font-family:'IBM Plex Mono',monospace;font-size:.85rem;outline:none;margin-bottom:.5rem}
+.contact-right input:focus,.contact-right textarea:focus{border-color:var(--yellow)}
+.contact-right input::placeholder,.contact-right textarea::placeholder{color:#555}
+.contact-right textarea{height:80px;resize:none}
+.btn-brutal{width:100%;background:var(--yellow);color:var(--black);border:none;padding:1rem;font-family:'Syne',sans-serif;font-weight:800;text-transform:uppercase;font-size:.85rem;cursor:pointer;margin-top:1rem;transition:.2s}
+.btn-brutal:hover{background:var(--red);color:var(--white)}
+
+footer{padding:1.5rem 2rem;font-size:.7rem;color:var(--gray);display:flex;justify-content:space-between;text-transform:uppercase;letter-spacing:.08em}
+footer span{color:var(--red)}
+
+@media(max-width:768px){
+  .hero,.listings-grid,.about-section,.contact-section{grid-template-columns:1fr}
+  .hero h1{font-size:3.5rem}
+  .listing-card{border-right:none;border-bottom:2px solid var(--black)}
+  .listing-card:last-child{border-bottom:none}
+  .about-left{border-right:none;border-bottom:2px solid var(--black)}
+  .contact-left{border-right:none;border-bottom:1px solid #333}
+  nav ul{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">{{agency_name}}</div>
+  <ul>
+    <li><a href="#biens">Biens</a></li>
+    <li><a href="#agence">Agence</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Estimer →</a>
+</nav>
+
+<div class="hero">
+  <div>
+    <h1>L'immo<span>bilier.</span></h1>
+    <div class="hero-meta">
+      Basé à {{city}}<br>
+      Depuis {{since_year}}<br>
+      {{listings_count}} biens actifs
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img"></div>
+    <div class="hero-tag">{{city}} — 2026</div>
+  </div>
+</div>
+
+<section id="biens">
+  <div class="section-header">
+    <div class="section-title">Biens en vente</div>
+    <div class="section-num">01</div>
+  </div>
+  <div class="listings-grid">
+    <div class="listing-card">
+      <div class="listing-img" style="background-image:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80')"></div>
+      <div class="listing-body">
+        <div class="listing-num">01</div>
+        <div class="listing-price">6 200 000 MAD <small>MAD</small></div>
+        <div class="listing-title">Villa contemporaine — Californie, Casablanca</div>
+        <div class="listing-meta"><span>240 m²</span><span>4 ch</span><span>Piscine</span></div>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80')"></div>
+      <div class="listing-body">
+        <div class="listing-num">02</div>
+        <div class="listing-price">1 850 000 MAD <small>MAD</small></div>
+        <div class="listing-title">Duplex rénové — Triangle d'Or, Casablanca</div>
+        <div class="listing-meta"><span>130 m²</span><span>3 ch</span><span>Terrasse</span></div>
+      </div>
+    </div>
+    <div class="listing-card">
+      <div class="listing-img" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80')"></div>
+      <div class="listing-body">
+        <div class="listing-num">03</div>
+        <div class="listing-price">3 400 000 MAD <small>MAD</small></div>
+        <div class="listing-title">Riad authentique — Guéliz, Marrakech</div>
+        <div class="listing-meta"><span>180 m²</span><span>5 ch</span><span>Patio</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="agence" style="padding:0">
+  <div class="about-section">
+    <div class="about-left">
+      <div class="section-header" style="margin-bottom:2rem">
+        <div class="section-title">L'agence</div>
+        <div class="section-num">02</div>
+      </div>
+      <p>{{agency_description}}</p>
+      <p>Une équipe de {{team_count}} agents. Pas de blabla. Du résultat.</p>
+    </div>
+    <div class="about-right">
+      <div class="stat-row"><div class="stat-val">{{listings_count}}</div><div class="stat-label">Biens actifs</div></div>
+      <div class="stat-row"><div class="stat-val">{{sales_count}}+</div><div class="stat-label">Transactions</div></div>
+      <div class="stat-row"><div class="stat-val">{{since_year}}</div><div class="stat-label">Fondation</div></div>
+      <div class="stat-row"><div class="stat-val">98%</div><div class="stat-label">Satisfaction</div></div>
+    </div>
+  </div>
+</section>
+
+<div id="contact" class="contact-section">
+  <div class="contact-left">
+    <h3>Contact</h3>
+    <p>{{address}}</p>
+    <p>{{phone}}</p>
+    <p>{{email}}</p>
+    <p style="margin-top:2rem">LUN—SAM / 09:00—19:00</p>
+  </div>
+  <div class="contact-right">
+    <form>
+      <input type="text" placeholder="NOM_">
+      <input type="email" placeholder="EMAIL_">
+      <input type="tel" placeholder="TÉL_">
+      <textarea placeholder="MESSAGE_"></textarea>
+      <button type="submit" class="btn-brutal">Envoyer →</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div>© 2026 {{agency_name}}</div>
+  <div>Propulsé par <span>Aqar</span>Pro</div>
+</footer>
+
+</body>
+</html>

@@ -1,21 +1,25 @@
-# Security Policy
+# Security Policy - AqarVision
 
-## Supported Versions
+## Signaler une Vulnerabilite
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Si vous decouvrez une vulnerabilite de securite dans ce projet, merci de la signaler de maniere responsable en ouvrant une issue privee sur GitHub ou en contactant directement le mainteneur.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+## Bonnes Pratiques
 
-## Reporting a Vulnerability
+- Ne jamais committer de fichiers `.env`, credentials, ou cles API
+- Les fichiers sensibles sont listes dans `.gitignore`
+- Les projets dans `projects/` gerent leur propre securite independamment
+- Les depots dans `resources/` sont en lecture seule et suivent les politiques de securite de leurs mainteneurs respectifs
 
-Use this section to tell people how to report a vulnerability.
+## Dependances
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Chaque projet dans `projects/` gere ses propres dependances. Verifiez regulierement les vulnerabilites connues :
+
+```bash
+# Pour les projets Node.js
+cd projects/<nom-projet>
+npm audit
+
+# Pour les projets Python
+pip audit
+```

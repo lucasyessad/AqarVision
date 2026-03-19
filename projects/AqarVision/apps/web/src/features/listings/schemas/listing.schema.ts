@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { sanitizeInput } from "@/lib/sanitize";
 
-export const LISTING_TYPES = ["sale", "rent", "vacation"] as const;
-export type ListingType = (typeof LISTING_TYPES)[number];
+export const listingTypeSchema = z.enum(["sale", "rent", "vacation"]);
+export type ListingType = z.infer<typeof listingTypeSchema>;
 
-export const PROPERTY_TYPES = [
+export const propertyTypeSchema = z.enum([
   "apartment",
   "villa",
   "terrain",
@@ -12,69 +13,72 @@ export const PROPERTY_TYPES = [
   "building",
   "farm",
   "warehouse",
-] as const;
-export type PropertyType = (typeof PROPERTY_TYPES)[number];
+]);
+export type PropertyType = z.infer<typeof propertyTypeSchema>;
 
-export const LOCALES = ["fr", "ar", "en", "es"] as const;
-export type Locale = (typeof LOCALES)[number];
+export const listingStatusSchema = z.enum([
+  "draft",
+  "pending_review",
+  "published",
+  "paused",
+  "rejected",
+  "sold",
+  "rented",
+  "expired",
+  "archived",
+]);
+export type ListingStatus = z.infer<typeof listingStatusSchema>;
 
-export const CreateListingSchema = z.object({
-  agency_id: z.string().uuid(),
-  branch_id: z.string().uuid().optional(),
-  listing_type: z.enum(LISTING_TYPES),
-  property_type: z.enum(PROPERTY_TYPES),
-  current_price: z.number().nonnegative(),
-  wilaya_code: z.number().min(1),
-  commune_id: z.number().optional(),
-  surface_m2: z.number().nonnegative().optional(),
-  rooms: z.number().nonnegative().int().optional(),
-  bathrooms: z.number().nonnegative().int().optional(),
-  details: z.record(z.unknown()).optional(),
+export const listingDetailsSchema = z.object({
+  area_m2: z.number().positive(),
+  rooms: z.number().int().min(0).optional(),
+  bathrooms: z.number().int().min(0).optional(),
+  floor: z.number().int().optional(),
+  total_floors: z.number().int().optional(),
+  year_built: z.number().int().min(1900).max(2030).optional(),
+  has_parking: z.boolean().optional(),
+  has_elevator: z.boolean().optional(),
+  has_balcony: z.boolean().optional(),
+  has_pool: z.boolean().optional(),
+  has_garden: z.boolean().optional(),
+  furnished: z.boolean().optional(),
+  has_sea_view: z.boolean().optional(),
+  has_water: z.boolean().optional(),
+  has_electricity: z.boolean().optional(),
 });
 
-export type CreateListingInput = z.infer<typeof CreateListingSchema>;
-
-export const UpdateListingSchema = z.object({
-  listing_id: z.string().uuid(),
-  expected_version: z.number(),
-  branch_id: z.string().uuid().optional(),
-  listing_type: z.enum(LISTING_TYPES).optional(),
-  property_type: z.enum(PROPERTY_TYPES).optional(),
-  current_price: z.number().nonnegative().optional(),
-  wilaya_code: z.number().min(1).optional(),
-  commune_id: z.number().optional(),
-  surface_m2: z.number().nonnegative().optional(),
-  rooms: z.number().nonnegative().int().optional(),
-  bathrooms: z.number().nonnegative().int().optional(),
-  details: z.record(z.unknown()).optional(),
-});
-
-export type UpdateListingInput = z.infer<typeof UpdateListingSchema>;
-
-export const UpsertTranslationSchema = z.object({
-  listing_id: z.string().uuid(),
-  locale: z.enum(LOCALES),
-  title: z.string().min(3),
-  description: z.string().min(10),
-  slug: z
+export const listingTranslationSchema = z.object({
+  locale: z.enum(["fr", "ar", "en", "es"]),
+  title: z
     .string()
-    .min(3)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase with hyphens"),
+    .min(10, "Le titre doit contenir au moins 10 caractères")
+    .max(120, "Le titre ne doit pas dépasser 120 caractères")
+    .transform(sanitizeInput),
+  description: z
+    .string()
+    .min(50, "La description doit contenir au moins 50 caractères")
+    .max(5000, "La description ne doit pas dépasser 5000 caractères")
+    .transform(sanitizeInput),
+  slug: z.string().optional(),
 });
 
-export type UpsertTranslationInput = z.infer<typeof UpsertTranslationSchema>;
-
-export const PublishListingSchema = z.object({
-  listing_id: z.string().uuid(),
+export const createListingSchema = z.object({
+  listing_type: listingTypeSchema,
+  property_type: propertyTypeSchema,
+  wilaya_code: z.string().min(1),
+  commune_id: z.number().int().positive(),
+  address: z.string().max(200).transform(sanitizeInput).optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
+  details: listingDetailsSchema,
+  price: z.number().positive("Le prix doit être positif"),
+  currency: z.enum(["DZD", "EUR"]).default("DZD"),
+  translations: z
+    .array(listingTranslationSchema)
+    .min(1, "Au moins une traduction est requise"),
+  contact_phone: z.string().optional(),
+  show_phone: z.boolean().default(true),
+  accept_messages: z.boolean().default(true),
 });
 
-export type PublishListingInput = z.infer<typeof PublishListingSchema>;
-
-export const ChangePriceSchema = z.object({
-  listing_id: z.string().uuid(),
-  new_price: z.number().nonnegative(),
-  expected_version: z.number(),
-  reason: z.string().optional(),
-});
-
-export type ChangePriceInput = z.infer<typeof ChangePriceSchema>;
+export type CreateListingInput = z.infer<typeof createListingSchema>;

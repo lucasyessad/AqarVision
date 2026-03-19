@@ -1,26 +1,38 @@
-import { useTranslations } from "next-intl";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
-import { LoginForm } from "@/features/auth/components";
+import { LoginForm } from "@/features/auth/components/LoginForm";
 
-export default function LoginPage() {
-  const t = useTranslations("auth");
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: t("login"),
+  };
+}
+
+export default async function LoginPage() {
+  const t = await getTranslations("auth.login");
+  const tButtons = await getTranslations("auth.buttons");
 
   return (
-    <div className="rounded-xl bg-white p-8 shadow-lg">
-      <div className="mb-6 text-center">
-        <h1 className="text-2xl font-bold text-gold">AqarVision</h1>
-        <p className="mt-2 text-lg font-semibold text-blue-night">
-          {t("login_title")}
+    <div className="space-y-6">
+      <div className="text-center">
+        <h1 className="text-xl font-bold text-stone-900 dark:text-stone-50">
+          {t("title")}
+        </h1>
+        <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
+          {t("subtitle")}
         </p>
       </div>
+
       <LoginForm />
-      <p className="mt-4 text-center text-sm text-gray-500">
-        {t("no_account")}{" "}
+
+      <p className="text-center text-sm text-stone-500 dark:text-stone-400">
         <Link
           href="/auth/signup"
-          className="font-medium text-gold hover:underline"
+          className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 transition-colors"
         >
-          {t("signup_button")}
+          {tButtons("signup")}
         </Link>
       </p>
     </div>

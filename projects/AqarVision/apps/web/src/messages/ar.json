@@ -1,0 +1,700 @@
+{
+  "common": {
+    "buttons": {
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "delete": "حذف",
+      "confirm": "تأكيد",
+      "back": "رجوع",
+      "next": "التالي",
+      "loading": "جاري التحميل…",
+      "search": "بحث",
+      "filter": "تصفية",
+      "close": "إغلاق",
+      "submit": "إرسال",
+      "edit": "تعديل",
+      "create": "إنشاء",
+      "retry": "إعادة المحاولة",
+      "share": "مشاركة"
+    },
+    "labels": {
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "phone": "الهاتف",
+      "name": "الاسم",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة"
+    },
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "invalidEmail": "عنوان بريد إلكتروني غير صالح",
+      "invalidPhone": "رقم هاتف غير صالح (الصيغة: 213+ أو 0، يليه 5-7، ثم 8 أرقام)",
+      "serverError": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+      "unauthorized": "يجب تسجيل الدخول للوصول إلى هذه الصفحة",
+      "forbidden": "ليس لديك الصلاحيات اللازمة",
+      "notFound": "الصفحة غير موجودة"
+    },
+    "next": "التالي",
+    "previous": "السابق",
+    "empty": {
+      "noLeads": "لا يوجد عملاء محتملون حاليًا",
+      "noVisits": "لا توجد طلبات زيارة",
+      "noAlerts": "لا توجد تنبيهات مُعدّة",
+      "noHistory": "لا يوجد سجل",
+      "noNotifications": "لا توجد إشعارات",
+      "noAgencies": "لم يتم العثور على وكالات",
+      "noPendingInvites": "لا توجد دعوات معلقة",
+      "noPayments": "لا توجد مدفوعات",
+      "noUsers": "لم يتم العثور على مستخدمين",
+      "noEvents": "لا توجد أحداث",
+      "noVerifications": "لا توجد طلبات تحقق معلقة",
+      "noModeration": "لا توجد إعلانات بانتظار الإشراف",
+      "noFavorites": "لا توجد مفضلات",
+      "noConversations": "لا توجد محادثات",
+      "noMessages": "لا توجد رسائل. ابدأ المحادثة!",
+      "selectConversation": "اختر محادثة",
+      "typeMessage": "اكتب رسالة...",
+      "searchPlaceholder": "بحث...",
+      "noResults": "لا توجد نتائج",
+      "noData": "لا توجد بيانات",
+      "noNotes": "لا توجد ملاحظات",
+      "selectAgency": "اختر وكالة لإدارة صلاحياتها"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "subtitle": "ادخل إلى حسابك في عقار فيجن",
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+      "genericError": "حدث خطأ. يرجى المحاولة مرة أخرى."
+    },
+    "signup": {
+      "title": "إنشاء حساب",
+      "subtitle": "انضم إلى مجتمع العقارات الجزائري",
+      "genericError": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+      "success": "تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني.",
+      "successTitle": "تم إنشاء الحساب!",
+      "successMessage": "تم إرسال رسالة تأكيد إلى عنوان بريدك الإلكتروني.",
+      "agencyPrompt": "هل أنت وكالة عقارية؟",
+      "createAgency": "أنشئ وكالتك"
+    },
+    "forgotPassword": {
+      "title": "نسيت كلمة المرور",
+      "subtitle": "أدخل بريدك الإلكتروني لتلقي رابط إعادة التعيين"
+    },
+    "resetPassword": {
+      "title": "إعادة تعيين كلمة المرور",
+      "subtitle": "اختر كلمة مرور جديدة"
+    },
+    "fields": {
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "rememberMe": "تذكرني",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "firstName": "الاسم الأول",
+      "lastName": "اللقب",
+      "phone": "الهاتف",
+      "newPassword": "كلمة المرور الجديدة",
+      "passwordWeak": "ضعيفة",
+      "passwordMedium": "متوسطة",
+      "passwordStrong": "قوية"
+    },
+    "errors": {
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+      "emailExists": "يوجد حساب بالفعل بهذا البريد الإلكتروني"
+    },
+    "buttons": {
+      "login": "تسجيل الدخول",
+      "signup": "إنشاء حساب",
+      "resetPassword": "إعادة التعيين",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "sendResetLink": "إرسال الرابط"
+    },
+    "invite": {
+      "title": "دعوة",
+      "description": "تمت دعوتك للانضمام إلى وكالة",
+      "accept": "قبول الدعوة",
+      "accepting": "جاري القبول…",
+      "role": "الدور",
+      "expiresNote": "تنتهي صلاحية هذا الرابط خلال 7 أيام",
+      "notFound": "الدعوة غير موجودة",
+      "notFoundDescription": "رابط الدعوة هذا غير صالح أو تم استخدامه بالفعل.",
+      "expired": "الدعوة منتهية الصلاحية",
+      "expiredDescription": "انتهت صلاحية رابط الدعوة هذا. اطلب رابطًا جديدًا من الوكالة.",
+      "alreadyAccepted": "الدعوة مقبولة مسبقًا",
+      "alreadyAcceptedDescription": "لقد قبلت هذه الدعوة بالفعل."
+    }
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "search": "بحث",
+    "deposit": "نشر إعلان",
+    "chaab": "عقار الشعب",
+    "pro": "عقار برو",
+    "agencies": "الوكالات",
+    "dashboard": "لوحة التحكم",
+    "myListings": "إعلاناتي",
+    "messages": "الرسائل",
+    "alerts": "التنبيهات",
+    "favorites": "المفضلة",
+    "history": "السجل",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "team": "الفريق",
+    "billing": "الفواتير",
+    "analytics": "الإحصائيات",
+    "leads": "العملاء المحتملون",
+    "visits": "الزيارات",
+    "logout": "تسجيل الخروج",
+    "notifications": "الإشعارات",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "sale": "بيع",
+    "rent": "إيجار",
+    "estimate": "تقدير",
+    "overview": "نظرة عامة",
+    "listings": "الإعلانات",
+    "branches": "الفروع",
+    "more": "المزيد",
+    "auditLogs": "سجل التدقيق",
+    "platformSettings": "الإعدادات",
+    "entitlements": "الصلاحيات",
+    "verifications": "التحقق",
+    "moderation": "الإشراف",
+    "upgrade": "ترقية",
+    "pricing": "الأسعار"
+  },
+  "dashboard": {
+    "overview": {
+      "title": "لوحة التحكم",
+      "welcomeMessage": "مرحبًا، {name}"
+    },
+    "onboarding": {
+      "title": "أكمل ملفك الشخصي",
+      "addLogo": "أضف شعارًا ووصفًا",
+      "publishListing": "انشر إعلانك الأول",
+      "inviteTeam": "ادعُ عضوًا في الفريق",
+      "customizeStorefront": "خصّص واجهتك",
+      "choosePlan": "اختر خطتك"
+    },
+    "stats": {
+      "views": "المشاهدات",
+      "leads": "العملاء المحتملون",
+      "contacts": "جهات الاتصال",
+      "listings": "الإعلانات",
+      "distribution": "التوزيع"
+    },
+    "settings": {
+      "tabs": {
+        "general": "عام",
+        "appearance": "المظهر",
+        "verification": "التحقق",
+        "notifications": "الإشعارات"
+      },
+      "fields": {
+        "name": "اسم الوكالة",
+        "description": "الوصف",
+        "email": "البريد الإلكتروني",
+        "phone": "الهاتف",
+        "hours": "ساعات العمل"
+      },
+      "verification": {
+        "description": "أرسل مستنداتك للحصول على شارة التحقق",
+        "legalName": "الاسم القانوني",
+        "rcNumber": "رقم السجل التجاري"
+      },
+      "notifications": {
+        "newLead": "عميل محتمل جديد",
+        "visitRequest": "طلب زيارة",
+        "newMessage": "رسالة جديدة",
+        "moderationResult": "نتيجة الإشراف",
+        "billingAlert": "تنبيه الفواتير",
+        "weeklyDigest": "الملخص الأسبوعي"
+      }
+    }
+  },
+  "listing": {
+    "types": {
+      "sale": "بيع",
+      "rent": "إيجار",
+      "vacation": "عطلة"
+    },
+    "propertyTypes": {
+      "apartment": "شقة",
+      "villa": "فيلا",
+      "terrain": "أرض",
+      "commercial": "محل تجاري",
+      "office": "مكتب",
+      "building": "عمارة",
+      "farm": "مزرعة",
+      "warehouse": "مستودع"
+    },
+    "statuses": {
+      "draft": "مسودة",
+      "pending": "قيد المراجعة",
+      "published": "منشور",
+      "paused": "متوقف",
+      "rejected": "مرفوض",
+      "sold": "مباع",
+      "rented": "مؤجر",
+      "expired": "منتهي",
+      "archived": "مؤرشف"
+    },
+    "fields": {
+      "title": "العنوان",
+      "description": "الوصف",
+      "price": "السعر",
+      "area": "المساحة (م²)",
+      "rooms": "الغرف",
+      "bathrooms": "الحمامات",
+      "floor": "الطابق",
+      "address": "العنوان",
+      "wilaya": "الولاية",
+      "commune": "البلدية",
+      "type": "نوع المعاملة",
+      "propertyType": "نوع العقار",
+      "created": "تاريخ الإنشاء",
+      "updated": "تاريخ التعديل"
+    },
+    "type": {
+      "sale": "بيع",
+      "rent": "إيجار",
+      "vacation": "عطلة"
+    },
+    "propertyType": {
+      "apartment": "شقة",
+      "villa": "فيلا",
+      "terrain": "أرض",
+      "commercial": "محل تجاري",
+      "office": "مكتب",
+      "building": "عمارة",
+      "farm": "مزرعة",
+      "warehouse": "مستودع"
+    },
+    "status": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "published": "منشور",
+      "paused": "متوقف",
+      "rejected": "مرفوض",
+      "sold": "مباع",
+      "rented": "مؤجر",
+      "expired": "منتهي",
+      "archived": "مؤرشف"
+    },
+    "features": {
+      "parking": "موقف سيارات",
+      "elevator": "مصعد",
+      "balcony": "شرفة",
+      "pool": "مسبح",
+      "garden": "حديقة",
+      "furnished": "مفروش",
+      "seaView": "إطلالة على البحر"
+    },
+    "actions": {
+      "publish": "نشر",
+      "pause": "إيقاف مؤقت",
+      "delete": "حذف",
+      "confirmDelete": "هل أنت متأكد من حذف هذا الإعلان؟",
+      "viewPublic": "عرض الإعلان العام"
+    },
+    "stats": {
+      "views": "المشاهدات",
+      "leads": "العملاء المحتملون",
+      "favorites": "المفضلات"
+    },
+    "priceHistory": "سجل الأسعار",
+    "noPhotos": "لا توجد صور",
+    "edit": "تعديل الإعلان",
+    "statistics": "الإحصائيات",
+    "metadata": "المعلومات",
+    "contact": {
+      "call": "اتصل"
+    },
+    "viewPublic": "عرض الإعلان العام"
+  },
+  "marketing": {
+    "heroTitle": "ابحث عن عقارك في الجزائر",
+    "heroSubtitle": "من البحر الأبيض المتوسط إلى الصحراء — آلاف العقارات عبر 69 ولاية جزائرية",
+    "scrollDown": "اكتشف",
+    "ctaSearch": "ابحث عن عقار",
+    "ctaPro": "أنت وكالة؟ رقمن نشاطك مع عقار برو",
+    "ctaProButton": "اكتشف عقار برو",
+    "featuredTitle": "إعلانات مميزة",
+    "tabSale": "بيع",
+    "tabRent": "إيجار",
+    "tabVacation": "عطلة",
+    "viewAll": "عرض جميع الإعلانات",
+    "editorialEyebrow": "العقارات في الجزائر",
+    "editorialTitle": "سوق عقاري في تحول كامل",
+    "editorialDescription": "تشهد الجزائر نهضة معمارية غير مسبوقة. مشاريع طموحة تعيد رسم المشهد العمراني، تمزج بين الحداثة والتراث المتوسطي.",
+    "editorialLink": "استكشف السوق",
+    "wilayasTitle": "الولايات الأكثر شعبية",
+    "regionsTitle": "استكشف حسب المنطقة",
+    "regionSahara": "الصحراء",
+    "regionSaharaSubtitle": "أبواب الصحراء",
+    "regionLittoral": "الساحل",
+    "regionLittoralSubtitle": "الساحل المتوسطي",
+    "regionMontagne": "الجبال",
+    "regionMontagneSubtitle": "قمم الأطلس",
+    "howItWorks": {
+      "title": "كيف يعمل",
+      "step1": "ابحث",
+      "step1Description": "استكشف آلاف الإعلانات باستخدام فلاترنا المتقدمة والخريطة التفاعلية",
+      "step2": "تواصل",
+      "step2Description": "تواصل مباشرة مع الوكالات والملاك عبر الهاتف أو واتساب أو الرسائل",
+      "step3": "زُر",
+      "step3Description": "خطط لزياراتك وابحث عن العقار المناسب لك"
+    },
+    "statsStrip": {
+      "listings": "إعلان",
+      "verifiedAgencies": "وكالة موثوقة",
+      "wilayas": "ولاية",
+      "users": "مستخدم"
+    },
+    "heroHeadline": "ابحث عن",
+    "heroBold": "العقار المثالي",
+    "heroSuffix": "في الجزائر",
+    "heroBadge": "+15 000 إعلان موثق",
+    "ctaSecondary": "انشر مجاناً",
+    "featureGrid": {
+      "search": {
+        "eyebrow": "أقار سيرش",
+        "title": "بحث ذكي",
+        "description": "فلاتر الولاية والبلدية والسعر بالدينار الجزائري. خريطة تفاعلية لجميع الولايات الـ69.",
+        "cta": "استكشف"
+      },
+      "pro": {
+        "eyebrow": "أقار برو",
+        "title": "فضاء المحترفين",
+        "description": "إدارة وكالة متكاملة — عرض حصري، إدارة العملاء المؤهلين والإحصاءات.",
+        "cta": "اكتشف"
+      },
+      "chaab": {
+        "eyebrow": "أقار شعب",
+        "title": "بين الأفراد",
+        "description": "أعلن مباشرة، بدون وسيط، بدون عمولة.",
+        "cta": "ابدأ"
+      }
+    }
+  },
+  "search": {
+    "title": "البحث عن عقار",
+    "subtitle": "استكشف الإعلانات العقارية عبر الجزائر",
+    "filters": {
+      "type": "نوع المعاملة",
+      "propertyType": "نوع العقار",
+      "priceMin": "السعر الأدنى",
+      "priceMax": "السعر الأقصى",
+      "surfaceMin": "المساحة الدنيا (م²)",
+      "surfaceMax": "المساحة القصوى (م²)",
+      "surfaceLabel": "المساحة (م²)",
+      "rooms": "الغرف (الحد الأدنى)",
+      "roomsMin": "الغرف (الحد الأدنى)",
+      "floorMin": "الطابق الأدنى",
+      "yearMin": "سنة البناء الدنيا",
+      "parking": "موقف سيارات",
+      "elevator": "مصعد",
+      "furnished": "مفروش",
+      "sale": "بيع",
+      "rent": "إيجار",
+      "vacation": "عطلة",
+      "apartment": "شقة",
+      "villa": "فيلا",
+      "terrain": "أرض",
+      "commercial": "محل تجاري",
+      "office": "مكتب",
+      "building": "عمارة",
+      "farm": "مزرعة",
+      "warehouse": "مستودع",
+      "search": "بحث",
+      "searchPlaceholder": "ولاية، بلدية، حي…",
+      "moreFilters": "مزيد من الفلاتر",
+      "clearAll": "مسح الكل",
+      "apply": "تطبيق",
+      "sortLabel": "ترتيب حسب",
+      "priceLabel": "الميزانية (د.ج)",
+      "roomsLabel": "الغرف",
+      "bathroomsLabel": "الحمامات",
+      "yearLabel": "سنة البناء",
+      "floorLabel": "الطابق",
+      "outdoorFeatures": "خارجي",
+      "indoorFeatures": "داخلي",
+      "infrastructure": "البنية التحتية",
+      "security": "الأمان"
+    },
+    "sort": {
+      "newest": "الأحدث",
+      "priceAsc": "السعر تصاعديًا",
+      "priceDesc": "السعر تنازليًا",
+      "surfaceDesc": "المساحة تنازليًا"
+    },
+    "noResults": "لا توجد نتائج تطابق بحثك",
+    "noResultsHint": "حاول توسيع معايير البحث",
+    "resultsCount": "إعلانات تم العثور عليها",
+    "similarListings": "إعلانات مشابهة",
+    "compare": "مقارنة",
+    "compareLabel": "اختر للمقارنة",
+    "compareSelected": "محدد",
+    "compareAdd": "مقارنة",
+    "compareCount": "{count}/{max} محددة",
+    "compareClear": "إلغاء",
+    "saveSearch": "حفظ هذا البحث",
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "pageOf": "الصفحة {page} من {totalPages}"
+    },
+    "comparison": {
+      "title": "مقارنة",
+      "photo": "الصورة",
+      "price": "السعر",
+      "area": "المساحة",
+      "rooms": "الغرف",
+      "location": "الموقع",
+      "type": "نوع المعاملة",
+      "propertyType": "نوع العقار",
+      "agency": "الوكالة",
+      "viewListing": "عرض الإعلان"
+    },
+    "alert": {
+      "title": "إنشاء تنبيه",
+      "name": "اسم التنبيه",
+      "namePlaceholder": "مثال: شقق في الجزائر العاصمة",
+      "frequency": "التكرار",
+      "instant": "فوري",
+      "daily": "يومي",
+      "weekly": "أسبوعي",
+      "create": "إنشاء التنبيه",
+      "success": "تم إنشاء التنبيه بنجاح",
+      "loginRequired": "سجّل الدخول لإنشاء تنبيه"
+    },
+    "map": {
+      "toggle": "الخريطة",
+      "list": "القائمة"
+    }
+  },
+  "contact": {
+    "call": "اتصل",
+    "sendMessage": "إرسال رسالة",
+    "requestVisit": "طلب زيارة",
+    "viewAllListings": "عرض جميع إعلانات هذه الوكالة",
+    "whatsappMessage": "مرحبًا، أنا مهتم بـ",
+    "formName": "اسمك",
+    "formPhone": "هاتفك",
+    "formMessage": "رسالتك",
+    "formDate": "التاريخ المطلوب",
+    "formTimeSlot": "الفترة",
+    "morning": "صباحًا",
+    "afternoon": "بعد الظهر",
+    "evening": "مساءً",
+    "send": "إرسال"
+  },
+  "chaab": {
+    "myListings": {
+      "title": "إعلاناتي",
+      "subtitle": "إدارة إعلاناتك العقارية",
+      "empty": "ليس لديك أي إعلان حاليًا",
+      "ctaDeposit": "نشر إعلان"
+    }
+  },
+  "pricing": {
+    "title": "الأسعار",
+    "subtitle": "اختر الخطة المناسبة لاحتياجاتك",
+    "starter": "Starter",
+    "pro": "Pro",
+    "enterprise": "Enterprise"
+  },
+  "billing": {
+    "noPlan": "لا يوجد خطة نشطة",
+    "trialActive": "الفترة التجريبية المجانية نشطة",
+    "activeUntil": "نشط حتى {date}",
+    "noActiveSubscription": "لا يوجد اشتراك نشط",
+    "popular": "الأكثر شعبية",
+    "month": "شهر",
+    "unlimitedListings": "إعلانات غير محدودة",
+    "maxListings": "{count} إعلان",
+    "maxPhotos": "{count} صور/إعلان",
+    "unlimitedTeam": "فريق غير محدود",
+    "maxTeam": "{count} أعضاء",
+    "currentPlan": "الخطة الحالية",
+    "choosePlan": "اختر هذه الخطة",
+    "manageSubscription": "إدارة الاشتراك",
+    "processing": "جاري المعالجة…"
+  },
+  "admin": {
+    "title": "الإدارة",
+    "agencies": "الوكالات",
+    "users": "المستخدمون",
+    "payments": "المدفوعات",
+    "verifications": "التحققات",
+    "moderation": "الإشراف",
+    "auditLogs": "سجل المراجعة",
+    "platformSettings": "إعدادات المنصة",
+    "entitlements": "الصلاحيات"
+  },
+  "estimation": {
+    "stepOf": "الخطوة {current} من {total}",
+    "step1Title": "نوع العقار",
+    "step2Title": "تفاصيل العقار",
+    "step3Title": "التقدير",
+    "area": "المساحة (م²)",
+    "rooms": "عدد الغرف",
+    "floor": "الطابق",
+    "yearBuilt": "سنة البناء",
+    "features": {
+      "parking": "موقف سيارات",
+      "elevator": "مصعد",
+      "seaView": "إطلالة على البحر",
+      "furnished": "مفروش"
+    },
+    "estimatedRange": "النطاق المقدر",
+    "perMonth": "/شهر",
+    "confidence": "الثقة",
+    "confidenceModerate": "متوسطة",
+    "confidenceNote": "تقدير مبني على أسعار السوق المحلية. قد تختلف الأسعار الفعلية.",
+    "priceDistribution": "توزيع الأسعار في المنطقة",
+    "ctaDeposer": "نشر إعلان",
+    "ctaSearch": "عرض عقارات مشابهة",
+    "insufficientData": "بيانات غير كافية للتقدير. أكمل جميع الحقول.",
+    "restart": "إعادة البدء",
+    "pageTitle": "قدّر قيمة عقارك",
+    "pageDescription": "احصل على تقدير مجاني في 3 خطوات",
+    "sale": "بيع",
+    "rent": "إيجار",
+    "vacation": "عطلة",
+    "propertyType": {
+      "apartment": "شقة",
+      "villa": "فيلا",
+      "terrain": "أرض",
+      "commercial": "محل تجاري",
+      "office": "مكتب",
+      "building": "عمارة",
+      "farm": "مزرعة",
+      "warehouse": "مستودع"
+    },
+    "transactionType": "نوع المعاملة"
+  },
+  "agency": {
+    "createTitle": "أنشئ وكالتك",
+    "createSubtitle": "تجربة مجانية لمدة 14 يومًا — خطة Starter",
+    "createDescription": "رقمن نشاطك العقاري",
+    "name": "اسم الوكالة",
+    "slug": "معرّف الرابط",
+    "slugAvailable": "متاح",
+    "slugTaken": "مأخوذ بالفعل",
+    "email": "بريد الوكالة",
+    "phone": "الهاتف",
+    "wilaya": "الولاية",
+    "commune": "البلدية",
+    "create": "إنشاء وكالتي",
+    "form": {
+      "name": "اسم الوكالة",
+      "namePlaceholder": "مثال: عقارات الجزائر",
+      "slug": "معرّف الرابط",
+      "slugHelp": "سيُستخدم في رابط واجهتك",
+      "email": "بريد الوكالة",
+      "phone": "الهاتف",
+      "wilaya": "الولاية",
+      "commune": "البلدية",
+      "submit": "إنشاء وكالتي",
+      "trialNote": "تجربة مجانية 14 يومًا — خطة Starter"
+    }
+  },
+  "team": {
+    "inviteTitle": "دعوة عضو",
+    "inviteSubtitle": "سيتم إرسال بريد إلكتروني مع رابط صالح لمدة 7 أيام",
+    "email": "البريد الإلكتروني",
+    "role": "الدور",
+    "send": "إرسال الدعوة",
+    "success": "تم إرسال الدعوة",
+    "alreadyMember": "هذا المستخدم عضو بالفعل في الوكالة"
+  },
+  "storefront": {
+    "title": "واجهة الوكالة",
+    "loading": "جاري تحميل الواجهة…"
+  },
+  "visitRequests": {
+    "status": {
+      "pending": "معلّقة",
+      "confirmed": "مؤكدة",
+      "completed": "مكتملة",
+      "cancelled": "ملغاة"
+    },
+    "slot": {
+      "morning": "صباحًا",
+      "afternoon": "بعد الظهر",
+      "evening": "مساءً"
+    },
+    "actions": {
+      "confirm": "تأكيد",
+      "complete": "إتمام",
+      "cancel": "إلغاء"
+    },
+    "details": "تفاصيل الزيارة",
+    "requester": "الطالب",
+    "message": "الرسالة",
+    "listing": "الإعلان",
+    "date": "التاريخ",
+    "timeSlot": "الفترة",
+    "week": "الأسبوع",
+    "today": "اليوم",
+    "calendarView": "التقويم",
+    "listView": "القائمة"
+  },
+  "agencySettings": {
+    "themeStudio": {
+      "selectTheme": "اختر مظهرًا",
+      "customizeColors": "تخصيص الألوان",
+      "primaryColor": "اللون الرئيسي",
+      "accentColor": "لون التمييز",
+      "secondaryColor": "اللون الثانوي",
+      "saveBranding": "حفظ الهوية البصرية",
+      "customizeStorefront": "تخصيص واجهتي",
+      "media": "الوسائط",
+      "texts": "النصوص",
+      "stats": "الإحصائيات",
+      "preview": "معاينة",
+      "heroImage": "صورة الغلاف",
+      "heroImageHint": "الصورة الرئيسية لواجهتك (الحد الأدنى 1920×800)",
+      "extraPhotos": "صور إضافية",
+      "videoUrl": "رابط الفيديو",
+      "videoUrlHint": "يوتيوب أو فيميو فقط",
+      "tagline": "الشعار",
+      "taglinePlaceholder": "شعارك في جملة واحدة",
+      "aboutText": "نبذة عنّا",
+      "aboutPlaceholder": "صف وكالتك",
+      "services": "الخدمات والقيم",
+      "addService": "إضافة خدمة",
+      "serviceTitle": "العنوان",
+      "serviceText": "الوصف",
+      "serviceIcon": "الأيقونة",
+      "yearsExperience": "سنوات الخبرة",
+      "satisfiedClients": "العملاء الراضون",
+      "autoStatsHint": "الإحصائيات التلقائية (الإعلانات، المشاهدات، العملاء المحتملون) معروضة دائمًا",
+      "themeExtras": "خيارات خاصة بالمظهر",
+      "goldenTagline": "شعار ذهبي",
+      "manifesto": "البيان",
+      "topbarHours": "ساعات الشريط العلوي",
+      "eyebrow": "نص علوي",
+      "ecoCertifications": "شهادات بيئية",
+      "publishStorefront": "نشر واجهتي",
+      "chars": "حرف"
+    }
+  },
+  "metadata": {
+    "home": "عقارات في الجزائر",
+    "homeDescription": "ابحث عن عقارك من بين آلاف الإعلانات الموثوقة عبر 69 ولاية في الجزائر",
+    "search": "البحث العقاري",
+    "dashboard": "لوحة التحكم",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "forgotPassword": "نسيت كلمة المرور",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "pricing": "الأسعار",
+    "admin": "الإدارة",
+    "myListings": "إعلاناتي"
+  }
+}

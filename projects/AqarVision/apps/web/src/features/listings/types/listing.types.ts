@@ -1,61 +1,83 @@
-import type { ListingType, PropertyType, Locale } from "../schemas/listing.schema";
+import type { ListingType, PropertyType, ListingStatus } from "../schemas/listing.schema";
 
-export type ListingStatus =
-  | "draft"
-  | "pending_review"
-  | "published"
-  | "paused"
-  | "rejected"
-  | "sold"
-  | "archived";
-
-export interface TranslationDto {
+export interface ListingMedia {
   id: string;
-  locale: Locale;
+  storage_path: string;
+  content_type: string;
+  width: number;
+  height: number;
+  file_size_bytes: number;
+  position: number;
+  is_cover: boolean;
+}
+
+export interface ListingTranslation {
+  locale: string;
   title: string;
   description: string;
   slug: string;
 }
 
-export interface MediaDto {
-  id: string;
-  storage_path: string;
-  content_type: string;
-  is_cover: boolean;
-  sort_order: number;
+export interface ListingDetails {
+  area_m2: number;
+  rooms?: number;
+  bathrooms?: number;
+  floor?: number;
+  total_floors?: number;
+  year_built?: number;
+  has_parking?: boolean;
+  has_elevator?: boolean;
+  has_balcony?: boolean;
+  has_pool?: boolean;
+  has_garden?: boolean;
+  furnished?: boolean;
+  has_sea_view?: boolean;
+  has_water?: boolean;
+  has_electricity?: boolean;
 }
 
-export interface ListingDto {
+export interface Listing {
   id: string;
-  agency_id: string;
-  current_status: ListingStatus;
-  current_price: number;
-  currency: string;
   listing_type: ListingType;
   property_type: PropertyType;
-  surface_m2: number | null;
-  rooms: number | null;
-  bathrooms: number | null;
-  wilaya_code: number;
-  commune_id: number | null;
-  version: number;
-  published_at: string | null;
-  created_at: string;
-  translations: TranslationDto[];
-  cover_url: string | null;
-}
-
-export interface ListingDetailDto extends ListingDto {
-  media: MediaDto[];
-  agency_name: string;
-  agency_slug: string;
-}
-
-export interface CreateListingResult {
-  listing_id: string;
   status: ListingStatus;
+  owner_type: "agency" | "individual";
+  agency_id: string | null;
+  user_id: string | null;
+  wilaya_code: string;
+  commune_id: number;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  price: number;
+  currency: string;
+  details: ListingDetails;
+  contact_phone: string | null;
+  show_phone: boolean;
+  accept_messages: boolean;
+  version: number;
+  created_at: string;
+  updated_at: string;
+  translations: ListingTranslation[];
+  media: ListingMedia[];
 }
 
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: { code: string; message: string } };
+export interface ListingCard {
+  id: string;
+  listing_type: ListingType;
+  property_type: PropertyType;
+  price: number;
+  currency: string;
+  area_m2: number;
+  rooms: number | null;
+  title: string;
+  slug: string;
+  wilaya_name: string;
+  commune_name: string;
+  cover_url: string | null;
+  agency_name: string | null;
+  agency_verified_level: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  created_at: string;
+}

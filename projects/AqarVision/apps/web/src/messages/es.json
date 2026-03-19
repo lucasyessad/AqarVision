@@ -1,0 +1,700 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "confirm": "Confirmar",
+      "back": "Volver",
+      "next": "Siguiente",
+      "loading": "Cargando…",
+      "search": "Buscar",
+      "filter": "Filtrar",
+      "close": "Cerrar",
+      "submit": "Enviar",
+      "edit": "Editar",
+      "create": "Crear",
+      "retry": "Reintentar",
+      "share": "Compartir"
+    },
+    "labels": {
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "phone": "Teléfono",
+      "name": "Nombre",
+      "firstName": "Nombre",
+      "lastName": "Apellido"
+    },
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "invalidEmail": "Dirección de correo electrónico no válida",
+      "invalidPhone": "Número de teléfono no válido (formato: +213 o 0, seguido de 5-7, luego 8 dígitos)",
+      "serverError": "Ha ocurrido un error. Por favor, inténtelo de nuevo.",
+      "unauthorized": "Debe iniciar sesión para acceder a esta página",
+      "forbidden": "No tiene los permisos necesarios",
+      "notFound": "Página no encontrada"
+    },
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "empty": {
+      "noLeads": "No hay prospectos por el momento",
+      "noVisits": "No hay solicitudes de visita",
+      "noAlerts": "No hay alertas configuradas",
+      "noHistory": "Sin historial",
+      "noNotifications": "No hay notificaciones",
+      "noAgencies": "No se encontraron agencias",
+      "noPendingInvites": "No hay invitaciones pendientes",
+      "noPayments": "No hay pagos",
+      "noUsers": "No se encontraron usuarios",
+      "noEvents": "No hay eventos",
+      "noVerifications": "No hay solicitudes de verificación pendientes",
+      "noModeration": "No hay anuncios en espera de moderación",
+      "noFavorites": "No hay favoritos",
+      "noConversations": "No hay conversaciones",
+      "noMessages": "No hay mensajes. ¡Inicie la conversación!",
+      "selectConversation": "Seleccione una conversación",
+      "typeMessage": "Escriba un mensaje...",
+      "searchPlaceholder": "Buscar...",
+      "noResults": "Sin resultados",
+      "noData": "No hay datos disponibles",
+      "noNotes": "Sin notas",
+      "selectAgency": "Seleccione una agencia para gestionar sus derechos"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "subtitle": "Acceda a su cuenta AqarVision",
+      "invalidCredentials": "Correo electrónico o contraseña incorrectos",
+      "genericError": "Ha ocurrido un error. Por favor, inténtelo de nuevo."
+    },
+    "signup": {
+      "title": "Crear una cuenta",
+      "subtitle": "Únase a la comunidad inmobiliaria argelina",
+      "genericError": "Ha ocurrido un error. Por favor, inténtelo de nuevo.",
+      "success": "¡Cuenta creada con éxito! Verifique su correo electrónico.",
+      "successTitle": "¡Cuenta creada!",
+      "successMessage": "Se ha enviado un correo de confirmación a su dirección.",
+      "agencyPrompt": "¿Es usted una agencia inmobiliaria?",
+      "createAgency": "Crear su agencia"
+    },
+    "forgotPassword": {
+      "title": "Contraseña olvidada",
+      "subtitle": "Introduzca su correo para recibir un enlace de restablecimiento"
+    },
+    "resetPassword": {
+      "title": "Restablecer contraseña",
+      "subtitle": "Elija una nueva contraseña"
+    },
+    "fields": {
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "rememberMe": "Recordarme",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "phone": "Teléfono",
+      "newPassword": "Nueva contraseña",
+      "passwordWeak": "Débil",
+      "passwordMedium": "Media",
+      "passwordStrong": "Fuerte"
+    },
+    "errors": {
+      "invalidCredentials": "Correo electrónico o contraseña incorrectos",
+      "emailExists": "Ya existe una cuenta con este correo electrónico"
+    },
+    "buttons": {
+      "login": "Iniciar sesión",
+      "signup": "Registrarse",
+      "resetPassword": "Restablecer",
+      "forgotPassword": "¿Olvidó su contraseña?",
+      "sendResetLink": "Enviar el enlace"
+    },
+    "invite": {
+      "title": "Invitación",
+      "description": "Ha sido invitado a unirse a una agencia",
+      "accept": "Aceptar la invitación",
+      "accepting": "Aceptando…",
+      "role": "Rol",
+      "expiresNote": "Este enlace expira en 7 días",
+      "notFound": "Invitación no encontrada",
+      "notFoundDescription": "Este enlace de invitación no es válido o ya ha sido utilizado.",
+      "expired": "Invitación expirada",
+      "expiredDescription": "Este enlace de invitación ha expirado. Solicite un nuevo enlace a la agencia.",
+      "alreadyAccepted": "Invitación ya aceptada",
+      "alreadyAcceptedDescription": "Ya ha aceptado esta invitación."
+    }
+  },
+  "nav": {
+    "home": "Inicio",
+    "search": "Buscar",
+    "deposit": "Publicar un anuncio",
+    "chaab": "AqarChaab",
+    "pro": "AqarPro",
+    "agencies": "Agencias",
+    "dashboard": "Panel de control",
+    "myListings": "Mis anuncios",
+    "messages": "Mensajes",
+    "alerts": "Alertas",
+    "favorites": "Favoritos",
+    "history": "Historial",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "team": "Equipo",
+    "billing": "Facturación",
+    "analytics": "Estadísticas",
+    "leads": "Prospectos",
+    "visits": "Visitas",
+    "logout": "Cerrar sesión",
+    "notifications": "Notificaciones",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "sale": "Venta",
+    "rent": "Alquiler",
+    "estimate": "Estimar",
+    "overview": "Resumen",
+    "listings": "Anuncios",
+    "branches": "Sucursales",
+    "more": "Más",
+    "auditLogs": "Registro de auditoría",
+    "platformSettings": "Configuración",
+    "entitlements": "Derechos",
+    "verifications": "Verificaciones",
+    "moderation": "Moderación",
+    "upgrade": "Mejorar",
+    "pricing": "Precios"
+  },
+  "dashboard": {
+    "overview": {
+      "title": "Panel de control",
+      "welcomeMessage": "Bienvenido/a, {name}"
+    },
+    "onboarding": {
+      "title": "Complete su perfil",
+      "addLogo": "Añadir un logotipo y una descripción",
+      "publishListing": "Publicar su primer anuncio",
+      "inviteTeam": "Invitar a un miembro del equipo",
+      "customizeStorefront": "Personalizar su escaparate",
+      "choosePlan": "Elegir su plan"
+    },
+    "stats": {
+      "views": "Vistas",
+      "leads": "Prospectos",
+      "contacts": "Contactos",
+      "listings": "Anuncios",
+      "distribution": "Distribución"
+    },
+    "settings": {
+      "tabs": {
+        "general": "General",
+        "appearance": "Apariencia",
+        "verification": "Verificación",
+        "notifications": "Notificaciones"
+      },
+      "fields": {
+        "name": "Nombre de la agencia",
+        "description": "Descripción",
+        "email": "Correo electrónico",
+        "phone": "Teléfono",
+        "hours": "Horario de atención"
+      },
+      "verification": {
+        "description": "Envíe sus documentos para obtener una insignia de verificación",
+        "legalName": "Razón social",
+        "rcNumber": "Número de registro mercantil"
+      },
+      "notifications": {
+        "newLead": "Nuevo prospecto",
+        "visitRequest": "Solicitud de visita",
+        "newMessage": "Nuevo mensaje",
+        "moderationResult": "Resultado de moderación",
+        "billingAlert": "Alerta de facturación",
+        "weeklyDigest": "Resumen semanal"
+      }
+    }
+  },
+  "listing": {
+    "types": {
+      "sale": "Venta",
+      "rent": "Alquiler",
+      "vacation": "Vacaciones"
+    },
+    "propertyTypes": {
+      "apartment": "Apartamento",
+      "villa": "Villa",
+      "terrain": "Terreno",
+      "commercial": "Local comercial",
+      "office": "Oficina",
+      "building": "Edificio",
+      "farm": "Finca",
+      "warehouse": "Almacén"
+    },
+    "statuses": {
+      "draft": "Borrador",
+      "pending": "En revisión",
+      "published": "Publicado",
+      "paused": "En pausa",
+      "rejected": "Rechazado",
+      "sold": "Vendido",
+      "rented": "Alquilado",
+      "expired": "Expirado",
+      "archived": "Archivado"
+    },
+    "fields": {
+      "title": "Título",
+      "description": "Descripción",
+      "price": "Precio",
+      "area": "Superficie (m²)",
+      "rooms": "Habitaciones",
+      "bathrooms": "Baños",
+      "floor": "Planta",
+      "address": "Dirección",
+      "wilaya": "Wilaya",
+      "commune": "Comuna",
+      "type": "Tipo de transacción",
+      "propertyType": "Tipo de propiedad",
+      "created": "Creado el",
+      "updated": "Modificado el"
+    },
+    "type": {
+      "sale": "Venta",
+      "rent": "Alquiler",
+      "vacation": "Vacaciones"
+    },
+    "propertyType": {
+      "apartment": "Apartamento",
+      "villa": "Villa",
+      "terrain": "Terreno",
+      "commercial": "Local comercial",
+      "office": "Oficina",
+      "building": "Edificio",
+      "farm": "Finca",
+      "warehouse": "Almacén"
+    },
+    "status": {
+      "draft": "Borrador",
+      "pending_review": "En revisión",
+      "published": "Publicado",
+      "paused": "En pausa",
+      "rejected": "Rechazado",
+      "sold": "Vendido",
+      "rented": "Alquilado",
+      "expired": "Expirado",
+      "archived": "Archivado"
+    },
+    "features": {
+      "parking": "Aparcamiento",
+      "elevator": "Ascensor",
+      "balcony": "Balcón",
+      "pool": "Piscina",
+      "garden": "Jardín",
+      "furnished": "Amueblado",
+      "seaView": "Vista al mar"
+    },
+    "actions": {
+      "publish": "Publicar",
+      "pause": "Pausar",
+      "delete": "Eliminar",
+      "confirmDelete": "¿Está seguro de que desea eliminar este anuncio?",
+      "viewPublic": "Ver anuncio público"
+    },
+    "stats": {
+      "views": "Vistas",
+      "leads": "Prospectos",
+      "favorites": "Favoritos"
+    },
+    "priceHistory": "Historial de precios",
+    "noPhotos": "Sin fotos",
+    "edit": "Editar anuncio",
+    "statistics": "Estadísticas",
+    "metadata": "Información",
+    "contact": {
+      "call": "Llamar"
+    },
+    "viewPublic": "Ver anuncio público"
+  },
+  "marketing": {
+    "heroTitle": "Encuentre su propiedad en Argelia",
+    "heroSubtitle": "Del Mediterráneo al Sahara — miles de propiedades en las 69 wilayas de Argelia",
+    "scrollDown": "Descubrir",
+    "ctaSearch": "Buscar una propiedad",
+    "ctaPro": "¿Es usted una agencia? Digitalice su negocio con AqarPro",
+    "ctaProButton": "Descubrir AqarPro",
+    "featuredTitle": "Anuncios destacados",
+    "tabSale": "Venta",
+    "tabRent": "Alquiler",
+    "tabVacation": "Vacaciones",
+    "viewAll": "Ver todos los anuncios",
+    "editorialEyebrow": "Inmobiliaria en Argelia",
+    "editorialTitle": "Un mercado inmobiliario en plena transformación",
+    "editorialDescription": "Argelia experimenta un renacimiento arquitectónico sin precedentes. Proyectos ambiciosos redefinen el paisaje urbano, combinando modernidad y herencia mediterránea.",
+    "editorialLink": "Explorar el mercado",
+    "wilayasTitle": "Wilayas populares",
+    "regionsTitle": "Explore por región",
+    "regionSahara": "Sáhara",
+    "regionSaharaSubtitle": "Las puertas del desierto",
+    "regionLittoral": "Litoral",
+    "regionLittoralSubtitle": "La costa mediterránea",
+    "regionMontagne": "Montaña",
+    "regionMontagneSubtitle": "Las cumbres del Atlas",
+    "howItWorks": {
+      "title": "Cómo funciona",
+      "step1": "Busque",
+      "step1Description": "Explore miles de anuncios con nuestros filtros avanzados y el mapa interactivo",
+      "step2": "Contacte",
+      "step2Description": "Comuníquese directamente con agencias y propietarios por teléfono, WhatsApp o mensajería",
+      "step3": "Visite",
+      "step3Description": "Programe sus visitas y encuentre la propiedad adecuada para usted"
+    },
+    "statsStrip": {
+      "listings": "anuncios",
+      "verifiedAgencies": "agencias verificadas",
+      "wilayas": "wilayas",
+      "users": "usuarios"
+    },
+    "heroHeadline": "Encuentra tu",
+    "heroBold": "PROPIEDAD IDEAL",
+    "heroSuffix": "en Argelia",
+    "heroBadge": "15.000+ anuncios verificados",
+    "ctaSecondary": "Publicar gratis",
+    "featureGrid": {
+      "search": {
+        "eyebrow": "AqarSearch",
+        "title": "Búsqueda inteligente",
+        "description": "Filtros por wilaya, comuna, superficie y presupuesto en DZD. Mapa interactivo en las 69 wilayas.",
+        "cta": "Explorar"
+      },
+      "pro": {
+        "eyebrow": "AqarPro",
+        "title": "Espacio Profesional",
+        "description": "CRM de agencia completo — escaparate en línea, gestión de leads cualificados y analíticas.",
+        "cta": "Descubrir"
+      },
+      "chaab": {
+        "eyebrow": "AqarChaab",
+        "title": "Entre Particulares",
+        "description": "Publica tu propiedad directamente, sin intermediarios ni comisión.",
+        "cta": "Empezar"
+      }
+    }
+  },
+  "search": {
+    "title": "Buscar una propiedad",
+    "subtitle": "Explore los anuncios inmobiliarios en Argelia",
+    "filters": {
+      "type": "Tipo de transacción",
+      "propertyType": "Tipo de propiedad",
+      "priceMin": "Precio mín.",
+      "priceMax": "Precio máx.",
+      "surfaceMin": "Superficie mín. (m²)",
+      "surfaceMax": "Superficie máx. (m²)",
+      "surfaceLabel": "Superficie (m²)",
+      "rooms": "Habitaciones mín.",
+      "roomsMin": "Habitaciones mín.",
+      "floorMin": "Planta mín.",
+      "yearMin": "Año mín.",
+      "parking": "Aparcamiento",
+      "elevator": "Ascensor",
+      "furnished": "Amueblado",
+      "sale": "Venta",
+      "rent": "Alquiler",
+      "vacation": "Vacaciones",
+      "apartment": "Apartamento",
+      "villa": "Villa",
+      "terrain": "Terreno",
+      "commercial": "Local comercial",
+      "office": "Oficina",
+      "building": "Edificio",
+      "farm": "Finca",
+      "warehouse": "Almacén",
+      "search": "Buscar",
+      "searchPlaceholder": "Wilaya, comuna, barrio…",
+      "moreFilters": "Más filtros",
+      "clearAll": "Borrar todo",
+      "apply": "Aplicar",
+      "sortLabel": "Ordenar por",
+      "priceLabel": "Presupuesto (DZD)",
+      "roomsLabel": "Habitaciones",
+      "bathroomsLabel": "Baños",
+      "yearLabel": "Año de construcción",
+      "floorLabel": "Piso",
+      "outdoorFeatures": "Exterior",
+      "indoorFeatures": "Interior",
+      "infrastructure": "Infraestructura",
+      "security": "Seguridad"
+    },
+    "sort": {
+      "newest": "Más recientes",
+      "priceAsc": "Precio ascendente",
+      "priceDesc": "Precio descendente",
+      "surfaceDesc": "Superficie descendente"
+    },
+    "noResults": "Ningún resultado coincide con su búsqueda",
+    "noResultsHint": "Intente ampliar sus criterios de búsqueda",
+    "resultsCount": "anuncios encontrados",
+    "similarListings": "Anuncios similares",
+    "compare": "Comparar",
+    "compareLabel": "Seleccionar para comparar",
+    "compareSelected": "Seleccionado",
+    "compareAdd": "Comparar",
+    "compareCount": "{count}/{max} seleccionados",
+    "compareClear": "Cancelar",
+    "saveSearch": "Guardar esta búsqueda",
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "pageOf": "Página {page} de {totalPages}"
+    },
+    "comparison": {
+      "title": "Comparación",
+      "photo": "Foto",
+      "price": "Precio",
+      "area": "Superficie",
+      "rooms": "Habitaciones",
+      "location": "Ubicación",
+      "type": "Tipo de transacción",
+      "propertyType": "Tipo de propiedad",
+      "agency": "Agencia",
+      "viewListing": "Ver anuncio"
+    },
+    "alert": {
+      "title": "Crear una alerta",
+      "name": "Nombre de la alerta",
+      "namePlaceholder": "Ej: Apartamentos Argel",
+      "frequency": "Frecuencia",
+      "instant": "Instantánea",
+      "daily": "Diaria",
+      "weekly": "Semanal",
+      "create": "Crear la alerta",
+      "success": "Alerta creada con éxito",
+      "loginRequired": "Inicie sesión para crear una alerta"
+    },
+    "map": {
+      "toggle": "Mapa",
+      "list": "Lista"
+    }
+  },
+  "contact": {
+    "call": "Llamar",
+    "sendMessage": "Enviar un mensaje",
+    "requestVisit": "Solicitar una visita",
+    "viewAllListings": "Ver todos los anuncios de esta agencia",
+    "whatsappMessage": "Hola, me interesa",
+    "formName": "Su nombre",
+    "formPhone": "Su teléfono",
+    "formMessage": "Su mensaje",
+    "formDate": "Fecha deseada",
+    "formTimeSlot": "Franja horaria",
+    "morning": "Mañana",
+    "afternoon": "Tarde",
+    "evening": "Noche",
+    "send": "Enviar"
+  },
+  "chaab": {
+    "myListings": {
+      "title": "Mis anuncios",
+      "subtitle": "Gestione sus anuncios inmobiliarios",
+      "empty": "No tiene ningún anuncio por el momento",
+      "ctaDeposit": "Publicar un anuncio"
+    }
+  },
+  "pricing": {
+    "title": "Precios",
+    "subtitle": "Elija el plan adaptado a sus necesidades",
+    "starter": "Starter",
+    "pro": "Pro",
+    "enterprise": "Enterprise"
+  },
+  "billing": {
+    "noPlan": "Sin plan activo",
+    "trialActive": "Prueba gratuita activa",
+    "activeUntil": "Activo hasta {date}",
+    "noActiveSubscription": "Sin suscripción activa",
+    "popular": "Popular",
+    "month": "mes",
+    "unlimitedListings": "Anuncios ilimitados",
+    "maxListings": "{count} anuncios",
+    "maxPhotos": "{count} fotos/anuncio",
+    "unlimitedTeam": "Equipo ilimitado",
+    "maxTeam": "{count} miembros",
+    "currentPlan": "Plan actual",
+    "choosePlan": "Elegir este plan",
+    "manageSubscription": "Gestionar suscripción",
+    "processing": "Procesando…"
+  },
+  "admin": {
+    "title": "Administración",
+    "agencies": "Agencias",
+    "users": "Usuarios",
+    "payments": "Pagos",
+    "verifications": "Verificaciones",
+    "moderation": "Moderación",
+    "auditLogs": "Registro de auditoría",
+    "platformSettings": "Configuración de la plataforma",
+    "entitlements": "Derechos"
+  },
+  "estimation": {
+    "stepOf": "Paso {current} de {total}",
+    "step1Title": "Tipo de propiedad",
+    "step2Title": "Detalles de la propiedad",
+    "step3Title": "Estimación",
+    "area": "Superficie (m²)",
+    "rooms": "Número de habitaciones",
+    "floor": "Planta",
+    "yearBuilt": "Año de construcción",
+    "features": {
+      "parking": "Aparcamiento",
+      "elevator": "Ascensor",
+      "seaView": "Vista al mar",
+      "furnished": "Amueblado"
+    },
+    "estimatedRange": "Rango estimado",
+    "perMonth": "/mes",
+    "confidence": "Confianza",
+    "confidenceModerate": "Moderada",
+    "confidenceNote": "Estimación basada en los precios del mercado local. Los precios reales pueden variar.",
+    "priceDistribution": "Distribución de precios en la zona",
+    "ctaDeposer": "Publicar un anuncio",
+    "ctaSearch": "Ver propiedades similares",
+    "insufficientData": "Datos insuficientes para estimar. Complete todos los campos.",
+    "restart": "Empezar de nuevo",
+    "pageTitle": "Estime su propiedad",
+    "pageDescription": "Obtenga una estimación gratuita en 3 pasos",
+    "sale": "Venta",
+    "rent": "Alquiler",
+    "vacation": "Vacaciones",
+    "propertyType": {
+      "apartment": "Apartamento",
+      "villa": "Villa",
+      "terrain": "Terreno",
+      "commercial": "Local comercial",
+      "office": "Oficina",
+      "building": "Edificio",
+      "farm": "Finca",
+      "warehouse": "Almacén"
+    },
+    "transactionType": "Tipo de transacción"
+  },
+  "agency": {
+    "createTitle": "Cree su agencia",
+    "createSubtitle": "Prueba gratuita de 14 días — Plan Starter",
+    "createDescription": "Digitalice su negocio inmobiliario",
+    "name": "Nombre de la agencia",
+    "slug": "Identificador URL",
+    "slugAvailable": "Disponible",
+    "slugTaken": "Ya está en uso",
+    "email": "Correo de la agencia",
+    "phone": "Teléfono",
+    "wilaya": "Wilaya",
+    "commune": "Comuna",
+    "create": "Crear mi agencia",
+    "form": {
+      "name": "Nombre de la agencia",
+      "namePlaceholder": "Ej: Inmobiliaria Argel",
+      "slug": "Identificador URL",
+      "slugHelp": "Se usará en la URL de su escaparate",
+      "email": "Correo de la agencia",
+      "phone": "Teléfono",
+      "wilaya": "Wilaya",
+      "commune": "Comuna",
+      "submit": "Crear mi agencia",
+      "trialNote": "Prueba gratuita 14 días — Plan Starter"
+    }
+  },
+  "team": {
+    "inviteTitle": "Invitar a un miembro",
+    "inviteSubtitle": "Se enviará un correo con un enlace válido durante 7 días",
+    "email": "Correo electrónico",
+    "role": "Rol",
+    "send": "Enviar la invitación",
+    "success": "Invitación enviada",
+    "alreadyMember": "Este usuario ya es miembro de la agencia"
+  },
+  "storefront": {
+    "title": "Escaparate de la agencia",
+    "loading": "Cargando escaparate…"
+  },
+  "visitRequests": {
+    "status": {
+      "pending": "Pendiente",
+      "confirmed": "Confirmada",
+      "completed": "Completada",
+      "cancelled": "Cancelada"
+    },
+    "slot": {
+      "morning": "Mañana",
+      "afternoon": "Tarde",
+      "evening": "Noche"
+    },
+    "actions": {
+      "confirm": "Confirmar",
+      "complete": "Completar",
+      "cancel": "Cancelar"
+    },
+    "details": "Detalles de la visita",
+    "requester": "Solicitante",
+    "message": "Mensaje",
+    "listing": "Anuncio",
+    "date": "Fecha",
+    "timeSlot": "Franja horaria",
+    "week": "Semana",
+    "today": "Hoy",
+    "calendarView": "Calendario",
+    "listView": "Lista"
+  },
+  "agencySettings": {
+    "themeStudio": {
+      "selectTheme": "Elegir un tema",
+      "customizeColors": "Personalizar los colores",
+      "primaryColor": "Color principal",
+      "accentColor": "Color de acento",
+      "secondaryColor": "Color secundario",
+      "saveBranding": "Guardar la identidad visual",
+      "customizeStorefront": "Personalizar mi escaparate",
+      "media": "Medios",
+      "texts": "Textos",
+      "stats": "Estadísticas",
+      "preview": "Vista previa",
+      "heroImage": "Foto principal",
+      "heroImageHint": "Imagen principal de su escaparate (mín. 1920×800)",
+      "extraPhotos": "Fotos adicionales",
+      "videoUrl": "URL del vídeo",
+      "videoUrlHint": "Solo YouTube o Vimeo",
+      "tagline": "Eslogan",
+      "taglinePlaceholder": "Su eslogan en una frase",
+      "aboutText": "Acerca de",
+      "aboutPlaceholder": "Describa su agencia",
+      "services": "Servicios y valores",
+      "addService": "Añadir un servicio",
+      "serviceTitle": "Título",
+      "serviceText": "Descripción",
+      "serviceIcon": "Icono",
+      "yearsExperience": "Años de experiencia",
+      "satisfiedClients": "Clientes satisfechos",
+      "autoStatsHint": "Las estadísticas automáticas (anuncios, vistas, prospectos) se muestran siempre",
+      "themeExtras": "Opciones específicas del tema",
+      "goldenTagline": "Eslogan dorado",
+      "manifesto": "Manifiesto",
+      "topbarHours": "Horarios en la barra superior",
+      "eyebrow": "Texto eyebrow",
+      "ecoCertifications": "Certificaciones ecológicas",
+      "publishStorefront": "Publicar mi escaparate",
+      "chars": "caracteres"
+    }
+  },
+  "metadata": {
+    "home": "Inmobiliaria en Argelia",
+    "homeDescription": "Encuentre su propiedad entre miles de anuncios verificados en las 69 wilayas de Argelia",
+    "search": "Búsqueda inmobiliaria",
+    "dashboard": "Panel de control",
+    "login": "Iniciar sesión",
+    "signup": "Crear una cuenta",
+    "forgotPassword": "Contraseña olvidada",
+    "resetPassword": "Restablecer contraseña",
+    "pricing": "Precios",
+    "admin": "Administración",
+    "myListings": "Mis anuncios"
+  }
+}

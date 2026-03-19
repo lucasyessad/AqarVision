@@ -1,58 +1,45 @@
 "use client";
 
-import { Component, type ErrorInfo, type ReactNode } from "react";
+import { Component, type ReactNode } from "react";
 
-interface ErrorBoundaryProps {
+interface Props {
   children: ReactNode;
   fallback?: ReactNode;
 }
 
-interface ErrorBoundaryState {
+interface State {
   hasError: boolean;
-  error: Error | null;
 }
 
-export class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
-  constructor(props: ErrorBoundaryProps) {
+export class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+  static getDerivedStateFromError(): State {
+    return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
-  }
-
-  render(): ReactNode {
+  render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
       return (
-        <div className="flex min-h-[400px] flex-col items-center justify-center px-4">
-          <div className="text-center">
-            <h2 className="mb-2 text-xl font-semibold text-blue-night">
-              Une erreur est survenue
-            </h2>
-            <p className="mb-4 text-gray-500">
-              {this.state.error?.message ?? "Erreur inattendue"}
-            </p>
-            <button
-              type="button"
-              onClick={() => this.setState({ hasError: false, error: null })}
-              className="rounded-lg bg-blue-night px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-night/90"
-            >
-              Réessayer
-            </button>
+        this.props.fallback ?? (
+          <div className="flex items-center justify-center min-h-[200px] p-8">
+            <div className="text-center">
+              <p className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+                Une erreur est survenue
+              </p>
+              <button
+                type="button"
+                onClick={() => this.setState({ hasError: false })}
+                className="mt-4 px-4 py-2 text-sm font-medium text-white bg-teal-600 dark:bg-teal-500 rounded-md hover:bg-teal-700 dark:hover:bg-teal-600 transition-colors duration-fast"
+              >
+                Réessayer
+              </button>
+            </div>
           </div>
-        </div>
+        )
       );
     }
 

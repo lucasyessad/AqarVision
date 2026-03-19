@@ -1,67 +1,93 @@
 "use client";
 
+import { useState, type FormEvent } from "react";
+import { Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useActionState } from "react";
-import { Link } from "@/lib/i18n/navigation";
-import { forgotPasswordAction, type ForgotPasswordFormState } from "../actions/auth.action";
+import { Button, Input } from "@/components/ui";
+import { forgotPasswordAction } from "@/features/auth/actions/auth.action";
+import { forgotPasswordSchema } from "@/features/auth/schemas/auth.schema";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("auth");
-  const [state, formAction, isPending] = useActionState<ForgotPasswordFormState, FormData>(forgotPasswordAction, null);
 
-  if (state?.success) {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+
+    const parsed = forgotPasswordSchema.safeParse({ email });
+    if (!parsed.success) {
+      setError(parsed.error.errors[0]?.message ?? t("forgotPassword.invalidEmail"));
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const result = await forgotPasswordAction({ email: parsed.data.email });
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        if (result.code === "RATE_LIMITED") {
+          setError(result.message);
+        } else {
+          // Always show success message to not reveal if email exists
+          setSubmitted(true);
+        }
+      }
+    } catch {
+      setError(t("forgotPassword.genericError"));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (submitted) {
     return (
-      <div className="rounded-lg bg-green-50 p-6 text-center">
-        <div className="mb-2 text-2xl">&#9993;</div>
-        <h3 className="mb-2 text-lg font-semibold text-green-800">
-          {t("reset_email_sent_title")}
-        </h3>
-        <p className="text-sm text-green-700">
-          {t("reset_email_sent_message")}
+      <div className="rounded-md bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 px-4 py-6 text-center">
+        <h2 className="text-lg font-semibold text-green-800 dark:text-green-300">
+          {t("forgotPassword.successTitle")}
+        </h2>
+        <p className="mt-2 text-sm text-green-700 dark:text-green-400">
+          {t("forgotPassword.successMessage")}
         </p>
-        <Link
-          href="/auth/login"
-          className="mt-4 inline-block text-sm font-medium text-gold hover:underline"
-        >
-          {t("back_to_login")}
-        </Link>
       </div>
     );
   }
 
   return (
-    <form action={formAction} className="space-y-4">
-      {state?.success === false && (
-        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-          {state.error.message}
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+      {error && (
+        <div
+          className="rounded-md bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-700 dark:text-red-400"
+          role="alert"
+        >
+          {error}
         </div>
       )}
-      <p className="text-sm text-gray-500">
-        {t("forgot_password_instructions")}
-      </p>
-      <div>
-        <label
-          htmlFor="email"
-          className="mb-1 block text-sm font-medium text-gray-700"
-        >
-          {t("email")}
-        </label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          required
-          defaultValue={state?.email ?? ""}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-night focus:outline-none focus:ring-2 focus:ring-blue-night/20"
-        />
-      </div>
-      <button
+
+      <Input
+        label={t("fields.email")}
+        type="email"
+        autoComplete="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        startIcon={<Mail size={16} />}
+        disabled={loading}
+        required
+      />
+
+      <Button
         type="submit"
-        disabled={isPending}
-        className="w-full rounded-lg bg-blue-night px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-night/90 disabled:opacity-50"
+        loading={loading}
+        className="w-full"
+        size="lg"
       >
-        {isPending ? t("sending") : t("send_reset_link")}
-      </button>
+        {t("buttons.sendResetLink")}
+      </Button>
     </form>
   );
 }

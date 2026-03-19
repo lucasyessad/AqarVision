@@ -1,77 +1,79 @@
 import type { MetadataRoute } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { routing } from "@/lib/i18n/routing";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://aqarvision.com";
-const LOCALES = ["fr", "ar", "en", "es"] as const;
+
+const STATIC_ROUTES = [
+  "/",
+  "/search",
+  "/agences",
+  "/estimer",
+  "/vendre",
+  "/pro",
+  "/deposer",
+];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = await createClient();
   const entries: MetadataRoute.Sitemap = [];
 
-  // Static pages per locale
-  for (const locale of LOCALES) {
-    entries.push({
-      url: `${BASE_URL}/${locale}`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1.0,
-    });
-
-    entries.push({
-      url: `${BASE_URL}/${locale}/search`,
-      lastModified: new Date(),
-      changeFrequency: "hourly",
-      priority: 0.9,
-    });
-  }
-
-  // Published listings: all locale-slug combinations
-  const { data: translations } = await supabase
-    .from("listing_translations")
-    .select("locale, slug, updated_at, listing_id, listings!inner(current_status, deleted_at)")
-    .eq("listings.current_status", "published")
-    .is("listings.deleted_at", null);
-
-  if (translations) {
-    for (const t of translations) {
+  // Static routes for all locales
+  for (const locale of routing.locales) {
+    for (const route of STATIC_ROUTES) {
       entries.push({
-        url: `${BASE_URL}/${t.locale}/l/${t.slug}`,
-        lastModified: new Date(t.updated_at as string),
-        changeFrequency: "daily",
-        priority: 0.8,
-      });
-    }
-  }
-
-  // Category pages per wilaya (1-58) per locale
-  for (const locale of LOCALES) {
-    for (let w = 1; w <= 58; w++) {
-      entries.push({
-        url: `${BASE_URL}/${locale}/search?wilaya_code=${w}`,
+        url: `${BASE_URL}/${locale}${route === "/" ? "" : route}`,
         lastModified: new Date(),
-        changeFrequency: "daily",
-        priority: 0.6,
+        changeFrequency: route === "/" ? "daily" : "weekly",
+        priority: route === "/" ? 1.0 : route === "/search" ? 0.9 : 0.7,
       });
     }
   }
 
-  // Agency pages
-  const { data: agencies } = await supabase
-    .from("agencies")
-    .select("slug, updated_at")
-    .is("deleted_at", null);
+  // Dynamic listing routes
+  try {
+    const { createServiceClient } = await import("@/lib/supabase/server");
+    const supabase = await createServiceClient();
 
-  if (agencies) {
-    for (const agency of agencies) {
-      for (const locale of LOCALES) {
+    const { data: listings } = await supabase
+      .from("listing_translations")
+      .select("slug, locale, listing:listings!inner(status, updated_at)")
+      .eq("listing.status", "published")
+      .limit(5000);
+
+    if (listings) {
+      for (const entry of listings) {
+        const listing = entry.listing as unknown as {
+          status: string;
+          updated_at: string;
+        };
         entries.push({
-          url: `${BASE_URL}/${locale}/a/${agency.slug}`,
-          lastModified: new Date(agency.updated_at as string),
-          changeFrequency: "weekly",
-          priority: 0.7,
+          url: `${BASE_URL}/${entry.locale}/annonce/${entry.slug}`,
+          lastModified: new Date(listing.updated_at),
+          changeFrequency: "daily",
+          priority: 0.8,
         });
       }
     }
+
+    // Dynamic agency routes
+    const { data: agencies } = await supabase
+      .from("agencies")
+      .select("slug, updated_at")
+      .limit(2000);
+
+    if (agencies) {
+      for (const agency of agencies) {
+        for (const locale of routing.locales) {
+          entries.push({
+            url: `${BASE_URL}/${locale}/a/${agency.slug}`,
+            lastModified: new Date(agency.updated_at),
+            changeFrequency: "weekly",
+            priority: 0.6,
+          });
+        }
+      }
+    }
+  } catch {
+    // Supabase not available at build time — return static routes only
   }
 
   return entries;

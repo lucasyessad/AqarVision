@@ -1,21 +1,23 @@
-export interface AgencyStatsDto {
-  day: string;
+export interface AgencyDailyStats {
+  date: string;
   total_views: number;
   total_leads: number;
-  total_new_listings: number;
+  total_contacts: number;
+  total_visits: number;
+  new_listings: number;
 }
 
 export interface AnalyticsSummary {
-  total_views: number;
-  total_leads: number;
-  total_new_listings: number;
-  conversion_rate: number;
-  trend_views: number;
-  trend_leads: number;
-  trend_new_listings: number;
-  trend_conversion: number;
+  totalViews: number;
+  totalLeads: number;
+  totalContacts: number;
+  totalListings: number;
+  viewsTrend: number;
+  leadsTrend: number;
 }
 
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: { code: string; message: string } };
+export interface PriceHistoryPoint {
+  date: string;
+  price: number;
+  reason: string | null;
+}

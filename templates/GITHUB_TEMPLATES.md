@@ -174,106 +174,7 @@ cd mon-api-fastapi
 
 ---
 
-## ets
-✅ Organisation professionnelle
-
----
-
-## 🔌 API & Backend
-
-### ⭐ Node.js Express Boilerplate
-**Stars:** Très populaire | **Licence:** MIT
-
-**Description:** RESTful API production-ready
-
-**Stack:**
-- Node.js + Express
-- MongoDB + Mongoose
-- JWT Authentication
-- Validation + Error handling
-- Testing + Docker
-
-**Pourquoi le choisir:**
-✅ Standard de l'industrie
-✅ Documentation complète
-✅ Best practices incluses
-
-**Clonage rapide:**
-```bash
-cd projects/
-git clone https://github.com/hagopj13/node-express-boilerplate mon-api
-cd mon-api
-npm install
-```
-
-**GitHub:** https://github.com/hagopj13/node-express-boilerplate
-
----
-
-### 🐍 FastAPI Full-Stack Template (Official)
-**Maintainer:** Tiangolo (créateur de FastAPI)
-
-**Description:** Template officiel FastAPI full-stack
-
-**Stack:**
-- FastAPI + Python
-- React frontend
-- SQLModel + PostgreSQL
-- Docker + GitHub Actions
-- HTTPS automatique
-
-**Pourquoi le choisir:**
-✅ Template officiel
-✅ Full-stack intégré
-✅ DevOps ready
-
-**Clonage rapide:**
-```bash
-cd projects/
-git clone https://github.com/fastapi/full-stack-fastapi-template mon-api-fastapi
-cd mon-api-fastapi
-```
-
-**GitHub:** https://github.com/fastapi/full-stack-fastapi-template
-
----
-
-### ⚡ FastAPI Backend Template
-**Description:** Backend asynchrone moderne
-
-**Stack:**
-- FastAPI + Python
-- PostgreSQL async (SQLAlchemy 2.0)
-- Alembic (migrations)
-- Docker
-
-**Pourquoi le choisir:**
-✅ Architecture async moderne
-✅ Performance optimale
-✅ Type-safe end-to-end
-
-**GitHub:** https://github.com/Aeternalis-Ingenium/FastAPI-Backend-Template
-
----
-
-### 🔄 Next.js + FastAPI Template
-**Description:** Full-stack TypeScript + Python
-
-**Stack:**
-- Next.js + TypeScript + Zod
-- FastAPI + Pydantic
-- End-to-end type safety
-
-**Pourquoi le choisir:**
-✅ Type-safe frontend ↔ backend
-✅ Best of both worlds
-✅ Clean architecture
-
-**GitHub:** https://github.com/vintasoftware/nextjs-fastapi-template
-
----
-
-## l (Next.js t� Mobile (React Native/Flutter)
+## 📱 Mobile (React Native/Flutter)
 
 ### ⭐ Obytes React Native Template
 **Description:** Template professionnel Expo
@@ -546,7 +447,7 @@ ccds mon-projet-ds
 
 ```bash
 # 1. Aller dans projects/
-cd /Users/lounis/Antigravity/Github/PersoDev/projects/
+cd projects/
 
 # 2. Cloner le template
 git clone <url-github> mon-nouveau-projet

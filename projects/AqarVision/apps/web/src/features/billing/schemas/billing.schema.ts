@@ -1,10 +1,16 @@
 import { z } from "zod";
 
-export const StartCheckoutSchema = z.object({
-  agency_id: z.string().uuid(),
-  plan_code: z.string().min(1),
+export const checkoutSchema = z.object({
+  agencyId: z.string().uuid(),
+  planId: z.string().uuid(),
 });
 
-export const OpenPortalSchema = z.object({
-  agency_id: z.string().uuid(),
+export type CheckoutInput = z.infer<typeof checkoutSchema>;
+
+export const individualPaymentSchema = z.object({
+  packType: z.enum(["pack_3", "pack_7", "pack_15"]).optional(),
+  subscriptionType: z.enum(["chaab_plus", "chaab_pro"]).optional(),
+  provider: z.enum(["stripe", "cib", "dahabia", "baridimob", "virement"]),
 });
+
+export type IndividualPaymentInput = z.infer<typeof individualPaymentSchema>;

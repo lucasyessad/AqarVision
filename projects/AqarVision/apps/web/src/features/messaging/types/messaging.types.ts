@@ -1,37 +1,26 @@
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: { code: string; message: string } };
-
-export type LeadSource = "platform" | "whatsapp" | "phone";
-export type LeadStatus = "new" | "contacted" | "qualified" | "closed";
-
-export interface LeadDto {
+export interface Conversation {
   id: string;
-  listing_id: string;
-  agency_id: string;
-  sender_user_id: string;
-  status: LeadStatus;
-  source: LeadSource;
+  listing_id: string | null;
+  agency_id: string | null;
   created_at: string;
   updated_at: string;
-}
-
-export interface ConversationDto {
-  id: string;
-  lead_id: string;
-  listing_title: string;
-  other_party_name: string;
-  last_message: string | null;
-  last_message_at: string | null;
+  last_message_preview: string | null;
   unread_count: number;
+  participants: ConversationParticipant[];
 }
 
-export interface MessageDto {
+export interface ConversationParticipant {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  avatar_url: string | null;
+}
+
+export interface Message {
   id: string;
   conversation_id: string;
-  sender_user_id: string;
-  sender_name: string;
-  body: string;
-  read_at: string | null;
+  sender_id: string;
+  content: string;
   created_at: string;
+  read_at: string | null;
 }

@@ -1,26 +1,18 @@
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: { code: string; message: string } };
+import type { ListingCard } from "@/features/listings/types/listing.types";
 
-export interface FavoriteDto {
+export interface FavoriteCollection {
   id: string;
-  listing_id: string;
-  created_at: string;
-}
-
-export interface NoteDto {
-  id: string;
-  listing_id: string;
-  body: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface SavedSearchDto {
-  id: string;
+  user_id: string;
   name: string;
-  filters: Record<string, unknown>;
-  notify: boolean;
   created_at: string;
-  updated_at: string;
+  listings_count: number;
+}
+
+export interface Favorite {
+  id: string;
+  user_id: string;
+  listing_id: string;
+  collection_id: string | null;
+  created_at: string;
+  listing: ListingCard;
 }

@@ -1,216 +1,165 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
-import { SignInSchema, SignUpSchema, ResetPasswordSchema } from "../schemas/auth.schema";
+import { ok, fail, type ActionResult } from "@/lib/action-result";
+import {
+  signupSchema,
+  loginSchema,
+  forgotPasswordSchema,
+  type SignupInput,
+  type LoginInput,
+} from "@/features/auth/schemas/auth.schema";
+import { authRateLimit, forgotPasswordRateLimit } from "@/lib/rate-limit";
+import { headers } from "next/headers";
+import { createLogger } from "@/lib/logger";
 
-// ── Sign In ──────────────────────────────────
+const log = createLogger("auth");
 
-export type AuthFormState = {
-  success: false;
-  error: { code: string; message: string };
-  email?: string;
-} | null;
-
-export async function signInAction(
-  _prevState: AuthFormState,
-  formData: FormData
-): Promise<AuthFormState> {
-  const email = formData.get("email") as string;
-
-  const parsed = SignInSchema.safeParse({
-    email,
-    password: formData.get("password"),
-  });
-
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: { code: "VALIDATION_ERROR", message: "Email ou mot de passe invalide" },
-      email,
-    };
-  }
-
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
-
-  if (error) {
-    return {
-      success: false,
-      error: { code: "AUTH_ERROR", message: "Email ou mot de passe incorrect" },
-      email,
-    };
-  }
-
-  const redirectTo = (formData.get("redirect") as string) || "/fr/dashboard";
-  redirect(redirectTo);
+async function getClientIp(): Promise<string> {
+  const h = await headers();
+  return h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 }
 
-// ── Sign Up ──────────────────────────────────
+export async function signupAction(
+  input: SignupInput
+): Promise<ActionResult<{ redirectTo: string; needsConfirmation: boolean }>> {
+  try {
+    const parsed = signupSchema.safeParse(input);
+    if (!parsed.success) {
+      return fail("VALIDATION_ERROR", parsed.error.errors[0]?.message ?? "Données invalides");
+    }
 
-export type SignUpFormState =
-  | { success: true; emailConfirmation: boolean }
-  | { success: false; error: { code: string; message: string }; email?: string; fullName?: string }
-  | null;
+    const ip = await getClientIp();
+    const { success: rateLimitOk } = await authRateLimit.limit(ip);
+    if (!rateLimitOk) {
+      return fail("RATE_LIMITED", "Trop de tentatives. Réessayez plus tard.");
+    }
 
-export async function signUpAction(
-  _prevState: SignUpFormState,
-  formData: FormData
-): Promise<SignUpFormState> {
-  const email = formData.get("email") as string;
-  const fullName = formData.get("full_name") as string;
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signUp({
+      email: parsed.data.email,
+      password: parsed.data.password,
+      options: {
+        data: {
+          first_name: parsed.data.firstName,
+          last_name: parsed.data.lastName,
+          phone: parsed.data.phone,
+        },
+      },
+    });
 
-  const parsed = SignUpSchema.safeParse({
-    email,
-    password: formData.get("password"),
-    preferred_locale: formData.get("preferred_locale") || "fr",
-  });
+    if (error) {
+      log.error({ error: error.message, code: error.status }, "Signup error");
 
+      if (error.message?.includes("already registered") || error.status === 422) {
+        return fail("EMAIL_EXISTS", "Un compte existe déjà avec cet email");
+      }
+      if (error.message?.includes("password")) {
+        return fail("WEAK_PASSWORD", "Le mot de passe ne respecte pas les critères de sécurité");
+      }
+      if (error.message?.includes("rate") || error.status === 429) {
+        return fail("RATE_LIMITED", "Trop de tentatives. Réessayez plus tard.");
+      }
+
+      return fail("AUTH_ERROR", `Erreur d'inscription : ${error.message}`);
+    }
+
+    // If email confirmation is enabled, user.identities will be empty until confirmed
+    // If disabled (dev/test), session is created immediately
+    const needsConfirmation = data.user?.identities?.length === 0;
+
+    return ok({
+      redirectTo: needsConfirmation ? "" : "/AqarChaab/espace/mes-annonces",
+      needsConfirmation,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    log.error({ error: message }, "Signup action crash");
+    return fail("INTERNAL_ERROR", `Erreur serveur : ${message}`);
+  }
+}
+
+export async function loginAction(
+  input: LoginInput
+): Promise<ActionResult<{ redirectTo: string }>> {
+  const parsed = loginSchema.safeParse(input);
   if (!parsed.success) {
-    const firstError = parsed.error.errors[0];
-    let message = "Données invalides";
-    if (firstError?.path[0] === "email") message = "Adresse e-mail invalide";
-    else if (firstError?.path[0] === "password") message = "Le mot de passe doit contenir au moins 8 caractères";
+    return fail("VALIDATION_ERROR", "Email ou mot de passe invalide");
+  }
 
-    return {
-      success: false,
-      error: { code: "VALIDATION_ERROR", message },
-      email,
-      fullName,
-    };
+  const ip = await getClientIp();
+  const { success: rateLimitOk } = await authRateLimit.limit(ip);
+  if (!rateLimitOk) {
+    return fail("RATE_LIMITED", "Trop de tentatives. Réessayez plus tard.");
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
     password: parsed.data.password,
-    options: {
-      data: {
-        full_name: fullName,
-        preferred_locale: parsed.data.preferred_locale,
-      },
-    },
   });
 
   if (error) {
-    return {
-      success: false,
-      error: { code: "AUTH_ERROR", message: error.message },
-      email,
-      fullName,
-    };
+    return fail("AUTH_ERROR", "Email ou mot de passe incorrect");
   }
 
-  // If email confirmation is required, user won't have a session yet
-  const needsConfirmation =
-    data.user && !data.session && data.user.identities?.length === 0
-      ? false // User already exists (Supabase returns empty identities)
-      : data.user && !data.session;
+  // Determine redirect based on membership
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (needsConfirmation) {
-    return { success: true, emailConfirmation: true };
+  if (!user) {
+    return fail("AUTH_ERROR", "Erreur d'authentification");
   }
 
-  // If user already exists with no identities, treat as error
-  if (data.user?.identities?.length === 0) {
-    return {
-      success: false,
-      error: { code: "AUTH_ERROR", message: "Un compte avec cet email existe déjà" },
-      email,
-      fullName,
-    };
+  const { data: membership } = await supabase
+    .from("agency_memberships")
+    .select("agency_id")
+    .eq("user_id", user.id)
+    .eq("is_active", true)
+    .limit(1)
+    .maybeSingle();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role === "super_admin") {
+    return ok({ redirectTo: "/admin/agencies" });
   }
 
-  // Direct sign-in success (no email confirmation needed) → redirect to dashboard
-  const locale = parsed.data.preferred_locale ?? "fr";
-  redirect(`/${locale}/dashboard`);
+  if (membership) {
+    return ok({ redirectTo: "/AqarPro/dashboard" });
+  }
+
+  return ok({ redirectTo: "/AqarChaab/espace/mes-annonces" });
 }
-
-// ── Forgot Password ──────────────────────────
-
-export type ForgotPasswordFormState =
-  | { success: true }
-  | { success: false; error: { code: string; message: string }; email?: string }
-  | null;
 
 export async function forgotPasswordAction(
-  _prevState: ForgotPasswordFormState,
-  formData: FormData
-): Promise<ForgotPasswordFormState> {
-  const email = formData.get("email") as string;
-
-  const parsed = ResetPasswordSchema.safeParse({ email });
-
+  input: { email: string }
+): Promise<ActionResult<void>> {
+  const parsed = forgotPasswordSchema.safeParse(input);
   if (!parsed.success) {
-    return {
-      success: false,
-      error: { code: "VALIDATION_ERROR", message: "Adresse e-mail invalide" },
-      email,
-    };
+    return fail("VALIDATION_ERROR", "Email invalide");
+  }
+
+  const ip = await getClientIp();
+  const { success: rateLimitOk } = await forgotPasswordRateLimit.limit(ip);
+  if (!rateLimitOk) {
+    return fail("RATE_LIMITED", "Trop de tentatives. Réessayez dans 10 minutes.");
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL ? "" : "http://localhost:3000"}/fr/auth/reset-password`,
-  });
+  await supabase.auth.resetPasswordForEmail(parsed.data.email);
 
-  if (error) {
-    return {
-      success: false,
-      error: { code: "AUTH_ERROR", message: "Impossible d'envoyer l'email de réinitialisation" },
-      email,
-    };
-  }
-
-  // Always return success to avoid email enumeration
-  return { success: true };
+  // Always return success (don't reveal if email exists)
+  return ok(undefined);
 }
 
-// ── Reset Password ───────────────────────────
-
-export type ResetPasswordFormState =
-  | { success: true }
-  | { success: false; error: { code: string; message: string } }
-  | null;
-
-export async function resetPasswordAction(
-  _prevState: ResetPasswordFormState,
-  formData: FormData
-): Promise<ResetPasswordFormState> {
-  const password = formData.get("password") as string;
-  const confirmPassword = formData.get("confirm_password") as string;
-
-  if (!password || password.length < 8) {
-    return {
-      success: false,
-      error: { code: "VALIDATION_ERROR", message: "Le mot de passe doit contenir au moins 8 caractères" },
-    };
-  }
-
-  if (password !== confirmPassword) {
-    return {
-      success: false,
-      error: { code: "VALIDATION_ERROR", message: "Les mots de passe ne correspondent pas" },
-    };
-  }
-
-  const supabase = await createClient();
-  const { error } = await supabase.auth.updateUser({ password });
-
-  if (error) {
-    return {
-      success: false,
-      error: { code: "AUTH_ERROR", message: "Impossible de mettre à jour le mot de passe" },
-    };
-  }
-
-  return { success: true };
-}
-
-// ── Sign Out ─────────────────────────────────
-
-export async function signOutAction(): Promise<void> {
+export async function logoutAction(): Promise<ActionResult<void>> {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/fr/auth/login");
+  return ok(undefined);
 }

@@ -1,114 +1,106 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { AgencyStatsDto, AnalyticsSummary } from "../types/analytics.types";
+import type {
+  AgencyDailyStats,
+  AnalyticsSummary,
+  PriceHistoryPoint,
+} from "../types/analytics.types";
 
-/* ------------------------------------------------------------------ */
-/*  Get daily agency stats for a date range                            */
-/* ------------------------------------------------------------------ */
-
-export async function getAgencyStats(
+export async function getAgencyAnalytics(
   supabase: SupabaseClient,
   agencyId: string,
-  startDate: string,
-  endDate: string
-): Promise<AgencyStatsDto[]> {
-  const { data, error } = await supabase
+  from: Date,
+  to: Date
+): Promise<AnalyticsSummary> {
+  const { data: currentStats } = await supabase
     .from("agency_stats_daily")
-    .select("day, total_views, total_leads, total_new_listings")
+    .select("total_views, total_leads, total_contacts, new_listings")
     .eq("agency_id", agencyId)
-    .gte("day", startDate)
-    .lte("day", endDate)
-    .order("day", { ascending: true });
+    .gte("date", from.toISOString().split("T")[0])
+    .lte("date", to.toISOString().split("T")[0]);
 
-  if (error || !data) {
-    return [];
+  const stats = currentStats ?? [];
+  const totalViews = stats.reduce((sum, s) => sum + (s.total_views ?? 0), 0);
+  const totalLeads = stats.reduce((sum, s) => sum + (s.total_leads ?? 0), 0);
+  const totalContacts = stats.reduce(
+    (sum, s) => sum + (s.total_contacts ?? 0),
+    0
+  );
+
+  const { count: totalListings } = await supabase
+    .from("listings")
+    .select("*", { count: "exact", head: true })
+    .eq("agency_id", agencyId)
+    .not("status", "eq", "archived");
+
+  // Calculate trend (compare with previous period)
+  const periodMs = to.getTime() - from.getTime();
+  const prevFrom = new Date(from.getTime() - periodMs);
+  const prevTo = new Date(from.getTime() - 1);
+
+  const { data: prevStats } = await supabase
+    .from("agency_stats_daily")
+    .select("total_views, total_leads")
+    .eq("agency_id", agencyId)
+    .gte("date", prevFrom.toISOString().split("T")[0])
+    .lte("date", prevTo.toISOString().split("T")[0]);
+
+  const prevViews = (prevStats ?? []).reduce(
+    (sum, s) => sum + (s.total_views ?? 0),
+    0
+  );
+  const prevLeads = (prevStats ?? []).reduce(
+    (sum, s) => sum + (s.total_leads ?? 0),
+    0
+  );
+
+  function calcTrend(current: number, previous: number): number {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return Math.round(((current - previous) / previous) * 100);
   }
 
-  return data.map((row) => ({
-    day: row.day as string,
-    total_views: (row.total_views as number) ?? 0,
-    total_leads: (row.total_leads as number) ?? 0,
-    total_new_listings: (row.total_new_listings as number) ?? 0,
-  }));
-}
-
-/* ------------------------------------------------------------------ */
-/*  Get 30-day summary with trend comparison                           */
-/* ------------------------------------------------------------------ */
-
-export async function getAgencySummary(
-  supabase: SupabaseClient,
-  agencyId: string
-): Promise<AnalyticsSummary> {
-  const now = new Date();
-  const thirtyDaysAgo = new Date(now);
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const sixtyDaysAgo = new Date(now);
-  sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-
-  const formatDate = (d: Date) => d.toISOString().split("T")[0] ?? "";
-
-  const [currentStats, previousStats] = await Promise.all([
-    getAgencyStats(supabase, agencyId, formatDate(thirtyDaysAgo), formatDate(now)),
-    getAgencyStats(supabase, agencyId, formatDate(sixtyDaysAgo), formatDate(thirtyDaysAgo)),
-  ]);
-
-  const sum = (arr: AgencyStatsDto[], key: keyof Omit<AgencyStatsDto, "day">) =>
-    arr.reduce((acc, row) => acc + row[key], 0);
-
-  const currentViews = sum(currentStats, "total_views");
-  const currentLeads = sum(currentStats, "total_leads");
-  const currentListings = sum(currentStats, "total_new_listings");
-  const currentConversion = currentViews > 0 ? (currentLeads / currentViews) * 100 : 0;
-
-  const previousViews = sum(previousStats, "total_views");
-  const previousLeads = sum(previousStats, "total_leads");
-  const previousListings = sum(previousStats, "total_new_listings");
-  const previousConversion = previousViews > 0 ? (previousLeads / previousViews) * 100 : 0;
-
-  const trend = (current: number, previous: number) =>
-    previous > 0 ? ((current - previous) / previous) * 100 : current > 0 ? 100 : 0;
-
   return {
-    total_views: currentViews,
-    total_leads: currentLeads,
-    total_new_listings: currentListings,
-    conversion_rate: Math.round(currentConversion * 100) / 100,
-    trend_views: Math.round(trend(currentViews, previousViews) * 10) / 10,
-    trend_leads: Math.round(trend(currentLeads, previousLeads) * 10) / 10,
-    trend_new_listings: Math.round(trend(currentListings, previousListings) * 10) / 10,
-    trend_conversion: Math.round(trend(currentConversion, previousConversion) * 10) / 10,
+    totalViews,
+    totalLeads,
+    totalContacts,
+    totalListings: totalListings ?? 0,
+    viewsTrend: calcTrend(totalViews, prevViews),
+    leadsTrend: calcTrend(totalLeads, prevLeads),
   };
 }
 
-/* ------------------------------------------------------------------ */
-/*  Get listing view stats by day                                      */
-/* ------------------------------------------------------------------ */
+export async function getDailyStats(
+  supabase: SupabaseClient,
+  agencyId: string,
+  from: Date,
+  to: Date
+): Promise<AgencyDailyStats[]> {
+  const { data, error } = await supabase
+    .from("agency_stats_daily")
+    .select("*")
+    .eq("agency_id", agencyId)
+    .gte("date", from.toISOString().split("T")[0])
+    .lte("date", to.toISOString().split("T")[0])
+    .order("date", { ascending: true });
 
-export async function getListingViewStats(
+  if (error) throw error;
+  return (data ?? []) as AgencyDailyStats[];
+}
+
+export async function getPriceHistory(
   supabase: SupabaseClient,
   listingId: string
-): Promise<{ day: string; count: number }[]> {
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
+): Promise<PriceHistoryPoint[]> {
   const { data, error } = await supabase
-    .from("listing_views")
-    .select("viewed_at")
+    .from("listing_price_history")
+    .select("new_price, changed_at, reason")
     .eq("listing_id", listingId)
-    .gte("viewed_at", thirtyDaysAgo.toISOString());
+    .order("changed_at", { ascending: true });
 
-  if (error || !data) {
-    return [];
-  }
+  if (error) throw error;
 
-  // Aggregate by day
-  const countsByDay: Record<string, number> = {};
-  for (const row of data) {
-    const day = (row.viewed_at as string).split("T")[0] ?? "";
-    countsByDay[day] = (countsByDay[day] ?? 0) + 1;
-  }
-
-  return Object.entries(countsByDay)
-    .map(([day, count]) => ({ day, count }))
-    .sort((a, b) => a.day.localeCompare(b.day));
+  return (data ?? []).map((row) => ({
+    date: row.changed_at as string,
+    price: row.new_price as number,
+    reason: row.reason as string | null,
+  }));
 }

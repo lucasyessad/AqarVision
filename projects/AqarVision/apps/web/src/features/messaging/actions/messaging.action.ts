@@ -1,88 +1,30 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { CreateLeadSchema, SendMessageSchema, MarkReadSchema } from "../schemas/messaging.schema";
-import {
-  createLead,
-  sendMessage,
-  markRead,
-  getConversationParticipants,
-} from "../services/messaging.service";
-import type { ActionResult } from "../types/messaging.types";
+import { ok, fail, type ActionResult } from "@/lib/action-result";
+import { sendMessage, markAsRead } from "../services/messaging.service";
+import { updateTag } from "next/cache";
+import { CacheTags } from "@/lib/cache/tags";
+import type { Message } from "../types/messaging.types";
+import { z } from "zod";
+import { sanitizeInput } from "@/lib/sanitize";
 
-export async function createLeadAction(
-  _prevState: ActionResult<{ lead_id: string; conversation_id: string }> | null,
-  formData: FormData
-): Promise<ActionResult<{ lead_id: string; conversation_id: string }>> {
-  const raw = {
-    listing_id: formData.get("listing_id"),
-    message: formData.get("message") || undefined,
-    source: formData.get("source") || "platform",
-  };
-
-  const parsed = CreateLeadSchema.safeParse(raw);
-
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: {
-        code: "VALIDATION_ERROR",
-        message: parsed.error.errors.map((e) => e.message).join(", "),
-      },
-    };
-  }
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
-  }
-
-  try {
-    const result = await createLead(
-      supabase,
-      user.id,
-      parsed.data.listing_id,
-      parsed.data.message,
-      parsed.data.source
-    );
-    return { success: true, data: result };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "CREATE_LEAD_FAILED",
-        message: err instanceof Error ? err.message : "Failed to create lead",
-      },
-    };
-  }
-}
+const sendMessageSchema = z.object({
+  conversationId: z.string().uuid(),
+  content: z
+    .string()
+    .min(1, "Le message ne peut pas être vide")
+    .max(5000, "Message trop long")
+    .transform(sanitizeInput),
+});
 
 export async function sendMessageAction(
-  _prevState: ActionResult<{ message_id: string }> | null,
-  formData: FormData
-): Promise<ActionResult<{ message_id: string }>> {
-  const raw = {
-    conversation_id: formData.get("conversation_id"),
-    body: formData.get("body"),
-  };
-
-  const parsed = SendMessageSchema.safeParse(raw);
-
+  conversationId: string,
+  content: string
+): Promise<ActionResult<Message>> {
+  const parsed = sendMessageSchema.safeParse({ conversationId, content });
   if (!parsed.success) {
-    return {
-      success: false,
-      error: {
-        code: "VALIDATION_ERROR",
-        message: parsed.error.errors.map((e) => e.message).join(", "),
-      },
-    };
+    return fail("VALIDATION_ERROR", parsed.error.errors[0]?.message ?? "Données invalides");
   }
 
   const supabase = await createClient();
@@ -91,105 +33,42 @@ export async function sendMessageAction(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
-  }
-
-  // Check participant access
-  const participants = await getConversationParticipants(
-    supabase,
-    parsed.data.conversation_id
-  );
-
-  if (!participants) {
-    return {
-      success: false,
-      error: { code: "NOT_FOUND", message: "Conversation not found" },
-    };
-  }
-
-  // Check if user is the sender or an agency member
-  if (participants.sender_user_id !== user.id) {
-    const { data: membership } = await supabase
-      .from("agency_memberships")
-      .select("id")
-      .eq("agency_id", participants.agency_id)
-      .eq("user_id", user.id)
-      .eq("is_active", true)
-      .single();
-
-    if (!membership) {
-      return {
-        success: false,
-        error: { code: "FORBIDDEN", message: "Not a participant" },
-      };
-    }
+    return fail("UNAUTHORIZED", "Vous devez être connecté");
   }
 
   try {
-    const result = await sendMessage(
+    const message = await sendMessage(
       supabase,
+      parsed.data.conversationId,
       user.id,
-      parsed.data.conversation_id,
-      parsed.data.body
+      parsed.data.content
     );
-    return { success: true, data: result };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "SEND_FAILED",
-        message: err instanceof Error ? err.message : "Failed to send message",
-      },
-    };
+    updateTag(CacheTags.conversations(user.id));
+    return ok(message);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : "Erreur interne";
+    return fail("INTERNAL_ERROR", msg);
   }
 }
 
-export async function markReadAction(
-  _prevState: ActionResult<null> | null,
-  formData: FormData
-): Promise<ActionResult<null>> {
-  const raw = {
-    conversation_id: formData.get("conversation_id"),
-  };
-
-  const parsed = MarkReadSchema.safeParse(raw);
-
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: {
-        code: "VALIDATION_ERROR",
-        message: parsed.error.errors.map((e) => e.message).join(", "),
-      },
-    };
-  }
-
+export async function markAsReadAction(
+  conversationId: string
+): Promise<ActionResult<void>> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return {
-      success: false,
-      error: { code: "UNAUTHORIZED", message: "Authentication required" },
-    };
+    return fail("UNAUTHORIZED", "Vous devez être connecté");
   }
 
   try {
-    await markRead(supabase, user.id, parsed.data.conversation_id);
-    return { success: true, data: null };
-  } catch (err) {
-    return {
-      success: false,
-      error: {
-        code: "MARK_READ_FAILED",
-        message:
-          err instanceof Error ? err.message : "Failed to mark as read",
-      },
-    };
+    await markAsRead(supabase, conversationId, user.id);
+    updateTag(CacheTags.conversations(user.id));
+    return ok(undefined);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : "Erreur interne";
+    return fail("INTERNAL_ERROR", msg);
   }
 }

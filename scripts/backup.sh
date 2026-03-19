@@ -12,10 +12,10 @@ NC='\033[0m'
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="backups"
-BACKUP_NAME="persodev-backup-$TIMESTAMP"
+BACKUP_NAME="aqarvision-backup-$TIMESTAMP"
 
 echo -e "${BLUE}╔══════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║           Backup PersoDev                            ║${NC}"
+echo -e "${BLUE}║           Backup AqarVision                            ║${NC}"
 echo -e "${BLUE}╚══════════════════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -63,8 +63,8 @@ if [ $? -eq 0 ]; then
     # Nettoyer les vieux backups (garder les 5 derniers)
     echo -e "${YELLOW}🧹 Nettoyage des anciens backups...${NC}"
     cd "$BACKUP_DIR"
-    ls -t persodev-backup-*.tar.gz 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
-    BACKUP_COUNT=$(ls -1 persodev-backup-*.tar.gz 2>/dev/null | wc -l)
+    ls -t aqarvision-backup-*.tar.gz 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
+    BACKUP_COUNT=$(ls -1 aqarvision-backup-*.tar.gz 2>/dev/null | wc -l)
     echo -e "${GREEN}✓ $BACKUP_COUNT backups conservés${NC}"
     cd - > /dev/null
 

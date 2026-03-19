@@ -1,23 +1,20 @@
-export interface ReportDto {
-  id: string;
+export interface ModerationQueueItem {
   listing_id: string;
-  action: string;
-  reason: string | null;
-  performed_by: string | null;
-  created_at: string;
-  listing_title: string | null;
-  listing_agency_id: string | null;
+  listing_title: string;
+  listing_type: string;
+  property_type: string;
+  owner_type: "agency" | "individual";
+  agency_name: string | null;
+  user_name: string | null;
+  wilaya_name: string;
+  submitted_at: string;
+  photos_count: number;
+  cover_url: string | null;
 }
 
-export interface ModerationHistoryDto {
-  id: string;
-  listing_id: string;
-  action: string;
+export interface ModerationAction {
+  action: "approved" | "rejected" | "hidden";
   reason: string | null;
-  performed_by: string | null;
+  moderator_id: string;
   created_at: string;
 }
-
-export type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: { code: string; message: string } };
