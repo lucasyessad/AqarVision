@@ -2,6 +2,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Geist, Geist_Mono, IBM_Plex_Sans_Arabic } from "next/font/google";
+import Script from "next/script";
 import { routing } from "@/lib/i18n/routing";
 import "@/app/globals.css";
 
@@ -41,24 +42,18 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var theme = document.cookie.match(/theme=(light|dark)/);
-                if (theme) document.documentElement.setAttribute('data-theme', theme[1]);
-                else if (window.matchMedia('(prefers-color-scheme: dark)').matches)
-                  document.documentElement.setAttribute('data-theme', 'dark');
-              })();
-            `,
-          }}
-        />
-      </head>
       <body
         className={`${geist.variable} ${geistMono.variable} ${ibmPlexArabic.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
+        <Script id="theme-init" strategy="beforeInteractive">{`
+          (function() {
+            var theme = document.cookie.match(/theme=(light|dark)/);
+            if (theme) document.documentElement.setAttribute('data-theme', theme[1]);
+            else if (window.matchMedia('(prefers-color-scheme: dark)').matches)
+              document.documentElement.setAttribute('data-theme', 'dark');
+          })();
+        `}</Script>
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

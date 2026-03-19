@@ -6,6 +6,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          50: "#FDF6E8",
+          100: "#FAE9C4",
+          200: "#F4D191",
+          300: "#EBB85A",
+          400: "#D9A03A",
+          DEFAULT: "#C4922A",
+          500: "#C4922A",
+          600: "#A87A22",
+          700: "#8C651C",
+          800: "#6A4C15",
+          900: "#4A350F",
+        },
         sahara: {
           50: "#FEF7E6",
           100: "#FDE9B8",
@@ -84,12 +97,12 @@ const config: Config = {
         "88": "352px",
       },
       zIndex: {
-        sticky: "10",
-        dropdown: "20",
-        overlay: "30",
-        modal: "40",
-        toast: "50",
-        tooltip: "60",
+        sticky: "100",
+        dropdown: "200",
+        overlay: "300",
+        modal: "400",
+        toast: "500",
+        tooltip: "600",
         max: "9999",
       },
       boxShadow: {

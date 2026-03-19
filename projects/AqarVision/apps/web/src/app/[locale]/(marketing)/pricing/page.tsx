@@ -12,7 +12,7 @@ export default async function PricingPage() {
   const t = await getTranslations("pricing");
 
   return (
-    <div className="py-16 sm:py-24">
+    <div className="pt-24 pb-16 sm:pt-28 sm:pb-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">

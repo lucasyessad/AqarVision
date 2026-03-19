@@ -15,7 +15,7 @@ const navLinks = [
   { key: "search", href: "/search" },
   { key: "deposit", href: "/deposer" },
   { key: "pro", href: "/pro" },
-  { key: "pricing", href: "/pricing" },
+  { key: "chaab", href: "/chaab" },
   { key: "agencies", href: "/agences" },
   { key: "estimate", href: "/estimer" },
 ] as const;

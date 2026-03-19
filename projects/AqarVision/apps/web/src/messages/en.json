@@ -111,7 +111,7 @@
     "home": "Home",
     "search": "Search",
     "deposit": "Post a listing",
-    "pricing": "Pricing",
+    "chaab": "AqarChaab",
     "pro": "AqarPro",
     "agencies": "Agencies",
     "dashboard": "Dashboard",
@@ -143,7 +143,8 @@
     "entitlements": "Entitlements",
     "verifications": "Verifications",
     "moderation": "Moderation",
-    "upgrade": "Upgrade"
+    "upgrade": "Upgrade",
+    "pricing": "Pricing"
   },
   "dashboard": {
     "overview": {
@@ -296,7 +297,8 @@
   },
   "marketing": {
     "heroTitle": "Find your property in Algeria",
-    "heroSubtitle": "Thousands of verified listings across all 58 wilayas",
+    "heroSubtitle": "From the Mediterranean coast to the Sahara — thousands of listings across all 69 wilayas of Algeria",
+    "scrollDown": "Discover",
     "ctaSearch": "Search for a property",
     "ctaPro": "Are you an agency? Digitize your business with AqarPro",
     "howItWorks": {
@@ -313,6 +315,31 @@
       "verifiedAgencies": "verified agencies",
       "wilayas": "wilayas",
       "users": "users"
+    },
+    "heroHeadline": "Find your",
+    "heroBold": "IDEAL PROPERTY",
+    "heroSuffix": "in Algeria",
+    "heroBadge": "15,000+ verified listings",
+    "ctaSecondary": "Post for free",
+    "featureGrid": {
+      "search": {
+        "eyebrow": "AqarSearch",
+        "title": "Smart Search",
+        "description": "Advanced filters by wilaya, commune, surface and DZD budget. Interactive map across all 69 wilayas.",
+        "cta": "Explore"
+      },
+      "pro": {
+        "eyebrow": "AqarPro",
+        "title": "Professional Space",
+        "description": "Full agency CRM — online storefront, qualified leads management, and analytics.",
+        "cta": "Discover"
+      },
+      "chaab": {
+        "eyebrow": "AqarChaab",
+        "title": "Between Individuals",
+        "description": "List your property directly, without intermediaries, without commission.",
+        "cta": "Get started"
+      }
     }
   },
   "search": {
@@ -462,7 +489,7 @@
   },
   "metadata": {
     "home": "Real estate in Algeria",
-    "homeDescription": "Find your property among thousands of verified listings across all 58 wilayas of Algeria",
+    "homeDescription": "Find your property among thousands of verified listings across all 69 wilayas of Algeria",
     "search": "Property search",
     "dashboard": "Dashboard",
     "login": "Log in",

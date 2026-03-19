@@ -16,6 +16,7 @@ const PUBLIC_ROUTES = [
   "/estimer",
   "/vendre",
   "/pro",
+  "/chaab",
   "/pricing",
   "/deposer",
   "/invite/:path*",

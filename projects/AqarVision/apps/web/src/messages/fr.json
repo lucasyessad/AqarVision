@@ -153,7 +153,7 @@
     "home": "Accueil",
     "search": "Recherche",
     "deposit": "Déposer une annonce",
-    "pricing": "Tarifs",
+    "chaab": "AqarChaab",
     "pro": "AqarPro",
     "agencies": "Agences",
     "dashboard": "Tableau de bord",
@@ -185,7 +185,8 @@
     "entitlements": "Droits",
     "verifications": "Vérifications",
     "moderation": "Modération",
-    "upgrade": "Upgrade"
+    "upgrade": "Upgrade",
+    "pricing": "Tarifs"
   },
   "dashboard": {
     "overview": {
@@ -339,7 +340,8 @@
   },
   "marketing": {
     "heroTitle": "Trouvez votre bien immobilier en Algérie",
-    "heroSubtitle": "Des milliers d'annonces vérifiées à travers les 58 wilayas",
+    "heroSubtitle": "De la côte méditerranéenne au Sahara — explorez des milliers de biens à travers les 69 wilayas d'Algérie",
+    "scrollDown": "Découvrir",
     "ctaSearch": "Rechercher un bien",
     "ctaPro": "Vous êtes agence ? Digitalisez votre activité avec AqarPro",
     "ctaProButton": "Découvrir AqarPro",
@@ -374,6 +376,31 @@
       "verifiedAgencies": "agences vérifiées",
       "wilayas": "wilayas",
       "users": "utilisateurs"
+    },
+    "heroHeadline": "Trouvez votre",
+    "heroBold": "BIEN IDÉAL",
+    "heroSuffix": "en Algérie",
+    "heroBadge": "15 000+ annonces vérifiées",
+    "ctaSecondary": "Publier gratuitement",
+    "featureGrid": {
+      "search": {
+        "eyebrow": "AqarSearch",
+        "title": "Recherche intelligente",
+        "description": "Filtres par wilaya, commune, surface et prix en DZD. Carte interactive sur les 69 wilayas.",
+        "cta": "Explorer"
+      },
+      "pro": {
+        "eyebrow": "AqarPro",
+        "title": "Espace Professionnel",
+        "description": "CRM agence complet — vitrine en ligne, gestion des leads qualifiés et analytics.",
+        "cta": "Découvrir"
+      },
+      "chaab": {
+        "eyebrow": "AqarChaab",
+        "title": "Entre Particuliers",
+        "description": "Publiez votre bien directement, sans intermédiaire ni commission.",
+        "cta": "Commencer"
+      }
     }
   },
   "search": {
@@ -690,7 +717,7 @@
   },
   "metadata": {
     "home": "Immobilier en Algérie",
-    "homeDescription": "Trouvez votre bien immobilier parmi des milliers d'annonces vérifiées à travers les 58 wilayas d'Algérie",
+    "homeDescription": "Trouvez votre bien immobilier parmi des milliers d'annonces vérifiées à travers les 69 wilayas d'Algérie",
     "search": "Recherche immobilière",
     "dashboard": "Tableau de bord",
     "login": "Connexion",

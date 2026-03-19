@@ -40,7 +40,7 @@ export default async function AgencesPage() {
 
   return (
     <div className="bg-stone-50 dark:bg-stone-950 min-h-screen">
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8 lg:pt-28 lg:pb-12">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100">
             {t("agencies")}

@@ -131,7 +131,7 @@
     "home": "Inicio",
     "search": "Buscar",
     "deposit": "Publicar un anuncio",
-    "pricing": "Precios",
+    "chaab": "AqarChaab",
     "pro": "AqarPro",
     "agencies": "Agencias",
     "dashboard": "Panel de control",
@@ -163,7 +163,8 @@
     "entitlements": "Derechos",
     "verifications": "Verificaciones",
     "moderation": "Moderación",
-    "upgrade": "Mejorar"
+    "upgrade": "Mejorar",
+    "pricing": "Precios"
   },
   "dashboard": {
     "overview": {
@@ -316,7 +317,8 @@
   },
   "marketing": {
     "heroTitle": "Encuentre su propiedad en Argelia",
-    "heroSubtitle": "Miles de anuncios verificados en las 58 wilayas",
+    "heroSubtitle": "Del Mediterráneo al Sahara — miles de propiedades en las 69 wilayas de Argelia",
+    "scrollDown": "Descubrir",
     "ctaSearch": "Buscar una propiedad",
     "ctaPro": "¿Es usted una agencia? Digitalice su negocio con AqarPro",
     "ctaProButton": "Descubrir AqarPro",
@@ -351,6 +353,31 @@
       "verifiedAgencies": "agencias verificadas",
       "wilayas": "wilayas",
       "users": "usuarios"
+    },
+    "heroHeadline": "Encuentra tu",
+    "heroBold": "PROPIEDAD IDEAL",
+    "heroSuffix": "en Argelia",
+    "heroBadge": "15.000+ anuncios verificados",
+    "ctaSecondary": "Publicar gratis",
+    "featureGrid": {
+      "search": {
+        "eyebrow": "AqarSearch",
+        "title": "Búsqueda inteligente",
+        "description": "Filtros por wilaya, comuna, superficie y presupuesto en DZD. Mapa interactivo en las 69 wilayas.",
+        "cta": "Explorar"
+      },
+      "pro": {
+        "eyebrow": "AqarPro",
+        "title": "Espacio Profesional",
+        "description": "CRM de agencia completo — escaparate en línea, gestión de leads cualificados y analíticas.",
+        "cta": "Descubrir"
+      },
+      "chaab": {
+        "eyebrow": "AqarChaab",
+        "title": "Entre Particulares",
+        "description": "Publica tu propiedad directamente, sin intermediarios ni comisión.",
+        "cta": "Empezar"
+      }
     }
   },
   "search": {
@@ -659,7 +686,7 @@
   },
   "metadata": {
     "home": "Inmobiliaria en Argelia",
-    "homeDescription": "Encuentre su propiedad entre miles de anuncios verificados en las 58 wilayas de Argelia",
+    "homeDescription": "Encuentre su propiedad entre miles de anuncios verificados en las 69 wilayas de Argelia",
     "search": "Búsqueda inmobiliaria",
     "dashboard": "Panel de control",
     "login": "Iniciar sesión",

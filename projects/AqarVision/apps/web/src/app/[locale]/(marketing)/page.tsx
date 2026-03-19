@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
-import { Search, Phone, MapPin, CalendarCheck } from "lucide-react";
+import { getTranslations, getLocale } from "next-intl/server";
+import { Search, Phone, CalendarCheck } from "lucide-react";
 import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { EditorialSplit } from "@/components/editorial/EditorialSplit";
 import { StatsStrip } from "@/components/editorial/StatsStrip";
 import { WilayaScroller } from "@/components/editorial/WilayaScroller";
 import { FeaturedListingsTabs } from "@/components/marketing/FeaturedListingsTabs";
-import { HeroSearchBar } from "@/components/marketing/HeroSearchBar";
+import { ObsidianHero } from "@/components/marketing/ObsidianHero";
+import { FeatureGrid } from "@/components/marketing/FeatureGrid";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { getFeaturedListings } from "@/features/marketplace/actions/featured.action";
 import type { ListingCard } from "@/features/listings/types/listing.types";
 import type { WilayaScrollerItem } from "@/components/editorial/WilayaScroller";
@@ -443,23 +445,19 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
 ];
 
 const POPULAR_WILAYAS: WilayaScrollerItem[] = [
-  { name: "Alger", imageUrl: "/images/placeholder/wilaya-alger.jpg", count: 4_230, code: "16" },
-  { name: "Oran", imageUrl: "/images/placeholder/wilaya-oran.jpg", count: 2_815, code: "31" },
-  { name: "Constantine", imageUrl: "/images/placeholder/wilaya-constantine.jpg", count: 1_920, code: "25" },
-  { name: "Annaba", imageUrl: "/images/placeholder/wilaya-annaba.jpg", count: 1_340, code: "23" },
-  { name: "Sétif", imageUrl: "/images/placeholder/wilaya-setif.jpg", count: 1_180, code: "19" },
-  { name: "Béjaïa", imageUrl: "/images/placeholder/wilaya-bejaia.jpg", count: 1_050, code: "06" },
-  { name: "Tizi Ouzou", imageUrl: "/images/placeholder/wilaya-tizi-ouzou.jpg", count: 980, code: "15" },
-  { name: "Blida", imageUrl: "/images/placeholder/wilaya-blida.jpg", count: 870, code: "09" },
+  { name: "Alger",       name_ar: "الجزائر",    imageUrl: "/images/placeholder/wilaya-alger.jpg",       count: 4_230, code: "16" },
+  { name: "Oran",        name_ar: "وهران",       imageUrl: "/images/placeholder/wilaya-oran.jpg",        count: 2_815, code: "31" },
+  { name: "Constantine", name_ar: "قسنطينة",     imageUrl: "/images/placeholder/wilaya-constantine.jpg", count: 1_920, code: "25" },
+  { name: "Annaba",      name_ar: "عنابة",       imageUrl: "/images/placeholder/wilaya-annaba.jpg",      count: 1_340, code: "23" },
+  { name: "Sétif",       name_ar: "سطيف",        imageUrl: "/images/placeholder/wilaya-setif.jpg",       count: 1_180, code: "19" },
+  { name: "Béjaïa",      name_ar: "بجاية",       imageUrl: "/images/placeholder/wilaya-bejaia.jpg",      count: 1_050, code: "06" },
+  { name: "Tizi Ouzou",  name_ar: "تيزي وزو",    imageUrl: "/images/placeholder/wilaya-tizi-ouzou.jpg",  count: 980,   code: "15" },
+  { name: "Blida",       name_ar: "البليدة",     imageUrl: "/images/placeholder/wilaya-blida.jpg",       count: 870,   code: "09" },
 ];
 
-// ---------------------------------------------------------------------------
-// How it works step icons
-// ---------------------------------------------------------------------------
-
 const STEPS = [
-  { icon: Search, color: "bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-400" },
-  { icon: Phone, color: "bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400" },
+  { icon: Search,       color: "bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-400" },
+  { icon: Phone,        color: "bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400" },
   { icon: CalendarCheck, color: "bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400" },
 ] as const;
 
@@ -469,8 +467,8 @@ const STEPS = [
 
 export default async function HomePage() {
   const t = await getTranslations("marketing");
+  const locale = await getLocale();
 
-  // Fetch featured listings from DB (replaces hardcoded placeholders)
   const [featuredSale, featuredRent, featuredVacation] = await Promise.all([
     getFeaturedListings("sale", 8),
     getFeaturedListings("rent", 8),
@@ -478,94 +476,28 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50 dark:bg-stone-950">
+    <>
       {/* ---------------------------------------------------------------- */}
-      {/* 1. Hero + SearchBar (100vh) */}
+      {/* 1. Hero — dark fullscreen ObsidianHero                          */}
       {/* ---------------------------------------------------------------- */}
-      <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-stone-900 dark:bg-stone-950">
-        {/* Background image placeholder */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/placeholder/hero-algerie.jpg"
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover"
-            priority
-          />
-        </div>
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-stone-900/70 via-stone-900/50 to-stone-900/85" />
-
-        <div className="relative z-10 mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl animate-fade-in">
-            {t("heroTitle")}
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-stone-200 dark:text-stone-300 sm:text-xl animate-fade-in">
-            {t("heroSubtitle")}
-          </p>
-
-          {/* Search bar */}
-          <HeroSearchBar searchLabel={t("ctaSearch")} />
-        </div>
-      </section>
+      <ObsidianHero />
 
       {/* ---------------------------------------------------------------- */}
-      {/* 2. How it works (3 steps) — premier scroll */}
+      {/* 2. Feature Grid — 3 product surfaces                            */}
+      {/* ---------------------------------------------------------------- */}
+      <FeatureGrid />
+
+      {/* ---------------------------------------------------------------- */}
+      {/* 3. Featured listings                                            */}
       {/* ---------------------------------------------------------------- */}
       <section className="bg-white dark:bg-stone-900 py-16 lg:py-20">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl">
-            {t("howItWorks.title")}
-          </h2>
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-12">
-            {([1, 2, 3] as const).map((step, idx) => {
-              const stepConfig = STEPS[idx]!;
-              const StepIcon = stepConfig.icon;
-              return (
-                <div key={step} className="flex flex-col items-center text-center">
-                  <div
-                    className={cn(
-                      "flex h-16 w-16 items-center justify-center rounded-2xl",
-                      stepConfig.color
-                    )}
-                  >
-                    <StepIcon size={28} aria-hidden="true" />
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold text-stone-900 dark:text-stone-50">
-                    {t(`howItWorks.step${step}`)}
-                  </h3>
-                  <p className="mt-2 max-w-xs text-sm text-stone-600 dark:text-stone-400">
-                    {t(`howItWorks.step${step}Description`)}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* 3. Stats Strip */}
-      {/* ---------------------------------------------------------------- */}
-      <StatsStrip
-        stats={[
-          { value: 12_450, label: t("statsStrip.listings"), suffix: "+" },
-          { value: 340, label: t("statsStrip.verifiedAgencies") },
-          { value: 58, label: t("statsStrip.wilayas") },
-          { value: 28_000, label: t("statsStrip.users"), suffix: "+" },
-        ]}
-      />
-
-      {/* ---------------------------------------------------------------- */}
-      {/* 4. Featured listings (8 cards with tabs) */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="bg-white dark:bg-stone-900 py-16 lg:py-20">
-        <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <h2 className="text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl">
-              {t("featuredTitle")}
-            </h2>
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center mb-6">
+            <ScrollReveal direction="none">
+              <h2 className="text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl">
+                {t("featuredTitle")}
+              </h2>
+            </ScrollReveal>
             <Link
               href="/search"
               className="text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors duration-fast"
@@ -573,8 +505,7 @@ export default async function HomePage() {
               {t("viewAll")} &rarr;
             </Link>
           </div>
-
-          <div className="mt-6">
+          <ScrollReveal delay={100} direction="none">
             <FeaturedListingsTabs
               listings={{
                 sale: featuredSale,
@@ -582,12 +513,98 @@ export default async function HomePage() {
                 vacation: featuredVacation,
               }}
             />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      {/* 4. Wilaya Scroller                                               */}
+      {/* ---------------------------------------------------------------- */}
+      <WilayaScroller
+        wilayas={POPULAR_WILAYAS}
+        title={t("wilayasTitle")}
+        locale={locale}
+      />
+
+      {/* ---------------------------------------------------------------- */}
+      {/* 5. Region Cards                                                  */}
+      {/* ---------------------------------------------------------------- */}
+      <section className="bg-white dark:bg-stone-900 py-16 lg:py-20">
+        <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+          {/* h2 NOT wrapped in ScrollReveal to avoid translate-y layout bug */}
+          <h2 className="mb-8 text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl animate-fade-in">
+            {t("regionsTitle")}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {([
+              {
+                region: "sahara",
+                title: t("regionSahara"),
+                subtitle: t("regionSaharaSubtitle"),
+                image: "/images/placeholder/region-sahara.jpg",
+                fallback: "from-amber-900 via-stone-900 to-stone-950",
+                delay: 0,
+              },
+              {
+                region: "littoral",
+                title: t("regionLittoral"),
+                subtitle: t("regionLittoralSubtitle"),
+                image: "/images/placeholder/region-littoral.jpg",
+                fallback: "from-blue-900 via-teal-900 to-stone-950",
+                delay: 100,
+              },
+              {
+                region: "montagne",
+                title: t("regionMontagne"),
+                subtitle: t("regionMontagneSubtitle"),
+                image: "/images/placeholder/region-montagne.jpg",
+                fallback: "from-green-900 via-stone-900 to-stone-950",
+                delay: 200,
+              },
+            ] as const).map((item) => (
+              <ScrollReveal key={item.region} delay={item.delay} direction="none">
+                <Link
+                  href={`/search?region=${item.region}`}
+                  className={cn(
+                    "group relative h-[220px] overflow-hidden rounded-xl flex",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 dark:focus-visible:ring-teal-400"
+                  )}
+                >
+                  {/* Gradient fallback — shown if image is missing */}
+                  <div className={cn("absolute inset-0 bg-gradient-to-br", item.fallback)} />
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-slow group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/20 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-5">
+                    <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                    <p className="mt-1 text-sm text-stone-200">{item.subtitle}</p>
+                  </div>
+                </Link>
+              </ScrollReveal>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* 5. Editorial Split */}
+      {/* 6. Stats Strip                                                   */}
+      {/* ---------------------------------------------------------------- */}
+      <StatsStrip
+        stats={[
+          { value: 12_450, label: t("statsStrip.listings"), suffix: "+" },
+          { value: 340, label: t("statsStrip.verifiedAgencies") },
+          { value: 69, label: t("statsStrip.wilayas") },
+          { value: 28_000, label: t("statsStrip.users"), suffix: "+" },
+        ]}
+      />
+
+      {/* ---------------------------------------------------------------- */}
+      {/* 7. Editorial Split                                               */}
       {/* ---------------------------------------------------------------- */}
       <EditorialSplit
         eyebrow={t("editorialEyebrow")}
@@ -600,95 +617,69 @@ export default async function HomePage() {
       />
 
       {/* ---------------------------------------------------------------- */}
-      {/* 6. Wilaya Scroller */}
-      {/* ---------------------------------------------------------------- */}
-      <WilayaScroller
-        wilayas={POPULAR_WILAYAS}
-        title={t("wilayasTitle")}
-      />
-
-      {/* ---------------------------------------------------------------- */}
-      {/* 7. Region Cards (3 columns) */}
+      {/* 8. How it works                                                  */}
       {/* ---------------------------------------------------------------- */}
       <section className="bg-white dark:bg-stone-900 py-16 lg:py-20">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-          <h2 className="mb-8 text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl">
-            {t("regionsTitle")}
+          {/* No ScrollReveal on h2 — use opacity-only fade to avoid layout shift */}
+          <h2 className="text-center text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl animate-fade-in">
+            {t("howItWorks.title")}
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {([
-              {
-                region: "sahara",
-                title: t("regionSahara"),
-                subtitle: t("regionSaharaSubtitle"),
-                image: "/images/placeholder/region-sahara.jpg",
-              },
-              {
-                region: "littoral",
-                title: t("regionLittoral"),
-                subtitle: t("regionLittoralSubtitle"),
-                image: "/images/placeholder/region-littoral.jpg",
-              },
-              {
-                region: "montagne",
-                title: t("regionMontagne"),
-                subtitle: t("regionMontagneSubtitle"),
-                image: "/images/placeholder/region-montagne.jpg",
-              },
-            ] as const).map((item) => (
-              <Link
-                key={item.region}
-                href={`/search?region=${item.region}`}
-                className={cn(
-                  "group relative h-[220px] overflow-hidden rounded-xl",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 dark:focus-visible:ring-teal-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-stone-900"
-                )}
-              >
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 33vw"
-                  className="object-cover transition-transform duration-slow group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-5">
-                  <h3 className="text-xl font-bold text-white">{item.title}</h3>
-                  <p className="mt-1 text-sm text-stone-200 dark:text-stone-300">
-                    {item.subtitle}
-                  </p>
-                </div>
-              </Link>
-            ))}
+          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-12">
+            {([1, 2, 3] as const).map((step, idx) => {
+              const stepConfig = STEPS[idx]!;
+              const StepIcon = stepConfig.icon;
+              return (
+                <ScrollReveal key={step} delay={idx * 120}>
+                  <div className="flex flex-col items-center text-center">
+                    <div
+                      className={cn(
+                        "flex h-16 w-16 items-center justify-center rounded-2xl",
+                        stepConfig.color
+                      )}
+                    >
+                      <StepIcon size={28} aria-hidden="true" />
+                    </div>
+                    <h3 className="mt-5 text-lg font-semibold text-stone-900 dark:text-stone-50">
+                      {t(`howItWorks.step${step}`)}
+                    </h3>
+                    <p className="mt-2 max-w-xs text-sm text-stone-600 dark:text-stone-400">
+                      {t(`howItWorks.step${step}Description`)}
+                    </p>
+                  </div>
+                </ScrollReveal>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* 8. CTA Pro */}
+      {/* 9. CTA Pro                                                       */}
       {/* ---------------------------------------------------------------- */}
       <section className="bg-stone-50 dark:bg-stone-950 py-20 lg:py-28">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl">
-            {t("ctaPro").split("AqarPro")[0]}
-            <span className="text-amber-500 dark:text-amber-400">AqarPro</span>
-          </h2>
-          <div className="mt-8">
-            <Link
-              href="/pro"
-              className={cn(
-                "inline-flex items-center rounded-lg bg-teal-600 dark:bg-teal-600 px-8 py-3",
-                "text-sm font-medium text-white",
-                "transition-colors duration-fast",
-                "hover:bg-teal-700 dark:hover:bg-teal-500",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 dark:focus-visible:ring-teal-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-offset-stone-950"
-              )}
-            >
-              {t("ctaProButton")}
-            </Link>
-          </div>
+          <ScrollReveal direction="none">
+            <h2 className="text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl">
+              {t("ctaPro").split("AqarPro")[0]}
+              <span className="text-amber-500 dark:text-amber-400">AqarPro</span>
+            </h2>
+            <div className="mt-8">
+              <Link
+                href="/pro"
+                className={cn(
+                  "inline-flex items-center rounded-lg bg-teal-600 dark:bg-teal-600 px-8 py-3",
+                  "text-sm font-medium text-white",
+                  "transition-colors duration-fast",
+                  "hover:bg-teal-700 dark:hover:bg-teal-500"
+                )}
+              >
+                {t("ctaProButton")}
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
-    </div>
+    </>
   );
 }
