@@ -21,7 +21,7 @@ async function getClientIp(): Promise<string> {
 }
 
 export async function signupAction(
-  input: SignupInput
+  input: SignupInput & { redirectTo?: string }
 ): Promise<ActionResult<{ redirectTo: string; needsConfirmation: boolean }>> {
   try {
     const parsed = signupSchema.safeParse(input);
@@ -68,8 +68,12 @@ export async function signupAction(
     // If disabled (dev/test), session is created immediately
     const needsConfirmation = data.user?.identities?.length === 0;
 
+    // Respect redirect param if provided (e.g. from /deposer flow)
+    const defaultRedirect = "/AqarChaab/espace/mes-annonces";
+    const safeRedirect = input.redirectTo?.startsWith("/") ? input.redirectTo : defaultRedirect;
+
     return ok({
-      redirectTo: needsConfirmation ? "" : "/AqarChaab/espace/mes-annonces",
+      redirectTo: needsConfirmation ? "" : safeRedirect,
       needsConfirmation,
     });
   } catch (err) {
@@ -80,7 +84,7 @@ export async function signupAction(
 }
 
 export async function loginAction(
-  input: LoginInput
+  input: LoginInput & { redirectTo?: string }
 ): Promise<ActionResult<{ redirectTo: string }>> {
   const parsed = loginSchema.safeParse(input);
   if (!parsed.success) {
@@ -125,6 +129,11 @@ export async function loginAction(
     .select("role")
     .eq("id", user.id)
     .single();
+
+  // If a redirect param was passed (e.g. from /deposer), use it first
+  if (input.redirectTo?.startsWith("/")) {
+    return ok({ redirectTo: input.redirectTo });
+  }
 
   if (profile?.role === "super_admin") {
     return ok({ redirectTo: "/admin/agencies" });

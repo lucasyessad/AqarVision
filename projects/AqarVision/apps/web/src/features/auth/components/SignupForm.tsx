@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Eye, EyeOff, Mail, Lock, Phone, User } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { Button, Input } from "@/components/ui";
 import { PhoneInput } from "@/components/ui/PhoneInput";
 import { Link, useRouter } from "@/lib/i18n/navigation";
@@ -42,6 +43,8 @@ export function SignupForm() {
   const t = useTranslations("auth");
   const tCommon = useTranslations("common");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect") ?? undefined;
 
   const [fields, setFields] = useState({
     firstName: "",
@@ -91,7 +94,7 @@ export function SignupForm() {
 
     setLoading(true);
     try {
-      const result = await signupAction(parsed.data);
+      const result = await signupAction({ ...parsed.data, redirectTo: redirectParam });
       if (result.success) {
         if (result.data.needsConfirmation) {
           // Production: email confirmation required

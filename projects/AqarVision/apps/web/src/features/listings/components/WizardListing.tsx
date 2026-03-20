@@ -1144,6 +1144,8 @@ export function WizardListing({
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [listingId, setListingId] = useState<string | null>(initialListingId ?? null);
   const [isPending, startTransition] = useTransition();
+  const [showValidationError, setShowValidationError] = useState(false);
+  const [publishError, setPublishError] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isAgency = mode.type === "agency";
 
@@ -1215,6 +1217,35 @@ export function WizardListing({
     };
   }, [state, isAgency, onSaveDraft, listingId]);
 
+  function isStepComplete(step: number): boolean {
+    if (isAgency) {
+      switch (step) {
+        case 0: return !!state.listingType;
+        case 1: return !!state.propertyType;
+        case 2: return !!state.wilayaCode && !!state.communeId;
+        case 3: return !!state.details.area_m2;
+        case 4: {
+          const fr = state.translations.find((t) => t.locale === "fr");
+          return !!fr && fr.title.length >= 10 && fr.description.length >= 50;
+        }
+        case 5: return state.photos.length >= 1;
+        case 6: return !!state.price && state.price > 0;
+        default: return false;
+      }
+    } else {
+      switch (step) {
+        case 0: return !!state.listingType && !!state.propertyType && !!state.wilayaCode && !!state.communeId;
+        case 1: {
+          const fr = state.translations.find((t) => t.locale === "fr");
+          return !!state.details.area_m2 && !!fr && fr.title.length >= 10;
+        }
+        case 2: return state.photos.length >= 1;
+        case 3: return !!state.price && state.price > 0;
+        default: return false;
+      }
+    }
+  }
+
   function canGoNext(): boolean {
     if (isAgency) {
       switch (currentStep) {
@@ -1244,26 +1275,89 @@ export function WizardListing({
     }
   }
 
+  function getMissingFields(): string[] {
+    const missing: string[] = [];
+    if (isAgency) {
+      switch (currentStep) {
+        case 0: if (!state.listingType) missing.push("Type de transaction"); break;
+        case 1: if (!state.propertyType) missing.push("Type de bien"); break;
+        case 2:
+          if (!state.wilayaCode) missing.push("Wilaya");
+          if (!state.communeId) missing.push("Commune");
+          break;
+        case 3: if (!state.details.area_m2) missing.push("Surface (m²)"); break;
+        case 4: {
+          const fr = state.translations.find((t) => t.locale === "fr");
+          if (!fr || fr.title.length < 10) missing.push("Titre (min 10 caractères)");
+          if (!fr || fr.description.length < 50) missing.push("Description (min 50 caractères)");
+          break;
+        }
+        case 5: if (state.photos.length < 1) missing.push("Au moins 1 photo"); break;
+        case 6: if (!state.price || state.price <= 0) missing.push("Prix"); break;
+      }
+    } else {
+      switch (currentStep) {
+        case 0:
+          if (!state.listingType) missing.push("Type de transaction");
+          if (!state.propertyType) missing.push("Type de bien");
+          if (!state.wilayaCode) missing.push("Wilaya");
+          if (!state.communeId) missing.push("Commune");
+          break;
+        case 1: {
+          if (!state.details.area_m2) missing.push("Surface (m²)");
+          const fr = state.translations.find((t) => t.locale === "fr");
+          if (!fr || fr.title.length < 10) missing.push("Titre (min 10 caractères)");
+          break;
+        }
+        case 2: if (state.photos.length < 1) missing.push("Au moins 1 photo"); break;
+        case 3: if (!state.price || state.price <= 0) missing.push("Prix"); break;
+      }
+    }
+    return missing;
+  }
+
   function handleNext() {
+    if (!canGoNext()) {
+      setShowValidationError(true);
+      return;
+    }
+    setShowValidationError(false);
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     }
   }
 
   function handlePrevious() {
+    setShowValidationError(false);
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   }
 
   function handlePublish() {
-    if (!onPublish) return;
+    if (!canGoNext()) {
+      setShowValidationError(true);
+      return;
+    }
+    setShowValidationError(false);
+    setPublishError(null);
+
+    // If no publish handler (anonymous user), save to localStorage and redirect to login
+    if (!onPublish) {
+      try {
+        const toSave = { ...state, photos: [], documents: [] };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      } catch { /* storage unavailable */ }
+      window.location.href = "/auth/login?redirect=/deposer";
+      return;
+    }
+
     startTransition(async () => {
       try {
         await onPublish(state);
         localStorage.removeItem(STORAGE_KEY);
-      } catch {
-        // Error handled upstream
+      } catch (err) {
+        setPublishError(err instanceof Error ? err.message : "Erreur lors de la publication");
       }
     });
   }
@@ -1325,15 +1419,23 @@ export function WizardListing({
             )}
             <span
               className={cn(
-                "rounded-full px-2 py-0.5",
+                "rounded-full px-2 py-0.5 inline-flex items-center gap-1",
                 i === currentStep
                   ? "bg-teal-100 dark:bg-teal-950 text-teal-700 dark:text-teal-400 font-medium"
-                  : i < currentStep
+                  : i < currentStep && isStepComplete(i)
                   ? "text-teal-600 dark:text-teal-500"
+                  : i < currentStep && !isStepComplete(i)
+                  ? "text-red-500 dark:text-red-400"
                   : "text-stone-400 dark:text-stone-500"
               )}
             >
               {label}
+              {i < currentStep && !isStepComplete(i) && (
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
+              )}
+              {i < currentStep && isStepComplete(i) && (
+                <Check size={10} className="text-teal-600 dark:text-teal-400" />
+              )}
             </span>
           </div>
         ))}
@@ -1343,6 +1445,27 @@ export function WizardListing({
       <div className="rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 p-6">
         {renderStep()}
       </div>
+
+      {/* Validation error */}
+      {showValidationError && !canGoNext() && (
+        <div className="rounded-md bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 px-4 py-3">
+          <p className="text-sm font-medium text-red-700 dark:text-red-400 mb-1">
+            Veuillez remplir les champs obligatoires :
+          </p>
+          <ul className="list-disc list-inside text-sm text-red-600 dark:text-red-400 space-y-0.5">
+            {getMissingFields().map((f) => (
+              <li key={f}>{f}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Publish error */}
+      {publishError && (
+        <div className="rounded-md bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-700 dark:text-red-400" role="alert">
+          {publishError}
+        </div>
+      )}
 
       {/* Navigation */}
       <div className="flex items-center justify-between gap-3">
@@ -1380,7 +1503,6 @@ export function WizardListing({
             <Button
               variant="primary"
               onClick={handleNext}
-              disabled={!canGoNext()}
             >
               Suivant
               <ArrowRight size={16} />

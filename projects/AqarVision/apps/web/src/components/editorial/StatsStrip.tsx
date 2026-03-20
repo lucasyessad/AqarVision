@@ -65,13 +65,13 @@ function StatCounter({
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-3xl font-bold text-amber-400 dark:text-amber-400 sm:text-4xl lg:text-5xl">
+      <span className="text-3xl font-bold text-amber-500 dark:text-amber-400 sm:text-4xl lg:text-5xl">
         {count.toLocaleString("fr-FR")}
         {stat.suffix && (
           <span className="text-2xl sm:text-3xl lg:text-4xl">{stat.suffix}</span>
         )}
       </span>
-      <span className="text-sm text-stone-300 dark:text-stone-400 sm:text-base">
+      <span className="text-sm text-stone-600 dark:text-stone-400 sm:text-base">
         {stat.label}
       </span>
     </div>
@@ -104,7 +104,7 @@ export function StatsStrip({ stats, className }: StatsStripProps) {
     <section
       ref={ref}
       className={cn(
-        "bg-stone-900 dark:bg-stone-950 py-16 lg:py-20",
+        "bg-stone-100 dark:bg-stone-950 py-16 lg:py-20",
         className
       )}
     >

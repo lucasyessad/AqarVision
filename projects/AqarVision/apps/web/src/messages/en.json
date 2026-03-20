@@ -314,7 +314,8 @@
       "listings": "listings",
       "verifiedAgencies": "verified agencies",
       "wilayas": "wilayas",
-      "users": "users"
+      "users": "users",
+      "totalViews": "views"
     },
     "heroHeadline": "Find your",
     "heroBold": "IDEAL PROPERTY",
@@ -322,23 +323,97 @@
     "heroBadge": "15,000+ verified listings",
     "ctaSecondary": "Post for free",
     "featureGrid": {
+      "sectionEyebrow": "Features",
+      "sectionTitle": "Everything you need",
       "search": {
         "eyebrow": "AqarSearch",
-        "title": "Smart Search",
-        "description": "Advanced filters by wilaya, commune, surface and DZD budget. Interactive map across all 69 wilayas.",
+        "title": "Advanced Search",
+        "description": "Smart filters by wilaya, commune, surface and budget. Interactive map across all 69 wilayas.",
+        "detail": "Our search engine covers all of Algeria with precise filters: property type, budget, surface, rooms, amenities. The interactive map lets you visualize geolocated listings and zoom into your neighborhood.",
+        "bullet1": "69 wilayas and 1,541 communes covered",
+        "bullet2": "Interactive map with clusters and zoom",
+        "bullet3": "Combinable filters: type, price, surface, amenities",
         "cta": "Explore"
       },
       "pro": {
         "eyebrow": "AqarPro",
         "title": "Professional Space",
-        "description": "Full agency CRM — online storefront, qualified leads management, and analytics.",
+        "description": "Full agency CRM — leads, visits, analytics and integrated billing.",
+        "detail": "A complete dashboard to manage your real estate agency: lead pipeline with automatic scoring, visit calendar, detailed performance analytics, team management with RBAC roles, and integrated Stripe billing.",
+        "bullet1": "Kanban lead pipeline with heat score 0-100",
+        "bullet2": "Analytics: views, contacts, trends by period",
+        "bullet3": "Multi-role team management and Stripe billing",
         "cta": "Discover"
       },
       "chaab": {
         "eyebrow": "AqarChaab",
         "title": "Between Individuals",
-        "description": "List your property directly, without intermediaries, without commission.",
+        "description": "List your property directly, without intermediaries or commission.",
+        "detail": "Post your listing in minutes with a simplified 4-step wizard. Your photos are automatically optimized, drafts auto-saved. Manage favorites, receive alerts and chat directly with interested buyers.",
+        "bullet1": "Simplified 4-step listing wizard",
+        "bullet2": "Automatic draft saving",
+        "bullet3": "Direct messaging with buyers",
         "cta": "Get started"
+      },
+      "estimation": {
+        "eyebrow": "Estimation",
+        "title": "Price Estimation",
+        "description": "Estimate your property value with our intelligent algorithm.",
+        "detail": "Our tool analyzes the price per m² by wilaya, adjusted for property type, floor, construction year and amenities (parking, elevator, sea view...). Get a realistic price range with a confidence index.",
+        "bullet1": "Price per m² calculated by wilaya and commune",
+        "bullet2": "10+ criteria: surface, floor, year, amenities",
+        "bullet3": "Min/max range with confidence index",
+        "cta": "Estimate"
+      },
+      "autoGenerate": {
+        "eyebrow": "Writing",
+        "title": "Auto Generation",
+        "description": "Titles and descriptions generated from your structured data.",
+        "detail": "No more writing: our generator automatically creates a catchy title and complete description from your property characteristics — type, surface, rooms, location, amenities. The text remains fully editable.",
+        "bullet1": "SEO-optimized title generated in one click",
+        "bullet2": "Structured description with amenities list",
+        "bullet3": "100% editable after generation",
+        "cta": "Try it"
+      },
+      "messaging": {
+        "eyebrow": "Communication",
+        "title": "Secure Messaging",
+        "description": "Real-time conversations between buyers and sellers.",
+        "detail": "Chat directly on the platform without sharing your phone number. Conversations are organized by listing, with read indicators and notifications. Agencies can assign conversations to their agents.",
+        "bullet1": "Real-time messages via Supabase Realtime",
+        "bullet2": "Read indicators and notifications",
+        "bullet3": "Conversations organized by listing",
+        "cta": "Learn more"
+      },
+      "themes": {
+        "eyebrow": "Storefronts",
+        "title": "10 Agency Themes",
+        "description": "Customizable mini-sites to showcase your agency.",
+        "detail": "Choose from 10 professional themes (LuxeNoir, Méditerranée, NeoBrutalist, ArtDeco...) and customize colors, logo, photos and text. Your storefront automatically displays your listings, stats and contact info.",
+        "bullet1": "10 unique themes with dark mode",
+        "bullet2": "4-step wizard: media, text, stats, preview",
+        "bullet3": "Your listings and stats displayed automatically",
+        "cta": "View themes"
+      },
+      "alerts": {
+        "eyebrow": "Notifications",
+        "title": "Real-Time Alerts",
+        "description": "Get notified when a listing matches your criteria.",
+        "detail": "Save your searches and choose notification frequency: instant, daily or weekly. When a new listing matches your filters (type, budget, wilaya, surface), you receive an alert.",
+        "bullet1": "Frequency: instant, daily, or weekly",
+        "bullet2": "Precise filters: type, budget, wilaya, surface",
+        "bullet3": "Enable/disable in one click",
+        "cta": "Create an alert"
+      },
+      "photoProcessing": {
+        "eyebrow": "Media",
+        "title": "Smart Photo Processing",
+        "description": "Your photos automatically optimized for a professional look.",
+        "detail": "Every uploaded photo is automatically converted to WebP (60% lighter), resized, and stripped of GPS metadata for your privacy. Thumbnails are generated for ultra-fast loading.",
+        "bullet1": "Automatic WebP conversion (-60% file size)",
+        "bullet2": "GPS metadata removal (privacy)",
+        "bullet3": "Auto thumbnails for instant loading",
+        "cta": "Learn more"
       }
     }
   },

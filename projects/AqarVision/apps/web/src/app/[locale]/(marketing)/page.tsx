@@ -4,14 +4,14 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { Search, Phone, CalendarCheck } from "lucide-react";
 import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { EditorialSplit } from "@/components/editorial/EditorialSplit";
-import { StatsStrip } from "@/components/editorial/StatsStrip";
+
 import { WilayaScroller } from "@/components/editorial/WilayaScroller";
 import { FeaturedListingsTabs } from "@/components/marketing/FeaturedListingsTabs";
 import { ObsidianHero } from "@/components/marketing/ObsidianHero";
 import { FeatureGrid } from "@/components/marketing/FeatureGrid";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { getFeaturedListings } from "@/features/marketplace/actions/featured.action";
+import { getHomepageStats } from "@/features/marketplace/actions/stats.action";
 import type { ListingCard } from "@/features/listings/types/listing.types";
 import type { WilayaScrollerItem } from "@/components/editorial/WilayaScroller";
 
@@ -40,7 +40,7 @@ const PLACEHOLDER_LISTINGS_SALE: ListingCard[] = [
     slug: "appartement-f4-vue-mer-alger",
     wilaya_name: "Alger",
     commune_name: "Hydra",
-    cover_url: "/images/placeholder/listing-1.jpg",
+    cover_url: null,
     agency_name: "Immobilier Premium",
     agency_verified_level: 3,
     latitude: null, longitude: null, created_at: "2026-03-10T10:00:00Z",
@@ -57,7 +57,7 @@ const PLACEHOLDER_LISTINGS_SALE: ListingCard[] = [
     slug: "villa-contemporaine-oran",
     wilaya_name: "Oran",
     commune_name: "Bir El Djir",
-    cover_url: "/images/placeholder/listing-2.jpg",
+    cover_url: null,
     agency_name: "West Immobilier",
     agency_verified_level: 4,
     latitude: null, longitude: null, created_at: "2026-03-08T14:00:00Z",
@@ -74,7 +74,7 @@ const PLACEHOLDER_LISTINGS_SALE: ListingCard[] = [
     slug: "f3-renove-constantine",
     wilaya_name: "Constantine",
     commune_name: "Constantine",
-    cover_url: "/images/placeholder/listing-3.jpg",
+    cover_url: null,
     agency_name: "Cirta Immo",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-03-05T09:00:00Z",
@@ -91,7 +91,7 @@ const PLACEHOLDER_LISTINGS_SALE: ListingCard[] = [
     slug: "terrain-constructible-tizi-ouzou",
     wilaya_name: "Tizi Ouzou",
     commune_name: "Tizi Ouzou",
-    cover_url: "/images/placeholder/listing-4.jpg",
+    cover_url: null,
     agency_name: null,
     agency_verified_level: null,
     latitude: null, longitude: null, created_at: "2026-03-02T11:00:00Z",
@@ -108,7 +108,7 @@ const PLACEHOLDER_LISTINGS_SALE: ListingCard[] = [
     slug: "duplex-standing-alger",
     wilaya_name: "Alger",
     commune_name: "Dély Ibrahim",
-    cover_url: "/images/placeholder/listing-5.jpg",
+    cover_url: null,
     agency_name: "Immobilier Premium",
     agency_verified_level: 3,
     latitude: null, longitude: null, created_at: "2026-02-28T16:00:00Z",
@@ -125,7 +125,7 @@ const PLACEHOLDER_LISTINGS_SALE: ListingCard[] = [
     slug: "local-commercial-annaba",
     wilaya_name: "Annaba",
     commune_name: "Annaba",
-    cover_url: "/images/placeholder/listing-6.jpg",
+    cover_url: null,
     agency_name: "Est Immobilier",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-02-25T08:00:00Z",
@@ -142,7 +142,7 @@ const PLACEHOLDER_LISTINGS_SALE: ListingCard[] = [
     slug: "villa-kabyle-bejaia",
     wilaya_name: "Béjaïa",
     commune_name: "Béjaïa",
-    cover_url: "/images/placeholder/listing-7.jpg",
+    cover_url: null,
     agency_name: null,
     agency_verified_level: null,
     latitude: null, longitude: null, created_at: "2026-02-20T13:00:00Z",
@@ -159,7 +159,7 @@ const PLACEHOLDER_LISTINGS_SALE: ListingCard[] = [
     slug: "f3-neuf-setif",
     wilaya_name: "Sétif",
     commune_name: "Sétif",
-    cover_url: "/images/placeholder/listing-8.jpg",
+    cover_url: null,
     agency_name: "Sétif Immobilier",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-02-18T10:00:00Z",
@@ -179,7 +179,7 @@ const PLACEHOLDER_LISTINGS_RENT: ListingCard[] = [
     slug: "f3-meuble-alger-location",
     wilaya_name: "Alger",
     commune_name: "Alger Centre",
-    cover_url: "/images/placeholder/listing-rent-1.jpg",
+    cover_url: null,
     agency_name: "Immobilier Premium",
     agency_verified_level: 3,
     latitude: null, longitude: null, created_at: "2026-03-12T10:00:00Z",
@@ -196,7 +196,7 @@ const PLACEHOLDER_LISTINGS_RENT: ListingCard[] = [
     slug: "bureau-moderne-oran",
     wilaya_name: "Oran",
     commune_name: "Oran",
-    cover_url: "/images/placeholder/listing-rent-2.jpg",
+    cover_url: null,
     agency_name: "West Immobilier",
     agency_verified_level: 4,
     latitude: null, longitude: null, created_at: "2026-03-11T14:00:00Z",
@@ -213,7 +213,7 @@ const PLACEHOLDER_LISTINGS_RENT: ListingCard[] = [
     slug: "f2-renove-constantine",
     wilaya_name: "Constantine",
     commune_name: "Constantine",
-    cover_url: "/images/placeholder/listing-rent-3.jpg",
+    cover_url: null,
     agency_name: "Cirta Immo",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-03-09T09:00:00Z",
@@ -230,7 +230,7 @@ const PLACEHOLDER_LISTINGS_RENT: ListingCard[] = [
     slug: "villa-jardin-blida",
     wilaya_name: "Blida",
     commune_name: "Blida",
-    cover_url: "/images/placeholder/listing-rent-4.jpg",
+    cover_url: null,
     agency_name: null,
     agency_verified_level: null,
     latitude: null, longitude: null, created_at: "2026-03-07T11:00:00Z",
@@ -247,7 +247,7 @@ const PLACEHOLDER_LISTINGS_RENT: ListingCard[] = [
     slug: "f4-vue-baie-bejaia",
     wilaya_name: "Béjaïa",
     commune_name: "Béjaïa",
-    cover_url: "/images/placeholder/listing-rent-5.jpg",
+    cover_url: null,
     agency_name: "Béjaïa Immo",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-03-04T16:00:00Z",
@@ -264,7 +264,7 @@ const PLACEHOLDER_LISTINGS_RENT: ListingCard[] = [
     slug: "local-commercial-annaba-location",
     wilaya_name: "Annaba",
     commune_name: "Annaba",
-    cover_url: "/images/placeholder/listing-rent-6.jpg",
+    cover_url: null,
     agency_name: "Est Immobilier",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-03-01T08:00:00Z",
@@ -281,7 +281,7 @@ const PLACEHOLDER_LISTINGS_RENT: ListingCard[] = [
     slug: "f3-calme-setif",
     wilaya_name: "Sétif",
     commune_name: "Sétif",
-    cover_url: "/images/placeholder/listing-rent-7.jpg",
+    cover_url: null,
     agency_name: "Sétif Immobilier",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-02-26T13:00:00Z",
@@ -298,7 +298,7 @@ const PLACEHOLDER_LISTINGS_RENT: ListingCard[] = [
     slug: "f3-moderne-tlemcen",
     wilaya_name: "Tlemcen",
     commune_name: "Tlemcen",
-    cover_url: "/images/placeholder/listing-rent-8.jpg",
+    cover_url: null,
     agency_name: null,
     agency_verified_level: null,
     latitude: null, longitude: null, created_at: "2026-02-22T10:00:00Z",
@@ -318,7 +318,7 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
     slug: "studio-vue-mer-jijel",
     wilaya_name: "Jijel",
     commune_name: "Jijel",
-    cover_url: "/images/placeholder/listing-vac-1.jpg",
+    cover_url: null,
     agency_name: null,
     agency_verified_level: null,
     latitude: null, longitude: null, created_at: "2026-03-14T10:00:00Z",
@@ -335,7 +335,7 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
     slug: "villa-pieds-eau-tipaza",
     wilaya_name: "Tipaza",
     commune_name: "Tipaza",
-    cover_url: "/images/placeholder/listing-vac-2.jpg",
+    cover_url: null,
     agency_name: "Côte Ouest Immo",
     agency_verified_level: 3,
     latitude: null, longitude: null, created_at: "2026-03-13T14:00:00Z",
@@ -352,7 +352,7 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
     slug: "appartement-plage-skikda",
     wilaya_name: "Skikda",
     commune_name: "Skikda",
-    cover_url: "/images/placeholder/listing-vac-3.jpg",
+    cover_url: null,
     agency_name: null,
     agency_verified_level: null,
     latitude: null, longitude: null, created_at: "2026-03-11T09:00:00Z",
@@ -369,7 +369,7 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
     slug: "chalet-montagne-chrea",
     wilaya_name: "Blida",
     commune_name: "Chréa",
-    cover_url: "/images/placeholder/listing-vac-4.jpg",
+    cover_url: null,
     agency_name: null,
     agency_verified_level: null,
     latitude: null, longitude: null, created_at: "2026-03-09T11:00:00Z",
@@ -386,7 +386,7 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
     slug: "f2-bord-mer-mostaganem",
     wilaya_name: "Mostaganem",
     commune_name: "Mostaganem",
-    cover_url: "/images/placeholder/listing-vac-5.jpg",
+    cover_url: null,
     agency_name: "Mostaganem Vacances",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-03-06T16:00:00Z",
@@ -403,7 +403,7 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
     slug: "villa-luxe-piscine-zeralda",
     wilaya_name: "Alger",
     commune_name: "Zéralda",
-    cover_url: "/images/placeholder/listing-vac-6.jpg",
+    cover_url: null,
     agency_name: "Immobilier Premium",
     agency_verified_level: 3,
     latitude: null, longitude: null, created_at: "2026-03-03T08:00:00Z",
@@ -420,7 +420,7 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
     slug: "studio-cosy-andalouses",
     wilaya_name: "Oran",
     commune_name: "Aïn El Turck",
-    cover_url: "/images/placeholder/listing-vac-7.jpg",
+    cover_url: null,
     agency_name: null,
     agency_verified_level: null,
     latitude: null, longitude: null, created_at: "2026-02-28T13:00:00Z",
@@ -437,7 +437,7 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
     slug: "appartement-cap-carbon-bejaia",
     wilaya_name: "Béjaïa",
     commune_name: "Béjaïa",
-    cover_url: "/images/placeholder/listing-vac-8.jpg",
+    cover_url: null,
     agency_name: "Béjaïa Immo",
     agency_verified_level: 2,
     latitude: null, longitude: null, created_at: "2026-02-24T10:00:00Z",
@@ -445,14 +445,14 @@ const PLACEHOLDER_LISTINGS_VACATION: ListingCard[] = [
 ];
 
 const POPULAR_WILAYAS: WilayaScrollerItem[] = [
-  { name: "Alger",       name_ar: "الجزائر",    imageUrl: "/images/placeholder/wilaya-alger.jpg",       count: 4_230, code: "16" },
-  { name: "Oran",        name_ar: "وهران",       imageUrl: "/images/placeholder/wilaya-oran.jpg",        count: 2_815, code: "31" },
-  { name: "Constantine", name_ar: "قسنطينة",     imageUrl: "/images/placeholder/wilaya-constantine.jpg", count: 1_920, code: "25" },
-  { name: "Annaba",      name_ar: "عنابة",       imageUrl: "/images/placeholder/wilaya-annaba.jpg",      count: 1_340, code: "23" },
-  { name: "Sétif",       name_ar: "سطيف",        imageUrl: "/images/placeholder/wilaya-setif.jpg",       count: 1_180, code: "19" },
-  { name: "Béjaïa",      name_ar: "بجاية",       imageUrl: "/images/placeholder/wilaya-bejaia.jpg",      count: 1_050, code: "06" },
-  { name: "Tizi Ouzou",  name_ar: "تيزي وزو",    imageUrl: "/images/placeholder/wilaya-tizi-ouzou.jpg",  count: 980,   code: "15" },
-  { name: "Blida",       name_ar: "البليدة",     imageUrl: "/images/placeholder/wilaya-blida.jpg",       count: 870,   code: "09" },
+  { name: "Alger",       name_ar: "الجزائر",    imageUrl: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=75",       imageUrlLight: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=75",  count: 4_230, code: "16" },
+  { name: "Oran",        name_ar: "وهران",       imageUrl: "https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=75",        imageUrlLight: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=75",   count: 2_815, code: "31" },
+  { name: "Constantine", name_ar: "قسنطينة",     imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=75",        imageUrlLight: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=75",      count: 1_920, code: "25" },
+  { name: "Annaba",      name_ar: "عنابة",       imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=75",        imageUrlLight: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=400&q=75",   count: 1_340, code: "23" },
+  { name: "Sétif",       name_ar: "سطيف",        imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75",           imageUrlLight: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=75",   count: 1_180, code: "19" },
+  { name: "Béjaïa",      name_ar: "بجاية",       imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=75",        imageUrlLight: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=75",   count: 1_050, code: "06" },
+  { name: "Tizi Ouzou",  name_ar: "تيزي وزو",    imageUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=75",        imageUrlLight: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=75",   count: 980,   code: "15" },
+  { name: "Blida",       name_ar: "البليدة",     imageUrl: "https://images.unsplash.com/photo-1499092346302-b8d7adee8d3a?w=400&q=75",        imageUrlLight: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=400&q=75",     count: 870,   code: "09" },
 ];
 
 const STEPS = [
@@ -469,10 +469,11 @@ export default async function HomePage() {
   const t = await getTranslations("marketing");
   const locale = await getLocale();
 
-  const [featuredSale, featuredRent, featuredVacation] = await Promise.all([
+  const [featuredSale, featuredRent, featuredVacation, stats] = await Promise.all([
     getFeaturedListings("sale", 8),
     getFeaturedListings("rent", 8),
     getFeaturedListings("vacation", 8),
+    getHomepageStats(),
   ]);
 
   return (
@@ -480,7 +481,7 @@ export default async function HomePage() {
       {/* ---------------------------------------------------------------- */}
       {/* 1. Hero — dark fullscreen ObsidianHero                          */}
       {/* ---------------------------------------------------------------- */}
-      <ObsidianHero />
+      <ObsidianHero stats={stats} />
 
       {/* ---------------------------------------------------------------- */}
       {/* 2. Feature Grid — 3 product surfaces                            */}
@@ -508,9 +509,9 @@ export default async function HomePage() {
           <ScrollReveal delay={100} direction="none">
             <FeaturedListingsTabs
               listings={{
-                sale: featuredSale,
-                rent: featuredRent,
-                vacation: featuredVacation,
+                sale: featuredSale.length > 0 ? featuredSale : PLACEHOLDER_LISTINGS_SALE,
+                rent: featuredRent.length > 0 ? featuredRent : PLACEHOLDER_LISTINGS_RENT,
+                vacation: featuredVacation.length > 0 ? featuredVacation : PLACEHOLDER_LISTINGS_VACATION,
               }}
             />
           </ScrollReveal>
@@ -518,47 +519,45 @@ export default async function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* 4. Wilaya Scroller                                               */}
-      {/* ---------------------------------------------------------------- */}
-      <WilayaScroller
-        wilayas={POPULAR_WILAYAS}
-        title={t("wilayasTitle")}
-        locale={locale}
-      />
-
-      {/* ---------------------------------------------------------------- */}
-      {/* 5. Region Cards                                                  */}
+      {/* 4. Explorer l'Algérie — Régions + Wilayas populaires             */}
       {/* ---------------------------------------------------------------- */}
       <section className="bg-white dark:bg-stone-900 py-16 lg:py-20">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-          {/* h2 NOT wrapped in ScrollReveal to avoid translate-y layout bug */}
           <h2 className="mb-8 text-2xl font-bold text-stone-900 dark:text-stone-50 sm:text-3xl animate-fade-in">
             {t("regionsTitle")}
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+          {/* 3 Region cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-6">
             {([
               {
                 region: "sahara",
                 title: t("regionSahara"),
                 subtitle: t("regionSaharaSubtitle"),
-                image: "/images/placeholder/region-sahara.jpg",
+                image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80",
+                imageLight: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80",
                 fallback: "from-amber-900 via-stone-900 to-stone-950",
+                fallbackLight: "from-amber-200 via-amber-100 to-stone-100",
                 delay: 0,
               },
               {
                 region: "littoral",
                 title: t("regionLittoral"),
                 subtitle: t("regionLittoralSubtitle"),
-                image: "/images/placeholder/region-littoral.jpg",
+                image: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80",
+                imageLight: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
                 fallback: "from-blue-900 via-teal-900 to-stone-950",
+                fallbackLight: "from-blue-200 via-teal-100 to-stone-100",
                 delay: 100,
               },
               {
                 region: "montagne",
                 title: t("regionMontagne"),
                 subtitle: t("regionMontagneSubtitle"),
-                image: "/images/placeholder/region-montagne.jpg",
+                image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
+                imageLight: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
                 fallback: "from-green-900 via-stone-900 to-stone-950",
+                fallbackLight: "from-green-200 via-stone-100 to-stone-50",
                 delay: 200,
               },
             ] as const).map((item) => (
@@ -566,58 +565,48 @@ export default async function HomePage() {
                 <Link
                   href={`/search?region=${item.region}`}
                   className={cn(
-                    "group relative h-[220px] overflow-hidden rounded-xl flex",
+                    "group relative h-[180px] overflow-hidden rounded-xl flex",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 dark:focus-visible:ring-teal-400"
                   )}
                 >
-                  {/* Gradient fallback — shown if image is missing */}
-                  <div className={cn("absolute inset-0 bg-gradient-to-br", item.fallback)} />
+                  <div className={cn("absolute inset-0 bg-gradient-to-br dark:hidden", item.fallbackLight)} />
+                  <div className={cn("absolute inset-0 bg-gradient-to-br hidden dark:block", item.fallback)} />
+                  <Image
+                    src={item.imageLight}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-slow group-hover:scale-105 dark:opacity-0 transition-opacity duration-500"
+                  />
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-slow group-hover:scale-105"
+                    className="object-cover transition-transform duration-slow group-hover:scale-105 opacity-0 dark:opacity-100 transition-opacity duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/20 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-5">
-                    <h3 className="text-xl font-bold text-white">{item.title}</h3>
-                    <p className="mt-1 text-sm text-stone-200">{item.subtitle}</p>
+                  <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-4">
+                    <h3 className="text-lg font-bold text-white">{item.title}</h3>
+                    <p className="mt-0.5 text-xs text-stone-200">{item.subtitle}</p>
                   </div>
                 </Link>
               </ScrollReveal>
             ))}
           </div>
         </div>
+
+        {/* Wilayas populaires scroller — inside same section */}
+        <WilayaScroller
+          wilayas={POPULAR_WILAYAS}
+          title={t("wilayasTitle")}
+          locale={locale}
+          className="pt-0 pb-0 bg-transparent dark:bg-transparent border-none"
+        />
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* 6. Stats Strip                                                   */}
-      {/* ---------------------------------------------------------------- */}
-      <StatsStrip
-        stats={[
-          { value: 12_450, label: t("statsStrip.listings"), suffix: "+" },
-          { value: 340, label: t("statsStrip.verifiedAgencies") },
-          { value: 69, label: t("statsStrip.wilayas") },
-          { value: 28_000, label: t("statsStrip.users"), suffix: "+" },
-        ]}
-      />
-
-      {/* ---------------------------------------------------------------- */}
-      {/* 7. Editorial Split                                               */}
-      {/* ---------------------------------------------------------------- */}
-      <EditorialSplit
-        eyebrow={t("editorialEyebrow")}
-        title={t("editorialTitle")}
-        description={t("editorialDescription")}
-        linkHref="/search"
-        linkText={t("editorialLink")}
-        imageSrc="/images/placeholder/editorial-algerie.jpg"
-        imageAlt="Architecture algérienne contemporaine"
-      />
-
-      {/* ---------------------------------------------------------------- */}
-      {/* 8. How it works                                                  */}
+      {/* 6. How it works                                                  */}
       {/* ---------------------------------------------------------------- */}
       <section className="bg-white dark:bg-stone-900 py-16 lg:py-20">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">

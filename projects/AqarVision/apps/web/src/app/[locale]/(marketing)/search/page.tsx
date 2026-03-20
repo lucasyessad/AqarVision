@@ -67,7 +67,7 @@ export default async function SearchPage({
     }));
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-stone-950">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 pt-20 md:pt-24">
       {/* Search header */}
       <div className="border-b border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-900">
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">

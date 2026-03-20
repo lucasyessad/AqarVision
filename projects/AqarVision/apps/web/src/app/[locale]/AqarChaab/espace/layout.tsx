@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
+import { getCachedUser } from "@/lib/auth/get-cached-user";
 import {
   Building2,
   Plus,
@@ -31,6 +33,11 @@ export default async function ChaabLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getCachedUser();
+  if (!user) {
+    redirect("/auth/login?redirect=/deposer");
+  }
+
   const t = await getTranslations("nav");
 
   return (

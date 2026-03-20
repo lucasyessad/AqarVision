@@ -23,8 +23,8 @@ export function AqarBrandLogo({
         className
       )}
     >
-      <span className="text-teal-600 dark:text-teal-400">Aqar</span>
-      <span className="text-stone-950 dark:text-stone-50">Vision</span>
+      <span className="text-teal-500 dark:text-teal-400">Aqar</span>
+      <span className="text-stone-800 dark:text-stone-50">Vision</span>
     </span>
   );
 }

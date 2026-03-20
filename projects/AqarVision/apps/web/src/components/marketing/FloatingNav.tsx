@@ -38,11 +38,11 @@ export function FloatingNav() {
       <div
         className={cn(
           "fixed top-4 left-1/2 -translate-x-1/2 z-sticky hidden md:flex",
-          "items-center gap-1 rounded-2xl border border-stone-800",
-          "transition-all duration-normal",
+          "items-center gap-1 rounded-2xl transition-all duration-normal",
+          "border border-stone-200 dark:border-stone-800",
           scrolled
-            ? "bg-stone-950/95 backdrop-blur-xl shadow-lg px-4 py-2"
-            : "bg-stone-950/75 backdrop-blur-md px-5 py-2.5"
+            ? "bg-white/95 dark:bg-stone-950/95 backdrop-blur-xl shadow-md px-4 py-2"
+            : "bg-white/85 dark:bg-stone-950/75 backdrop-blur-md px-5 py-2.5"
         )}
       >
         <Link href="/" className="me-4 flex-shrink-0">
@@ -57,8 +57,8 @@ export function FloatingNav() {
               className={cn(
                 "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-fast",
                 pathname === link.href
-                  ? "text-brand bg-brand-900/30"
-                  : "text-stone-400 hover:text-stone-100 hover:bg-stone-800/60"
+                  ? "text-teal-700 dark:text-brand bg-teal-50 dark:bg-brand-900/30"
+                  : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800/60"
               )}
             >
               {t(link.key)}
@@ -66,7 +66,7 @@ export function FloatingNav() {
           ))}
         </nav>
 
-        <div className="ms-3 flex items-center gap-1 border-s border-stone-800 ps-3">
+        <div className="ms-3 flex items-center gap-1 border-s border-stone-200 dark:border-stone-800 ps-3">
           <LanguageSwitcher currentLocale={locale} />
           <ThemeToggle />
           <Link
@@ -88,10 +88,10 @@ export function FloatingNav() {
         className={cn(
           "fixed top-0 left-0 right-0 z-sticky md:hidden",
           "flex items-center justify-between h-14 px-4",
-          "border-b border-stone-800 transition-all duration-normal",
+          "border-b border-stone-200 dark:border-stone-800 transition-all duration-normal",
           scrolled
-            ? "bg-stone-950/95 backdrop-blur-xl"
-            : "bg-stone-950/80 backdrop-blur-md"
+            ? "bg-white/95 dark:bg-stone-950/95 backdrop-blur-xl shadow-sm"
+            : "bg-white/85 dark:bg-stone-950/80 backdrop-blur-md"
         )}
       >
         <Link href="/">
@@ -101,7 +101,7 @@ export function FloatingNav() {
         <button
           type="button"
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-lg text-stone-400 hover:bg-stone-800 hover:text-stone-100"
+          className="p-2 rounded-lg text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-100"
           aria-label="Menu"
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -110,7 +110,7 @@ export function FloatingNav() {
 
       {/* ── Mobile drawer ── */}
       {mobileOpen && (
-        <div className="fixed top-14 left-0 right-0 z-sticky md:hidden bg-stone-950 border-b border-stone-800 animate-slide-down">
+        <div className="fixed top-14 left-0 right-0 z-sticky md:hidden bg-white dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 animate-slide-down">
           <nav className="flex flex-col gap-1 p-4">
             {navLinks.map((link) => (
               <Link
@@ -120,15 +120,15 @@ export function FloatingNav() {
                 className={cn(
                   "px-3 py-2.5 rounded-lg text-sm font-medium",
                   pathname === link.href
-                    ? "bg-brand-900/40 text-brand"
-                    : "text-stone-400 hover:text-stone-100 hover:bg-stone-800"
+                    ? "bg-teal-50 dark:bg-brand-900/40 text-teal-700 dark:text-brand"
+                    : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800"
                 )}
               >
                 {t(link.key)}
               </Link>
             ))}
           </nav>
-          <div className="border-t border-stone-800 p-4 flex flex-col gap-3">
+          <div className="border-t border-stone-200 dark:border-stone-800 p-4 flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <LanguageSwitcher currentLocale={locale} />
               <ThemeToggle />

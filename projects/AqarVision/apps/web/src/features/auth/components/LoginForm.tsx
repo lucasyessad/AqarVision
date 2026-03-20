@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { Button, Input } from "@/components/ui";
 import { Link, useRouter } from "@/lib/i18n/navigation";
 import { loginAction } from "@/features/auth/actions/auth.action";
@@ -10,6 +11,8 @@ import { loginSchema } from "@/features/auth/schemas/auth.schema";
 import { cn } from "@/lib/utils";
 
 export function LoginForm() {
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect") ?? undefined;
   const t = useTranslations("auth");
   const router = useRouter();
 
@@ -32,7 +35,7 @@ export function LoginForm() {
 
     setLoading(true);
     try {
-      const result = await loginAction(parsed.data);
+      const result = await loginAction({ ...parsed.data, redirectTo: redirectParam });
       if (result.success) {
         router.push(result.data.redirectTo);
       } else {

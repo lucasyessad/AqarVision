@@ -4,7 +4,7 @@ import { getCachedUser } from "@/lib/auth/get-cached-user";
 import { getAgencyForUser } from "@/lib/auth/get-agency-for-user";
 import { redirect } from "next/navigation";
 import { Link } from "@/lib/i18n/navigation";
-import { DeferredAuthDeposer } from "./deferred-auth-deposer";
+import { AnonymousWizardWrapper } from "./anonymous-wizard-wrapper";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("nav");
@@ -27,7 +27,6 @@ export default async function DeposerPublicPage() {
   return (
     <div className="bg-stone-50 dark:bg-stone-950 min-h-screen">
       <div className="max-w-2xl mx-auto px-4 py-12 lg:py-16">
-        {/* Logo + back to home */}
         <div className="text-center mb-8">
           <Link
             href="/"
@@ -39,11 +38,11 @@ export default async function DeposerPublicPage() {
             {t("deposit")}
           </h1>
           <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
-            Commencez sans inscription — connectez-vous plus tard
+            Remplissez votre annonce — connectez-vous au moment de publier
           </p>
         </div>
 
-        <DeferredAuthDeposer />
+        <AnonymousWizardWrapper />
       </div>
     </div>
   );

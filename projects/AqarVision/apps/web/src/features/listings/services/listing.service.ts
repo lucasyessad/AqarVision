@@ -8,27 +8,55 @@ export async function createListing(
   ownerType: "agency" | "individual",
   ownerId: string
 ): Promise<Listing> {
-  const { data, error } = await supabase.rpc("create_listing_atomic", {
-    p_listing_type: input.listing_type,
-    p_property_type: input.property_type,
-    p_owner_type: ownerType,
-    p_owner_id: ownerId,
-    p_wilaya_code: input.wilaya_code,
-    p_commune_id: input.commune_id,
-    p_address: input.address ?? null,
-    p_latitude: input.latitude ?? null,
-    p_longitude: input.longitude ?? null,
-    p_details: input.details,
-    p_price: input.price,
-    p_currency: input.currency,
-    p_translations: input.translations,
-    p_contact_phone: input.contact_phone ?? null,
-    p_show_phone: input.show_phone,
-    p_accept_messages: input.accept_messages,
-  });
+  // 1. Insert listing (columns match 004_listings_core.sql)
+  const details = input.details ?? {};
+  const { data: listing, error: listingError } = await supabase
+    .from("listings")
+    .insert({
+      listing_type: input.listing_type,
+      property_type: input.property_type,
+      owner_type: ownerType,
+      ...(ownerType === "agency"
+        ? { agency_id: ownerId }
+        : { individual_owner_id: ownerId }),
+      wilaya_code: input.wilaya_code,
+      commune_id: input.commune_id,
+      address_text: input.address ?? null,
+      surface_m2: (details as Record<string, unknown>).area_m2 ?? null,
+      rooms: (details as Record<string, unknown>).rooms ?? null,
+      bathrooms: (details as Record<string, unknown>).bathrooms ?? null,
+      details,
+      current_price: input.price,
+      currency: input.currency,
+      contact_phone: input.contact_phone ?? null,
+      show_phone: input.show_phone ?? true,
+      accept_messages: input.accept_messages ?? true,
+      current_status: "pending_review",
+      published_at: new Date().toISOString(),
+    })
+    .select("*")
+    .single();
 
-  if (error) throw error;
-  return data as Listing;
+  if (listingError) throw listingError;
+
+  // 2. Insert translations
+  if (input.translations?.length) {
+    const translationRows = input.translations.map((t) => ({
+      listing_id: listing.id,
+      locale: t.locale,
+      title: t.title,
+      description: t.description,
+      slug: t.slug || `${t.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 80)}-${listing.id.slice(0, 8)}`,
+    }));
+
+    const { error: transError } = await supabase
+      .from("listing_translations")
+      .insert(translationRows);
+
+    if (transError) throw transError;
+  }
+
+  return listing as Listing;
 }
 
 export async function getListingBySlug(

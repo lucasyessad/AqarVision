@@ -10,6 +10,7 @@ export interface WilayaScrollerItem {
   name: string;
   name_ar?: string;
   imageUrl: string;
+  imageUrlLight?: string;
   count: number;
   code: string;
 }
@@ -46,7 +47,7 @@ export function WilayaScroller({
   return (
     <section
       className={cn(
-        "bg-stone-900 dark:bg-stone-950 py-16 lg:py-24",
+        "bg-stone-100 dark:bg-stone-950 py-16 lg:py-24",
         className
       )}
     >
@@ -54,7 +55,7 @@ export function WilayaScroller({
         {/* Header */}
         {title && (
           <div className="mb-10 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">
+            <h2 className="text-2xl font-bold text-stone-900 dark:text-white sm:text-3xl">
               {title}
             </h2>
             {subtitle && (
@@ -72,8 +73,8 @@ export function WilayaScroller({
               "absolute -start-4 top-1/2 z-10 -translate-y-1/2",
               "hidden lg:flex",
               "h-10 w-10 items-center justify-center rounded-full",
-              "bg-stone-800 shadow-lg ring-1 ring-stone-700",
-              "text-stone-300 hover:text-white hover:bg-stone-700",
+              "bg-white dark:bg-stone-800 shadow-lg ring-1 ring-stone-200 dark:ring-stone-700",
+              "text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-stone-50 dark:hover:bg-stone-700",
               "transition-colors duration-fast"
             )}
             aria-label="Précédent"
@@ -98,18 +99,37 @@ export function WilayaScroller({
                     "relative shrink-0 snap-start overflow-hidden rounded-xl",
                     "w-52 sm:w-60 lg:w-64",
                     "aspect-[3/4]",
-                    "group",
+                    "group bg-stone-700 dark:bg-stone-800",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900"
                   )}
                 >
                   {/* Photo */}
-                  <Image
-                    src={wilaya.imageUrl}
-                    alt={displayName}
-                    fill
-                    sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 256px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                  {wilaya.imageUrlLight ? (
+                    <>
+                      <Image
+                        src={wilaya.imageUrlLight}
+                        alt={displayName}
+                        fill
+                        sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 256px"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105 dark:opacity-0 transition-opacity duration-500"
+                      />
+                      <Image
+                        src={wilaya.imageUrl}
+                        alt={displayName}
+                        fill
+                        sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 256px"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-0 dark:opacity-100 transition-opacity duration-500"
+                      />
+                    </>
+                  ) : (
+                    <Image
+                      src={wilaya.imageUrl}
+                      alt={displayName}
+                      fill
+                      sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 256px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  )}
 
                   {/* Gradient overlay — stronger at bottom */}
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-900/30 to-transparent" />
@@ -156,8 +176,8 @@ export function WilayaScroller({
               "absolute -end-4 top-1/2 z-10 -translate-y-1/2",
               "hidden lg:flex",
               "h-10 w-10 items-center justify-center rounded-full",
-              "bg-stone-800 shadow-lg ring-1 ring-stone-700",
-              "text-stone-300 hover:text-white hover:bg-stone-700",
+              "bg-white dark:bg-stone-800 shadow-lg ring-1 ring-stone-200 dark:ring-stone-700",
+              "text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-stone-50 dark:hover:bg-stone-700",
               "transition-colors duration-fast"
             )}
             aria-label="Suivant"

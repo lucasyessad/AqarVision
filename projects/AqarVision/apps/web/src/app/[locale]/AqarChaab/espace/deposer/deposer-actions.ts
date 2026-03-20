@@ -56,8 +56,12 @@ export async function publishIndividualListingAction(
   try {
     const listing = await createListing(supabase, parsed.data, "individual", userId);
     return ok(listing);
-  } catch (error) {
-    const msg = error instanceof Error ? error.message : "Erreur interne";
-    return fail("INTERNAL_ERROR", msg);
+  } catch (error: unknown) {
+    // Surface the actual Supabase/DB error for debugging
+    const supaErr = error as { message?: string; details?: string; hint?: string; code?: string };
+    const msg = supaErr.message ?? (error instanceof Error ? error.message : "Erreur interne");
+    const detail = supaErr.details ?? supaErr.hint ?? "";
+    console.error("[publishIndividualListing]", msg, detail, supaErr.code);
+    return fail("INTERNAL_ERROR", `${msg}${detail ? ` — ${detail}` : ""}`);
   }
 }

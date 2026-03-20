@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
   title: {
@@ -13,5 +14,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children as React.ReactElement;
+  return (
+    <html suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        {children}
+      </body>
+    </html>
+  );
 }

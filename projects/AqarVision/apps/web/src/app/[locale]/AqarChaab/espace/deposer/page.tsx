@@ -15,7 +15,7 @@ export default async function DeposerPage() {
   const user = await getCachedUser();
 
   if (!user) {
-    redirect("/auth/signup?redirect=/AqarChaab/espace/deposer");
+    redirect("/deposer");
   }
 
   return (

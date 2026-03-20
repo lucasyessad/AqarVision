@@ -375,7 +375,8 @@
       "listings": "annonces",
       "verifiedAgencies": "agences vérifiées",
       "wilayas": "wilayas",
-      "users": "utilisateurs"
+      "users": "utilisateurs",
+      "totalViews": "vues"
     },
     "heroHeadline": "Trouvez votre",
     "heroBold": "BIEN IDÉAL",
@@ -383,23 +384,97 @@
     "heroBadge": "15 000+ annonces vérifiées",
     "ctaSecondary": "Publier gratuitement",
     "featureGrid": {
+      "sectionEyebrow": "Fonctionnalités",
+      "sectionTitle": "Tout ce dont vous avez besoin",
       "search": {
         "eyebrow": "AqarSearch",
-        "title": "Recherche intelligente",
-        "description": "Filtres par wilaya, commune, surface et prix en DZD. Carte interactive sur les 69 wilayas.",
+        "title": "Recherche multicritère",
+        "description": "Filtres avancés par wilaya, commune, surface et prix. Carte interactive sur les 69 wilayas.",
+        "detail": "Notre moteur de recherche couvre l'ensemble du territoire algérien avec des filtres précis : type de bien, budget, surface, nombre de pièces, équipements. La carte interactive vous permet de visualiser les annonces géolocalisées et de zoomer sur votre quartier.",
+        "bullet1": "69 wilayas et 1 541 communes couvertes",
+        "bullet2": "Carte interactive avec clusters et zoom",
+        "bullet3": "Filtres combinables : type, prix, surface, équipements",
         "cta": "Explorer"
       },
       "pro": {
         "eyebrow": "AqarPro",
         "title": "Espace Professionnel",
-        "description": "CRM agence complet — vitrine en ligne, gestion des leads qualifiés et analytics.",
+        "description": "CRM agence complet — leads, visites, analytics et facturation intégrée.",
+        "detail": "Un tableau de bord complet pour gérer votre agence immobilière : pipeline de leads avec scoring automatique, calendrier de visites, analytics détaillés sur vos performances, gestion d'équipe avec rôles RBAC, et facturation Stripe intégrée.",
+        "bullet1": "Pipeline leads Kanban avec heat score 0-100",
+        "bullet2": "Analytics : vues, contacts, tendances par période",
+        "bullet3": "Gestion d'équipe multi-rôles et facturation Stripe",
         "cta": "Découvrir"
       },
       "chaab": {
         "eyebrow": "AqarChaab",
         "title": "Entre Particuliers",
         "description": "Publiez votre bien directement, sans intermédiaire ni commission.",
+        "detail": "Déposez votre annonce en quelques minutes grâce à un wizard simplifié en 4 étapes. Vos photos sont optimisées automatiquement, vos brouillons sauvegardés. Gérez vos favoris, recevez des alertes et échangez directement avec les intéressés.",
+        "bullet1": "Wizard de dépôt simplifié en 4 étapes",
+        "bullet2": "Sauvegarde automatique des brouillons",
+        "bullet3": "Messagerie directe avec les acheteurs",
         "cta": "Commencer"
+      },
+      "estimation": {
+        "eyebrow": "Estimation",
+        "title": "Estimation de prix",
+        "description": "Estimez la valeur de votre bien grâce à notre algorithme intelligent.",
+        "detail": "Notre outil analyse le prix au m² par wilaya, ajusté selon le type de bien, l'étage, l'année de construction et les équipements (parking, ascenseur, vue mer...). Obtenez une fourchette de prix réaliste avec un indice de confiance.",
+        "bullet1": "Prix au m² calculé par wilaya et commune",
+        "bullet2": "10+ critères : surface, étage, année, équipements",
+        "bullet3": "Fourchette min/max avec indice de confiance",
+        "cta": "Estimer"
+      },
+      "autoGenerate": {
+        "eyebrow": "Rédaction",
+        "title": "Génération automatique",
+        "description": "Titres et descriptions générés depuis vos données structurées.",
+        "detail": "Plus besoin de rédiger : notre générateur crée automatiquement un titre accrocheur et une description complète à partir des caractéristiques de votre bien — type, surface, pièces, localisation, équipements. Le texte reste entièrement modifiable.",
+        "bullet1": "Titre optimisé SEO généré en un clic",
+        "bullet2": "Description structurée avec liste d'équipements",
+        "bullet3": "100% modifiable après génération",
+        "cta": "Essayer"
+      },
+      "messaging": {
+        "eyebrow": "Communication",
+        "title": "Messagerie sécurisée",
+        "description": "Conversations en temps réel entre acheteurs et vendeurs.",
+        "detail": "Échangez directement sur la plateforme sans partager votre numéro. Les conversations sont organisées par annonce, avec indicateur de lecture et notifications. Les agences peuvent assigner les conversations à leurs agents.",
+        "bullet1": "Messages temps réel via Supabase Realtime",
+        "bullet2": "Indicateurs de lecture et notifications",
+        "bullet3": "Conversations organisées par annonce",
+        "cta": "En savoir plus"
+      },
+      "themes": {
+        "eyebrow": "Vitrines",
+        "title": "10 thèmes agences",
+        "description": "Mini-sites personnalisables pour présenter votre agence.",
+        "detail": "Choisissez parmi 10 thèmes professionnels (LuxeNoir, Méditerranée, NeoBrutalist, ArtDeco...) et personnalisez couleurs, logo, photos et textes. Votre vitrine affiche automatiquement vos annonces, stats et coordonnées.",
+        "bullet1": "10 thèmes uniques avec dark mode",
+        "bullet2": "Wizard 4 étapes : médias, textes, stats, preview",
+        "bullet3": "Vos annonces et stats affichées automatiquement",
+        "cta": "Voir les thèmes"
+      },
+      "alerts": {
+        "eyebrow": "Notifications",
+        "title": "Alertes temps réel",
+        "description": "Soyez notifié dès qu'une annonce correspond à vos critères.",
+        "detail": "Sauvegardez vos recherches et choisissez la fréquence de notification : instantanée, quotidienne ou hebdomadaire. Dès qu'une nouvelle annonce matche vos filtres (type, budget, wilaya, surface), vous recevez une alerte.",
+        "bullet1": "Fréquence au choix : instant, quotidien, hebdo",
+        "bullet2": "Filtres précis : type, budget, wilaya, surface",
+        "bullet3": "Activation/désactivation en un clic",
+        "cta": "Créer une alerte"
+      },
+      "photoProcessing": {
+        "eyebrow": "Médias",
+        "title": "Traitement photo intelligent",
+        "description": "Vos photos optimisées automatiquement pour un rendu professionnel.",
+        "detail": "Chaque photo uploadée est automatiquement convertie en WebP (60% plus léger), redimensionnée, et débarrassée des métadonnées GPS pour votre vie privée. Des thumbnails sont générés pour un chargement ultra-rapide.",
+        "bullet1": "Conversion WebP automatique (-60% de poids)",
+        "bullet2": "Suppression des métadonnées GPS (vie privée)",
+        "bullet3": "Thumbnails auto pour un chargement instantané",
+        "cta": "En savoir plus"
       }
     }
   },
